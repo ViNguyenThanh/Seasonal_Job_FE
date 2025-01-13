@@ -1,0 +1,20 @@
+.footer-whole-container {
+    width: 100%;
+    background-color: #02033B;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    color: white;
+    min-height: 400px;
+    height: fit-content;
+}
+
+.footer-container {
+    max-width: var(--max-screen-width);
+    background-color: #02033B;
+    width: 90%;
+    font-family: var(--font-inter);
+    font-weight: bold;
+    padding: 5%;
+    display: flex;
+}

@@ -1,0 +1,9 @@
+:root {
+  --max-screen-width: 1530px;
+}
+
+
+body {
+  padding: 0;
+  margin: 0;
+}
