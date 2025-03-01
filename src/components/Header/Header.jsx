@@ -1,10 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import './Header.css'
+import logo from '/assets/logo.png'
+import { useNavigate } from 'react-router-dom'
 
 const Header = () => {
+
+    const navigate = useNavigate()
+
+    const handleClick = () => {
+        navigate("/");
+        window.scrollTo(0, 0); // Cuộn lên đầu trang
+    }
     const [showHeader, setShowHeader] = useState(true)
     const [lastScrollY, setLastScrollY] = useState(0)
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+
+
 
     const controlHeader = () => {
         if (typeof window !== 'undefined') {
@@ -34,7 +45,16 @@ const Header = () => {
     return (
         <div className={`header-whole-container ${showHeader ? 'show' : ''}`} >
             <div className={`header-container ${showHeader ? 'show-down' : ''}`}>
-                <h1>Header</h1>
+                <div className="header-left">
+                    <img src={logo} className='header-logo' onClick={handleClick} />
+                    <li>All Jobs</li>
+                    <li>Resume & CV</li>
+                    <li>Companies</li>
+                </div>
+                <div className="header-right">
+                    <li>For Employer</li>
+                    <li>Sign in / Sign Up</li>
+                </div>
             </div>
         </div>
     )

@@ -1,5 +1,8 @@
 :root {
   --max-screen-width: 1530px;
+  --font-oswald: "Oswald", sans-serif;
+  --primary-color: #03254C;
+  --background-color: #dfedff;
 }
 
 
