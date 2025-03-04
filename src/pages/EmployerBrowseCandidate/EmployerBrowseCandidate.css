@@ -1,0 +1,85 @@
+.employer-browse-candidate-whole-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex-direction: column;
+}
+
+.employer-browse-candidate-container {
+  max-width: var(--max-screen-width);
+  width: 100%;
+  margin-top: 80px;
+  height: 100vh;
+  padding-top: 40px;
+}
+
+.custom-space-compact {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ebc-p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.ebc-p2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.custom-icon {
+  color: #187bcd !important;
+  font-size: 20px !important;
+}
+
+.search-filter-layer1 {
+  background: #dfedff; /* Layer color */
+  border-radius: 10px; /* Border radius */
+  padding: 30px; /* Padding around the content */
+  width: 100%;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+}
+
+.search-filter-layer2 {
+  background: rgba(255, 255, 255, 0.726); /* Smoke layer color */
+  border-radius: 10px; /* Border radius */
+  padding: 10px; /* Padding around the content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for better effect */
+}
+
+:where(.css-dev-only-do-not-override-7ny38l).ant-select-outlined:not(
+    .ant-select-customize-input
+  )
+  .ant-select-selector {
+  border: none; /* Hide the border */
+  background: #ffffff;
+}
+
+.filter-open-layer {
+  background: rgba(255, 255, 255, 0.726); /* Smoke layer color */
+  border-radius: 10px; /* Border radius */
+  padding: 32px; /* Padding around the content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for better effect */
+  width: auto;
+  margin-top: 30px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 950px) {
+  .employer-browse-candidate-container {
+    margin-top: 125px;
+  }
+}
+
+@media (max-width: 650px) {
+  .employer-browse-candidate-container {
+    margin-top: 115px;
+  }
+}
