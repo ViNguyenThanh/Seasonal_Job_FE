@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./EmployerBrowseCandidate.css";
+import "./FindingWorker.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { Select, Space, Button, Slider, Card, Radio, Checkbox, Row, Col } from "antd";
@@ -7,10 +7,11 @@ import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, ClockCircleOutl
 import { Flex } from 'antd';
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { FilterOutlined } from "@ant-design/icons";
+import { Pagination } from 'antd';
 
 const { Option } = Select;
 
-const EmployerBrowseCandidate = () => {
+const FindingWorker = () => {
     // State for candidate data
     const [candidates, setCandidates] = useState([
         {
@@ -104,9 +105,9 @@ const EmployerBrowseCandidate = () => {
     }
 
     return (
-        <div className="employer-browse-candidate-whole-container">
+        <div className="finding-worker-whole-container">
             <Header />
-            <div className="employer-browse-candidate-container">
+            <div className="finding-worker-container">
                 <div className="search-filter-layer1">
                     <p className="ebc-p">Find Workers</p>
                     <div className="search-filter-layer2">
@@ -166,6 +167,7 @@ const EmployerBrowseCandidate = () => {
 
                         <Select
                             defaultValue="Latest"
+                            className="sort-select"
                             style={{
                                 width: 120,
                                 marginRight: '10px',
@@ -291,7 +293,9 @@ const EmployerBrowseCandidate = () => {
                                                             </Button>
                                                             <Button
                                                                 type="primary"
-                                                                style={{ width: '180px', height: '40px' }}>
+                                                                className="view-profile-button"
+                                                                style={{ width: '180px', height: '40px' }}
+                                                            >
                                                                 View Profile <ArrowRightOutlined />
                                                             </Button>
                                                         </div>
@@ -307,6 +311,9 @@ const EmployerBrowseCandidate = () => {
                                 </Flex>
                             ))}
                         </div>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                            <Pagination defaultCurrent={1} total={50} />
+                        </div>
                     </Col>
                 </Row>
             </div>
@@ -315,4 +322,4 @@ const EmployerBrowseCandidate = () => {
     );
 };
 
-export default EmployerBrowseCandidate;
+export default FindingWorker;

@@ -1,4 +1,4 @@
-.employer-browse-candidate-whole-container {
+.finding-worker-whole-container {
   width: 100%;
   display: flex;
   flex-wrap: nowrap;
@@ -6,7 +6,7 @@
   flex-direction: column;
 }
 
-.employer-browse-candidate-container {
+.finding-worker-container {
   max-width: var(--max-screen-width);
   width: 100%;
   margin-top: 80px;
@@ -17,6 +17,17 @@
 .custom-space-compact {
   width: 100%;
   box-sizing: border-box;
+}
+
+@media (max-width: 650px) {
+  .custom-space-compact {
+    flex-direction: column;
+  }
+
+  .custom-space-compact .ant-select,
+  .custom-space-compact .ant-btn {
+    width: 100% !important;
+  }
 }
 
 .ebc-p {
@@ -73,13 +84,26 @@
 }
 
 @media (max-width: 950px) {
-  .employer-browse-candidate-container {
+  .finding-worker-container {
     margin-top: 125px;
   }
 }
 
 @media (max-width: 650px) {
-  .employer-browse-candidate-container {
+  .finding-worker-container {
     margin-top: 115px;
+  }
+}
+
+@media (max-width: 650px) {
+  .view-profile-button {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 650px) {
+  .sort-select {
+    margin-left: 30px !important;
+    margin-right: 0 !important;
   }
 }

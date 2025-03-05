@@ -1,5 +1,5 @@
 import './App.css'
-import EmployerBrowseCandidate from './pages/EmployerBrowseCandidate/EmployerBrowseCandidate'
+import FindingWorker from './pages/FindingWorker/FindingWorker'
 import Home from './pages/Home/Home'
 import { Route, Routes } from 'react-router-dom'
 
@@ -9,7 +9,7 @@ function App() {
     <>
       <Routes>
         <Route path ="/" element={<Home />} />
-        <Route path ="/employer-browse-candidate" element={<EmployerBrowseCandidate />} />
+        <Route path ="/finding-worker" element={<FindingWorker />} />
       </Routes>
     </>
   )
