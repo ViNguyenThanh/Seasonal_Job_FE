@@ -11,12 +11,13 @@
     height: 10px;
     transition: height 0.3s ease;
 }
+
 .show {
     transition: 0.3s ease;
     height: 95px;
 }
 
-.header-container{
+.header-container {
     font-family: var(--font-inter);
     font-weight: bold;
     max-width: var(--max-screen-width);
@@ -25,7 +26,6 @@
     justify-content: space-between;
     padding-top: 5px;
     /* border-bottom: 3px solid rgba(235, 235, 235, 0.8); */
-    transition: 0.3s ease;
     height: 95px;
     transform: translateY(-100%);
     transition: 0.3s ease;
@@ -36,36 +36,207 @@
     transition: 0.3s ease;
 }
 
-.header-left{
+.header-left {
     width: 60%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
-.header-left .header-logo{
+
+.header-left .header-logo {
     width: 200px;
     height: 80px;
     cursor: pointer;
-    padding-left: 2%;
-}
-.header-left li{
-    list-style-type: none;
-    cursor: pointer;
-    padding: 0 5%;
-    font-size: 24px;
-    font-weight: 350;
+    padding: 0 2%;
 }
 
-.header-right{
+.header-left li {
+    list-style-type: none;
+    cursor: pointer;
+    padding: 0 1%;
+    margin: 0 2%;
+    font-size: 24px;
+    font-weight: 350;
+    transition: 0.2s ease;
+    position: relative;
+}
+
+/* .header-left li:hover {
+    border-bottom: 5px solid white;
+    transition: 0.2s ease;
+}
+
+.header-left li.active{
+    border-bottom: 5px solid white;
+} */
+.header-left li::after {
+    content: "";
+    position: absolute;
+    left: 0%;
+    bottom: -5px;
+    /* Điều chỉnh khoảng cách dưới */
+    width: 0%;
+    /* Bắt đầu với chiều rộng 0% */
+    height: 5px;
+    /* Độ dày của border */
+    background-color: white;
+    transition: width 0.3s ease, left 0.3s ease;
+    transform: translateX(0%);
+    /* left: 50%; 
+    transform: translateX(-50%);*/
+    /*để border-bottom chạy từ giữa*/
+}
+
+.header-left li:hover::after,
+.header-left li.active::after {
+    width: 100%;
+    /* Điều chỉnh độ dài của border-bottom theo ý muốn */
+}
+
+.header-right {
     width: 40%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
-.header-right li{
+
+.header-right li {
     list-style-type: none;
     cursor: pointer;
-    padding: 0 5%;
+    padding: 0 1%;
+    margin: 0 2%;
     font-size: 24px;
     font-weight: 350;
+    transition: 0.2s ease;
+    position: relative;
+}
+
+.header-right li:nth-of-type(2) {
+    margin-right: 5%;
+}
+
+/* .header-right li:hover {
+    border-bottom: 5px solid white;
+    transition: 0.2s ease;
+} 
+
+.header-right li.active{
+    border-bottom: 5px solid white;
+} */
+
+.header-right li::after {
+    content: "";
+    position: absolute;
+    left: 0%;
+    bottom: -5px;
+    /* Điều chỉnh khoảng cách dưới */
+    width: 0%;
+    /* Bắt đầu với chiều rộng 0% */
+    height: 5px;
+    /* Độ dày của border */
+    background-color: white;
+    transition: width 0.3s ease, left 0.3s ease;
+    transform: translateX(0%);/
+}
+
+.header-right li:hover::after,
+.header-right li.active::after {
+    width: 100%;
+    /* Điều chỉnh độ dài của border-bottom theo ý muốn */
+}
+
+.dropdown-btn {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    /* align-items: center; */
+    cursor: pointer;
+    padding: 0 1%;
+    margin: 0 2%;
+}
+.dropdown-btn .ant-btn.ant-btn-icon-only {
+    width: 40px;
+    height: 40px;
+}
+.dropdown-btn .ant-btn-variant-solid{
+    background-color: #16488e;
+}
+.dropdown-btn.ant-btn.ant-btn-icon-only .anticon {
+    font-size: 20px;
+}
+.dropdown-btn .ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
+    background: #1e5baf;
+    color: #fff;
+}
+
+@media (max-width: 950px) {
+    .show {
+        height: 125px;
+    }
+
+    .header-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 125px;
+        padding-top: 20px;
+    }
+
+    .header-left {
+        width: 100%;
+    }
+
+    .header-left .header-logo {
+        width: 150px;
+        height: 60px;
+    }
+
+    .header-right {
+        width: 100%;
+        justify-content: flex-end;
+        margin-bottom: 2%;
+    }
+
+    .header-left li,
+    .header-right li {
+        font-size: 22px;
+    }
+
+    .header-left li::after,
+    .header-right li::after {
+        height: 4px
+    }
+}
+
+@media (max-width: 650px) {
+    .show {
+        /* height: 115px; */
+        height: 95px;
+    }
+
+    .header-container {
+        /* height: 115px; */
+        height: 95px;
+    }
+
+    .header-left .header-logo {
+        width: 180px;
+        height: 70px;
+    }
+
+    .header-left li,
+    .header-right li {
+        font-size: 18px;
+    }
+
+    /* .header-left li:hover, .header-right li:hover{
+        border-bottom: 3px solid white;
+    }
+    .header-left li.active, .header-right li.active{
+        border-bottom: 3px solid white;
+    } */
+    .header-left li::after,
+    .header-right li::after {
+        height: 3px
+    }
 }

@@ -9,6 +9,17 @@
 .home-container {
     max-width: var(--max-screen-width);
     width: 100%;
-    margin-top: 80px;
+    margin-top: 95px;
     height: 100vh;
+}
+
+@media (max-width: 950px) {
+    .home-container{
+        margin-top: 125px;
+    }
+}
+@media (max-width: 650px) {
+    .home-container{
+        margin-top: 95px;
+    }
 }
