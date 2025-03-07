@@ -11,7 +11,6 @@
   width: 100%;
   margin-top: 80px;
   height: 100vh;
-  padding-top: 40px;
 }
 
 .custom-space-compact {
@@ -65,10 +64,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: add a shadow for better effect */
 }
 
-:where(.css-dev-only-do-not-override-7ny38l).ant-select-outlined:not(
-    .ant-select-customize-input
-  )
-  .ant-select-selector {
+.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
   border: none; /* Hide the border */
   background: #ffffff;
 }
