@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import "./FindingWorker.css";
 import Header from "../../components/Header/Header";
@@ -289,7 +290,7 @@ const FindingWorker = () => {
                                                                 style={{ width: '18%', height: '40px' }}
                                                                 onClick={() => handleSaveClick(index)}
                                                             >
-                                                                <BookOutlined />
+                                                            <BookOutlined />
                                                             </Button>
                                                             <Button
                                                                 type="primary"
@@ -311,7 +312,7 @@ const FindingWorker = () => {
                                 </Flex>
                             ))}
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
                             <Pagination defaultCurrent={1} total={50} />
                         </div>
                     </Col>

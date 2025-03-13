@@ -9,8 +9,7 @@
 .finding-worker-container {
   max-width: var(--max-screen-width);
   width: 100%;
-  margin-top: 80px;
-  height: 100vh;
+  margin-top: 125px;
 }
 
 .custom-space-compact {
