@@ -117,9 +117,23 @@ const Header = () => {
                 </div> */}
                 {!isMobile && (
                     <div className="header-right">
-                        <li>For Employer</li>
+                        <li
+                            onClick={() => {
+                                navigate("/login-for-employer")
+                                window.scrollTo(0, 0);
+                            }}
+                        >
+                            For Employer
+                        </li>
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
-                        <li>Sign in / Sign Up</li>
+                        <li
+                            onClick={() => {
+                                navigate("/login-for-worker")
+                                window.scrollTo(0, 0);
+                            }}
+                        >
+                            Sign in / Sign Up
+                        </li>
                     </div>
                 )}
             </div>

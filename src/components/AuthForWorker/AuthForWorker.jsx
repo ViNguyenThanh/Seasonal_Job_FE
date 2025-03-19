@@ -9,7 +9,7 @@ import { Checkbox, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import google from '/assets/google.png'
 
-const Auth = ({ comp }) => {
+const AuthForWorker = ({ comp }) => {
   const [passwordVisible, setPasswordVisible] = useState(false)
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false)
   const [checked, setChecked] = useState(false);
@@ -75,9 +75,11 @@ const Auth = ({ comp }) => {
 
         <img src={background_worker} className='auth-worker-background-img' />
 
+        <button className='home-btn' onClick={() => navigate("/")}><HomeFilled /></button>
+
         <div className="auth-worker-left">
           <div className="welcome-worker">
-            <h1>HI! WELCOME BACK TO</h1>
+            <h1>HI! WELCOME {comp === "Register" ? "" : "BACK"} TO</h1>
             <img src={logo} />
           </div>
           <form onSubmit={formik.handleSubmit} className='auth-worker-form'>
@@ -192,7 +194,7 @@ const Auth = ({ comp }) => {
 
           </form>
 
-          <button className='log-in-gg-btn'>
+          <button className='log-in-gg-btn' onClick={() => navigate("/")}>
             <img src={google} />
             Log in with Google
           </button>
@@ -202,14 +204,24 @@ const Auth = ({ comp }) => {
             <div className="already-account-or-not">
               <p>
                 Already have an account?
-                <span> Sign In now</span>
+                <span
+                  onClick={() => {
+                    navigate("/login-for-worker")
+                    window.scrollTo(0, 0);
+                  }}> Sign In now
+                </span>
               </p>
             </div>
           ) : (
             <div className="already-account-or-not">
               <p>
                 Do not have an account?
-                <span> Sign Up now</span>
+                <span
+                  onClick={() => {
+                    navigate("/register-for-worker")
+                    window.scrollTo(0, 0);
+                  }}> Sign Up now
+                </span>
               </p>
             </div>
           )}
@@ -223,4 +235,4 @@ const Auth = ({ comp }) => {
   )
 }
 
-export default Auth
+export default AuthForWorker
