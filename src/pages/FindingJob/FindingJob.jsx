@@ -5,7 +5,7 @@ import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Select, Space, Button, Flex, Modal, Checkbox, Radio, Card, Tag } from "antd";
 import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, CalendarOutlined, BookOutlined, ArrowRightOutlined } from '@ant-design/icons';
-import { Row, Col, Pagination } from 'antd';
+import { Row, Col, Pagination, Breadcrumb } from 'antd';
 
 const { Option } = Select;
 
@@ -98,7 +98,20 @@ const FindingJob = () => {
 
             <div className="finding-job-container">
                 <div className="search-filter-layer1">
-                    <p className="ebc-p">Find Jobs</p>
+                    <div className="header-title">
+                        <p className="ebc-p">Find Jobs</p>
+                        <Breadcrumb
+                            className="breadcrumb"
+                            items={[
+                                {
+                                    title: <a href="/">Home</a>,
+                                },
+                                {
+                                    title: 'Find Jobs',
+                                },
+                            ]}
+                        />
+                    </div>
                     <div className="search-filter-layer2">
                         <Space.Compact size="large" className="custom-space-compact">
                             <Select
@@ -220,14 +233,14 @@ const FindingJob = () => {
 
                             <Flex gap="small" wrap>
                                 <Button type="primary" style={{
-                                    height: '50px'
+                                    height: '50px', borderRadius: '5px', width: '100%'
                                 }}>Find Job</Button>
                             </Flex>
                         </Space.Compact>
                     </div>
                 </div>
 
-                <Row justify="end" align="middle" style={{ marginTop: '30px' }}>
+                <Row justify="end" align="middle" style={{ marginTop: '30px', marginRight: '39px' }}>
                     <Col>
                         <Select
                             defaultValue="Latest"
@@ -275,8 +288,10 @@ const FindingJob = () => {
                     <div key={index} style={{ display: 'flex', justifyContent: 'center' }}>
                         <Card
                             style={{
-                                width: '96%',
-                                marginTop: 20,
+                                width: '100%',
+                                marginTop: 30,
+                                marginLeft: 50,
+                                marginRight: 50,
                             }}
                         >
                             <Card.Meta
@@ -300,6 +315,7 @@ const FindingJob = () => {
                                                     shape="rectangle"
                                                     style={{ height: '40px' }}
                                                     onClick={() => handleSaveClick(index)}
+                                                    className="save-button"
                                                 >
                                                     <BookOutlined />
                                                 </Button>

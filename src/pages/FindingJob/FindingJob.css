@@ -9,7 +9,7 @@
 .finding-job-container {
   max-width: var(--max-screen-width);
   width: 100%;
-  margin-top: 125px;
+  margin-top: 65px;
 }
 
 @media (max-width: 950px) {
@@ -21,6 +21,15 @@
   .finding-job-container {
     margin-top: 95px;
   }
+}
+
+.header-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.breadcrumb {
+  margin-top: 24px;
 }
 
 .modal-content {
@@ -56,7 +65,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 890px) {
   .job-card {
     flex-direction: column;
     align-items: center;
@@ -83,5 +92,43 @@
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .job-card-description {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .job-card-description > div {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .job-card-buttons {
+    justify-content: flex-start;
+    gap: 5px;
+    margin-right: 0;
+  }
+
+  .job-card-buttons .ant-btn {
+    height: 30px;
+    font-size: 12px;
+  }
+
+  .job-card-description span {
+    font-size: 12px;
+  }
+
+  .save-button {
+    width: 90%;
+    margin-left: 9px;
+  }
+
+  .apply-now-button {
+    width: 90% !important;
+    margin-left: 9.5px !important;
   }
 }

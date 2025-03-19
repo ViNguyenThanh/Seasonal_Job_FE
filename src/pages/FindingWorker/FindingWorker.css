@@ -9,7 +9,16 @@
 .finding-worker-container {
   max-width: var(--max-screen-width);
   width: 100%;
-  margin-top: 125px;
+  margin-top: 65px;
+}
+
+.header-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.breadcrumb {
+  margin-top: 24px;
 }
 
 .custom-space-compact {
@@ -76,6 +85,8 @@
   width: auto;
   margin-top: 30px;
   margin-bottom: 40px;
+  margin-right: 20px;
+  margin-left: 50px;
 }
 
 @media (max-width: 950px) {
@@ -100,5 +111,71 @@
   .sort-select {
     margin-left: 30px !important;
     margin-right: 0 !important;
+  }
+}
+
+/* Add styles for iPad Air (820px width) */
+@media (max-width: 820px) {
+  .filter-open-layer {
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 20px;
+    width: auto;
+  }
+
+  .filter-open-layer .ebc-p,
+  .filter-open-layer .ebc-p2 {
+    font-size: 1.1rem; /* Slightly smaller font size for better fit */
+  }
+
+  .filter-open-layer .ant-radio-wrapper,
+  .filter-open-layer .ant-checkbox-wrapper {
+    font-size: 16px; /* Adjust font size for radios and checkboxes */
+  }
+
+  .filter-open-layer .ant-slider {
+    margin: 0 auto; /* Center the slider */
+  }
+
+  .filter-open-layer .ant-checkbox-group {
+    gap: 6px; /* Reduce gap between checkboxes */
+  }
+}
+
+/* Hide the row on mobile screens */
+@media (max-width: 650px) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
+
+/* Hide the row on desktop and tablet screens */
+@media (min-width: 651px) {
+  .hide-on-desktop-n-tablet {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .view-profile-button {
+    width: 40px !important; /* Adjust button width */
+    height: 40px !important; /* Adjust button height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+
+  .view-profile-text {
+    display: none; /* Hide the text on smaller screens */
+  }
+
+  .arrow-icon {
+    display: none; /* Hide the ArrowRightOutlined icon on smaller screens */
+  }
+
+  .info-icon {
+    display: inline-block !important; /* Show the InfoCircleOutlined icon on smaller screens */
+    font-size: 18px; /* Adjust icon size */
   }
 }
