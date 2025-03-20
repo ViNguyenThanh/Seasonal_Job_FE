@@ -1,21 +1,71 @@
+/* eslint-disable react/jsx-no-duplicate-props */
+/* eslint-disable no-undef */
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
 import "./JobDetailView.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col } from 'antd';
+import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input } from 'antd';
 import { AntDesignOutlined, LinkOutlined, PhoneOutlined, MailOutlined, BookOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
-import { FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutlined, SolutionOutlined, WalletOutlined, EnvironmentOutlined, FileProtectOutlined, HistoryOutlined, TwitterOutlined, YoutubeOutlined } from '@ant-design/icons';
+import { FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutlined, SolutionOutlined, WalletOutlined, EnvironmentOutlined, FileProtectOutlined, HistoryOutlined, TwitterOutlined, YoutubeOutlined, UploadOutlined } from '@ant-design/icons';
+const { TextArea } = Input;
 
 const JobDetailView = () => {
+    // Save button click handler
     const [isSaved, setIsSaved] = useState(false); // State to track saved status
 
     const toggleSaveStatus = () => {
         setIsSaved(!isSaved); // Toggle the saved status
     };
 
+    // Modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+    const props = {
+        name: 'file',
+        action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+        headers: {
+            authorization: 'authorization-text',
+        },
+        onChange(info) {
+            if (info.file.status !== 'uploading') {
+                console.log(info.file, info.fileList);
+            }
+            if (info.file.status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully`);
+            } else if (info.file.status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+            }
+        },
+    };
+
+    // Textarea
+    const [value, setValue] = useState('');
+
+    // Loading button
+    const [loadings, setLoadings] = useState([]);
+    const enterLoading = (index) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[index] = true;
+            return newLoadings;
+        });
+        setTimeout(() => {
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[index] = false;
+                return newLoadings;
+            });
+        }, 3000);
+    };
     return (
         <div className='job-detail-view-whole-container'>
             <Header />
@@ -75,6 +125,7 @@ const JobDetailView = () => {
                             <Button
                                 type="primary"
                                 className="apply-now-button"
+                                onClick={showModal}
                             >
                                 Apply now <ArrowRightOutlined />
                             </Button>
@@ -325,6 +376,7 @@ const JobDetailView = () => {
                                     <Button
                                         type="primary"
                                         className="apply-now-button"
+                                        onClick={showModal}
                                     >
                                         Apply now <ArrowRightOutlined />
                                     </Button>
@@ -350,6 +402,47 @@ const JobDetailView = () => {
                                     </Button>
                                 </div>
                             </div>
+
+                            <Modal
+                                title="Apply Job: UX Designer"
+                                open={isModalOpen}
+                                onCancel={handleCancel}
+                                centered
+                                footer={[
+                                    <Button key="cancel" onClick={handleCancel}>
+                                        Cancel
+                                    </Button>,
+                                    <Button
+                                        key="submit"
+                                        type="primary"
+                                        style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
+                                        loading={loadings[1]}
+                                        onClick={() => enterLoading(1)}
+                                    >
+                                        Apply Now <ArrowRightOutlined />
+                                    </Button>,
+                                ]}
+                            >
+                                <Title level={5} style={{ margin: 0 }}>Choose CV</Title>
+                                <Upload {...props}>
+                                    <Button icon={<UploadOutlined />} style={{ marginTop: '15px' }}>
+                                        Upload
+                                    </Button>
+                                </Upload>
+                                <Title level={5} style={{ marginTop: '20px' }}>Cover Letter</Title>
+                                <div style={{ position: 'relative', width: '100%' }}>
+                                    <TextArea
+                                        value={value}
+                                        onChange={(e) => setValue(e.target.value)}
+                                        placeholder="Write down your biography here. Let the employers know who you are..."
+                                        autoSize={{
+                                            minRows: 3,
+                                            maxRows: 5,
+                                        }}
+                                        style={{ paddingBottom: '50px' }}
+                                    />
+                                </div>
+                            </Modal>
                         </div>
                     </Col>
                 </Row>
