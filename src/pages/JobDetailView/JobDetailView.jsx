@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable no-undef */
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";

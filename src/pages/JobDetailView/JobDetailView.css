@@ -306,7 +306,7 @@
   display: none;
 }
 
-.job-detail-action-section-mobile-only{
+.job-detail-action-section-mobile-only {
   display: none;
 }
 
@@ -327,12 +327,16 @@
     gap: 10px; /* Add spacing between buttons */
   }
 
-  .job-overview {
+  .job-description-leftSide-typography {
     margin-left: 30px;
   }
 
+  .job-overview {
+    margin-left: 15px;
+  }
+
   .job-others-info {
-    margin-left: 30px;
+    margin-left: 15px;
   }
 
   .share-this-job-mobile-only {
@@ -341,7 +345,7 @@
 }
 
 @media screen and (max-width: 820px) {
-  .job-detail-action-section-mobile-only{
+  .job-detail-action-section-mobile-only {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -420,7 +424,7 @@
     gap: 10px;
   }
 
-  .job-detail-action-section-mobile-only{
+  .job-detail-action-section-mobile-only {
     display: flex;
     justify-content: center;
     align-items: center;
