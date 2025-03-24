@@ -54,7 +54,7 @@ const Footer = () => {
                 TP Thủ Đức, TP.HCM</p>
             </div>
             <div className="contact-us">
-              <img src={telephone} />
+              <img src={email} />
               <p><b>Email:</b> scjp@gmail.com</p>
             </div>
           </div>

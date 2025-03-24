@@ -1,0 +1,257 @@
+.auth-management-team-whole-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    background-image: url('/assets/background_admin.png');
+    background-size: 100% 100%;
+}
+.auth-management-team-whole-container.support-staff {
+    background-image: url('/assets/background_support_staff.png');
+    background-size: 100% 100%;
+}
+
+.auth-management-team-container {
+    max-width: var(--max-screen-width);
+    width: 100%;
+    min-height: 100vh;
+    height: fit-content;
+    display: flex;
+    position: relative;
+    overflow: hidden; /*ngăn cuộn trang*/
+}
+
+/* .auth-management-team-container .auth-management-team-bg-img{
+    width: 100%;
+    height: 780px;
+    position: fixed;
+    left: 0;
+    z-index: -1;
+} */
+
+.auth-management-team-container .home-btn{
+    z-index: 1;
+    position: absolute;
+    top: 20px;
+    left: 25px;
+    font-size: 25px;
+    color: #187bcd;
+    background-color: #dfedff;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.auth-management-team-container .home-btn:hover{
+    transform: scale(1.2);
+    transition: 0.3s ease;
+}
+
+
+.auth-management-team-container .auth-management-team-left {
+    width: 35%;
+    padding: 7% 0 0 15%;
+}
+
+.auth-management-team-left .welcome-management-team{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.auth-management-team-left .welcome-management-team h1{
+    color: #1167B1;
+}
+.auth-management-team-left .welcome-management-team img{
+    width: 180px;
+    height: 60px;
+    padding-left: 2%;
+}
+
+.auth-management-team-left .auth-management-team-form {
+    width: 80%;
+    padding: 0 10%;
+}
+.auth-management-team-left .auth-management-team-form .management-team-info {}
+
+.auth-management-team-left .auth-management-team-form .management-team-info .title {
+    color: #1167B1;
+    margin: 10px 0;
+}
+.auth-management-team-left .auth-management-team-form .management-team-info .input {
+    padding-left: 3%;
+
+}
+/* chỉnh cho placeholder xa icon */
+.auth-management-team-left .auth-management-team-form .management-team-info .ant-input-affix-wrapper>input.ant-input {
+    padding-left: 3%;
+    font-family: var(--font-oswald);
+}
+/* chỉnh message error */
+.auth-management-team-left .auth-management-team-form .management-team-info .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 15px;
+    padding: 2% 0;
+}
+
+.auth-management-team-left .auth-management-team-form .forgot-password {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
+.auth-management-team-left .auth-management-team-form .forgot-password p {
+    width: fit-content;
+    color: gray;
+    cursor: pointer;
+    margin: 0;
+}
+.auth-management-team-left .auth-management-team-form .forgot-password p:hover {
+    text-decoration: underline;
+}
+
+.auth-management-team-left .auth-management-team-form button {
+    width: 100%;
+    margin: 5% 0;
+    padding: 2% 0;
+    background-color: #187bcd;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.auth-management-team-left .auth-management-team-form button:hover {
+    background-color: #2d8cda;
+    transition: 0.3s ease;
+}
+
+
+
+.auth-management-team-container .auth-management-team-right{
+    width: 50%;
+    height: 100vh;
+}
+
+/* bỏ 2 hình admin_login với support_staff_login
+thay vào đó đã chỉnh auth-management-team-whole-container với 2 ảnh mới là bg_admin với bg_support_staff */
+/* .auth-management-team-right .auth-management-team-admin-img{
+    width: 650px; 
+    height: 500px;
+    padding-top: 275px;
+    padding-left: 120px;
+}
+.auth-management-team-right .auth-management-team-support-staff-img{
+    width: 730px; 
+    height: 420px;
+    padding-top: 285px;
+    padding-left: 120px;
+} */
+
+/* thu nhỏ màn hình không bị lỗi nx nên ko cần min-width: 1200px */
+@media (min-width: 1200px) {
+    /* cách này làm 2 hình admin_login với support_staff_login ở 2 screen khác nhau thì bottom, 
+    right ko ở dưới cùng trang như mình muốn */
+    /* .auth-management-team-right .auth-management-team-admin-img{
+        width: 50%;
+        height: 70%;
+        position: fixed;
+        bottom: -11%;
+        right: -3%
+    }
+    .auth-management-team-right .auth-management-team-support-staff-img{
+        width: 50%;
+        height: 55%;
+        position: fixed;
+        bottom: -2%;
+        right: -5%
+    } */
+
+    /* cách này là khi thêm 2 hình bg_admin với bg_support_staff vô luôn
+    thì trông vẫn không ổn nên thoy chỉnh auth-management-team-whole-container nagy từ ban đầu luôn*/
+    /* .auth-management-team-whole-container {
+        background-image: url('/assets/background_admin.png');
+        background-size: 100% 100%;
+    }
+    .auth-management-team-whole-container.support-staff {
+        background-image: url('/assets/background_support_staff.png');
+        background-size: 100% 100%;
+    }
+    .auth-management-team-right .auth-management-team-admin-img{
+        width: 0;
+    }
+    .auth-management-team-right .auth-management-team-support-staff-img{
+        width: 0; 
+    } */
+}
+@media (max-width: 1300px) {
+    .auth-management-team-container .auth-management-team-left {
+        width: 40%;
+        padding: 8% 0 0 10%;
+    }
+    .auth-management-team-left .welcome-management-team{
+        flex-wrap: wrap;
+    }
+    /* .auth-management-team-right .auth-management-team-admin-img{
+        width: 550px; 
+        height: 400px;
+        padding-top: 360px;
+        padding-left: 100px;
+    }
+    .auth-management-team-right .auth-management-team-support-staff-img{
+        width: 650px; 
+        height: 380px;
+        padding-top: 330px;
+        padding-left: 50px;
+    } */
+}
+@media (max-width: 1200px) {
+    /* .auth-management-team-container .auth-management-team-bg-img{
+        width: 105%;
+    } */
+    .auth-management-team-whole-container, .auth-management-team-whole-container.support-staff {
+        background-image: url('/assets/background_management_team.jpg');
+    }
+    .auth-management-team-container .auth-management-team-left {
+        width: 60%;
+        padding: 12% 20% 0;
+    }
+    .auth-management-team-container .auth-management-team-right{
+        width: 0%;
+    }
+    /* .auth-management-team-right .auth-management-team-admin-img{
+        width: 0;
+    }
+    .auth-management-team-right .auth-management-team-support-staff-img{
+        width: 0; 
+    } */
+}
+@media (max-width: 900px) {
+    .auth-management-team-whole-container, .auth-management-team-whole-container.support-staff {
+        background-image: url('');
+        background-color: #E0EDFE;
+    }
+    .auth-management-team-container .auth-management-team-bg-img{
+        width: 0;
+    }
+    .auth-management-team-container .auth-management-team-left {
+        width: 60%;
+        padding: 15% 20% 0;
+    }
+    .auth-management-team-left .auth-management-team-form button {
+        padding: 3% 0;
+    }
+}
+@media (max-width: 650px) {
+    .auth-management-team-left .welcome-management-team h1{
+        text-align: center;
+        margin-bottom: 5px;
+    }
+    .auth-management-team-left .auth-management-team-form {
+        width: 90%;
+        padding: 0 5%;
+    }
+
+}
