@@ -147,12 +147,13 @@ const AuthForWorker = ({ comp }) => {
                   value={formik.values.password}
                 />
               </Form.Item>
-              {comp === "Login" && (
-                <div className='forgot-password'>
-                  <p onClick={() => navigate("/forgot-password")}>Forgot password?</p>
-                </div>
-              )}
             </div>
+
+            {comp === "Login" && (
+              <div className='forgot-password'>
+                <p onClick={() => navigate("/forgot-password")}>Forgot password?</p>
+              </div>
+            )}
 
             {comp === "Register" && (
               <div className='worker-info'>

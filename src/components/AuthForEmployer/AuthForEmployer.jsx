@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import './AuthForEmployer.css'
-import { AimOutlined, EnvironmentOutlined, HomeFilled, IdcardOutlined, LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
+import { AimOutlined, EnvironmentOutlined, HomeFilled, IdcardOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import background_employer from '/assets/background_employer.gif'
 import logo from '/assets/logo.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Checkbox, Form, Input, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import google from '/assets/google.png'
 
 const AuthForEmployer = ({ comp }) => {
     const [passwordVisible, setPasswordVisible] = useState(false)
@@ -127,6 +126,7 @@ const AuthForEmployer = ({ comp }) => {
                 </div>
 
                 <div className="auth-employer-right">
+
                     <div className="welcome-employer">
                         <div className="welcome-employer-text">
                             <h1>HI! WELCOME {comp === "Register" ? "" : "BACK"} TO</h1>
@@ -177,12 +177,13 @@ const AuthForEmployer = ({ comp }) => {
                                     value={formik.values.password}
                                 />
                             </Form.Item>
-                            {comp === "Login" && (
-                                <div className='forgot-password'>
-                                    <p onClick={() => navigate("/forgot-password")}>Forgot password?</p>
-                                </div>
-                            )}
                         </div>
+
+                        {comp === "Login" && (
+                            <div className='forgot-password'>
+                                <p onClick={() => navigate("/forgot-password")}>Forgot password?</p>
+                            </div>
+                        )}
 
                         {comp === "Register" && (
                             <>
@@ -283,7 +284,7 @@ const AuthForEmployer = ({ comp }) => {
                                                 {/* Danh sách tỉnh/thành từ API */}
                                                 {cityList.map((city) => (
                                                     <Select.Option key={city.full_name} value={city.full_name}>
-                                                       <EnvironmentOutlined />  {city.full_name}
+                                                        <EnvironmentOutlined />  {city.full_name}
                                                     </Select.Option>
                                                 ))}
                                             </Select>

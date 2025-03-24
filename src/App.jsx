@@ -1,6 +1,8 @@
 import './App.css'
 import LoginForEmployer from './pages/AuthForEmployer/LoginForEmployer'
 import RegisterForEmployer from './pages/AuthForEmployer/RegisterForEmployer'
+import LoginForAdmin from './pages/AuthForManagementTeam/LoginForAdmin'
+import LoginForSupportStaff from './pages/AuthForManagementTeam/LoginForSupportStaff'
 import LoginForWorker from './pages/AuthForWorker/LoginForWorker'
 import RegisterForWorker from './pages/AuthForWorker/RegisterForWorker'
 import FindingJob from './pages/FindingJob/FindingJob'
@@ -20,6 +22,8 @@ function App() {
         <Route path="/register-for-worker" element={<RegisterForWorker />} />
         <Route path="/login-for-employer" element={<LoginForEmployer/>} />
         <Route path="/register-for-employer" element={<RegisterForEmployer />} />
+        <Route path="/sjcp-admin-login" element={<LoginForAdmin/>}/>
+        <Route path="/sjcp-support-staff-login" element={<LoginForSupportStaff/>}/>
 
         <Route path ="/finding-worker" element={<FindingWorker />} />
         <Route path ="/finding-job" element={<FindingJob />} />
