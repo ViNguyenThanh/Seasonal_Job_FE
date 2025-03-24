@@ -15,7 +15,7 @@
 .breadcrumb {
   display: flex;
   justify-content: flex-end;
-  margin-right: 60px;
+  margin-right: 60px !important;
 }
 
 /* .ebc-p-title {

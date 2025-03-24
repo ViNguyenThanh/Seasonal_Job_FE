@@ -8,6 +8,7 @@ import FindingWorker from './pages/FindingWorker/FindingWorker'
 import Home from './pages/Home/Home'
 import { Route, Routes } from 'react-router-dom'
 import JobDetailView from './pages/JobDetailView/JobDetailView'
+import FindingCompnay from './pages/FindingCompany/FindingCompany'
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
         <Route path ="/finding-worker" element={<FindingWorker />} />
         <Route path ="/finding-job" element={<FindingJob />} />
         <Route path ="/job-detail-view" element={<JobDetailView />} />
+        <Route path ="/finding-company" element={<FindingCompnay />} />
       </Routes>
     </>
   )
