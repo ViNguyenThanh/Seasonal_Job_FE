@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import "./FindingWorker.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { Select, Space, Button, Slider, Card, Radio, Checkbox, Row, Col } from "antd";
-import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, ClockCircleOutlined, BookOutlined } from "@ant-design/icons";
+import { Select, Space, Button, Card, Radio, Checkbox, Row, Col } from "antd";
+import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, ClockCircleOutlined, BookOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { Flex } from 'antd';
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { FilterOutlined } from "@ant-design/icons";
-import { Pagination } from 'antd';
+import { Pagination, Breadcrumb } from 'antd';
 
 const { Option } = Select;
 
@@ -63,12 +63,6 @@ const FindingWorker = () => {
         setCandidates(newCandidates);
     };
 
-    // Slider
-    const [radius, setRadius] = useState(32);
-    const handleSliderChange = (value) => {
-        setRadius(value);
-    };
-
     // Radio Candidate Level
     const styleRadio = {
         display: 'flex',
@@ -110,7 +104,20 @@ const FindingWorker = () => {
             <Header />
             <div className="finding-worker-container">
                 <div className="search-filter-layer1">
-                    <p className="ebc-p">Find Workers</p>
+                    <div className="header-title">
+                        <p className="ebc-p">Find Workers</p>
+                        <Breadcrumb
+                            className="breadcrumb"
+                            items={[
+                                {
+                                    title: <a href="/">Home</a>,
+                                },
+                                {
+                                    title: 'Find Workers',
+                                },
+                            ]}
+                        />
+                    </div>
                     <div className="search-filter-layer2">
                         <Space.Compact size="large" className="custom-space-compact">
                             <Select
@@ -151,21 +158,30 @@ const FindingWorker = () => {
                             </Select>
                             <Flex gap="small" wrap>
                                 <Button type="primary" style={{
-                                    height: '50px'
+                                    height: '50px', borderRadius: '5px', width: '100px'
                                 }}>Find Job</Button>
                             </Flex>
                         </Space.Compact>
                     </div>
                 </div>
 
-                <Row justify="space-between" align="middle" style={{ marginTop: '30px' }}>
+                {/* Filter and Select for Desktop and Tablet UI*/}
+                <Row
+                    justify="space-between"
+                    align="middle"
+                    style={{ marginTop: '30px' }}
+                    className="hide-on-mobile"
+                >
                     <Col>
-                        <Button type="primary" icon={<FilterOutlined />} style={{ padding: '20px', marginLeft: '30px' }}>
+                        <Button
+                            type="primary"
+                            icon={<FilterOutlined />}
+                            style={{ padding: '20px', marginLeft: '50px' }}
+                        >
                             Filter
                         </Button>
                     </Col>
                     <Col>
-
                         <Select
                             defaultValue="Latest"
                             className="sort-select"
@@ -192,7 +208,7 @@ const FindingWorker = () => {
                                 width: 120,
                                 border: '1px solid gray',
                                 borderRadius: '5px',
-                                marginRight: '30px',
+                                marginRight: '40px',
                             }}
                             options={[
                                 {
@@ -205,19 +221,12 @@ const FindingWorker = () => {
                                 },
                             ]}
                         />
-
                     </Col>
                 </Row>
 
-                <Row gutter={[16, 16]}>
+                <Row >
                     <Col xs={24} md={7}>
                         <div className="filter-open-layer">
-                            <p className="ebc-p">Location Radius: <span style={{ color: '#187bcd' }}>{radius} miles</span></p>
-                            <Slider
-                                defaultValue={32}
-                                onChange={handleSliderChange}
-                                style={{ width: '100%' }}
-                            />
 
                             <p className="ebc-p2">Candidate Level</p>
                             <Radio.Group
@@ -267,8 +276,67 @@ const FindingWorker = () => {
                             </Radio.Group>
                         </div>
                     </Col>
+
+                    {/* Filter and Select for Mobile UI*/}
+                    <Row
+                        justify="space-between"
+                        align="middle"
+                        className="hide-on-desktop-n-tablet"
+                    >
+                        <Col>
+                            <Button
+                                type="primary"
+                                icon={<FilterOutlined />}
+                                style={{ padding: '20px', marginLeft: '30px', marginBottom: '20px' }}
+                            >
+                                Filter
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Select
+                                defaultValue="Latest"
+                                className="sort-select"
+                                style={{
+                                    width: 120,
+                                    marginRight: '10px',
+                                    border: '1px solid gray',
+                                    borderRadius: '5px',
+                                }}
+                                options={[
+                                    {
+                                        value: 'latest',
+                                        label: 'Latest',
+                                    },
+                                    {
+                                        value: 'oldest',
+                                        label: 'Oldest',
+                                    },
+                                ]}
+                            />
+                            <Select
+                                defaultValue="12 per page"
+                                style={{
+                                    width: 120,
+                                    border: '1px solid gray',
+                                    borderRadius: '5px',
+                                    marginLeft: '8px',
+                                }}
+                                options={[
+                                    {
+                                        value: '12perpage',
+                                        label: '12 per page',
+                                    },
+                                    {
+                                        value: '24perpage',
+                                        label: '24 per page',
+                                    },
+                                ]}
+                            />
+                        </Col>
+                    </Row>
+
                     <Col xs={24} md={17}>
-                        <div style={{ marginTop: '30px' }}>
+                        <div style={{ marginTop: '30px', width: '96%', marginLeft: '10px' }}>
                             {candidates.map((candidate, index) => (
                                 <Flex key={index} gap="middle" align="start" vertical style={{ marginBottom: '20px' }}>
                                     <Card
@@ -290,14 +358,16 @@ const FindingWorker = () => {
                                                                 style={{ width: '18%', height: '40px' }}
                                                                 onClick={() => handleSaveClick(index)}
                                                             >
-                                                            <BookOutlined />
+                                                                <BookOutlined />
                                                             </Button>
                                                             <Button
                                                                 type="primary"
                                                                 className="view-profile-button"
                                                                 style={{ width: '180px', height: '40px' }}
                                                             >
-                                                                View Profile <ArrowRightOutlined />
+                                                                <span className="view-profile-text">View Profile</span>
+                                                                <ArrowRightOutlined className="arrow-icon" />
+                                                                <InfoCircleOutlined className="info-icon" style={{ display: 'none' }} />
                                                             </Button>
                                                         </div>
                                                     </div>
