@@ -11,6 +11,7 @@ import Home from './pages/Home/Home'
 import { Route, Routes } from 'react-router-dom'
 import JobDetailView from './pages/JobDetailView/JobDetailView'
 import FindingCompnay from './pages/FindingCompany/FindingCompany'
+import CompanyDetail from './pages/CompanyDetail/CompanyDetail'
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
         <Route path ="/finding-job" element={<FindingJob />} />
         <Route path ="/job-detail-view" element={<JobDetailView />} />
         <Route path ="/finding-company" element={<FindingCompnay />} />
+        <Route path ="/company-detail" element={<CompanyDetail />} />
       </Routes>
     </>
   )
