@@ -11,9 +11,13 @@ import Home from './pages/Home/Home'
 import { Route, Routes } from 'react-router-dom'
 import JobDetailView from './pages/JobDetailView/JobDetailView'
 import FindingCompnay from './pages/FindingCompany/FindingCompany'
+
 import JobPostingFlow from './pages/JobPostingFlow/JobPostingFlow'
 import PostingNotifications from './components/JobPostingFlow/PostingNotifications/PostingNotifications'
 import JobPostingFlowLayout from './components/JobPostingFlow/JobPostingFlowLayout/JobPostingFlowLayout'
+
+import CompanyDetail from './pages/CompanyDetail/CompanyDetail'
+
 
 function App() {
 
@@ -30,10 +34,12 @@ function App() {
         <Route path="/sjcp-admin-login" element={<LoginForAdmin />} />
         <Route path="/sjcp-support-staff-login" element={<LoginForSupportStaff />} />
 
+
         <Route path="/finding-worker" element={<FindingWorker />} />
         <Route path="/finding-job" element={<FindingJob />} />
         <Route path="/job-detail-view" element={<JobDetailView />} />
         <Route path="/finding-company" element={<FindingCompnay />} />
+        <Route path ="/company-detail" element={<CompanyDetail />} />
 
         {/* Job Posting Flow */}
         <Route path='/job-posting-flow/*' element={<JobPostingFlow />}>
