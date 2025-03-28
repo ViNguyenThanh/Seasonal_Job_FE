@@ -39,6 +39,12 @@ const AuthForEmployer = ({ comp }) => {
                     : Yup.string(),
             companyName: comp === "Register"
                 ? Yup.string()
+                    .test('no-leading-space', '* No spaces at the beginning', value => {
+                        return value ? !/^\s/.test(value) : false;
+                    })
+                    .test('no-extra-space', '* No extra spaces allowed', value => {
+                        return value ? !/ {2,}/.test(value) : false;
+                    })
                     .max(60, "* Company Name cannot be longer than 60 characters")
                     .required("* Required")
                 : Yup.string(),

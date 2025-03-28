@@ -43,9 +43,9 @@ const AuthForWorker = ({ comp }) => {
           .max(30, "* Full Name cannot be longer than 30 characters")
           .required("* Required")
         : Yup.string(),
-      email: Yup.string().matches(
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "* Invalid Email"
-      ).required('* Required'),
+      email: Yup.string()
+      .matches( /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "* Invalid Email")
+      .required('* Required'),
       password: Yup.string().min(6, "* Password must be at least 6 characters or more").required("* Required"),
       confirmPassword:
         comp === "Register"

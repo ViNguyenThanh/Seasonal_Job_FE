@@ -6,6 +6,7 @@ import Footer from '../../components/Footer/Footer';
 import { Select, Space, Button, Flex, Modal, Checkbox, Radio, Card, Tag } from "antd";
 import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, CalendarOutlined, BookOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -91,6 +92,8 @@ const FindingJob = () => {
         newJobData[index].isSaved = !newJobData[index].isSaved;
         setJobData(newJobData);
     };
+
+    const navigate = useNavigate();
 
     return (
         <div className='finding-job-whole-container'>
@@ -323,6 +326,10 @@ const FindingJob = () => {
                                                     type="primary"
                                                     className="apply-now-button"
                                                     style={{ height: '40px' }}
+                                                    onClick={() => {
+                                                        navigate("/job-detail-view")
+                                                        window.scrollTo(0, 0);
+                                                    }}
                                                 >
                                                     Apply now <ArrowRightOutlined />
                                                 </Button>
