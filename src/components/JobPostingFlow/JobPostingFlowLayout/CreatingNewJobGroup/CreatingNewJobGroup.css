@@ -1,0 +1,170 @@
+.creating-new-job-group-container {
+    width: 90%;
+    margin: 0 5% 5%;
+}
+
+.creating-new-job-group-container p{
+    font-size: 18px;
+}
+.creating-new-job-group-container p .warning{
+    font-size: 28px;
+}
+.creating-new-job-group-container p .yellow{
+    color: #FFCD37;
+    font-weight: 400;
+}
+.creating-new-job-group-container p .red{
+    color: #ff4d4f;
+    font-weight: 400;
+}
+.creating-new-job-group-container p .purple{
+    color: #9470C4;
+    font-weight: 450;
+}
+
+
+
+.creating-new-job-group-container .creating-new-job-group-form{
+    width: 90%;
+    padding: 0 5%;
+}
+
+.creating-new-job-group-form .job-group-field .title {
+    font-weight: 500;
+    font-size: 16px;
+    margin: 10px 0;
+}
+.creating-new-job-group-form .job-group-field .title span{
+    color: red
+}
+.creating-new-job-group-form .job-group-field .input {
+    padding-left: 3%;
+    font-family: var(--font-oswald);
+    font-size: 15px;
+}
+/* chỉnh message error */
+.creating-new-job-group-form .job-group-field .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 15px;
+    padding: 1% 0;
+}
+
+
+.creating-new-job-group-form .job-group-info {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+}
+
+.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting{
+    width: 50%;
+    display: flex;
+    align-items: baseline;
+}
+.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .title {
+    font-weight: 500;
+    font-size: 16px;
+    margin: 10px 0;
+}
+.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .title span{
+    color: red
+}
+.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .input {
+    margin-left: 7%;
+    padding-left: 6%;
+    width: 40% !important;
+    font-family: var(--font-oswald);
+    font-size: 15px;
+}
+/* chỉnh message error */
+.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 15px;
+    padding: 1% 0;
+}
+
+.creating-new-job-group-form .job-group-info .job-group-start-end-date{
+    width: 50%;
+    display: flex;
+    align-items: baseline;
+}
+.creating-new-job-group-form .job-group-info .job-group-start-end-date .title {
+    font-weight: 500;
+    font-size: 16px;
+    margin: 10px 0;
+}
+.creating-new-job-group-form .job-group-info .job-group-start-end-date .title span{
+    color: red
+}
+.creating-new-job-group-form .job-group-info .job-group-start-end-date .input {
+    margin-left: 7%;
+    padding-left: 7%;
+    /* width: 40% !important; */
+    font-family: var(--font-oswald);
+    font-size: 15px;
+}
+/* chỉnh message error */
+.creating-new-job-group-form .job-group-info .job-group-start-end-date .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 15px;
+    padding: 1% 0;
+}
+
+@media (max-width: 1250px){
+    .creating-new-job-group-form .job-group-info {
+        flex-wrap: wrap;
+    }
+    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting{
+        width: 100%;
+    }
+    .creating-new-job-group-form .job-group-info .job-group-start-end-date{
+        width: 100%;
+    }
+}
+@media (max-width: 800px) {
+    .creating-new-job-group-container {
+        margin: 0 5% 8%;
+    }
+}
+@media (max-width: 616px){
+    .creating-new-job-group-form .job-group-info .job-group-start-end-date{
+        /* align-items: flex-start; */
+        flex-wrap: wrap;
+    }
+    .creating-new-job-group-form .job-group-info .job-group-start-end-date .title {
+        width: 100%;
+    }
+    .creating-new-job-group-form .job-group-info .job-group-start-end-date .input {
+        margin-left: 0%;
+        /* width: 152% !important; */
+        /* width: 100% !important; */
+        width: auto !important;
+        max-width: 100% !important;
+        flex-grow: 1;
+    }
+    
+}
+@media (max-width: 550.5px){ 
+    .creating-new-job-group-container {
+        margin: 0 5% 10%;
+    }
+    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting{
+        align-items: baseline;
+        flex-wrap: wrap;
+    }
+    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .title {
+        width: 100%;
+        margin-right: 2%;
+    }
+    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .ant-form-item .ant-form-item-control-input-content {
+        max-width: 50% !important;
+        display: flex;
+    }
+    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .input {
+        margin-left: 0%;
+        padding-left: 6%;
+        width: 100% !important;
+        font-family: var(--font-oswald);
+        font-size: 15px;
+    }
+}

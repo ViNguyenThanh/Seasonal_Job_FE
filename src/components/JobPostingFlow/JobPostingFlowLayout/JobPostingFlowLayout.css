@@ -1,0 +1,152 @@
+.job-posting-flow-layout-container{
+    width: 90%;
+    padding: 1% 5% 5%;
+    min-height: 100vh;
+    height: fit-content;
+}
+
+.job-posting-flow-layout-container .ant-breadcrumb {
+    font-size: 18px;
+}
+.job-posting-flow-layout-container .ant-breadcrumb ol {
+    /* display: flex;
+    flex-wrap: wrap; */
+    margin: -2%;
+    /* padding: 0;
+    list-style: none; */
+    align-items: center;
+}
+
+.job-posting-flow-layout-container .ant-breadcrumb .ant-breadcrumb-link{
+    margin: 0 5px;
+}
+.job-posting-flow-layout-container .breadcrumb .b-title-1{
+    padding: 5px 10px 15px;
+}
+/* chỉnh dấu /  */
+.job-posting-flow-layout-container .ant-breadcrumb .ant-breadcrumb-separator {
+    color: black;
+    padding-bottom: 0.3%;
+    font-size: 18px;
+}
+.job-posting-flow-layout-container .breadcrumb .b-title-2 {
+    color: rgb(61, 61, 61);
+    text-transform: capitalize;
+    cursor: pointer;
+    margin: 0;
+    padding: 5px 10px 10px;
+    border-radius: 5px;
+}
+.job-posting-flow-layout-container .breadcrumb .b-title-2:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+.job-posting-flow-layout-container .ant-breadcrumb .anticon {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+
+.job-posting-flow-layout-container .job-posting-flow-layout-content{
+    width: 90%;
+    margin: 2% 5%;
+    /* padding: 2%; */
+    border: 2px solid #2A9DF4;
+    border-radius: 12px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.job-posting-flow-layout-content .ant-steps {
+    width: 100%;
+    background-image: linear-gradient(to right, #04264c, #3676d0);
+    margin: 0;
+    padding: 15px 5% !important;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+/* chỉnh màu chữ và độ dày chữ của nút steps */
+.job-posting-flow-layout-content .ant-steps-item-icon .ant-steps-icon{
+    font-size: 16px !important;
+    font-weight: bold !important;
+    color: #767676 !important;
+}
+/* chỉnh màu của steps hiện tại */
+.job-posting-flow-layout-content .ant-steps .ant-steps-item-process .ant-steps-item-icon {
+    background-color: #FFCD37;
+    border-color: #FFCD37;
+}
+.job-posting-flow-layout-content .ant-steps .ant-steps-item-process .ant-steps-item-icon .ant-steps-icon{
+    color: white !important;
+}
+/* chỉnh màu của steps khi không phải lượt */
+.job-posting-flow-layout-content .ant-steps-item-wait .ant-steps-item-icon{
+    background-color: #F5F5F5 !important;
+    border-color: #F5F5F5!important;
+    color: #767676;
+}
+.job-posting-flow-layout-content .ant-steps-item-wait .ant-steps-item-title{
+    color: #F5F5F5 !important;
+}
+/* chỉnh màu thanh tiến độ */
+.job-posting-flow-layout-content .ant-steps-item-title::after{
+    background-color: #F5F5F5 !important;
+    height: 2px !important;
+}
+.job-posting-flow-layout-content .ant-steps-item-finish .ant-steps-item-title::after{
+    background-color: #FFCD37 !important;
+    height: 2px !important;
+}
+.job-posting-flow-layout-content .ant-steps-item-process .ant-steps-item-title::after{
+    background-color: #F5F5F5 !important;
+    height: 2px !important;
+}
+/* chỉnh màu của steps khi qua lượt rồi */
+.job-posting-flow-layout-content .ant-steps-item-icon{
+    background-color: #FFCD37 !important;
+    border-color: #FFCD37 !important;
+}
+.job-posting-flow-layout-content .ant-steps-icon .anticon svg{
+    width: 20px;
+    height: 20px;
+    fill: white !important;
+}
+.job-posting-flow-layout-content .ant-steps-item-title{
+    color: #FFCD37 !important;
+}
+
+
+.job-posting-flow-layout-content .job-posting-flow-layout-btn{
+    margin: 24px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+.job-posting-flow-layout-content .job-posting-flow-layout-btn button{
+    background-color: #2A9DF4 !important;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    border: none;
+}
+.job-posting-flow-layout-content .job-posting-flow-layout-btn button:hover{
+    background-color: #4ba7ed !important;
+    color: white !important;
+    border: none;
+}
+
+@media (max-width: 950px) {
+    .job-posting-flow-layout-content .ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+        display: inline-flex;
+        flex-wrap: wrap !important;
+        flex-direction: column;
+    }
+    
+}
+@media (max-width: 750px) {
+    .job-posting-flow-layout-content .ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
+        background-color: #FFCD37 !important;
+    }
+    .job-posting-flow-layout-content .ant-steps.ant-steps-vertical >.ant-steps-item>.ant-steps-item-container>.ant-steps-item-tail::after {
+        width: 2px !important;
+    }
+}

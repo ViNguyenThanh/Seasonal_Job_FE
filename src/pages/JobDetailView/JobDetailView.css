@@ -13,7 +13,7 @@
   padding: 0 5%;
 }
 
-.breadcrumb {
+.job-detail-view-container .breadcrumb {
   display: flex;
   justify-content: flex-end;
   margin-right: 3% !important;

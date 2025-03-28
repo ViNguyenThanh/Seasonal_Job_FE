@@ -1,0 +1,200 @@
+.posting-notifications-container{
+    width: 90%;
+    padding: 1% 5% 5%;
+    min-height: 100vh;
+    height: fit-content;
+}
+
+.posting-notifications-container .ant-breadcrumb {
+    font-size: 18px;
+}
+.posting-notifications-container .ant-breadcrumb ol {
+    /* display: flex;
+    flex-wrap: wrap; */
+    margin: -2%;
+    /* padding: 0;
+    list-style: none; */
+    align-items: center;
+}
+
+.posting-notifications-container .ant-breadcrumb .ant-breadcrumb-link{
+    margin: 0 5px;
+}
+.posting-notifications-container .breadcrumb .b-title-1{
+    padding: 5px 10px 15px;
+}
+/* chỉnh dấu /  */
+.posting-notifications-container .ant-breadcrumb .ant-breadcrumb-separator {
+    color: black;
+    padding-bottom: 0.3%;
+    font-size: 18px;
+}
+.posting-notifications-container .breadcrumb .b-title-2 {
+    color: rgb(61, 61, 61);
+    text-transform: capitalize;
+    cursor: pointer;
+    margin: 0;
+    padding: 5px 10px 10px;
+    border-radius: 5px;
+}
+.posting-notifications-container .breadcrumb .b-title-2:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+.posting-notifications-container .ant-breadcrumb .anticon {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+
+
+.posting-notifications-container .posting-notifications-info{
+    width: 90%;
+    margin: 2% 5%;
+    border: 2px solid #2A9DF4;
+    border-radius: 12px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
+}
+.posting-notifications-info h1{
+    background-image: linear-gradient(to right, #04264c, #3676d0);
+    margin: 0;
+    padding: 1%;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    color: white;
+}
+.posting-notifications-info h1 span{
+    color: #FFCD37;
+}
+
+.posting-notifications-info .posting-notification-content{
+    width: 92%;
+    padding: 2.5% 4%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.posting-notifications-info .posting-notification-content p{
+    font-size: 18px;
+    font-weight: 350;
+    line-height: 1.8;
+}
+.posting-notifications-info .posting-notification-content p .blue{
+    color: #2A9DF4;
+    font-weight: 500;
+}
+.posting-notifications-info .posting-notification-content p .red{
+    color: red;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .black{
+    font-weight: 500;
+}
+.posting-notifications-info .posting-notification-content p .rose-first{
+    color: #f03388;
+    font-weight: 450;
+}
+.posting-notifications-info .posting-notification-content p .rose{
+    color: #f03388;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .crimson{
+    color: #DC143C;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .dark-green{
+    color: #01c75e;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .blue-lagoon{
+    color: #028cba;
+    font-weight: 450;
+}
+.posting-notifications-info .posting-notification-content p .purple{
+    color: #9470C4;
+    font-weight: 450;
+}
+.posting-notifications-info .posting-notification-content p .light-blue{
+    color:#51a3fa;
+    font-weight: 420;
+}
+.posting-notifications-info .posting-notification-content p .orange{
+    color: #f98d10 ;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .green{
+    color: #18e277;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .light-red{
+    color: #ff4d4f;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .warning{
+    font-size: 28px;
+}
+.posting-notifications-info .posting-notification-content p .yellow{
+    color: #FFCD37;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .icon{
+    font-size: 20px;
+}
+
+
+.posting-notifications-info .posting-notification-content button{
+    color: #2A9DF4;
+    padding: 0.5% 2%;
+    border-radius: 15px;
+    border: 3px solid #2A9DF4;
+    background-color: white;
+    font-size: 16px;
+    cursor: pointer; 
+    transition: 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+.posting-notifications-info .posting-notification-content button span{
+    font-size: 23px;
+    margin-left: 5px;
+    margin-bottom: 2px;
+}
+.posting-notifications-info .posting-notification-content button:hover{
+    background-color: #2A9DF4;
+    color: white;
+    transform: scale(1.05);
+    transition: 0.3s ease;
+}
+
+@media (max-width: 1000px) {
+    .posting-notifications-container .posting-notifications-info{
+        padding-bottom: 2%;
+    }
+    .posting-notifications-info h1{
+        padding: 2% 0;
+    }
+}
+@media (max-width: 700px) {
+    .posting-notifications-container .posting-notifications-info{
+        padding-bottom: 3%;
+        margin: 3% 5%
+    }
+    .posting-notifications-info h1{
+        padding: 3% 0;
+    }
+}
+@media (max-width: 500px) {
+    .posting-notifications-container .posting-notifications-info{
+        padding-bottom: 4%;
+        margin: 5%
+    }
+    .posting-notifications-info h1{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .posting-notifications-info .posting-notification-content button{
+        padding: 1.5% 3%
+    }
+}
