@@ -12,6 +12,7 @@ import { Route, Routes } from 'react-router-dom'
 import JobDetailView from './pages/JobDetailView/JobDetailView'
 import FindingCompnay from './pages/FindingCompany/FindingCompany'
 import CompanyDetail from './pages/CompanyDetail/CompanyDetail'
+import EmployerHome from './pages/EmployerHome/EmployerHome'
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
     <>
       <Routes>
         <Route path ="/" element={<Home />} />
+        <Route path ="/employer-home" element={<EmployerHome />} />
 
         {/* Auth */}
         <Route path="/login-for-worker" element={<LoginForWorker/>} />
