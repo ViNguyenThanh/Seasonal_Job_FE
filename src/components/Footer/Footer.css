@@ -7,6 +7,7 @@
     color: white;
     min-height: 400px;
     height: fit-content;
+    overflow: hidden;
     background-image: url('/assets/background_footer_1.jpg');
     background-size: 100% 100%;
     /* background-size: contain; 
@@ -105,6 +106,7 @@
 .footer-right .footer-content .contact-us img{
     width: 25px;
     height: 25px;
+    margin-top: 5px;
 }
 .footer-right .footer-content .contact-us b{
     font-weight: 450;
@@ -133,6 +135,9 @@
     .footer-right .footer-content .contact-us{
         margin: 2% 0;
         align-items: center
+    }
+    .footer-right .footer-content .contact-us img{
+        margin-top: 0;
     }
     .footer-right .footer-content .contact-us p{
         margin: 0.5% 3%

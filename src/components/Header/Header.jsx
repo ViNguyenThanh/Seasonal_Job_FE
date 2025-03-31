@@ -61,12 +61,12 @@ const Header = () => {
     const menu = (
         <Menu
             items={[
-                { key: '1', label: <div onClick={handleClick}>All Jobs</div> },
+                { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
                 { key: '2', label: 'Resume & CV' },
-                { key: '3', label: 'Companies' },
+                { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div>},
                 { key: 'divider', type: 'divider' },
-                { key: '4', label: 'For Employer' },
-                { key: '5', label: 'Sign in / Sign Up' },
+                { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>For Employer</div> },
+                { key: '5', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div>},
             ]}
         />
     );
@@ -100,13 +100,24 @@ const Header = () => {
                     ) : (
                         <>
                             <li
-                                onClick={handleClick}
-                                className={location.pathname === '/' ? 'active' : ''}
+                                onClick={() => {
+                                    navigate("/finding-job")
+                                    window.scrollTo(0, 0);
+                                }}
+                                className={location.pathname === '/finding-job' ? 'active' : ''}
                             >
                                 All Jobs
                             </li>
-                            <li>Resume & CV</li>
-                            <li>Companies</li>
+                            {/* <li>Resume & CV</li> */}
+                            <li
+                                onClick={() => {
+                                    navigate("/finding-company")
+                                    window.scrollTo(0, 0);
+                                }}
+                                className={location.pathname === '/finding-company' ? 'active' : ''}
+                            >
+                                Companies
+                            </li>
                         </>
                     )}
                 </div>
@@ -117,9 +128,23 @@ const Header = () => {
                 </div> */}
                 {!isMobile && (
                     <div className="header-right">
-                        <li>For Employer</li>
+                        <li
+                            onClick={() => {
+                                navigate("/login-for-employer")
+                                window.scrollTo(0, 0);
+                            }}
+                        >
+                            For Employer
+                        </li>
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
-                        <li>Sign in / Sign Up</li>
+                        <li
+                            onClick={() => {
+                                navigate("/login-for-worker")
+                                window.scrollTo(0, 0);
+                            }}
+                        >
+                            Sign in / Sign Up
+                        </li>
                     </div>
                 )}
             </div>
