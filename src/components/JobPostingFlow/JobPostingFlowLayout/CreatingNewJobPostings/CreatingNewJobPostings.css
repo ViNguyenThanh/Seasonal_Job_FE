@@ -1,0 +1,258 @@
+.creating-new-job-postings-container{
+    width: 90%;
+    margin: 0 5% 5%;
+}
+.creating-new-job-postings-container p{
+    font-size: 19px;
+}
+.creating-new-job-postings-container p .warning{
+    font-size: 28px;
+}
+.creating-new-job-postings-container p .yellow{
+    color: #FFCD37;
+    font-weight: 400;
+}
+
+
+.creating-new-job-postings-container .creating-new-job-postings-collapse{
+
+}
+.creating-new-job-postings-collapse .ant-collapse>.ant-collapse-item >.ant-collapse-header {
+    color: black;
+    font-size: 16px;
+    font-weight: 450;
+}
+
+
+.creating-new-job-postings-container .creating-new-job-postings-form{
+    width: 90%;
+    padding: 0 5%;
+}
+
+.creating-new-job-postings-form .job-postings-field .title {
+    font-weight: 500;
+    font-size: 17px;
+    margin: 10px 0;
+}
+.creating-new-job-postings-form .job-postings-field .title span{
+    color: red
+}
+.creating-new-job-postings-form .job-postings-field .input {
+    padding-left: 3%;
+    font-family: var(--font-oswald);
+    font-size: 16px;
+}
+/* chỉnh message error */
+.creating-new-job-postings-form .job-postings-field .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 1% 0;
+}
+
+
+.creating-new-job-postings-form .job-postings-info {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+}
+
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district{
+    width: 50%;
+    display: flex;
+    align-items: baseline;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district .title {
+    font-weight: 500;
+    font-size: 17px;
+    margin: 10px 0;
+    margin-right: 2%;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district .title span{
+    color: red
+}
+/* chỉnh chiều dài của field Select */
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-form-item-with-help {
+    transition: none;
+    width: 60%;
+}
+  /* chỉnh chiều cao của field Select */
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    height: 130%;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    padding-left: 8%;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-select-single .ant-select-selector {
+    font-size: 16px;
+}
+/* chỉnh màu khi field Select bị disabled */
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    cursor: not-allowed;
+    background: rgb(255, 255, 255) !important;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+    border-color: #1677ff;
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    outline: 0;
+}
+/* chỉnh message error */
+.creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 2% 0;
+}
+
+
+.creating-new-job-postings-form .job-postings-info .job-postings-number-of-people{
+    width: 50%;
+    display: flex;
+    align-items: baseline;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-number-of-people .title {
+    font-weight: 500;
+    font-size: 17px;
+    margin: 10px 0;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-number-of-people .title span{
+    color: red
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-number-of-people .input {
+    margin-left: 7%;
+    padding-left: 6%;
+    width: 50% !important;
+    font-size: 16px;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-number-of-people .ant-input-number .ant-input-number-input {
+    font-family: var(--font-oswald);
+}
+/* chỉnh message error */
+.creating-new-job-postings-form .job-postings-info .job-postings-number-of-people .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 1% 0 0 7%;
+}
+
+
+.creating-new-job-postings-form .job-postings-info .job-postings-salary{
+    width: 50%;
+    display: flex;
+    align-items: normal;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-salary .title {
+    font-weight: 500;
+    font-size: 17px;
+    margin: 10px 0;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-salary .title span{
+    color: red
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-salary .input {
+    margin-left: 3%;
+    padding-left: 6%;
+    width: 100% !important;
+    font-size: 16px;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-salary .ant-input-number .ant-input-number-input {
+    font-family: var(--font-oswald);
+    padding-left: 23px;
+}
+/* chỉnh message error */
+.creating-new-job-postings-form .job-postings-info .job-postings-salary .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 1% 0 0 9%;
+}
+
+.creating-new-job-postings-form .job-postings-rating{
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+}
+.creating-new-job-postings-form .job-postings-rating .title {
+    font-weight: 500;
+    font-size: 17px;
+    margin: 10px 15px 10px 0;
+}
+.creating-new-job-postings-form .job-postings-rating .title span{
+    color: red
+}
+/* chỉnh message error */
+.creating-new-job-postings-form .job-postings-rating .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 1% 0;
+}
+
+
+/* chỉnh font chữ cho description */
+.creating-new-job-postings-form .job-postings-field .ant-input-textarea-affix-wrapper.ant-input-affix-wrapper >textarea.ant-input {
+    font-family: var(--font-oswald);
+    font-size: 16px;
+    padding-left: 3%;
+}
+
+
+@media (max-width: 1200px) {
+    .creating-new-job-postings-form .job-postings-info {
+        flex-wrap: wrap;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-city-district{
+        width: 100%;
+    }
+    /* chỉnh chiều dài của field Select */
+    .creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-form-item-with-help {
+        width: 40%;
+    }
+    
+    .creating-new-job-postings-form .job-postings-info .job-postings-number-of-people{
+        width: 100%;
+    }
+
+    .creating-new-job-postings-form .job-postings-info .job-postings-salary{
+        width: 100%;
+    }
+}
+@media (max-width: 750px) {
+    .creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-form-item-with-help {
+        width: 60%;
+    }
+}
+@media (max-width: 620px) {
+    .creating-new-job-postings-form .job-postings-info .job-postings-city-district{
+        flex-wrap: wrap;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-city-district .title {
+        width: 100%;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-city-district .ant-form-item-with-help {
+        width: 80%;
+    }
+
+    .creating-new-job-postings-form .job-postings-info .job-postings-number-of-people{
+        flex-wrap: wrap;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-number-of-people .title {
+        width: 100%;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-number-of-people .input {
+        margin-left: 0%;
+    }
+
+    .creating-new-job-postings-form .job-postings-info .job-postings-salary{
+        flex-wrap: wrap;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-salary .title {
+        width: 100%;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-salary .input {
+        margin-left: 0%;
+        padding-left: 0%;
+    }
+
+    .creating-new-job-postings-form .job-postings-rating{
+        flex-wrap: wrap;
+    }
+    .creating-new-job-postings-form .job-postings-rating .title {
+        width: 100%;
+    }
+}
