@@ -5,13 +5,14 @@ import { BellOutlined, FileTextOutlined, HomeOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom';
 import CreatingNewJobGroup from './CreatingNewJobGroup/CreatingNewJobGroup';
 import CreatingNewJobPostings from './CreatingNewJobPostings/CreatingNewJobPostings';
-
+import ConfirmPosting from './ConfirmPosting/ConfirmPosting';
+import dayjs from 'dayjs';
 
 const JobPostingFlowLayout = () => {
 
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 750); 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 750);
   const [jobGroup, setJobGroup] = useState({
     jobGroupName: '',
     startDate: '',
@@ -19,6 +20,20 @@ const JobPostingFlowLayout = () => {
     numberOfJobPostings: '',
     descriptionJobGroup: '',
   });
+
+  const [isJobGroupValid, setIsJobGroupValid] = useState(false);
+
+  // const [jobPostings, setJobPostings] = useState({
+  //   jobPostingName: '',
+  //   address: '',
+  //   city: '',
+  //   district: '',
+  //   numberOfPeople: '',
+  //   salary: '',
+  //   rating: '',
+  //   descriptionJobPosting: '',
+  // })
+  const [jobPostings, setJobPostings] = useState([]);
 
   // mấy cái comment là bỏ hết, vì khi bấm Next thì chưa nhập gì nó hiện hết lỗi của formik đã bắt ra
   // nhưng sau khi hết lỗi formik rồi thì ko thể bấm Next được nữa (còn không thì nó Next đc nhưng ko check lỗi formik gì luôn)
@@ -32,25 +47,56 @@ const JobPostingFlowLayout = () => {
     //   //submitCreatingNewJobGroup(); // Gọi formik.handleSubmit của CreatingNewJobGroup       
     //   setCurrent(current + 1);
     // }
-
-    if (!jobGroup.jobGroupName || !jobGroup.startDate || !jobGroup.endDate || !jobGroup.numberOfJobPostings || !jobGroup.descriptionJobGroup) {
-      // alert("Please input all required information")
-      message.error("Please fix the errors before proceeding.");
-    }
-    else {
-      setCurrent(current + 1);
-      window.scrollTo(0, 0);
-    }
-
-
     // if (submitCreatingNewJobGroup && isValid) {
     //   setCurrent(current + 1);
     // }
     // console.log(submitCreatingNewJobGroup);
     // setCurrent(current + 1);
+
+    // const formattedStartDate = dayjs(jobGroup.startDate);
+    // const formattedEndDate = dayjs(jobGroup.endDate);
+    // console.log(formattedStartDate);  // In ngày bắt đầu
+    // console.log(formattedEndDate);
+    // // Cập nhật lại giá trị sau khi định dạng
+    // setJobGroup({
+    //   ...jobGroup,
+    //   startDate: formattedStartDate,
+    //   endDate: formattedEndDate,
+    // });
+
+    // Kiểm tra jobGroup lần đầu nếu chưa hợp lệ
+    if (isJobGroupValid === false) {
+      if (!jobGroup.jobGroupName || !jobGroup.startDate || !jobGroup.endDate /*|| !formattedStartDate || !formattedEndDate*/ || !jobGroup.numberOfJobPostings || !jobGroup.descriptionJobGroup) {
+        message.error("Please fill in all information before going to the next step.");
+        return; // Dừng lại ở đây nếu dữ liệu jobGroup không hợp lệ
+      } else {
+        // console.log(jobGroup)
+        setIsJobGroupValid(true); // Đánh dấu jobGroup hợp lệ sau lần kiểm tra đầu tiên
+        setCurrent(current + 1);
+        window.scrollTo(0, 0);
+      }
+
+    }
+
+    if (isJobGroupValid === true) {
+      // Kiểm tra tất cả các job postings trong mảng
+      for (let i = 0; i < jobPostings.length; i++) {
+        const posting = jobPostings[i];
+        if (!posting.jobPostingName || !posting.address || !posting.city || !posting.district || parseInt(posting.district) === 0 || !posting.numberOfPeople || !posting.salary || !posting.rating || !posting.descriptionJobPosting) {
+          message.error("Please fill in all information before going to the next step.");
+          return; // Dừng lại ở đây nếu có mục job posting thiếu dữ liệu
+        }
+        // console.log(posting)
+      }
+
+      // Nếu tất cả job postings đều hợp lệ
+      setCurrent(current + 1);
+      window.scrollTo(0, 0);
+    }
   };
 
   const prev = () => {
+    setIsJobGroupValid(false);
     setCurrent(current - 1);
     window.scrollTo(0, 0);
   };
@@ -70,19 +116,17 @@ const JobPostingFlowLayout = () => {
       title: 'Create New Job Postings',
       content:
         <CreatingNewJobPostings
-        // setNextEnabled={setNextEnabled}
-        // selectedId={selectedThemeId}
-        // setSelectedId={setSelectedThemeId} 
+          numberOfJobPostings={jobGroup.numberOfJobPostings}
+          jobPostings={jobPostings}
+          setJobPostings={setJobPostings}
         />,
     },
     {
-      title: 'haha',
-      content: <div>hihi</div>
-      // <CreatingNewJobGroup
-      // setNextEnabled={setNextEnabled}
-      // selectedId={selectedThemeId}
-      // setSelectedId={setSelectedThemeId} 
-      // />,
+      title: 'Confirm Posting',
+      content:
+        <ConfirmPosting
+        // numberOfJobPostings={jobGroup.numberOfJobPostings}
+        />,
     },
   ]
 
@@ -117,8 +161,6 @@ const JobPostingFlowLayout = () => {
     };
   }, []);
 
-
-
   return (
     <div className='job-posting-flow-layout-container'>
 
@@ -151,7 +193,7 @@ const JobPostingFlowLayout = () => {
       />
 
       <div className="job-posting-flow-layout-content">
-        <Steps current={current} items={items} direction={isMobile ? 'vertical' : 'horizontal'}/>
+        <Steps current={current} items={items} direction={isMobile ? 'vertical' : 'horizontal'} />
         <div style={contentStyle}>{steps[current].content}</div>
 
         {/* div dành cho nút Next, Previous */}
