@@ -1,0 +1,155 @@
+.jobs-spotlight-container {
+    padding: 100px 5%;
+    display: flex;
+    justify-content: center;
+    background-color: var(--background-color);
+}
+
+.jobs-spotlight-container .jobs-spotlight-info {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.jobs-spotlight-info .jobs-spotlight-header {
+    background-image: url('/assets/background_colour.jpg');
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+}
+
+.jobs-spotlight-info .jobs-spotlight-header p {
+    font-weight: bolder;
+    color: white;
+    font-size: 60px;
+    margin: 5px 30px;
+}
+
+.jobs-spotlight-info .jobs-spotlight-header span {
+    color: #FFCD37;
+}
+
+.jobs-spotlight-info .jobs-spotlight-content {
+    background-color: white;
+    width: 100%;
+    border-radius: 0 0 20px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px 20px 30px;
+    gap: 20px;
+}
+
+.jobs-spotlight-content .jobs-spotlight-items {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+    height: fit-content;
+    gap: 20px;
+    padding: 10px 0
+}
+
+.jobs-spotlight-items .job-list-spotlight {
+    width: 350px;
+    height: 100px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    transition: 0.5s ease;
+    cursor: pointer;
+}
+
+.jobs-spotlight-items .job-list-spotlight:hover {
+    background-color: rgb(42, 157, 244, 0.75);
+    color: white;
+    transition: 0.5s ease;
+}
+.job-list-spotlight:hover .job-list-spotlight-info p {
+    color: white;
+    transition: 0.5s ease;
+}
+
+
+.job-list-spotlight .job-list-spotlight-img {
+    width: 30%;
+    height: auto;
+    border-radius: 10px;
+    padding-right: 10px;
+}
+
+.job-list-spotlight .job-list-spotlight-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    border-radius: 10px;
+}
+
+.job-list-spotlight .job-list-spotlight-info {
+    width: 70%;
+}
+
+.job-list-spotlight-info .job-list-spotlight-info-location {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.job-list-spotlight .job-list-spotlight-info h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* Giới hạn văn bản ở 2 dòng */
+    overflow: hidden;
+    /* Ẩn phần văn bản bị thừa */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ba chấm khi quá dài */
+    font-size: medium;
+    /* color: #136cb9; */
+    margin: 0;
+}
+
+.job-list-spotlight .job-list-spotlight-info p {
+    margin: 2px 0;
+    color: gray;
+    font-size: small;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    /* Giới hạn văn bản ở 2 dòng */
+    overflow: hidden;
+    /* Ẩn phần văn bản bị thừa */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ba chấm khi quá dài */
+    transition: 0.3s ease;
+
+}
+
+@media (max-width: 1350px) {
+    /* .jobs-spotlight-container {
+        padding-inline: 1%;
+    } */
+
+    .jobs-spotlight-items .job-list-spotlight {
+        width: 300px;
+    }
+
+    /* .job-list-spotlight .job-list-spotlight-img {
+        width: 20%;
+        height: 50px;
+    } */
+}
+
+@media (max-width: 1170px) {
+    .jobs-spotlight-content .jobs-spotlight-items {
+        justify-content: space-evenly;
+    }
+    
+}
+
+@media (max-width: 420px) {
+    .jobs-spotlight-info .jobs-spotlight-content {
+        padding: 20px 0;
+    }
+}

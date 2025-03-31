@@ -1,0 +1,240 @@
+.slide-container {
+    background-image: url('/assets/background_colour.jpg');
+    background-size: 100% 100%;
+    width: 100%;
+    height: 550px;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.slide-container .slide_left {
+    width: 60%;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+
+.slide_left .location-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    width: 70%;
+}
+
+.slide_left .location-search .search-input {
+    height: fit-content;
+}
+
+.slide_left .location-search .search-btn {
+    background-color: #136cb9;
+    color: white;
+    border: none;
+    width: fit-content;
+    height: auto;
+    /* padding: 10px; */
+}
+
+.slide_left .company-spotlight {
+    width: 80%;
+    height: fit-content;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.4);
+    display: flex;
+}
+
+.company-spotlight .company-spotlight-img {
+    width: 30%;
+    height: auto;
+    border-radius: 10px;
+    padding-right: 20px;
+}
+
+.company-spotlight .company-spotlight-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    border-radius: 10px;
+}
+
+.company-spotlight .company-spotlight-info {
+    width: 70%;
+}
+
+.company-spotlight-info .company-spotlight-info-location {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.company-spotlight-info .company-spotlight-info-location a {
+    /* padding-right: 20px; */
+    text-decoration: none;
+    color: white;
+}
+
+.company-spotlight .company-spotlight-info h2 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* Giới hạn văn bản ở 2 dòng */
+    overflow: hidden;
+    /* Ẩn phần văn bản bị thừa */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ba chấm khi quá dài */
+    font-size: 20px;
+    /* color: #136cb9; */
+    margin-top: 0;
+}
+
+.company-spotlight .company-spotlight-info p {
+    margin-bottom: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* Giới hạn văn bản ở 2 dòng */
+    overflow: hidden;
+    /* Ẩn phần văn bản bị thừa */
+    text-overflow: ellipsis;
+    /* Hiển thị dấu ba chấm khi quá dài */
+}
+
+.slide-container .slide_right {
+    width: 40%;
+    height: 100%;
+    /* height: auto; */
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.slide_right .today_dashboard {
+    /* width: 100%;
+    height: 20%;
+    background-color: #FFFFFF; */
+    width: 70%;
+    /* height: 10%; */
+    height: fit-content;
+    margin-top: 30px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+}
+
+.slide_right .today_dashboard p {
+    margin: 0;
+    color: white;
+    font-size: large;
+}
+
+.slide_right .image_background {
+    width: 90%;
+    /* height: 70%; */
+    height: auto;
+}
+
+/* .image_background {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
+
+.slide_right .image_background img {
+    width: 100%;
+    /* max-width: 200px; */
+    height: 100%;
+    border-radius: 10px;
+}
+
+@media (max-width: 1100px) {
+    .slide-container {
+        height: fit-content;
+    }
+
+    .slide_right .today_dashboard {
+        font-size: small;
+        width: 90%;
+    }
+
+    .location-search .select-location {
+        width: 30%;
+    }
+
+    .slide_left .company-spotlight {
+        font-size: small;
+    }
+
+    .company-spotlight .company-spotlight-info h3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        /* Giới hạn văn bản ở 2 dòng */
+        overflow: hidden;
+        /* Ẩn phần văn bản bị thừa */
+        text-overflow: ellipsis;
+        /* Hiển thị dấu ba chấm khi quá dài */
+        /* color: #136cb9; */
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 800px) {
+    .slide_right .image_background {
+        display: none;
+    }
+
+    .slide-container {
+        flex-wrap: wrap-reverse;
+        /* justify-content: flex-start; */
+    }
+
+    .slide-container .slide_left {
+        width: 100%;
+    }
+
+    .slide_left .location-search {
+        width: 80%;
+    }
+
+    /* .slide-container .slide_left .company-spotlight {
+        width: 80%;
+    } */
+
+    .slide-container .slide_right {
+        width: 100%;
+        align-items: center;
+    }
+
+    .slide-container .slide_right .today_dashboard {
+        width: 50%;
+    }
+}
+
+@media(max-width: 500px) {
+    .slide_left .company-spotlight {
+        width: 100%;
+        padding: 3%;
+    }
+}
+
+@media (max-width: 400px) {
+    .company-spotlight .company-spotlight-info p {
+        -webkit-line-clamp: 1;
+        margin: 2px 0;
+    }
+
+    .company-spotlight .company-spotlight-info h3 {
+        margin: 0 0 2px 0;
+    }
+
+    .company-spotlight .company-spotlight-info {
+        width: 300px;
+        height: 100px;
+    }
+}
