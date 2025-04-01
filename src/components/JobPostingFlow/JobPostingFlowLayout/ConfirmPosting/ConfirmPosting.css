@@ -1,0 +1,180 @@
+.confirm-posting-container{
+    width: 90%;
+    margin: 3% 5% 5%;
+}
+
+.confirm-posting-container .confirm-posting-header{
+    width: 100%;
+}
+.confirm-posting-container .confirm-posting-header h2{
+    width: 100%;
+    margin: 0;
+    text-align: center;
+}
+.confirm-posting-container .confirm-posting-header .start-end-date{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+.confirm-posting-container .confirm-posting-header .start-end-date p{
+    width: 50%;
+    font-size: 18px;
+    margin: 1% 0 2%;
+    text-align: center;
+}
+.confirm-posting-container .confirm-posting-header .start-end-date p .anticon{
+    font-size: 25px !important;
+    margin-right: 5px;
+}
+
+.confirm-posting-container .confirm-posting-whole-table{
+    width: 100%;
+}
+
+.confirm-posting-container .confirm-posting-whole-table .confirm-posting-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16.5px;
+}
+
+.confirm-posting-container .confirm-posting-table thead{
+    background-color: #2A9DF4;
+    color: white;
+}
+.confirm-posting-container .confirm-posting-table thead tr{
+    width: 100%;
+}
+.confirm-posting-container .confirm-posting-table thead tr th{
+    border: 1px solid #d3d3d3;
+    padding: 0.5% 0;
+}
+.confirm-posting-container .confirm-posting-table thead tr th.no-column {
+    width: 5%;
+}
+.confirm-posting-container .confirm-posting-table thead tr th.job-posting-name {
+    width: 18%;
+}
+.confirm-posting-container .confirm-posting-table thead tr th.address {
+    width: 24%;
+}
+.confirm-posting-container .confirm-posting-table thead tr th.rating {
+    width: 17%;
+}
+.confirm-posting-container .confirm-posting-table thead tr th.number-of-workers {
+    width: 9%;
+    padding: 0 1%;
+}
+.confirm-posting-container .confirm-posting-table thead tr th.salary {
+    width: 10%;
+    padding: 0 1%;
+}
+.confirm-posting-container .confirm-posting-table thead tr th.total-salary {
+    width: 11%;
+    padding: 0 1%;
+}
+
+
+.confirm-posting-container .confirm-posting-table tbody{
+    /* background-color: #2A9DF4;
+    color: white; */
+}
+.confirm-posting-container .confirm-posting-table tbody tr{
+    width: 100%;
+}
+.confirm-posting-container .confirm-posting-table tbody tr td{
+    border: 1px solid #d3d3d3;
+    padding: 3% 0;
+}
+.confirm-posting-container .confirm-posting-table tbody tr td.no-column {
+    width: 5%;
+    text-align: center;
+}
+.confirm-posting-container .confirm-posting-table tbody tr td.job-posting-name {
+    width: 14%;
+    padding: 0 2%;
+}
+.confirm-posting-container .confirm-posting-table tbody tr td.address {
+    width: 20%;
+    padding: 0 2%;
+}
+.confirm-posting-container .confirm-posting-table tbody tr td.rating {
+    width: 15%;
+    padding: 0 1%;
+    text-align: center;
+}
+.confirm-posting-container .confirm-posting-table tbody tr td.number-of-workers {
+    width: 11%;
+    text-align: center;
+}
+.confirm-posting-container .confirm-posting-table tbody tr td.salary {
+    width: 12%;
+    text-align: center;
+}
+.confirm-posting-container .confirm-posting-table tbody tr td.total-salary {
+    width: 13%;
+    text-align: center;
+}
+
+
+.confirm-posting-container .total-amount{
+    width: 100%;
+    text-align: right;
+    font-size: 20px;
+    font-weight: 420;
+    color:#e00430;
+}
+.confirm-posting-container .total-amount .break-line{
+    display: none;
+}
+
+@media (max-width: 1240px) {
+    .confirm-posting-container .confirm-posting-table tbody tr td.rating {
+        width: 9%;
+        padding: 0 3%;
+    }
+}
+@media (max-width: 1180px) {
+    .confirm-posting-container .confirm-posting-table tbody tr td{
+        padding: 5% 0;
+    }
+}
+@media (max-width: 980px) {
+    .confirm-posting-container .confirm-posting-table tbody tr td.rating {
+        width: 13%;
+        padding: 0 1%;
+    }
+}
+@media (max-width: 900px) {
+    .confirm-posting-container .confirm-posting-whole-table{
+        overflow-x: auto;
+    }
+    .confirm-posting-container .confirm-posting-header .start-end-date p{
+        font-size: 18px;
+        margin: 2% 0 3%;
+    }
+    .confirm-posting-container .confirm-posting-whole-table .confirm-posting-table {
+        min-width: 900px; /* Đảm bảo bảng không bị co lại quá nhỏ */
+    }
+    .confirm-posting-container .confirm-posting-table tbody tr td{
+        padding: 3% 0;
+    }
+    .confirm-posting-container .confirm-posting-table tbody tr td.rating {
+        width: 13%;
+        padding: 0 1%;
+    }
+}
+@media (max-width: 600px) {
+    .confirm-posting-container .confirm-posting-header .start-end-date{
+        flex-wrap: wrap
+    }
+    .confirm-posting-container .confirm-posting-header .start-end-date p{
+        width: 100%;
+        margin: 2% 0;
+    }
+    .confirm-posting-container .confirm-posting-whole-table{
+        margin-top: 3%
+    }
+    .confirm-posting-container .total-amount .break-line{
+        display: block;
+    }
+}

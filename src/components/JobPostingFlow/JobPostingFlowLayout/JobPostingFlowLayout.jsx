@@ -125,7 +125,10 @@ const JobPostingFlowLayout = () => {
       title: 'Confirm Posting',
       content:
         <ConfirmPosting
-        // numberOfJobPostings={jobGroup.numberOfJobPostings}
+        jobGroupName ={jobGroup.jobGroupName}
+        startDate={dayjs(jobGroup.startDate).format('DD/MM/YYYY')} 
+        endDate={dayjs(jobGroup.endDate).format('DD/MM/YYYY')}  
+        jobPostings={jobPostings}
         />,
     },
   ]

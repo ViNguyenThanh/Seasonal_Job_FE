@@ -270,7 +270,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
 
         <div className='job-postings-info'>
           <div className="job-postings-number-of-people">
-            <p className='title'><span>*</span> Number of people recruited: </p>
+            <p className='title'><span>*</span> Number of workers: </p>
             <Form.Item
               validateStatus={formik.errors.numberOfPeople && formik.touched.numberOfPeople ? "error" : ""}
               help={formik.errors.numberOfPeople && formik.touched.numberOfPeople ? formik.errors.numberOfPeople : ""}
@@ -365,13 +365,26 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
       </p>
 
       <div className="creating-new-job-postings-collapse">
-        <Collapse activeKey={activeKeys} onChange={handleCollapseChange} expandIconPosition="right">
+        {/* ko sai nhưng để cái này bị warning 
+          Những cảnh báo này chỉ ra rằng một số thuộc tính bạn đang sử dụng đã bị lỗi thời 
+          và sẽ bị loại bỏ trong phiên bản chính tiếp theo*/}
+        {/* <Collapse activeKey={activeKeys} onChange={handleCollapseChange} expandIconPosition="end">
           {Array.from({ length: numberOfJobPostings }).map((_, index) => (
             <Panel header={`Job posting ${index + 1}`} key={index + 1}>
               {renderJobPostingForm(index)}
             </Panel>
           ))}
-        </Collapse>
+        </Collapse> */}
+        <Collapse
+          activeKey={activeKeys}
+          onChange={handleCollapseChange}
+          expandIconPosition="end"
+          items={Array.from({ length: numberOfJobPostings }).map((_, index) => ({
+            key: index + 1,  // Chú ý: `key` là bắt buộc
+            label: `Job posting ${index + 1}`,  // Tiêu đề của panel
+            children: renderJobPostingForm(index),  // Nội dung của panel
+          }))}
+        />
       </div>
 
     </div>
