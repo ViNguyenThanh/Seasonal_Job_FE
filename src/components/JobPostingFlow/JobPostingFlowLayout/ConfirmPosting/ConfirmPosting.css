@@ -164,6 +164,9 @@
     }
 }
 @media (max-width: 600px) {
+    .confirm-posting-container .confirm-posting-header h2{
+        padding: 2% 0;
+    }
     .confirm-posting-container .confirm-posting-header .start-end-date{
         flex-wrap: wrap
     }

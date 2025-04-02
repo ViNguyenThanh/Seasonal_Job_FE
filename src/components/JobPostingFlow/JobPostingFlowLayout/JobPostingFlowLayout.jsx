@@ -21,7 +21,6 @@ const JobPostingFlowLayout = () => {
     descriptionJobGroup: '',
   });
 
-  const [isJobGroupValid, setIsJobGroupValid] = useState(false);
 
   // const [jobPostings, setJobPostings] = useState({
   //   jobPostingName: '',
@@ -53,40 +52,35 @@ const JobPostingFlowLayout = () => {
     // console.log(submitCreatingNewJobGroup);
     // setCurrent(current + 1);
 
-    // const formattedStartDate = dayjs(jobGroup.startDate);
-    // const formattedEndDate = dayjs(jobGroup.endDate);
-    // console.log(formattedStartDate);  // In ngày bắt đầu
-    // console.log(formattedEndDate);
-    // // Cập nhật lại giá trị sau khi định dạng
-    // setJobGroup({
-    //   ...jobGroup,
-    //   startDate: formattedStartDate,
-    //   endDate: formattedEndDate,
-    // });
-
-    // Kiểm tra jobGroup lần đầu nếu chưa hợp lệ
-    if (isJobGroupValid === false) {
+    if (current === 0) {
       if (!jobGroup.jobGroupName || !jobGroup.startDate || !jobGroup.endDate /*|| !formattedStartDate || !formattedEndDate*/ || !jobGroup.numberOfJobPostings || !jobGroup.descriptionJobGroup) {
         message.error("Please fill in all information before going to the next step.");
+        // giữ cho ko bị tắt để chỉnh css
+        // message.error({
+        //   content: 'Please fill in all information before going to the next step.',
+        //   duration: 0, // Giữ thông báo hiển thị vô thời gian
+        // });
         return; // Dừng lại ở đây nếu dữ liệu jobGroup không hợp lệ
       } else {
-        // console.log(jobGroup)
-        setIsJobGroupValid(true); // Đánh dấu jobGroup hợp lệ sau lần kiểm tra đầu tiên
+        console.log(jobGroup)
         setCurrent(current + 1);
         window.scrollTo(0, 0);
       }
-
     }
 
-    if (isJobGroupValid === true) {
+    if (current === 1) {
       // Kiểm tra tất cả các job postings trong mảng
       for (let i = 0; i < jobPostings.length; i++) {
         const posting = jobPostings[i];
-        if (!posting.jobPostingName || !posting.address || !posting.city || !posting.district || parseInt(posting.district) === 0 || !posting.numberOfPeople || !posting.salary || !posting.rating || !posting.descriptionJobPosting) {
-          message.error("Please fill in all information before going to the next step.");
+        if (!posting.jobPostingName || !posting.address || !posting.city || parseInt(posting.city) === 0 || !posting.district || parseInt(posting.district) === 0 || !posting.ward || parseInt(posting.ward) === 0 || !posting.numberOfPeople || !posting.salary || !posting.rating || !posting.descriptionJobPosting) {
+          message.error("Please fill in all information before going to the next step.", 0);
           return; // Dừng lại ở đây nếu có mục job posting thiếu dữ liệu
-        }
-        // console.log(posting)
+        } 
+        // else {
+        //   setCurrent(current + 1);
+        //   window.scrollTo(0, 0);
+        // }
+        console.log(posting)
       }
 
       // Nếu tất cả job postings đều hợp lệ
@@ -96,7 +90,6 @@ const JobPostingFlowLayout = () => {
   };
 
   const prev = () => {
-    setIsJobGroupValid(false);
     setCurrent(current - 1);
     window.scrollTo(0, 0);
   };
@@ -125,10 +118,10 @@ const JobPostingFlowLayout = () => {
       title: 'Confirm Posting',
       content:
         <ConfirmPosting
-        jobGroupName ={jobGroup.jobGroupName}
-        startDate={dayjs(jobGroup.startDate).format('DD/MM/YYYY')} 
-        endDate={dayjs(jobGroup.endDate).format('DD/MM/YYYY')}  
-        jobPostings={jobPostings}
+          jobGroupName={jobGroup.jobGroupName}
+          startDate={dayjs(jobGroup.startDate).format('DD/MM/YYYY')}
+          endDate={dayjs(jobGroup.endDate).format('DD/MM/YYYY')}
+          jobPostings={jobPostings}
         />,
     },
   ]
