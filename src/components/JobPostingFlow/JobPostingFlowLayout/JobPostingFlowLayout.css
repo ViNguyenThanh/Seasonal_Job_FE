@@ -155,10 +155,15 @@
     font-size: 17px !important;
     margin-top: 1%;
 }
- .anticon-check-circle svg{
+.ant-message-notice-content .anticon-check-circle svg{
     width: 25px !important;
     height: 25px !important;
     fill: green !important;
+}
+.ant-message-notice-content .anticon-close-circle svg{
+    width: 25px !important;
+    height: 25px !important;
+    fill: red !important;
 }
 
 @media (max-width: 750px) {

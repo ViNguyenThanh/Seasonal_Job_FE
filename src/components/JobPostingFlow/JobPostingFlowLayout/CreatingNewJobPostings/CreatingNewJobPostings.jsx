@@ -10,7 +10,8 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
   const [cityList, setCityList] = useState([]);
   // bỏ => nếu không district không riêng biệt index với các field city khác nhau
   // const [districtList, setDistrictList] = useState([]);
-  const [districtList, setDistrictList] = useState({});
+  const [districtList, setDistrictList] = useState({}); // Lưu district theo index
+  const [wardList, setWardList] = useState({});  // Lưu ward theo index
   const [activeKeys, setActiveKeys] = useState([]);  // Khai báo activeKeys
   // const previousDistrictValue = useRef(null);
   // const previousCityValue = useRef(null);
@@ -34,6 +35,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         address: jobPostings[index]?.address || '',
         city: jobPostings[index]?.city || '',
         district: jobPostings[index]?.district || '',
+        ward: jobPostings[index]?.ward || '',
         numberOfPeople: jobPostings[index]?.numberOfPeople || '',
         salary: jobPostings[index]?.salary || '',
         rating: jobPostings[index]?.rating || '',
@@ -85,6 +87,9 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
           .required("* Required"),
         district: Yup.string()
           .notOneOf(["0"], "* District must be selected")
+          .required("* Required"),
+        ward: Yup.string()
+          .notOneOf(["0"], "* Ward must be selected")
           .required("* Required"),
         numberOfPeople: Yup.number()
           .required("* Required"),
@@ -147,6 +152,31 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
     }, [formik.values.city, cityList, index]); // Re-run when city or cityList changes
 
     useEffect(() => {
+      const selectedDistrict = districtList[index]?.find(district => district.full_name === formik.values.district);
+      if (selectedDistrict) {
+        fetch(`https://esgoo.net/api-tinhthanh/3/${selectedDistrict.id}.htm`)
+          .then((response) => response.json())
+          .then((wardData) => {
+            if (wardData.error === 0) {
+              // Lưu ward theo index của job posting
+              setWardList((prevWardLists) => ({
+                ...prevWardLists,
+                [index]: wardData.data, // Lưu theo index của job posting
+              }));
+              // formik.setFieldValue('ward', '0'); // Reset Ward khi district thay đổi
+            }
+          });
+      }
+      else {
+        setWardList((prevWardLists) => ({
+          ...prevWardLists,
+          [index]: [], // Lưu theo index của job posting
+        }));
+        // formik.setFieldValue('ward', '0');
+      }
+    }, [formik.values.district, districtList, index]); // Khi district thay đổi
+
+    useEffect(() => {
       setJobPostings((prevJobPostings = []) => { // Đảm bảo prevJobPostings là một mảng
         const updatedJobPostings = [...prevJobPostings];
         updatedJobPostings[index] = formik.values;
@@ -177,7 +207,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         </div>
 
         <div className='job-postings-field'>
-          <p className='title'><span>*</span> Address (Specific address): </p>
+          <p className='title'><span>*</span> Address (House number): </p>
           <Form.Item
             validateStatus={formik.errors.address && formik.touched.address ? "error" : ""}
             help={formik.errors.address && formik.touched.address ? formik.errors.address : ""}
@@ -197,7 +227,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         </div>
 
         <div className='job-postings-info'>
-          <div className="job-postings-city-district">
+          <div className="job-postings-address">
             <p className='title'><span>*</span> City: </p>
             <Form.Item
               validateStatus={formik.errors.city && formik.touched.city ? "error" : ""}
@@ -216,8 +246,10 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 onChange={(value) => {
                   formik.setFieldValue("city", value);
                   formik.setFieldValue("district", '0'); // Reset district về '0' khi city thay đổi
+                  formik.setFieldValue("ward", '0');
                 }}
                 onBlur={() => formik.setFieldTouched("city", true)}
+                allowClear
               >
                 <Select.Option value="0" disabled>
                   Select Province/City
@@ -232,7 +264,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
             </Form.Item>
           </div>
 
-          <div className='job-postings-city-district'>
+          <div className='job-postings-address'>
             <p className='title'><span>*</span> District: </p>
             <Form.Item
               validateStatus={formik.errors.district && formik.touched.district ? "error" : ""}
@@ -247,9 +279,15 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 }}
                 placeholder="Select District"
                 value={formik.values.district || undefined}
-                onChange={(value) => formik.setFieldValue("district", value)}
+                // onChange={(value) => formik.setFieldValue("district", value)}
+                onChange={(value) => {
+                  formik.setFieldValue("district", value);
+                  formik.setFieldValue("ward", '0');
+                }}
                 onBlur={() => formik.setFieldTouched("district", true)}
-                disabled={!formik.values.city} // Vô hiệu hóa nếu chưa chọn tỉnh/thành
+                // disabled={!formik.values.city} // Vô hiệu hóa nếu chưa chọn tỉnh/thành
+                disabled={!formik.values.city || formik.values.city === '0'} 
+                allowClear
               >
                 <Select.Option value="0" disabled>
                   Select District
@@ -260,6 +298,38 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 {districtList[index]?.map((district) => (
                   <Select.Option key={district.full_name} value={district.full_name}>
                     {district.full_name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </div>
+
+          <div className='job-postings-address'>
+            <p className='title'><span>*</span> Ward: </p>
+            <Form.Item
+              validateStatus={formik.errors.ward && formik.touched.ward ? "error" : ""}
+              help={formik.errors.ward && formik.touched.ward ? formik.errors.ward : ""}
+            >
+              <Select
+                style={{
+                  width: '100%',
+                  margin: '0% 0 1%',
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                placeholder="Select Ward"
+                value={formik.values.ward || undefined}
+                onChange={(value) => formik.setFieldValue("ward", value)}
+                onBlur={() => formik.setFieldTouched("ward", true)}
+                disabled={!formik.values.city || !formik.values.district || formik.values.city === '0' || formik.values.district === '0'} 
+                allowClear
+              >
+                <Select.Option value="0" disabled>
+                  Select Ward
+                </Select.Option>
+                {wardList[index]?.map((ward) => (  // Dùng index để lấy danh sách ward đúng
+                  <Select.Option key={ward.full_name} value={ward.full_name}>
+                    {ward.full_name}
                   </Select.Option>
                 ))}
               </Select>
@@ -357,6 +427,18 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
       </form>
     );
   };
+
+  // Nếu ban đầu numberOfJobPostings là 2, tạo ra mảng jobPostings có 2 phần tử
+  // và sửa lại numberOfJobPostings là 1 thì mảng jobPostings vẫn còn 2 phần tử
+  // => sai logic
+  // Sửa: Nếu numberOfJobPostings nhỏ hơn số lượng phần tử trong jobPostings
+  // => cắt mảng jobPostings để chỉ giữ lại số lượng phần tử tương ứng với numberOfJobPostings.
+  // slice(0, numberOfJobPostings) giúp giữ lại phần tử từ index 0 đến index numberOfJobPostings - 1.
+  useEffect(() => {
+    if (numberOfJobPostings < jobPostings.length) {
+      setJobPostings(prevJobPostings => prevJobPostings.slice(0, numberOfJobPostings));
+    }
+  }, [numberOfJobPostings, jobPostings, setJobPostings]);
 
   return (
     <div className='creating-new-job-postings-container'>

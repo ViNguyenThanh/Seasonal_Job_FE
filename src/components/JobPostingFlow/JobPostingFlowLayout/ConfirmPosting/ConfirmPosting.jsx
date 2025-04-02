@@ -57,7 +57,7 @@ const ConfirmPosting = ({jobGroupName, startDate, endDate, jobPostings}) => {
               <tr key={index}>
                 <td className="no-column">{index + 1}</td>
                 <td className="job-posting-name">{job.jobPostingName}</td>
-                <td className="address">{job.address}, {job.district}, {job.city}</td>
+                <td className="address">{job.address}, {job.ward}, {job.district}, {job.city}</td>
                 <td className="rating"><Rate disabled allowHalf defaultValue={job.rating} /></td>
                 <td className="number-of-workers">{job.numberOfPeople}</td>
                 <td className="salary">{job.salary.toLocaleString('vi-VN')}</td>
