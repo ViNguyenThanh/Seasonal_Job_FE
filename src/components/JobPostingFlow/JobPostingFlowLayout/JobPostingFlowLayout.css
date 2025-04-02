@@ -69,6 +69,14 @@
     font-weight: bold !important;
     color: #767676 !important;
 }
+.job-posting-flow-layout-content .ant-steps .ant-steps-item-wait>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 18px;
+}
+.job-posting-flow-layout-content .ant-steps .ant-steps-item-process>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title {
+    color: rgba(0, 0, 0, 0.88);
+    font-size: 18px;
+}
 /* chỉnh màu của steps hiện tại */
 .job-posting-flow-layout-content .ant-steps .ant-steps-item-process .ant-steps-item-icon {
     background-color: #FFCD37;
@@ -134,14 +142,25 @@
     border: none;
 }
 
-@media (max-width: 950px) {
-    .job-posting-flow-layout-content .ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
-        display: inline-flex;
-        flex-wrap: wrap !important;
-        flex-direction: column;
-    }
-    
+/* chỉnh message error khi bấm next*/
+/* .ant-message{
+    font-size: 15px !important;
+    color: red;
+} */
+/* chỉnh thông báo hoàn thành steps, vì thông báo hiện ra ko nằm trong class cha nên ko đc để trước mấy class này, không nó không ăn được thuộc tính*/
+.ant-message-notice-content {
+    display: flex;
+    align-items: center;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 17px !important;
+    margin-top: 1%;
 }
+ .anticon-check-circle svg{
+    width: 25px !important;
+    height: 25px !important;
+    fill: green !important;
+}
+
 @media (max-width: 750px) {
     .job-posting-flow-layout-content .ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
         background-color: #FFCD37 !important;

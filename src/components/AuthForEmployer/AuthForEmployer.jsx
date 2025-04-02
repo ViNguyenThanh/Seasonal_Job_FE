@@ -315,9 +315,19 @@ const AuthForEmployer = ({ comp }) => {
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                 }}
-                                                placeholder="Select Province/City"
+                                                // placeholder="Select Province/City"
+                                                placeholder={
+                                                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                        <EnvironmentOutlined />
+                                                        Select Province/City
+                                                    </span>
+                                                }
                                                 value={formik.values.city || undefined}
-                                                onChange={(value) => formik.setFieldValue("city", value)}
+                                                // onChange={(value) => formik.setFieldValue("city", value)}
+                                                onChange={(value) => {
+                                                    formik.setFieldValue("city", value);
+                                                    formik.setFieldValue("district", '0'); // Reset district về '0' khi city thay đổi
+                                                }}
                                                 onBlur={() => formik.setFieldTouched("city", true)}
                                             // options={cityList.map((city) => ({
                                             //     label: city.full_name,
@@ -325,7 +335,10 @@ const AuthForEmployer = ({ comp }) => {
                                             // }))}
                                             >
                                                 <Select.Option value="0" disabled>
-                                                    Select Province/City
+                                                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                        <EnvironmentOutlined />
+                                                        Select Province/City
+                                                    </span>
                                                 </Select.Option>
 
                                                 {/* Danh sách tỉnh/thành từ API */}
@@ -361,7 +374,10 @@ const AuthForEmployer = ({ comp }) => {
                                                 disabled={!formik.values.city} // Vô hiệu hóa nếu chưa chọn tỉnh/thành
                                             >
                                                 <Select.Option value="0" disabled>
-                                                    Select District
+                                                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                        <AimOutlined />
+                                                        Select District
+                                                    </span>
                                                 </Select.Option>
 
                                                 {/* Danh sách quận/huyện dựa trên tỉnh đã chọn */}

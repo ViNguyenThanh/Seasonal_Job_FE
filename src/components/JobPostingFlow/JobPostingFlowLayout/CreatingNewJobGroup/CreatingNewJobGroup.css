@@ -4,7 +4,7 @@
 }
 
 .creating-new-job-group-container p{
-    font-size: 18px;
+    font-size: 19px;
 }
 .creating-new-job-group-container p .warning{
     font-size: 28px;
@@ -31,7 +31,7 @@
 
 .creating-new-job-group-form .job-group-field .title {
     font-weight: 500;
-    font-size: 16px;
+    font-size: 17px;
     margin: 10px 0;
 }
 .creating-new-job-group-form .job-group-field .title span{
@@ -40,12 +40,12 @@
 .creating-new-job-group-form .job-group-field .input {
     padding-left: 3%;
     font-family: var(--font-oswald);
-    font-size: 15px;
+    font-size: 16px;
 }
 /* chỉnh message error */
 .creating-new-job-group-form .job-group-field .ant-form-item .ant-form-item-explain-error {
     color: red;
-    font-size: 15px;
+    font-size: 16px;
     padding: 1% 0;
 }
 
@@ -56,30 +56,32 @@
     align-items: baseline;
 }
 
-.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting{
+.creating-new-job-group-form .job-group-info .job-group-number-of-job-posting{
     width: 50%;
     display: flex;
     align-items: baseline;
 }
-.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .title {
+.creating-new-job-group-form .job-group-info .job-group-number-of-job-posting .title {
     font-weight: 500;
-    font-size: 16px;
+    font-size: 17px;
     margin: 10px 0;
 }
-.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .title span{
+.creating-new-job-group-form .job-group-info .job-group-number-of-job-posting .title span{
     color: red
 }
-.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .input {
+.creating-new-job-group-form .job-group-info .job-group-number-of-job-posting .input {
     margin-left: 7%;
     padding-left: 6%;
-    width: 40% !important;
+    width: 50% !important;
+    font-size: 16px;
+}
+.creating-new-job-group-form .job-group-info .job-group-number-of-job-posting .ant-input-number .ant-input-number-input {
     font-family: var(--font-oswald);
-    font-size: 15px;
 }
 /* chỉnh message error */
-.creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .ant-form-item .ant-form-item-explain-error {
+.creating-new-job-group-form .job-group-info .job-group-number-of-job-posting .ant-form-item .ant-form-item-explain-error {
     color: red;
-    font-size: 15px;
+    font-size: 16px;
     padding: 1% 0;
 }
 
@@ -90,7 +92,7 @@
 }
 .creating-new-job-group-form .job-group-info .job-group-start-end-date .title {
     font-weight: 500;
-    font-size: 16px;
+    font-size: 17px;
     margin: 10px 0;
 }
 .creating-new-job-group-form .job-group-info .job-group-start-end-date .title span{
@@ -101,24 +103,39 @@
     padding-left: 7%;
     /* width: 40% !important; */
     font-family: var(--font-oswald);
-    font-size: 15px;
+    font-size: 16px;
 }
 /* chỉnh message error */
 .creating-new-job-group-form .job-group-info .job-group-start-end-date .ant-form-item .ant-form-item-explain-error {
     color: red;
-    font-size: 15px;
+    font-size: 16px;
     padding: 1% 0;
+}
+
+/* chỉnh font chữ cho description */
+.creating-new-job-group-form .job-group-field .ant-input-textarea-affix-wrapper.ant-input-affix-wrapper >textarea.ant-input {
+    font-family: var(--font-oswald);
+    font-size: 16px;
+    padding-left: 3%;
 }
 
 @media (max-width: 1250px){
     .creating-new-job-group-form .job-group-info {
         flex-wrap: wrap;
     }
-    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting{
+    .creating-new-job-group-form .job-group-info .job-group-number-of-job-posting{
         width: 100%;
     }
     .creating-new-job-group-form .job-group-info .job-group-start-end-date{
         width: 100%;
+    }
+}
+@media (max-width: 950px) {
+    /* vì nó là class bấm vào field mới hiện ra nên ko thể .creating-new-job-group-form  làm cha đc */
+    .ant-picker-dropdown .ant-picker-panel-container .ant-picker-panels {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        flex-direction: column;
     }
 }
 @media (max-width: 800px) {
@@ -148,23 +165,23 @@
     .creating-new-job-group-container {
         margin: 0 5% 10%;
     }
-    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting{
+    .creating-new-job-group-form .job-group-info .job-group-number-of-job-posting{
         align-items: baseline;
         flex-wrap: wrap;
     }
-    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .title {
+    .creating-new-job-group-form .job-group-info .job-group-number-of-job-posting .title {
         width: 100%;
         margin-right: 2%;
     }
-    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .ant-form-item .ant-form-item-control-input-content {
+    .creating-new-job-group-form .job-group-info .job-group-number-of-job-posting .ant-form-item .ant-form-item-control-input-content {
         max-width: 50% !important;
         display: flex;
     }
-    .creating-new-job-group-form .job-group-info .jop-group-number-of-job-posting .input {
+    .creating-new-job-group-form .job-group-info .job-group-number-of-job-posting .input {
         margin-left: 0%;
         padding-left: 6%;
         width: 100% !important;
         font-family: var(--font-oswald);
-        font-size: 15px;
+        font-size: 16px;
     }
 }

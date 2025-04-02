@@ -62,7 +62,7 @@ const PostingNotifications = () => {
                         <span className='blue'>• You must pay the full amount and deposit in one transaction before the job posting is posted.</span> <br />
                         <span className='warning'>⚠️</span> <span className='yellow'>Important: </span> Your job posting will only be posted
                         after the payment is completed. Please double check all the details before proceeding! This amount will be
-                        temporarily locked when starting the job, after the job is completed and confirmed by both parties, this amount
+                        temporarily locked when starting the <span className='purple'>Job Group</span>, after the <span className='purple'>Job Group</span> is completed and confirmed by both parties, this amount
                         will be unlocked and then the salary will be paid. <br />
                         <br />
                         <span className='icon'>📞</span> If you have any questions, please contact our support team: <span className='blue'>Mr. Kiet: 0903334554</span> <br />
