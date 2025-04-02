@@ -100,6 +100,11 @@
     align-items: center;
 }
 
+.header-right-items {
+    display: flex;
+    gap: 20px;
+}
+
 .header-right li {
     list-style-type: none;
     cursor: pointer;
@@ -239,4 +244,11 @@
     .header-right li::after {
         height: 3px
     }
+
+
+    .dropdown-btn.user-logged-in {
+        align-items: center;
+        justify-content: space-between;
+    }
+
 }
