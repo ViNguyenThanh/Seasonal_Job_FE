@@ -17,6 +17,7 @@ import PostingNotifications from './components/JobPostingFlow/PostingNotificatio
 import JobPostingFlowLayout from './components/JobPostingFlow/JobPostingFlowLayout/JobPostingFlowLayout'
 
 import CompanyDetail from './pages/CompanyDetail/CompanyDetail'
+import EmployerHome from './pages/EmployerHome/EmployerHome'
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/employer-home" element={<EmployerHome />} />
 
         {/* Auth */}
         <Route path="/login-for-worker" element={<LoginForWorker />} />
