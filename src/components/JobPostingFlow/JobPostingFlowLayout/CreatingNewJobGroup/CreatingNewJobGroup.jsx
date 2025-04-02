@@ -3,7 +3,6 @@ import './CreatingNewJobGroup.css'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { DatePicker, Form, Input, InputNumber } from 'antd';
-import { AimOutlined, EnvironmentOutlined, HomeFilled, IdcardOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
 const { RangePicker } = DatePicker;
 import dayjs from 'dayjs';
@@ -12,6 +11,7 @@ const { TextArea } = Input;
 const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }) => {
 
     const formik = useFormik({
+        enableReinitialize: true, 
         initialValues: {
             jobGroupName: jobGroup.jobGroupName || '',
             startDate: jobGroup.startDate || '',
@@ -51,10 +51,12 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
                 })
                 .max(60, "* Job Group Name cannot be longer than 60 characters")
                 .required("* Required"),
-            startDate: Yup.date()
-                .required("* Required"),
-            endDate: Yup.date()
-                .required("* Required"),
+            // startDate: Yup.string()
+            //     .required("* Required"),
+            // endDate: Yup.string()
+            //     .required("* Required"),
+            startDate: Yup.date().required("* Required"),
+            endDate: Yup.date().required("* Required"),
             // ko xài nữa tại có hàm để check r
             // .test("max-30-days", "* Date range cannot exceed 30 days", function (value) {
             //     const { startDate } = this.parent;
@@ -80,7 +82,11 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
             // console.log("isValid: ", formik.isValid);
 
             // onSubmit(true); // Gửi trạng thái hợp lệ lên cha khi submit thành công
+
+
             // alert(`startDate: ${values.startDate}`);
+            
+            console.log(values.startDate)
         },
     });
 
@@ -144,7 +150,6 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
                             className='input'
                             size="large"
                             placeholder="Input Job Group Name here..."
-                            // prefix={<MailOutlined />}
                             id="jobGroupName"
                             name="jobGroupName"
                             type="text"
@@ -156,7 +161,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
                 </div>
 
                 <div className='job-group-info'>
-                    <div className="jop-group-number-of-job-posting">
+                    <div className="job-group-number-of-job-posting">
                         <p className='title'><span>*</span> Number of Job Posting: </p>
                         <Form.Item
                             validateStatus={formik.errors.numberOfJobPostings && formik.touched.numberOfJobPostings ? "error" : ""}
@@ -206,14 +211,18 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
                             <RangePicker
                                 className='input'
                                 size="large"
-                                format="DD-MM-YYYY"
+                                format="DD/MM/YYYY"
                                 disabledDate={disabled30DaysDate}
-                                // đã sử dụng onChange để cập nhật formik.values.startDate và formik.values.endDate:
-                                // => antd tự động cập nhật state bên trong RangePicker, nên ko cần để value nữa 
                                 onChange={(dates) => {
+                                    // console.log(dates);
                                     formik.setFieldValue("startDate", dates ? dates[0] : null);
                                     formik.setFieldValue("endDate", dates ? dates[1] : null);
                                 }}
+                                // onChange={(dates) => {
+                                //     // Chuyển đổi ngày thành dạng chuỗi nếu cần thiết
+                                //     formik.setFieldValue("startDate", dates ? dates[0].format("DD/MM/YYYY") : '');
+                                //     formik.setFieldValue("endDate", dates ? dates[1].format("DD/MM/YYYY") : '');
+                                // }}
                                 // Ko sd onOpenChange vì nó chạy khi đóng, nhưng không đảm bảo người dùng thực sự rời khỏi ô nhập
                                 // vì RangePicker không có sự kiện onBlur trực tiếp nên phải viết ra 
                                 onBlur={() => {
@@ -223,6 +232,12 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
                                         formik.setFieldError("endDate", "* Required");
                                     }
                                 }}
+                                // trong antd defaultValue mới cho phép giá trị null hoặc undefined
+                                // chứ value chỉ cho set date chứ không cho phép giá trị null hoặc undefined
+                                defaultValue={[
+                                    formik.values.startDate ? dayjs(formik.values.startDate) : null,
+                                    formik.values.endDate ? dayjs(formik.values.endDate) : null
+                                ]}
                             />
                         </Form.Item>
                     </div>
@@ -240,7 +255,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
                             rows={10}
                             id="descriptionJobGroup"
                             name="descriptionJobGroup"
-                            placeholder="Enter job group description..."
+                            placeholder="Enter Job Group Description here..."
                             style={{ height: 200, resize: 'none' }}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}

@@ -1,0 +1,134 @@
+.platform-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 50px;
+    margin-bottom: 100px;
+}
+
+.platform-container .platform-title {
+    width: 100%;
+    text-align: center;
+    margin: 0 20px;
+}
+
+.platform-container .platform-title p {
+    margin: 20px 0 0 0;
+}
+
+.platform-container .platform-title h2 {
+    margin: 40px 0 0 0;
+    font-size: 50px;
+    background: url('/assets/background_home_page_platform.jpg') center;
+    background-size: cover;
+    background-clip: text;
+    color: transparent;
+    animation: animate-for-platform 10s ease-in-out infinite alternate;
+}
+
+@keyframes animate-for-platform {
+    from {
+        background-position: 0px;
+    }
+    to {
+        background-position: -200px;
+    }
+}
+
+.platform-container .platform-list-card {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 100px;
+}
+
+.platform-list-card .platform-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 100px 10px 5px;
+    width: 300px;
+    height: 200px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 5px solid rgba(42, 157, 244, 0.75);
+    /* box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); */
+    /* transition: transform 0.7s ease, box-shadow 0.3s ease; */
+    transition: 0.5s all;
+}
+
+.platform-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 8px 20px rgba(42, 157, 244, 0.3);
+}
+
+.platform-card:hover .platform-card-icon {
+    transform: rotateY(180deg); /* Xoay icon 360 độ khi hover vào card */
+    /* background-color: rgba(42, 157, 244, 1); */
+    background: linear-gradient(to right, #e896ca, rgba(42, 157, 244, 1));
+    color: white;
+    transition: all 0.5s ease-in-out;
+    border: none;
+}
+
+.platform-card .platform-card-icon {
+    position: absolute;
+    top: -50px;
+    font-size: 40px;
+    padding: 15px;
+    background-color: white;
+    border: 5px solid rgba(42, 157, 244, 0.75);
+    display: flex;
+    justify-content: center;
+    border-radius: 50% 10% 50% 10%;
+    width: 100px;
+    height: 100px;
+    transition: all 0.5s ease-in-out;
+}
+
+
+.platform-card .platform-card-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+    color: rgba(42, 157, 244, 0.75);
+}
+
+.platform-card .platform-card-content {
+    text-align: center;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+@media (max-width: 1050px) {
+    .platform-container .platform-list-card {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .platform-list-card .platform-card {
+        width: 100%;
+        height: auto;
+        margin: 5% 10%;
+        padding: 20px 50px;
+    }
+
+    .platform-card .platform-card-icon {
+        border-radius: 30% 70% / 70% 30%;
+        left: -50px;
+        top: 50%;
+        font-size: 30px;
+        padding: 10px;
+        width: 80px;
+        height: 80px;
+        transform: translateY(-50%);
+    }
+
+    .platform-card .platform-card-content {
+        text-align: start;
+        width: 90%;
+        padding: 0 0 0 10%;
+    }
+}
