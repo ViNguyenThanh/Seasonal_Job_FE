@@ -2,11 +2,31 @@ import React, { useEffect, useState } from 'react'
 import './Header.css'
 import logo from '/assets/logo.png'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Button, Dropdown, Menu } from 'antd'
-import { MenuOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Button, Dropdown, Menu, message, Space } from 'antd'
+import { AppstoreAddOutlined, BellOutlined, BulbOutlined, FileOutlined, LogoutOutlined, MenuOutlined, UserOutlined, WalletOutlined } from '@ant-design/icons';
+import { loadFromLocalstorage } from '../../utils/Localstorage'
+import { getUserFromToken } from '../../utils/Token'
+import { userApi } from '../../apis/user.request'
+import { logout } from '../../apis/auth.request'
 
 
 const Header = () => {
+    const { user } = getUserFromToken();
+    const [userInfor, setUserInfo] = useState({});
+
+    useEffect(() => {
+        const getUserInfo = async () => {
+            try {
+                const res = await userApi.getUserById(user.id);
+                setUserInfo(res.data.data);
+                // console.log(res.data.data);
+                
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getUserInfo();
+    }, []);
 
     const navigate = useNavigate()
     const location = useLocation()
@@ -58,25 +78,94 @@ const Header = () => {
     }, []);
 
 
-    const menu = (
-        <Menu
-            items={[
-                { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
-                { key: '2', label: 'Resume & CV' },
-                { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div>},
-                { key: 'divider', type: 'divider' },
-                { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>For Employer</div> },
-                { key: '5', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div>},
-            ]}
-        />
-    );
+    // const menu = (
+    //     <Menu
+    //         items={[
+    //             { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
+    //             { key: '2', label: 'Resume & CV' },
+    //             { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div> },
+    //             { key: 'divider', type: 'divider' },
+    //             { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>For Employer</div> },
+    //             { key: '5', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
+    //         ]}
+    //     />
+    // );
+    const menuItems = [
+        { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
+        { key: '2', label: 'Resume & CV' },
+        { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div> },
+        { key: 'divider', type: 'divider' },
+        { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>For Employer</div> },
+        { key: '5', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
+    ];
+    // Nếu có user, bỏ các mục key: 'divider', key: '4', key: '5' ra khỏi menuItems
+    useEffect(() => {
+        if (user) {
+            const updatedMenuItems = menuItems.filter(item => item.key !== 'divider' && item.key !== '4' && item.key !== '5');
+            // Cập nhật lại menuItems nếu có user
+            menuItems.length = 0;
+            menuItems.push(...updatedMenuItems);
+        }
+    }, [user]);
 
+    const handleLogout = () => {
+        logout("token");
+        message.success("Logout successfully!");
+        navigate("/");
+    }
+
+    const itemsUser = [
+        {
+            label: "Profile",
+            key: '1',
+            icon: <UserOutlined />,
+            // onClick: () => { navigate('/admin/admin-home') },
+        },
+        {
+            label: "CV attachment",
+            key: '2',
+            icon: <FileOutlined />,
+            // onClick: handleLogout,
+        },
+        {
+            label: "Applications",
+            key: '3',
+            icon: <AppstoreAddOutlined />,
+            // onClick: handleLogout,
+        },
+        {
+            label: "My jobs",
+            key: '4',
+            icon: <BulbOutlined />,
+            // onClick: handleLogout,
+        },
+        {
+            label: "Wallet & transaction",
+            key: '5',
+            icon: <WalletOutlined />,
+            // onClick: handleLogout,
+        },
+        {
+            label: "Log out",
+            key: '6',
+            icon: <LogoutOutlined />,
+            onClick: handleLogout,
+        },
+    ];
 
     return (
         <div className={`header-whole-container ${showHeader ? 'show' : ''}`} >
             <div className={`header-container ${showHeader ? 'show-down' : ''}`}>
                 <div className="header-left">
-                    <img src={logo} className='header-logo' onClick={handleClick} />
+                    {!isMobile && (
+                        <img src={logo} className='header-logo' onClick={handleClick} />
+                    )}
+                    {/* <img src={logo} className='header-logo' onClick={handleClick} /> */}
+                    {isMobile && !user ? (
+                        <div className="header-left">
+                            <img src={logo} className='header-logo' onClick={handleClick} />
+                        </div>
+                    ) : null}
                     {!isMobile && (
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
                     )}
@@ -92,10 +181,32 @@ const Header = () => {
                     <li>Resume & CV</li>
                     <li>Companies</li> */}
                     {isMobile ? (
-                        <div className="dropdown-btn">
-                            <Dropdown menu={{ items: menu.props.items }} trigger={['click']} placement="bottomRight">
-                                <Button icon={<MenuOutlined />} type="primary" />
-                            </Dropdown>
+                        <div className={`dropdown-btn ${user ? 'user-logged-in' : ''}`}>
+                            {user ? (
+                                <>
+                                    <Dropdown menu={{ items: /*menu.props.items*/ menuItems }} trigger={['click']} placement="bottomRight">
+                                        <Button icon={<MenuOutlined />} type="primary" />
+                                    </Dropdown>
+                                    <img src={logo} className='header-logo' onClick={handleClick} />
+                                    <Dropdown menu={{ items: itemsUser }} trigger={['click']} className='dropdown' placement='bottom'
+                                        open={isDropdownVisible} // Kiểm soát trạng thái dropdown
+                                        onOpenChange={(visible) => setIsDropdownVisible(visible)} // Cập nhật trạng thái
+                                    >
+                                        <a onClick={(e) => e.preventDefault()}>
+                                            <Space>
+                                                <Avatar
+                                                    src={userInfor.avatar}
+                                                    style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
+                                                />
+                                            </Space>
+                                        </a>
+                                    </Dropdown>
+                                </>
+                            ) : (
+                                <Dropdown menu={{ items: /*menu.props.items*/ menuItems }} trigger={['click']} placement="bottomRight">
+                                    <Button icon={<MenuOutlined />} type="primary" />
+                                </Dropdown>
+                            )}
                         </div>
                     ) : (
                         <>
@@ -137,14 +248,35 @@ const Header = () => {
                             For Employer
                         </li>
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
-                        <li
-                            onClick={() => {
-                                navigate("/login-for-worker")
-                                window.scrollTo(0, 0);
-                            }}
-                        >
-                            Sign in / Sign Up
-                        </li>
+                        {user ? (
+                            <div className='header-right-items'>
+                                <Badge count={1}>
+                                    <Avatar size={'large'} shape="square" icon={<BellOutlined />} />
+                                </Badge>
+                                <Dropdown menu={{ items: itemsUser }} trigger={['click']} className='dropdown' placement='bottom'
+                                    open={isDropdownVisible} // Kiểm soát trạng thái dropdown
+                                    onOpenChange={(visible) => setIsDropdownVisible(visible)} // Cập nhật trạng thái
+                                >
+                                    <a onClick={(e) => e.preventDefault()}>
+                                        <Space>
+                                            <Avatar
+                                                src={userInfor.avatar}
+                                                style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
+                                            />
+                                        </Space>
+                                    </a>
+                                </Dropdown>
+                            </div>
+                        ) : (
+                            <li
+                                onClick={() => {
+                                    navigate("/login-for-worker")
+                                    window.scrollTo(0, 0);
+                                }}
+                            >
+                                Sign in / Sign Up
+                            </li>
+                        )}
                     </div>
                 )}
             </div>

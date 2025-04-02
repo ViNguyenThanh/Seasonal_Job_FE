@@ -5,9 +5,11 @@ import background_worker from '/assets/background_worker.gif'
 import logo from '/assets/logo.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Checkbox, Form, Input } from 'antd';
+import { Checkbox, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import google from '/assets/google.png'
+import { login, register } from '../../apis/auth.request';
+import { saveLocalstorage } from '../../utils/Localstorage';
 
 const AuthForWorker = ({ comp }) => {
   const [passwordVisible, setPasswordVisible] = useState(false)
@@ -44,8 +46,8 @@ const AuthForWorker = ({ comp }) => {
           .required("* Required")
         : Yup.string(),
       email: Yup.string()
-      .matches( /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "* Invalid Email")
-      .required('* Required'),
+        .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "* Invalid Email")
+        .required('* Required'),
       password: Yup.string().min(6, "* Password must be at least 6 characters or more").required("* Required"),
       confirmPassword:
         comp === "Register"
@@ -55,15 +57,56 @@ const AuthForWorker = ({ comp }) => {
           : Yup.string()
     }),
     onSubmit: async (values) => {
-      if (comp === "Register" && !checked) {
-        setShowCheckboxError(true);
-        return; // Dừng submit nếu checkbox chưa được chọn
+      message.open({
+        type: 'loading',
+        content: 'Please wait a moment',
+      })
+      try {
+        if (comp === "Register") {
+          if (!checked) {
+            message.destroy()
+            setShowCheckboxError(true);
+            return; // Dừng submit nếu checkbox chưa được chọn
+          }
+          const user = await register({
+            email: values.email,
+            password: values.password,
+            role: "user",
+            fullname: values.fullname
+          })
+          if(user.status == 201) {
+            message.destroy()
+            message.success("Register successfully!");
+            navigate("/login-for-worker");
+          }
+          // console.log(user);
+        } else if (comp === "Login") {
+          // console.log(values);
+          const user = await login({
+            identifier: values.email,
+            password: values.password
+          });
+          // console.log(user);
+          if(user.status == 200) {
+            message.destroy()
+            message.success("Login successfully!");
+            // console.log(user);
+            saveLocalstorage("token", user.data.token);
+            navigate("/");
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        message.destroy()
+        message.error(error.response.data.message);
       }
-      alert(`email: ${values.email}`);
+
     }
   });
 
   const onChange = (e) => {
+    // console.log('checked = ', e.target.checked);
+
     setChecked(e.target.checked);
     if (e.target.checked) setShowCheckboxError(false); // Xóa lỗi khi check lại
   };
