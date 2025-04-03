@@ -21,6 +21,8 @@ const JobPostingFlowLayout = () => {
     descriptionJobGroup: '',
   });
 
+  const [checkErrorJobGroup, setCheckErrorJobGroup] = useState(false);
+
 
   // const [jobPostings, setJobPostings] = useState({
   //   jobPostingName: '',
@@ -33,6 +35,7 @@ const JobPostingFlowLayout = () => {
   //   descriptionJobPosting: '',
   // })
   const [jobPostings, setJobPostings] = useState([]);
+  const [checkErrorJobPostings, setCheckErrorJobPostings] = useState(false);
 
   // mấy cái comment là bỏ hết, vì khi bấm Next thì chưa nhập gì nó hiện hết lỗi của formik đã bắt ra
   // nhưng sau khi hết lỗi formik rồi thì ko thể bấm Next được nữa (còn không thì nó Next đc nhưng ko check lỗi formik gì luôn)
@@ -60,7 +63,9 @@ const JobPostingFlowLayout = () => {
         //   content: 'Please fill in all information before going to the next step.',
         //   duration: 0, // Giữ thông báo hiển thị vô thời gian
         // });
-        return; // Dừng lại ở đây nếu dữ liệu jobGroup không hợp lệ
+        // return; // ko để return, nếu để thì ko check đc else if vì bị dừng r
+      } else if (checkErrorJobGroup){
+        message.error("Please correct the error before proceeding to the next step.");
       } else {
         console.log(jobGroup)
         setCurrent(current + 1);
@@ -75,12 +80,15 @@ const JobPostingFlowLayout = () => {
         if (!posting.jobPostingName || !posting.address || !posting.city || parseInt(posting.city) === 0 || !posting.district || parseInt(posting.district) === 0 || !posting.ward || parseInt(posting.ward) === 0 || !posting.numberOfPeople || !posting.salary || !posting.rating || !posting.descriptionJobPosting) {
           message.error("Please fill in all information before going to the next step.", 0);
           return; // Dừng lại ở đây nếu có mục job posting thiếu dữ liệu
-        } 
+        } else if (checkErrorJobPostings){
+          message.error("Please correct the error before proceeding to the next step.");
+          return; // Dừng lại ở đây nếu dữ liệu jobPostings không hợp lệ
+        }
         // else {
         //   setCurrent(current + 1);
         //   window.scrollTo(0, 0);
         // }
-        console.log(posting)
+        // console.log(posting)
       }
 
       // Nếu tất cả job postings đều hợp lệ
@@ -103,6 +111,7 @@ const JobPostingFlowLayout = () => {
           // onSubmit={(submit) => setSubmitCreatingNewJobGroup(() => submit)}
           jobGroup={jobGroup}
           setJobGroup={setJobGroup}
+          setCheckErrorJobGroup={setCheckErrorJobGroup}
         />,
     },
     {
@@ -112,6 +121,7 @@ const JobPostingFlowLayout = () => {
           numberOfJobPostings={jobGroup.numberOfJobPostings}
           jobPostings={jobPostings}
           setJobPostings={setJobPostings}
+          setCheckErrorJobPostings={setCheckErrorJobPostings}
         />,
     },
     {

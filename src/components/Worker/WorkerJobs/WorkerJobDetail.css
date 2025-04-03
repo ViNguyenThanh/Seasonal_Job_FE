@@ -1,0 +1,31 @@
+.worker-job-detail-container{
+    width: 90%;
+    margin-left: 2%;
+    padding: 2% 4% 5%;
+    background-color: white;
+    box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+    border-radius: 10px;
+    position: relative;
+}
+
+.worker-job-detail-container .go-back-btn{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 25px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.worker-job-detail-container .go-back-btn:hover{
+    color: rgb(109, 109, 109);
+    transition: 0.3s ease;
+}
+
+.worker-job-detail-container h1{
+    text-align: center;
+    margin: 0;
+    padding-bottom: 2%;
+    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
