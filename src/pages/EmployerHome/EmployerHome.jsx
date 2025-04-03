@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import './EmployerHome.css'
-import Header from '../../components/Header/Header'
+import EmployerHeader from '../../components/EmployerHeader/EmployerHeader';
 import Footer from '../../components/Footer/Footer'
 import { Typography, Button } from 'antd';
 const { Title, Paragraph } = Typography;
@@ -9,7 +9,7 @@ const { Title, Paragraph } = Typography;
 const EmployerHome = () => {
     return (
         <div className='employer-home-whole-container'>
-            <Header />
+            <EmployerHeader />
             <div className="employer-home-container">
 
                 <div className="employer-home-first-section">

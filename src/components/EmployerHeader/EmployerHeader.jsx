@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import './Header.css'
+import './EmployerHeader.css'
 import logo from '/assets/logo.png'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Avatar, Badge, Button, Dropdown, message, Space } from 'antd'
-import { AuditOutlined, BellOutlined, CreditCardOutlined, FileOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined,} from '@ant-design/icons';
+import { AuditOutlined, BellOutlined, CreditCardOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
 import { getUserFromToken } from '../../utils/Token'
 import { userApi } from '../../apis/user.request'
 import { logout } from '../../apis/auth.request'
 
 
-const Header = () => {
+const EmployerHeader = () => {
     const { user } = getUserFromToken();
     const [userInfor, setUserInfo] = useState({});
 
@@ -78,31 +78,17 @@ const Header = () => {
         };
     }, []);
 
-
-    // const menu = (
-    //     <Menu
-    //         items={[
-    //             { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
-    //             { key: '2', label: 'Resume & CV' },
-    //             { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div> },
-    //             { key: 'divider', type: 'divider' },
-    //             { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>For Employer</div> },
-    //             { key: '5', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
-    //         ]}
-    //     />
-    // );
     const menuItems = [
-        { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
-        { key: '2', label: 'Resume & CV' },
-        { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div> },
+        { key: '1', label: <div onClick={() => { navigate("/job-posting-flow/posting-notifications"); window.scrollTo(0, 0); }}>Job posting</div> },
+        { key: '2', label: 'Premium' },
         { key: 'divider', type: 'divider' },
-        { key: '4', label: <div onClick={() => { navigate("/employer-home"); window.scrollTo(0, 0); }}>For Employer</div> },
-        { key: '5', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
+        { key: '3', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>For worker</div> },
+        { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
     ];
     // Nếu có user, bỏ các mục key: 'divider', key: '4', key: '5' ra khỏi menuItems
     useEffect(() => {
         if (user) {
-            const updatedMenuItems = menuItems.filter(item => item.key !== 'divider' && item.key !== '4' && item.key !== '5');
+            const updatedMenuItems = menuItems.filter(item => item.key !== 'divider' && item.key !== '3' && item.key !== '4');
             // Cập nhật lại menuItems nếu có user
             menuItems.length = 0;
             menuItems.push(...updatedMenuItems);
@@ -112,7 +98,7 @@ const Header = () => {
     const handleLogout = () => {
         logout("token");
         message.success("Logout successfully!");
-        navigate("/");
+        navigate("/employer-home");
     }
 
     const itemsUser = [
@@ -123,48 +109,42 @@ const Header = () => {
             // onClick: () => { navigate('/admin/admin-home') },
         },
         {
-            label: "CV attachment",
-            key: '2',
-            icon: <FileOutlined />,
-            // onClick: handleLogout,
-        },
-        {
             label: "Applications",
-            key: '3',
+            key: '2',
             icon: <AuditOutlined />,
             // onClick: handleLogout,
         },
         {
-            label: "My jobs",
-            key: '4',
+            label: "My jobs posting",
+            key: '3',
             icon: <ProfileOutlined />,
             // onClick: handleLogout,
         },
         {
             label: "Wallet & transaction",
-            key: '5',
+            key: '4',
             icon: <CreditCardOutlined />,
             // onClick: handleLogout,
         },
         {
             label: "Log out",
-            key: '6',
+            key: '5',
             icon: <LogoutOutlined />,
             onClick: handleLogout,
         },
     ];
 
     return (
-        <div className={`header-whole-container ${showHeader ? 'show' : ''}`} >
-            <div className={`header-container ${showHeader ? 'show-down' : ''}`}>
-                <div className="header-left">
+        <div className={`employer-header-whole-container ${showHeader ? 'show' : ''}`} >
+            <div className={`employer-header-container ${showHeader ? 'show-down' : ''}`}>
+                <div className="employer-header-left">
                     {!isMobile && (
-                        <img src={logo} className='header-logo' onClick={handleClick} />
+                        <img src={logo} className='employer-header-logo' onClick={handleClick} />
                     )}
-                    {/* <img src={logo} className='header-logo' onClick={handleClick} /> */}
+                    {/* <img src={logo} className='employer-header-logo' onClick={handleClick} /> */}
                     {isMobile && !user ? (
-                        <div className="header-left">
-                            <img src={logo} className='header-logo' onClick={handleClick} />
+                        <div className="employer-header-left">
+                            <img src={logo} className='employer-header-logo' onClick={handleClick} />
                         </div>
                     ) : null}
                     {!isMobile && (
@@ -188,7 +168,7 @@ const Header = () => {
                                     <Dropdown menu={{ items: /*menu.props.items*/ menuItems }} trigger={['click']} placement="bottomRight">
                                         <Button icon={<MenuOutlined />} type="primary" />
                                     </Dropdown>
-                                    <img src={logo} className='header-logo' onClick={handleClick} />
+                                    <img src={logo} className='employer-header-logo' onClick={handleClick} />
                                     <Dropdown menu={{ items: itemsUser }} trigger={['click']} className='dropdown' placement='bottom'
                                         open={isDropdownVisible} // Kiểm soát trạng thái dropdown
                                         onOpenChange={(visible) => setIsDropdownVisible(visible)} // Cập nhật trạng thái
@@ -213,12 +193,12 @@ const Header = () => {
                         <>
                             <li
                                 onClick={() => {
-                                    navigate("/finding-job")
+                                    navigate("/job-posting-flow/posting-notifications")
                                     window.scrollTo(0, 0);
                                 }}
-                                className={location.pathname === '/finding-job' ? 'active' : ''}
+                                className={location.pathname === '/job-posting-flow/posting-notifications' ? 'active' : ''}
                             >
-                                All Jobs
+                                Job posting
                             </li>
                             {/* <li>Resume & CV</li> */}
                             <li
@@ -228,29 +208,29 @@ const Header = () => {
                                 }}
                                 className={location.pathname === '/finding-company' ? 'active' : ''}
                             >
-                                Companies
+                                Premium
                             </li>
                         </>
                     )}
                 </div>
-                {/* <div className="header-right">
+                {/* <div className="employer-header-right">
                     <li>For Employer</li>
                     <div style={{border: '1px solid white', height: '35px', margin: '0 3%'}}></div>
                     <li>Sign in / Sign Up</li>
                 </div> */}
                 {!isMobile && (
-                    <div className="header-right">
+                    <div className="employer-header-right">
                         <li
                             onClick={() => {
-                                navigate("/employer-home")
+                                navigate("/")
                                 window.scrollTo(0, 0);
                             }}
                         >
-                            For Employer
+                            For Worker
                         </li>
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
                         {user ? (
-                            <div className='header-right-items'>
+                            <div className='employer-header-right-items'>
                                 <Badge count={1}>
                                     <Avatar size={'large'} shape="square" icon={<BellOutlined />} />
                                 </Badge>
@@ -271,7 +251,7 @@ const Header = () => {
                         ) : (
                             <li
                                 onClick={() => {
-                                    navigate("/login-for-worker")
+                                    navigate("/login-for-employer")
                                     window.scrollTo(0, 0);
                                 }}
                             >
@@ -285,4 +265,4 @@ const Header = () => {
     )
 }
 
-export default Header
+export default EmployerHeader
