@@ -1,0 +1,59 @@
+.worker-jobs-container{
+    width: 90%;
+    margin-left: 2%;
+    padding: 2% 4% 5%;
+    background-color: white;
+    box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+    border-radius: 10px;
+}
+
+.worker-jobs-container h1{}
+
+
+.worker-jobs-container .worker-jobs-item{
+    width: 94%;
+    padding: 2% 3%;
+    border: 1px solid #E4E5E8;
+    border-radius: 10px;
+    display: flex;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-bottom: 1%;
+}
+.worker-jobs-container .worker-jobs-item:hover{
+    background-color: rgb(249, 249, 249);
+    transition: 0.3s ease;
+}
+
+.worker-jobs-item .worker-jobs-item-left{
+    width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.worker-jobs-item .worker-jobs-item-left .worker-jobs-item-title{
+    width: 100%;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 420;
+}
+.worker-jobs-item .worker-jobs-item-left .worker-jobs-item-info{
+    width: 100%;
+    margin: 1% 0;
+    font-size: 16px;
+    /* font-weight: 420; */
+    color: #5e6670;
+}
+.worker-jobs-item .worker-jobs-item-left .worker-jobs-item-info .anticon{
+    margin-right: 2px;
+}
+
+.worker-jobs-item .worker-jobs-item-right{
+    width: 10%;
+}
+.worker-jobs-item .worker-jobs-item-right p{
+    text-align: center;
+    color: #187bcd
+}
+
+
