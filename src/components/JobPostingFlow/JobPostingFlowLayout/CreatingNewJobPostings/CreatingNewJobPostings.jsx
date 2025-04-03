@@ -6,7 +6,7 @@ import { Collapse, Form, Input, InputNumber, Rate, Select } from 'antd';
 const { TextArea } = Input;
 const { Panel } = Collapse;
 
-const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostings }) => {
+const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostings, setCheckErrorJobPostings }) => {
   const [cityList, setCityList] = useState([]);
   // bỏ => nếu không district không riêng biệt index với các field city khác nhau
   // const [districtList, setDistrictList] = useState([]);
@@ -23,14 +23,6 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
     // Khởi tạo Formik cho từng job posting
     const formik = useFormik({
       initialValues: {
-        // jobPostingName: jobPosting.jobPostingName || '',
-        // address: jobPosting.address || '',
-        // city: jobPosting.city || '',
-        // district: jobPosting.district || '',
-        // numberOfPeople: jobPosting.numberOfPeople || '',
-        // salary: jobPosting.salary || '',
-        // rating: jobPosting.rating || '',
-        // descriptionJobPosting: jobPosting.descriptionJobPosting || '',
         jobPostingName: jobPostings[index]?.jobPostingName || '',
         address: jobPostings[index]?.address || '',
         city: jobPostings[index]?.city || '',
@@ -38,6 +30,8 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         ward: jobPostings[index]?.ward || '',
         numberOfPeople: jobPostings[index]?.numberOfPeople || '',
         salary: jobPostings[index]?.salary || '',
+        jobType: jobPostings[index]?.jobType || '',
+        specialSkills: jobPostings[index]?.specialSkills || '',
         rating: jobPostings[index]?.rating || '',
         descriptionJobPosting: jobPostings[index]?.descriptionJobPosting || '',
       },
@@ -71,7 +65,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
               return true; // Nếu không phải chữ cái, bỏ qua
             });
           })
-          .max(60, "* Job Group Name cannot be longer than 60 characters")
+          .max(120, "* Job Group Name cannot be longer than 120 characters")
           .required("* Required"),
         address: Yup.string()
           .test('no-leading-space', '* No spaces at the beginning', value => {
@@ -94,7 +88,11 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         numberOfPeople: Yup.number()
           .required("* Required"),
         salary: Yup.number()
+          .min(1000, "* Must be greater than 1000 VND.")
           .required("* Required"),
+        jobType: Yup.string()
+          .max(120, "* Job Type cannot be longer than 120 characters"),
+        specialSkills: Yup.string(),
         rating: Yup.number()
           // .min(0.5, "* You must rate at least 0.5 star")
           .required("* Required"),
@@ -177,12 +175,17 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
     }, [formik.values.district, districtList, index]); // Khi district thay đổi
 
     useEffect(() => {
+      if (formik.errors.jobPostingName || formik.errors.address || formik.errors.salary) {
+        setCheckErrorJobPostings(true);
+      } else {
+        setCheckErrorJobPostings(false);
+      }
       setJobPostings((prevJobPostings = []) => { // Đảm bảo prevJobPostings là một mảng
         const updatedJobPostings = [...prevJobPostings];
         updatedJobPostings[index] = formik.values;
         return updatedJobPostings;
       });
-    }, [formik.values, index]);
+    }, [formik.values, index, formik.errors]);
 
     return (
       <form onSubmit={formik.handleSubmit} className='creating-new-job-postings-form'>
@@ -286,7 +289,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 }}
                 onBlur={() => formik.setFieldTouched("district", true)}
                 // disabled={!formik.values.city} // Vô hiệu hóa nếu chưa chọn tỉnh/thành
-                disabled={!formik.values.city || formik.values.city === '0'} 
+                disabled={!formik.values.city || formik.values.city === '0'}
                 allowClear
               >
                 <Select.Option value="0" disabled>
@@ -321,7 +324,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 value={formik.values.ward || undefined}
                 onChange={(value) => formik.setFieldValue("ward", value)}
                 onBlur={() => formik.setFieldTouched("ward", true)}
-                disabled={!formik.values.city || !formik.values.district || formik.values.city === '0' || formik.values.district === '0'} 
+                disabled={!formik.values.city || !formik.values.district || formik.values.city === '0' || formik.values.district === '0'}
                 allowClear
               >
                 <Select.Option value="0" disabled>
@@ -387,6 +390,47 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
           </div>
         </div>
 
+        <div className='job-postings-field'>
+          <p className='title'> Job Type: </p>
+          <Form.Item
+            validateStatus={formik.errors.jobType && formik.touched.jobType ? "error" : ""}
+            help={formik.errors.jobType && formik.touched.jobType ? formik.errors.jobType : ""}
+          >
+            <Input
+              className='input'
+              size="large"
+              placeholder="Input Job Type here..."
+              id="jobType"
+              name="jobType"
+              type="text"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.jobType}
+            />
+          </Form.Item>
+        </div>
+
+        <div className='job-postings-field'>
+          <p className='title'> Special Skills: </p>
+          <Form.Item
+            validateStatus={formik.errors.specialSkills && formik.touched.specialSkills ? "error" : ""}
+            help={formik.errors.specialSkills && formik.touched.specialSkills ? formik.errors.specialSkills : ""}
+          >
+            <TextArea
+              showCount
+              maxLength={500}
+              autoSize={{ minRows: 1, maxRows: 7 }}
+              id="specialSkills"
+              name="specialSkills"
+              placeholder="Input Special Skills here..."
+              style={{ height: 150, resize: 'none' }}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.specialSkills}
+            />
+          </Form.Item>
+        </div>
+
         <div className='job-postings-rating'>
           <p className='title'><span>*</span> Minimum rating for worker: </p>
           <Form.Item
@@ -414,8 +458,8 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
               rows={10}
               id="descriptionJobPosting"
               name="descriptionJobPosting"
-              placeholder="Enter Job Posting Description here..."
-              style={{ height: 200, resize: 'none' }}
+              placeholder="Input Job Posting Description here..."
+              style={{ height: 300, resize: 'none' }}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.descriptionJobPosting}

@@ -41,7 +41,7 @@
     padding-left: 3%;
     font-family: var(--font-oswald);
     font-size: 16px;
-}
+} 
 /* chỉnh message error */
 .creating-new-job-group-form .job-group-field .ant-form-item .ant-form-item-explain-error {
     color: red;

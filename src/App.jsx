@@ -18,6 +18,10 @@ import JobPostingFlowLayout from './components/JobPostingFlow/JobPostingFlowLayo
 
 import CompanyDetail from './pages/CompanyDetail/CompanyDetail'
 import EmployerHome from './pages/EmployerHome/EmployerHome'
+import Worker from './pages/Worker/Worker'
+import WorkerJobs from './components/Worker/WorkerJobs/WorkerJobs'
+import WorkerJobDetail from './components/Worker/WorkerJobs/WorkerJobDetail'
+
 
 
 function App() {
@@ -47,6 +51,12 @@ function App() {
         <Route path='/job-posting-flow/*' element={<JobPostingFlow />}>
         <Route path='posting-notifications' element={<PostingNotifications/>}/>
           <Route path="creating-new-job-group" element={<JobPostingFlowLayout />} />
+        </Route>
+
+        {/* User */}
+        <Route path='/worker/*' element={<Worker/>}>
+            <Route path="worker-jobs" element={<WorkerJobs/>}/>
+            <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail/>}/>
         </Route>
       </Routes>
     </>
