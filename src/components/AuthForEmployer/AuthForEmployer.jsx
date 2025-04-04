@@ -7,8 +7,10 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Checkbox, Form, Input, message, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { login, register } from '../../apis/auth.request';
-import { saveLocalstorage } from '../../utils/Localstorage';
+import { authApi } from '../../apis/auth.request';
+import { login } from '../../redux/actions/auth.action';
+import store from "../../store/ReduxStore";
+import { useDispatch } from 'react-redux';
 
 const AuthForEmployer = ({ comp }) => {
     const [passwordVisible, setPasswordVisible] = useState(false)
@@ -16,6 +18,7 @@ const AuthForEmployer = ({ comp }) => {
     const [checked, setChecked] = useState(false);
     const [showCheckboxError, setShowCheckboxError] = useState(false);
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
 
     const formik = useFormik({
@@ -84,7 +87,7 @@ const AuthForEmployer = ({ comp }) => {
                         setShowCheckboxError(true);
                         return; // Dừng submit nếu checkbox chưa được chọn
                     }
-                    const user = await register({
+                    const user = await authApi.register({
                         email: values.email,
                         password: values.password,
                         address: values.district + ", " + values.city,
@@ -94,23 +97,24 @@ const AuthForEmployer = ({ comp }) => {
                     })
                     if (user.status == 201) {
                         message.destroy()
-                        message.success("Register successfully!");
+                        message.success("Register successfully! Check your email to verify account");
                         navigate("/login-for-employer");
                     }
                     // console.log(user);
                 } else if (comp === "Login") {
-                    // console.log(values);
-                    const user = await login({
+                    await dispatch(login({
                         identifier: values.email,
                         password: values.password
-                    });
-                    // console.log(user);
-                    if (user.status == 200) {
+                    }))
+                    const authState = store.getState().authReducer;
+
+                    if (authState.payload) {
                         message.destroy()
                         message.success("Login successfully!");
-                        // console.log(user);
-                        saveLocalstorage("token", user.data.token);
                         navigate("/employer-home");
+                    } else {
+                        message.destroy()
+                        message.error(authState.error.message);
                     }
                 }
             } catch (error) {

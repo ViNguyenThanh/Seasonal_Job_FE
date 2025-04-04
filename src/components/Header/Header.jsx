@@ -3,13 +3,15 @@ import './Header.css'
 import logo from '/assets/logo.png'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Avatar, Badge, Button, Dropdown, message, Space } from 'antd'
-import { AuditOutlined, BellOutlined, CreditCardOutlined, FileOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined,} from '@ant-design/icons';
+import { AuditOutlined, BellOutlined, CreditCardOutlined, FileOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined, } from '@ant-design/icons';
 import { getUserFromToken } from '../../utils/Token'
 import { userApi } from '../../apis/user.request'
-import { logout } from '../../apis/auth.request'
+import { useDispatch } from 'react-redux'
+import { logout } from '../../redux/actions/auth.action'
 
 
 const Header = () => {
+    const dispatch = useDispatch()
     const { user } = getUserFromToken();
     const [userInfor, setUserInfo] = useState({});
 
@@ -19,8 +21,8 @@ const Header = () => {
                 if (user) {
                     const res = await userApi.getUserById(user.id);
                     setUserInfo(res.data.data);
+                    // console.log(res.data.data);
                 }
-                // console.log(res.data.data);
 
             } catch (error) {
                 console.log(error);
@@ -101,7 +103,7 @@ const Header = () => {
     ];
     // Nếu có user, bỏ các mục key: 'divider', key: '4', key: '5' ra khỏi menuItems
     useEffect(() => {
-        if (user) {
+        if (user && userInfor.role === "user") {
             const updatedMenuItems = menuItems.filter(item => item.key !== 'divider' && item.key !== '4' && item.key !== '5');
             // Cập nhật lại menuItems nếu có user
             menuItems.length = 0;
@@ -110,7 +112,7 @@ const Header = () => {
     }, [user]);
 
     const handleLogout = () => {
-        logout("token");
+        dispatch(logout("token"));
         message.success("Logout successfully!");
         navigate("/");
     }
@@ -119,37 +121,43 @@ const Header = () => {
         {
             label: "Profile",
             key: '1',
-            icon: <UserOutlined />,
+            icon: <UserOutlined style={{ fontSize: '16px' }} />,
+            style: { fontSize: '16px' },
             // onClick: () => { navigate('/admin/admin-home') },
         },
         {
             label: "CV attachment",
             key: '2',
-            icon: <FileOutlined />,
+            icon: <FileOutlined style={{ fontSize: '16px' }} />,
+            style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
         {
             label: "Applications",
             key: '3',
-            icon: <AuditOutlined />,
+            icon: <AuditOutlined style={{ fontSize: '16px' }} />,
+            style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
         {
             label: "My jobs",
             key: '4',
-            icon: <ProfileOutlined />,
+            icon: <ProfileOutlined style={{ fontSize: '16px' }} />,
+            style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
         {
             label: "Wallet & transaction",
             key: '5',
-            icon: <CreditCardOutlined />,
+            icon: <CreditCardOutlined style={{ fontSize: '16px' }} />,
+            style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
         {
             label: "Log out",
             key: '6',
-            icon: <LogoutOutlined />,
+            icon: <LogoutOutlined style={{ fontSize: '16px' }} />,
+            style: { fontSize: '16px' },
             onClick: handleLogout,
         },
     ];
@@ -162,7 +170,7 @@ const Header = () => {
                         <img src={logo} className='header-logo' onClick={handleClick} />
                     )}
                     {/* <img src={logo} className='header-logo' onClick={handleClick} /> */}
-                    {isMobile && !user ? (
+                    {(isMobile && (!user || userInfor.role === 'employer')) ? (
                         <div className="header-left">
                             <img src={logo} className='header-logo' onClick={handleClick} />
                         </div>
@@ -182,26 +190,32 @@ const Header = () => {
                     <li>Resume & CV</li>
                     <li>Companies</li> */}
                     {isMobile ? (
-                        <div className={`dropdown-btn ${user ? 'user-logged-in' : ''}`}>
-                            {user ? (
+                        <div className={`dropdown-btn ${user && userInfor.role === 'user' ? 'user-logged-in' : ''}`}>
+                            {user && userInfor.role === 'user' ? (
                                 <>
                                     <Dropdown menu={{ items: /*menu.props.items*/ menuItems }} trigger={['click']} placement="bottomRight">
                                         <Button icon={<MenuOutlined />} type="primary" />
                                     </Dropdown>
                                     <img src={logo} className='header-logo' onClick={handleClick} />
-                                    <Dropdown menu={{ items: itemsUser }} trigger={['click']} className='dropdown' placement='bottom'
-                                        open={isDropdownVisible} // Kiểm soát trạng thái dropdown
-                                        onOpenChange={(visible) => setIsDropdownVisible(visible)} // Cập nhật trạng thái
-                                    >
-                                        <a onClick={(e) => e.preventDefault()}>
-                                            <Space>
-                                                <Avatar
-                                                    src={userInfor.avatar}
-                                                    style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
-                                                />
-                                            </Space>
-                                        </a>
-                                    </Dropdown>
+                                    <div>
+                                        <Badge size='default' style={{ marginRight: '15px' }} count={1}>
+                                            <Avatar style={{ marginRight: '10px', backgroundColor: '#4096ff8a' }} size={'large'} shape="square" icon={<BellOutlined />} />
+                                        </Badge>
+                                        <Dropdown menu={{ items: itemsUser }} trigger={['click']} className='dropdown' placement='bottom'
+                                            open={isDropdownVisible} // Kiểm soát trạng thái dropdown
+                                            onOpenChange={(visible) => setIsDropdownVisible(visible)} // Cập nhật trạng thái
+                                        >
+                                            <a onClick={(e) => e.preventDefault()}>
+                                                <Space>
+                                                    <Avatar
+                                                        src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
+                                                        style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
+                                                    />
+                                                </Space>
+                                            </a>
+                                        </Dropdown>
+                                    </div>
+
                                 </>
                             ) : (
                                 <Dropdown menu={{ items: /*menu.props.items*/ menuItems }} trigger={['click']} placement="bottomRight">
@@ -249,10 +263,10 @@ const Header = () => {
                             For Employer
                         </li>
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
-                        {user ? (
+                        {user && userInfor.role === "user" ? (
                             <div className='header-right-items'>
-                                <Badge count={1}>
-                                    <Avatar size={'large'} shape="square" icon={<BellOutlined />} />
+                                <Badge size='default' style={{ marginRight: '15px' }} count={1}>
+                                    <Avatar style={{ marginRight: '10px', backgroundColor: '#4096ff8a' }} size={'large'} shape="square" icon={<BellOutlined />} />
                                 </Badge>
                                 <Dropdown menu={{ items: itemsUser }} trigger={['click']} className='dropdown' placement='bottom'
                                     open={isDropdownVisible} // Kiểm soát trạng thái dropdown
@@ -261,7 +275,7 @@ const Header = () => {
                                     <a onClick={(e) => e.preventDefault()}>
                                         <Space>
                                             <Avatar
-                                                src={userInfor.avatar}
+                                                src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
                                                 style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
                                             />
                                         </Space>
