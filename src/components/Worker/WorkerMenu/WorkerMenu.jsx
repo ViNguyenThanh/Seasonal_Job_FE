@@ -54,6 +54,7 @@ const WorkerMenu = () => {
   const handleButtonClick = (buttonIndex) => {
     if (buttonIndex === 1) {
       navigate('/worker/worker-profile');
+      setActiveButton(buttonIndex);
     }
     if (buttonIndex === 2) {
       navigate('/worker/cv-attachment');
@@ -67,6 +68,8 @@ const WorkerMenu = () => {
     if (buttonIndex === 5){
       navigate('/worker/wallet-and-transaction')
     }
+
+    setActiveButton(buttonIndex);
   }
 
   // khi người dùng có reload lại trang thì đang ở component nào thì nút đó sẽ phát sáng
@@ -82,7 +85,7 @@ const WorkerMenu = () => {
     if(location.pathname === '/worker/application'){
       setActiveButton(3)
     }
-    if(location.pathname === '/worker/worker-jobs'){
+    if(location.pathname === '/worker/worker-jobs' || location.pathname.includes('/worker/worker-jobs/worker-job-detail')){
       setActiveButton(4)
     }
     if(location.pathname === '/worker/wallet-and-transaction'){
