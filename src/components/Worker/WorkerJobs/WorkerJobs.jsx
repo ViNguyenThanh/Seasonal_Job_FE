@@ -3,7 +3,7 @@ import './WorkerJobs.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { DollarOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { Input, Pagination, Select } from 'antd';
+import { Empty, Input, Pagination, Select } from 'antd';
 const { Search } = Input;
 
 const WorkerJobs = () => {
@@ -61,6 +61,13 @@ const WorkerJobs = () => {
     }
   ];
 
+  const getStatusClass = (status) => {
+    if (status === 'Processing') return 'processing';
+    if (status === 'Completed') return 'completed';
+    if (status === 'Cancelled') return 'cancelled';
+    return '';
+  };
+
   // Quản lý phân trang
   const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
   const pageSize = 5; // Mỗi trang hiển thị 5 dòng
@@ -105,7 +112,8 @@ const WorkerJobs = () => {
 
       {listData.length === 0 ? (
         <div className="no-job">
-          <p>You do not have a job yet! </p>
+          {/* <p>You do not have a job yet! </p> */}
+          <Empty description="You do not have a job yet!" />
         </div>
       ) : (
         <>
@@ -171,7 +179,7 @@ const WorkerJobs = () => {
 
           {filteredJobs.length === 0 ? (
             <div className="no-job">
-              <p>Not found! </p>
+              <Empty description="No job found!" />
             </div>
           ) : (
             <>
@@ -189,7 +197,7 @@ const WorkerJobs = () => {
                     </div>
                   </div>
                   <div className="worker-jobs-item-right">
-                    <p>{item.status} <br className='break-line-status' /> (Updated {item.today})</p>
+                    <p><span className={`${getStatusClass(item.status)}`}>{item.status}</span> <br className='break-line-status' /> (Updated {item.today})</p>
                   </div>
                 </div>
               ))}

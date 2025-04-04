@@ -121,25 +121,28 @@
     padding: 1% 0;
 }
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.no-column {
-    width: 5%;
+    width: 4%;
 }
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.job-description {
-    width: 28%; 
+    width: 24%; 
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.assignment-date {
+    width: 11%;
 }
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.check-in {
-    width: 14%; 
+    width: 13.5%; 
 }
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.check-out {
-    width: 14%; 
+    width: 13.5%; 
 }
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.progress {
-    width: 10%; 
+    width: 9%; 
 }
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.progress-completed {
-    width: 10%; 
+    width: 9%; 
 }
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.reason {
-    width: 26%;
+    width: 23%;
 }
 
 .worker-job-execute-whole-table .worker-job-execute-table tbody{
@@ -156,25 +159,21 @@
     padding: 2% 0;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.no-column {
-    width: 5%;
+    width: 4%;
     text-align: center;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.job-description {
-    width: 26%; 
+    width: 20%; 
     padding: 0 2%;
 }
-.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in {
-    width: 14%; 
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.assignment-date {
+    width: 11%;
     text-align: center;
 }
-/* bỏ input type */
-/* .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in img{
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in {
+    width: 13.5%; 
+    text-align: center;
 }
-.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in input{
-} */
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in .ant-upload-wrapper {
     display: flex;
     justify-content: center;
@@ -184,7 +183,7 @@
     border-color: rgb(52, 165, 52);
 } */
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out {
-    width: 14%; 
+    width: 13.5%; 
     text-align: center;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out .ant-upload-wrapper {
@@ -197,15 +196,15 @@
     cursor: pointer;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.progress {
-    width: 10%; 
+    width: 9%; 
     text-align: center;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.progress-completed {
-    width: 10%; 
+    width: 9%; 
     text-align: center;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.reason {
-    width: 22%;
+    width: 19%;
     padding: 0 2%;
     color: red
 }
@@ -308,5 +307,15 @@
     }
     .worker-job-detail-container .worker-job-detail-info .show-more-less-btn{
         margin: 3% 0;
+    }
+}
+@media (max-width: 500px) {
+    .worker-job-detail-container .go-back-btn{
+        position: absolute;
+        top: 1%;
+        left: 3%;
+    }
+    .worker-job-detail-container .worker-job-detail-title{
+        padding: 2% 0 5%;
     }
 }

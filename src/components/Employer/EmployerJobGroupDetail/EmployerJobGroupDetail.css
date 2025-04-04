@@ -1,0 +1,287 @@
+.employer-job-group-detail-container{
+    width: 75%;
+    margin: 60px 7.5% 100px;
+    padding: 2% 5%;
+    background-color: white;
+    box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+    border-radius: 10px;
+    position: relative;
+}
+
+.employer-job-group-detail-container .go-back-btn{
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    font-size: 25px;
+    background-color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.employer-job-group-detail-container .go-back-btn:hover{
+    color: rgb(109, 109, 109);
+    transition: 0.3s ease;
+}
+
+.employer-job-group-detail-container .employer-job-group-detail-title{
+    text-align: center;
+    margin: 0;
+    padding-bottom: 2%;
+    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+
+
+/* Worker Job Detail Info */
+.employer-job-group-detail-container .employer-job-group-detail-info{
+    width: 90%;
+    padding: 3% 5% 20px;
+    color: #444444;
+    font-size: 21px;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+.employer-job-group-detail-container .employer-job-group-detail-info p{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    margin: 1.5% 0;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info p .anticon {
+    font-size: 28px;
+    margin-right: 11px;
+}
+
+.employer-job-group-detail-container .employer-job-group-detail-info .employer-job-group-detail-short-info{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .employer-job-group-detail-short-info p{
+    width: 50%;
+    display: flex;
+    align-items: flex-start;
+    margin: 1.5% 0;
+}
+
+.employer-job-group-detail-container .employer-job-group-detail-info .show-more-less-btn{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 1% 0;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .show-more-less-btn button {
+    border: none;
+    font-size: 19px;
+    background-color: white;
+    color: #0a65cc;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .show-more-less-btn button:hover {
+    color: #0412b2;
+    transition: 0.3s ease;
+}
+
+.employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    margin: 2% 0 1%;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn button{
+    font-size: 20px;
+    width: 200px;
+    padding: 12px 0;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn .start-btn{
+    background-color: rgb(0, 180, 0);
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn .start-btn:hover{
+    background-color: rgb(3, 214, 3);
+    transition: 0.3s ease;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn .end-btn{
+    background-color: rgb(252, 46, 46);
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn .end-btn:hover{
+    background-color: rgb(255, 77, 77);
+    transition: 0.3s ease;
+}
+
+
+/* List Job Postings */
+.employer-job-group-detail-container .job-postings-list{
+    width: 100%;
+    margin: 4% 0;
+}
+.employer-job-group-detail-container .job-postings-list h1{
+    text-align: center;
+    margin: 0 0 3%;
+}
+.employer-job-group-detail-container .job-postings-list .job-postings-item{
+    width: 94%;
+    padding: 2% 3%;
+    border: 1px solid #E4E5E8;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin: 1.5% 0;
+    position: relative;
+}
+.employer-job-group-detail-container .job-postings-list .job-postings-item:hover{
+    background-color: rgb(249, 249, 249);
+    transition: 0.3s ease;
+}
+.job-postings-list .job-postings-item .job-postings-item-title{
+    width: 100%;
+    margin: 1% 0 0;
+    font-size: 20px;
+    font-weight: 420;
+    color:  #1f3760;
+}
+.job-postings-list .job-postings-item .job-postings-item-info{
+    width: 100%;
+    margin:  1% 0;
+    font-size: 18px;
+    /* color: #5e6670; */
+    color: #187bcd;
+    display: flex;
+    flex-wrap: wrap;
+}
+.job-postings-list .job-postings-item .job-postings-item-info p{
+    margin: 0;
+}
+.job-postings-list .job-postings-item .job-postings-item-info .anticon{
+    margin-right: 2px;
+}
+.job-postings-list .job-postings-item .job-postings-item-info .break-line-info{
+    display: none;
+}
+.job-postings-list .job-postings-item button{
+    position: absolute;
+    top: 35%;
+    right: 5%;
+    border: none;
+    background-color: transparent;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.job-postings-list .job-postings-item button:hover{
+    color: rgb(109, 109, 109);
+    transition: 0.3s ease;
+}
+
+
+
+@media (max-width: 1100px) {
+    .employer-job-group-detail-container .go-back-btn{
+        top: 1%;
+    }
+
+    .employer-job-group-detail-container .job-postings-list h1{
+        margin: 5% 0 3%;
+    }
+    .employer-job-group-detail-container .job-postings-list .job-postings-item{
+        width: 90%;
+        padding: 2% 5%;
+        margin: 2.5% 0;
+    }
+    .job-postings-list .job-postings-item .job-postings-item-info p{
+        width: 80%;
+        margin: 0.5% 0;
+    }
+    .job-postings-list .job-postings-item .job-postings-item-info .break-line-info{
+        display: block;
+    }
+}
+@media (max-width: 800px) {
+    .employer-job-group-detail-container .employer-job-group-detail-title{
+        padding: 2% 0 4%;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info p{
+        margin: 2% 0;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .employer-job-group-detail-short-info p{
+        width: 100%;
+        margin: 2% 0;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .show-more-less-btn{
+        margin: 3% 0;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn{
+        justify-content: space-between;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn button{
+        padding: 10px 0;
+    }
+
+
+    .employer-job-group-detail-container .job-postings-list .job-postings-item{
+        width: 85%;
+        margin: 5% 0;
+        padding: 3% 7.5%;
+    }
+}
+@media (max-width: 650px) {
+    .employer-job-group-detail-container .employer-job-group-detail-info p{
+        margin: 3% 0;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .employer-job-group-detail-short-info p{
+        width: 100%;
+        margin: 3% 0;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn button{
+        width: 150px;
+    }
+
+    .employer-job-group-detail-container .job-postings-list{
+        width: 90%;
+        margin: 4% 5%;
+    }
+    .employer-job-group-detail-container .job-postings-list h1{
+        margin: 7% 0 3%;
+    }
+    .job-postings-list .job-postings-item .job-postings-item-title{
+        margin: 2% 0;
+    }
+    .job-postings-list .job-postings-item .job-postings-item-info p{
+        width: 80%;
+        margin: 1% 0;
+    }
+}
+@media (max-width: 500px) {
+    .employer-job-group-detail-container .employer-job-group-detail-info .show-more-less-btn{
+        margin: 5% 0;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn{
+        justify-content: space-around;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn button{
+        width: 100px;
+        padding: 8px 0;
+    }
+
+
+    .employer-job-group-detail-container .job-postings-list{
+        width: 86%;
+        margin: 4% 7%;
+    }
+    .employer-job-group-detail-container .job-postings-list .job-postings-item{
+        width: 80%;
+        margin: 7% 0;
+        padding: 5% 10%;
+    }
+    .job-postings-list .job-postings-item button{
+        top: 40%;
+    }
+}

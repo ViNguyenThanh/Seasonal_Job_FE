@@ -1,16 +1,16 @@
 import React, { useRef, useState } from 'react'
 import './WorkerJobDetail.css'
-import { ArrowLeftOutlined, CloseOutlined, CreditCardOutlined, DashboardOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, PlusOutlined, ProductOutlined, ProfileOutlined, ScheduleOutlined, StarOutlined, TagOutlined, UpOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, CreditCardOutlined, DashboardOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, PlusOutlined, ProductOutlined, ProfileOutlined, ScheduleOutlined, StarOutlined, TagOutlined, UpOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Image, Modal, Pagination, Upload } from 'antd';
+import { Image, Pagination, Upload } from 'antd';
 
 const WorkerJobDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const jobDetail = location.state;  // Dữ liệu truyền qua state từ WorkerJobs component
+    const jobInfo = location.state;  // Dữ liệu truyền qua state từ WorkerJobs component
     const [showMore, setShowMore] = useState(false);
 
-    if (!jobDetail) {
+    if (!jobInfo) {
         return <p>Job not found.</p>;
     }
 
@@ -18,56 +18,62 @@ const WorkerJobDetail = () => {
         {
             no: 1,
             jobDescription: "Đóng gói quà tặng cho khách hàng theo đơn đặt hàng",
+            assignmentDate: '10/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
             progress: 17,
             progressCompleted: 17,
-            reason: "Quà đã sẵn sàng, chờ hoàn tất đóng gói"
+            reason: "Quà đã sẵn sàng, chờ hoàn tất đóng gói",
         },
         {
             no: 2,
             jobDescription: "Sắp xếp quà tặng vào hộp đựng theo yêu cầu",
+            assignmentDate: '11/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
             progress: 17,
             progressCompleted: 17,
-            reason: "Đang kiểm tra chất lượng quà"
+            reason: "Đang kiểm tra chất lượng quà",
         },
         {
             no: 3,
             jobDescription: "Vận chuyển quà tặng đến khu vực tổ chức",
+            assignmentDate: '13/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
             progress: 17,
             progressCompleted: 17,
-            reason: "Đã hoàn thành, chờ giao nhận"
+            reason: "Đã hoàn thành, chờ giao nhận",
         },
         {
             no: 4,
             jobDescription: "Kiểm tra lại các hộp quà đã đóng gói",
+            assignmentDate: '15/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
             progress: 17,
             progressCompleted: 17,
-            reason: "Chưa hoàn thành kiểm tra toàn bộ"
+            reason: "Chưa hoàn thành kiểm tra toàn bộ",
         },
         {
             no: 5,
             jobDescription: "Ghi nhận và báo cáo số lượng quà tặng",
+            assignmentDate: '16/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
             progress: 17,
             progressCompleted: 17,
-            reason: "Chưa hoàn thành báo cáo"
+            reason: "Chưa hoàn thành báo cáo",
         },
         {
             no: 6,
             jobDescription: "Dọn dẹp và kiểm tra lại khu vực đóng gói",
+            assignmentDate: '18/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
             progress: 15,
             progressCompleted: 13,
-            reason: "Đã hoàn thành toàn bộ công việc, nhưng đi trễ"
+            reason: "Đã hoàn thành toàn bộ công việc, nhưng đi trễ",
         }
     ]);
 
@@ -138,7 +144,7 @@ const WorkerJobDetail = () => {
             </button>
 
             <h1 className='worker-job-detail-title'>Job Detail</h1>
-            {/* <h1>Job Detail: {jobDetail.title}</h1> */}
+            {/* <h1>Job Detail: {jobInfo.title}</h1> */}
 
             <div className="worker-job-detail-info">
                 <p><ProfileOutlined /> Job Group Name: Sự kiện Global City, chuyên trách các công việc từ chuẩn bị địa điểm đến hỗ trợ đóng gói và tổ chức.</p>
@@ -193,6 +199,7 @@ const WorkerJobDetail = () => {
                         <tr>
                             <th className="no-column">No</th>
                             <th className="job-description">Job Description</th>
+                            <th className='assignment-date'>Assignment <br/> Date</th>
                             <th className="check-in">Check in</th>
                             <th className="check-out">Check out</th>
                             <th className="progress">Progress <br /> (%)</th>
@@ -205,6 +212,7 @@ const WorkerJobDetail = () => {
                             <tr key={index}>
                                 <td className="no-column">{data.no}</td>
                                 <td className="job-description">{data.jobDescription}</td>
+                                <td className='assignment-date'>{data.assignmentDate}</td>
                                 <td className="check-in">
                                     <Upload
                                         action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"

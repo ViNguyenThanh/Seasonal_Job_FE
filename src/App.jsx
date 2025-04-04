@@ -21,6 +21,10 @@ import EmployerHome from './pages/EmployerHome/EmployerHome'
 import Worker from './pages/Worker/Worker'
 import WorkerJobs from './components/Worker/WorkerJobs/WorkerJobs'
 import WorkerJobDetail from './components/Worker/WorkerJobs/WorkerJobDetail'
+import Employer from './pages/Employer/Employer'
+import EmployerJobGroups from './components/Employer/EmployerJobGroups/EmployerJobGroups'
+import EmployerJobGroupDetail from './components/Employer/EmployerJobGroupDetail/EmployerJobGroupDetail'
+import EmployerJobPostingDetail from './components/Employer/EmployerJobPostingDetail/EmployerJobPostingDetail'
 
 
 
@@ -53,10 +57,17 @@ function App() {
           <Route path="creating-new-job-group" element={<JobPostingFlowLayout />} />
         </Route>
 
-        {/* User */}
+        {/* Worker */}
         <Route path='/worker/*' element={<Worker/>}>
             <Route path="worker-jobs" element={<WorkerJobs/>}/>
             <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail/>}/>
+        </Route>
+
+        {/* Employer */}
+        <Route path='/employer/*' element={<Employer/>}>
+            <Route path='employer-job-groups' element={<EmployerJobGroups/>}/>
+            <Route path='employer-job-groups/employer-job-group-detail/:id' element={<EmployerJobGroupDetail/>}/>
+            <Route path='employer-job-groups/employer-job-group-detail/:id/employer-job-posting-detail/:id' element={<EmployerJobPostingDetail/>}/>
         </Route>
       </Routes>
     </>
