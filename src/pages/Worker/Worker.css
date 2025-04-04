@@ -38,3 +38,16 @@
         margin-top: 95px;
     }
 }
+
+@media (max-width: 1100px) {
+    .worker-container {
+        width: 90%;
+        padding: 40px 5%;
+    }
+    .worker-container .worker-left-container {
+        display: none;
+    }
+    .worker-container .worker-right-container {
+        width: 100%;
+    }
+}

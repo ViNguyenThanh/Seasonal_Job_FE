@@ -10,8 +10,8 @@
 
 .worker-job-detail-container .go-back-btn{
     position: absolute;
-    top: 20px;
-    left: 20px;
+    top: 1%;
+    left: 2%;
     font-size: 25px;
     background-color: white;
     border: none;
@@ -23,9 +23,290 @@
     transition: 0.3s ease;
 }
 
-.worker-job-detail-container h1{
+
+.worker-job-detail-container .worker-job-detail-title{
     text-align: center;
     margin: 0;
     padding-bottom: 2%;
     border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+
+
+/* Worker Job Detail Info */
+.worker-job-detail-container .worker-job-detail-info{
+    width: 90%;
+    padding: 3% 5% 2%;
+    color: #444444;
+    font-size: 19px;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+.worker-job-detail-container .worker-job-detail-info p{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    margin: 1.5% 0;
+}
+.worker-job-detail-container .worker-job-detail-info p .anticon {
+    font-size: 28px;
+    margin-right: 11px;
+}
+
+.worker-job-detail-container .worker-job-detail-info .worker-job-detail-short-info{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.worker-job-detail-container .worker-job-detail-info .worker-job-detail-short-info p{
+    width: 50%;
+    display: flex;
+    align-items: flex-start;
+    margin: 1.5% 0;
+}
+
+.worker-job-detail-container .worker-job-detail-info .show-more-less-btn{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 1% 0;
+}
+.worker-job-detail-container .worker-job-detail-info .show-more-less-btn button {
+    border: none;
+    font-size: 17px;
+    background-color: white;
+    color: #0a65cc;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.worker-job-detail-container .worker-job-detail-info .show-more-less-btn button:hover {
+    color: #0412b2;
+    transition: 0.3s ease;
+}
+
+
+/* Worker Job Execute */
+.worker-job-detail-container .worker-job-execute-title{
+    width: 100%;
+    text-align: center;
+    margin-top: 3%;
+}
+.worker-job-detail-container .worker-job-execute-whole-table{
+    width: 90%;
+    padding: 0 5% 2%;
+}
+.worker-job-detail-container .worker-job-execute-whole-table .worker-job-execute-table{
+    width: 100%;
+    border: 1px solid rgba(118, 118, 118, 0.16);
+    font-size: 16.5px;
+    border-radius: 10px;
+    /* do có cái này nên ko border-radius được */
+    /* border-collapse: collapse; */
+    border-collapse: separate; /* Rất quan trọng */
+    border-spacing: 0; /* Để các ô sát nhau */
+    overflow: hidden;  /* Bắt buộc nếu muốn thấy rõ bo góc */
+}
+
+.worker-job-execute-whole-table .worker-job-execute-table thead{
+    /* background-color: #2A9DF4;
+    color: white; */
+    background-color: rgb(229, 229, 229);
+    color: rgb(51, 51, 51);
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr{
+    width: 100%;
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th{
+    border: 1px solid #d8d8d8;
+    padding: 1% 0;
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.no-column {
+    width: 5%;
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.job-description {
+    width: 28%; 
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.check-in {
+    width: 14%; 
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.check-out {
+    width: 14%; 
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.progress {
+    width: 10%; 
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.progress-completed {
+    width: 10%; 
+}
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.reason {
+    width: 26%;
+}
+
+.worker-job-execute-whole-table .worker-job-execute-table tbody{
+    /* background-color: #2A9DF4;
+    color: white; */
+    /* background-color: rgb(205, 205, 205);
+    color: rgb(51, 51, 51); */
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr{
+    width: 100%;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td{
+    border: 1px solid #eaeaea;
+    padding: 2% 0;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.no-column {
+    width: 5%;
+    text-align: center;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.job-description {
+    width: 26%; 
+    padding: 0 2%;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in {
+    width: 14%; 
+    text-align: center;
+}
+/* bỏ input type */
+/* .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in img{
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in input{
+} */
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in .ant-upload-wrapper {
+    display: flex;
+    justify-content: center;
+}
+/* chỉnh viền upload error */
+/* .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in .ant-upload-wrapper .ant-upload-list.ant-upload-list-picture-card .ant-upload-list-item-error {
+    border-color: rgb(52, 165, 52);
+} */
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out {
+    width: 14%; 
+    text-align: center;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out .ant-upload-wrapper {
+    display: flex;
+    justify-content: center;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out img{
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.progress {
+    width: 10%; 
+    text-align: center;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.progress-completed {
+    width: 10%; 
+    text-align: center;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.reason {
+    width: 22%;
+    padding: 0 2%;
+    color: red
+}
+
+/* bỏ vì không sd input type="file" nữa */
+/* Modal Overlay */
+.worker-job-detail-container.image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Làm mờ phần nền */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+/* Modal content */
+.worker-job-detail-container.image-modal-overlay .image-modal {
+    position: relative;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+/* Nút đóng ở góc trên bên phải */
+.worker-job-detail-container.image-modal-overlay .image-modal .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+}
+
+@media (max-width: 1300px) {
+    .worker-job-execute-whole-table .worker-job-execute-table tbody tr td{
+        padding: 4% 0;
+    }
+    /* chỉnh ô upload ảnh */
+    .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in .ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select{
+        width: 70px;
+        height: 70px;
+    }
+    .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out .ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select{
+        width: 70px;
+        height: 70px;
+    }
+}
+@media (max-width: 1100px) {
+    .worker-job-detail-container{
+        width: 92%;
+        margin-left: 0%;
+        padding: 2% 4% 5%;
+    }
+}
+@media (max-width: 950px) {
+    .worker-job-detail-container{
+        width: 84%;
+        padding: 2% 8% 5%;
+    }
+    .worker-job-detail-container .worker-job-detail-info p{
+        margin: 2% 0;
+    }
+    .worker-job-detail-container .worker-job-detail-info .worker-job-detail-short-info p{
+        margin: 2% 0;
+    }
+    .worker-job-detail-container .worker-job-execute-whole-table{
+        overflow-x: auto;
+        margin-bottom: 4%;
+    }
+    .worker-job-detail-container .worker-job-execute-whole-table .worker-job-execute-table{
+        min-width: 950px; /* Đảm bảo bảng không bị co lại quá nhỏ */
+    }
+    .worker-job-execute-whole-table .worker-job-execute-table tbody tr td{
+        padding: 2% 0;
+    }
+    /* chỉnh ô upload ảnh */
+    .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in .ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select{
+        width: 80px;
+        height: 80px;
+    }
+    .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out .ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select{
+        width: 80px;
+        height: 80px;
+    }
+}
+@media (max-width: 700px) {
+    .worker-job-detail-container .go-back-btn{
+        top: 0.5%
+    }
+    .worker-job-detail-container .worker-job-detail-info{
+        padding: 5%;
+    }
+    .worker-job-detail-container .worker-job-detail-info .worker-job-detail-short-info p{
+        width: 100%;
+    }
+    .worker-job-detail-container .worker-job-detail-info .show-more-less-btn{
+        margin: 3% 0;
+    }
 }
