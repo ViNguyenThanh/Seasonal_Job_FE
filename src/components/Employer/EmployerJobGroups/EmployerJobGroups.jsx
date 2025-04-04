@@ -1,0 +1,147 @@
+import React, { useState } from 'react'
+import './EmployerJobGroups.css'
+import { ArrowRightOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { Empty, Input, Pagination, Select } from 'antd';
+import { useNavigate } from 'react-router-dom';
+const { Search } = Input;
+
+const EmployerJobGroups = () => {
+  // Giả sử bạn đã có một mảng dữ liệu jobGroups như dưới đây
+  const jobGroups = [
+    { id: 1, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Sản Phẩm Tiêu Dùng Tại Các Trung Tâm Thương Mại.', numberOfJobPostings: 5, status: 'Cancelled' },
+    { id: 2, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 7, status: 'Processing' },
+    { id: 3, title: 'Tổ Chức Các Chuyến Tham Quan Cho Khách Tham Dự Hội Nghị Quốc Tế Về Nghiên Cứu Môi Trường.', numberOfJobPostings: 8, status: 'Cancelled' },
+    { id: 4, title: 'Hỗ Trợ Việc Setup Âm Thanh, Ánh Sáng Và Thiết Bị Cho Các Sự Kiện Văn Hóa, Sự Kiện Lễ Hội.', numberOfJobPostings: 6, status: 'Processing' },
+    { id: 5, title: 'Quản Lý Các Công Việc Hậu Cần Cho Các Sự Kiện Thể Thao, Đảm Bảo An Ninh Và Vận Chuyển Hàng Hóa.', numberOfJobPostings: 1, status: 'Completed' },
+    { id: 6, title: 'Giám Sát Công Tác Phục Vụ Các Bữa Ăn Và Sự Kiện Hội Nghị Cho Các Khách Tham Gia.', numberOfJobPostings: 2, status: 'Cancelled' },
+    { id: 7, title: 'Quản Lý Các Công Việc Hậu Cần Cho Các Sự Kiện Giáo Dục Và Đào Tạo Tại Trường Học.', numberOfJobPostings: 6, status: 'Cancelled' },
+    { id: 8, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 9, status: 'Processing' },
+    { id: 9, title: 'Phụ Trách Vận Hành Dịch Vụ Vận Chuyển Hành Lý Cho Các Sự Kiện Hội Nghị Quốc Tế Tại Các Khách Sạn.', numberOfJobPostings: 3, status: 'Processing' },
+    { id: 10, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Sản Phẩm Tiêu Dùng Tại Các Trung Tâm Thương Mại.', numberOfJobPostings: 1, status: 'Cancelled' },
+    { id: 11, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 7, status: 'Completed' },
+    { id: 12, title: 'Giám Sát Công Tác Phục Vụ Các Bữa Ăn Và Sự Kiện Hội Nghị Cho Các Khách Tham Gia.', numberOfJobPostings: 3, status: 'Completed' },
+    { id: 13, title: 'Quản Lý Tài Liệu Và Giúp Đỡ Nhân Viên Trong Việc Phân Phối Thông Tin Về Sự Kiện Văn Hóa.', numberOfJobPostings: 6, status: 'Completed' },
+    { id: 14, title: 'Chạy Và Giám Sát Các Công Tác Chuẩn Bị, Cài Đặt Thiết Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 3, status: 'Completed' },
+    { id: 15, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 10, status: 'Completed' }
+  ];
+
+  const getStatusClass = (status) => {
+    if (status === 'Processing') return 'processing';
+    if (status === 'Completed') return 'completed';
+    if (status === 'Cancelled') return 'cancelled';
+    return '';
+  };
+
+  // Quản lý phân trang
+  const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
+  const pageSize = 12; // Mỗi trang hiển thị 12 dòng
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // window.scrollTo(0, 0);
+    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
+  };
+
+
+  // chức năng Search Job Posting
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusJobGroupValue, setStatusJobGroupValue] = useState(null);
+  const onSearch = (value) => {
+    setSearchTerm(value.trim().toLowerCase());
+    setStatusJobGroupValue(null);
+    setCurrentPage(1);     // Reset to the first page
+  };
+
+  const filteredJobGroups = jobGroups.filter(item => {
+    const searchTermLower = searchTerm.toLowerCase();
+    return (
+      (!statusJobGroupValue || item.status === statusJobGroupValue) &&
+      (!searchTerm
+        || item.title.toLowerCase().includes(searchTermLower)
+      )
+    );
+  });
+
+  // Phân trang dữ liệu (cắt dữ liệu theo trang)
+  const paginatedData = /*listData*/ filteredJobGroups.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  const navigate = useNavigate()
+
+  return (
+    <div className='employer-job-groups-container'>
+
+      {jobGroups.length === 0 ? (
+        <div className="no-job-groups">
+          <Empty description="You do not have a job group yet!" />;
+        </div>
+      ) : (
+        <>
+          <p className='employer-job-groups-title'><FolderOpenOutlined /> Total number of <br /> Job Groups: <span>{jobGroups.length}</span></p>
+
+          <div className="employer-job-groups-search">
+            <Search
+              placeholder="Search Job Group Name..."
+              value={searchTerm} // Giữ từ tìm kiếm
+              allowClear
+              // enterButton="Search"
+              enterButton
+              size="large"
+              onSearch={onSearch}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Select
+              showSearch
+              placeholder="Status"
+              value={statusJobGroupValue}
+              onChange={(value) => {
+                setStatusJobGroupValue(value);
+                setCurrentPage(1);
+              }}
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              size="large"
+              allowClear
+              options={[
+                { value: 'Completed', label: 'Completed' },
+                { value: 'Processing', label: 'Processing' },
+                { value: 'Cancelled', label: 'Cancelled' },
+              ]}
+            />
+          </div>
+
+          {filteredJobGroups.length === 0 ? (
+            <div className="no-job-groups">
+              <Empty description="No job groups found!" />;
+            </div>
+          ) : (
+            <>
+              <div className="employer-job-groups-list">
+                {/*jobGroups*/ paginatedData.map((group) => (
+                  <div className="employer-job-groups-item" key={group.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${group.id}`, { state: group }, window.scrollTo(0, 0))}>
+                    <p className='job-group-name'>{group.title}</p>
+                    <p className='number-of-job-postings'>Number of Job Postings: {group.numberOfJobPostings}</p>
+                    <p className={`status ${getStatusClass(group.status)}`}>{group.status}</p>
+                    <button><ArrowRightOutlined /></button>
+                  </div>
+                ))}
+              </div>
+
+              <Pagination
+                current={currentPage}
+                pageSize={pageSize}
+                total={filteredJobGroups.length}
+                onChange={handlePageChange}
+                showSizeChanger={false}
+                align="center"
+              />
+            </>
+          )}
+
+        </>
+      )}
+    </div>
+  )
+}
+
+export default EmployerJobGroups
