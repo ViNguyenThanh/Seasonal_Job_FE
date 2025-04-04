@@ -7,6 +7,9 @@ import CreatingNewJobGroup from './CreatingNewJobGroup/CreatingNewJobGroup';
 import CreatingNewJobPostings from './CreatingNewJobPostings/CreatingNewJobPostings';
 import ConfirmPosting from './ConfirmPosting/ConfirmPosting';
 import dayjs from 'dayjs';
+import { jobGroupApi } from '../../../apis/job-group.request';
+import { jobPostingApi } from '../../../apis/job-posting.request';
+import { paymentApi } from '../../../apis/payment.request';
 
 const JobPostingFlowLayout = () => {
 
@@ -64,10 +67,10 @@ const JobPostingFlowLayout = () => {
         //   duration: 0, // Giữ thông báo hiển thị vô thời gian
         // });
         // return; // ko để return, nếu để thì ko check đc else if vì bị dừng r
-      } else if (checkErrorJobGroup){
+      } else if (checkErrorJobGroup) {
         message.error("Please correct the error before proceeding to the next step.");
       } else {
-        console.log(jobGroup)
+        // console.log(jobGroup)
         setCurrent(current + 1);
         window.scrollTo(0, 0);
       }
@@ -80,7 +83,7 @@ const JobPostingFlowLayout = () => {
         if (!posting.jobPostingName || !posting.address || !posting.city || parseInt(posting.city) === 0 || !posting.district || parseInt(posting.district) === 0 || !posting.ward || parseInt(posting.ward) === 0 || !posting.numberOfPeople || !posting.salary || !posting.rating || !posting.descriptionJobPosting) {
           message.error("Please fill in all information before going to the next step.", 0);
           return; // Dừng lại ở đây nếu có mục job posting thiếu dữ liệu
-        } else if (checkErrorJobPostings){
+        } else if (checkErrorJobPostings) {
           message.error("Please correct the error before proceeding to the next step.");
           return; // Dừng lại ở đây nếu dữ liệu jobPostings không hợp lệ
         }
@@ -153,6 +156,50 @@ const JobPostingFlowLayout = () => {
 
 
   const handleDone = async () => {
+    console.log(jobGroup);
+    console.log(jobPostings);
+
+    try {
+      const resJG = await jobGroupApi.createJobGroup({
+        title: jobGroup.jobGroupName,
+        description: jobGroup.descriptionJobGroup,
+        start_date: jobGroup.startDate,
+        end_date: jobGroup.endDate
+      });
+      // console.log(resJG);
+
+      if (resJG.status === 201) {
+        for (let i = 0; i < jobPostings.length; i++) {
+          const jobPosting = jobPostings[i];
+          const resJP = await jobPostingApi.createJobPosting({
+            title: jobPosting.jobPostingName,
+            description: jobPosting.descriptionJobPosting,
+            address: `${jobPosting.address}, ${jobPosting.ward}, ${jobPosting.district}, ${jobPosting.city}`,
+            location: jobPosting.city,
+            number_of_person: jobPosting.numberOfPeople,
+            min_star_requirement: jobPosting.rating,
+            status: 'incompleted',
+            started_date: jobGroup.startDate,
+            end_date: jobGroup.endDate,
+            salary: jobPosting.salary,
+            jobType: jobPosting.jobType,
+            jobGroupId: resJG.data.data.id
+          });
+          console.log(resJP);
+        }
+      }
+
+      if (resJG.status === 201) {
+        const resPayment = await paymentApi.createPayment({
+          jobGroupId: resJG.data.data.id,
+          orderId: 2
+        })
+        console.log(resPayment);
+        
+      }
+    } catch (error) {
+      console.log(error);
+    }
 
     window.scrollTo(0, 350);
   };
@@ -214,7 +261,7 @@ const JobPostingFlowLayout = () => {
             </Button>
           )}
           {current === steps.length - 1 && (
-            <Button type="primary" onClick={() => message.success('Processing complete!')}/*onClick={handleDone} disabled={!selectedBoxId}*/>
+            <Button type="primary" onClick={handleDone}/*onClick={handleDone} disabled={!selectedBoxId}*/>
               Done
             </Button>
           )}

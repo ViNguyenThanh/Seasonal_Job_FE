@@ -198,9 +198,9 @@ const Header = () => {
                                     </Dropdown>
                                     <img src={logo} className='header-logo' onClick={handleClick} />
                                     <div>
-                                        <Badge size='default' style={{ marginRight: '15px' }} count={1}>
+                                        {/* <Badge size='default' style={{ marginRight: '15px' }} count={1}>
                                             <Avatar style={{ marginRight: '10px', backgroundColor: '#4096ff8a' }} size={'large'} shape="square" icon={<BellOutlined />} />
-                                        </Badge>
+                                        </Badge> */}
                                         <Dropdown menu={{ items: itemsUser }} trigger={['click']} className='dropdown' placement='bottom'
                                             open={isDropdownVisible} // Kiểm soát trạng thái dropdown
                                             onOpenChange={(visible) => setIsDropdownVisible(visible)} // Cập nhật trạng thái
@@ -265,9 +265,9 @@ const Header = () => {
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
                         {user && userInfor.role === "user" ? (
                             <div className='header-right-items'>
-                                <Badge size='default' style={{ marginRight: '15px' }} count={1}>
+                                {/* <Badge size='default' style={{ marginRight: '15px' }} count={1}>
                                     <Avatar style={{ marginRight: '10px', backgroundColor: '#4096ff8a' }} size={'large'} shape="square" icon={<BellOutlined />} />
-                                </Badge>
+                                </Badge> */}
                                 <Dropdown menu={{ items: itemsUser }} trigger={['click']} className='dropdown' placement='bottom'
                                     open={isDropdownVisible} // Kiểm soát trạng thái dropdown
                                     onOpenChange={(visible) => setIsDropdownVisible(visible)} // Cập nhật trạng thái

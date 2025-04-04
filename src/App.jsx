@@ -34,6 +34,8 @@ function App() {
   useEffect(() => {
     const { user } = getUserFromToken();
     setNewUser(user);
+    console.log(user);
+    
   }, [payload]);
 
 
@@ -87,7 +89,7 @@ function App() {
         {newUser &&newUser.role === 'employer' ? (
           <Route path='/job-posting-flow/*' element={<JobPostingFlow />}>
             <Route path='posting-notifications' element={<PostingNotifications />} />
-            <Route path="creating-new-job-group" element={<JobPostingFlowLayout />} />
+            <Route path="creating-new-job-group" element={<JobPostingFlowLayout/>} />
           </Route>
         ) : (
           <Route path='/job-posting-flow/*' element={<Navigate to="/login-for-employer" />} />
