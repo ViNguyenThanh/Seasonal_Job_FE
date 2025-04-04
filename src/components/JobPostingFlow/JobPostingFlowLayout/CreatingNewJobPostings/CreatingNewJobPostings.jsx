@@ -31,8 +31,9 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         numberOfPeople: jobPostings[index]?.numberOfPeople || '',
         salary: jobPostings[index]?.salary || '',
         jobType: jobPostings[index]?.jobType || '',
-        specialSkills: jobPostings[index]?.specialSkills || '',
+        // specialSkills: jobPostings[index]?.specialSkills || '',
         rating: jobPostings[index]?.rating || '',
+        gender: jobPostings[index]?.gender || '',
         descriptionJobPosting: jobPostings[index]?.descriptionJobPosting || '',
       },
       validationSchema: Yup.object({
@@ -91,11 +92,24 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
           .min(1000, "* Must be greater than 1000 VND.")
           .required("* Required"),
         jobType: Yup.string()
+          .matches(
+            /^[^0-9]*$/,
+            "* Job Type cannot be entered in numbers"
+          )
+          .matches(
+            /^[^!@#$%^&*(),.?":;{}|<>]*$/,
+            "* Job Type cannot contain special characters"
+          )
+          .matches(
+            /^[A-ZÀ-Ỹ][a-zà-ỹ]*(\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$/,
+            "* Each word must have its first letter capitalized"
+          )
           .max(120, "* Job Type cannot be longer than 120 characters"),
-        specialSkills: Yup.string(),
+        // specialSkills: Yup.string(),
         rating: Yup.number()
           // .min(0.5, "* You must rate at least 0.5 star")
           .required("* Required"),
+        gender: Yup.string(),
         descriptionJobPosting: Yup.string().required("* Required"),
       }),
 
@@ -410,7 +424,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
           </Form.Item>
         </div>
 
-        <div className='job-postings-field'>
+        {/* <div className='job-postings-field'>
           <p className='title'> Special Skills: </p>
           <Form.Item
             validateStatus={formik.errors.specialSkills && formik.touched.specialSkills ? "error" : ""}
@@ -429,22 +443,53 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
               value={formik.values.specialSkills}
             />
           </Form.Item>
+        </div> */}
+
+        <div className='job-postings-info'>
+          <div className='job-postings-rating'>
+            <p className='title'><span>*</span> Minimum rating for worker: </p>
+            <Form.Item
+              validateStatus={formik.errors.rating && formik.touched.rating ? "error" : ""}
+              help={formik.errors.rating && formik.touched.rating ? formik.errors.rating : ""}
+            >
+              <Rate
+                // allowHalf
+                value={formik.values.rating}
+                onChange={(value) => formik.setFieldValue("rating", value)}
+                onBlur={() => formik.setFieldTouched("rating", true)}
+              />
+            </Form.Item>
+          </div>
+          <div className="job-postings-gender">
+            <p className='title'>Gender: </p>
+            <Form.Item
+              validateStatus={formik.errors.gender && formik.touched.gender ? "error" : ""}
+              help={formik.errors.gender && formik.touched.gender ? formik.errors.gender : ""}
+            >
+              <Select
+                style={{
+                  width: '100%',
+                  margin: '0% 0 1%',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+                placeholder="Select Gender"
+                showSearch
+                value={formik.values.gender || undefined}  // Sử dụng Formik để lấy giá trị
+                onChange={(value) => formik.setFieldValue("gender", value || "")}  //Đảm bảo giá trị khi sử dụng allowClear là một chuỗi rỗng khi null hoặc undefined
+                onBlur={() => formik.setTouched({ gender: true })}
+                allowClear
+              >
+                <Select.Option value="0" disabled>
+                  Select Gender
+                </Select.Option>
+                <Select.Option value="Male">Male</Select.Option>
+                <Select.Option value="Female">Female</Select.Option>
+              </Select>
+            </Form.Item>
+          </div>
         </div>
 
-        <div className='job-postings-rating'>
-          <p className='title'><span>*</span> Minimum rating for worker: </p>
-          <Form.Item
-            validateStatus={formik.errors.rating && formik.touched.rating ? "error" : ""}
-            help={formik.errors.rating && formik.touched.rating ? formik.errors.rating : ""}
-          >
-            <Rate
-              allowHalf
-              value={formik.values.rating}
-              onChange={(value) => formik.setFieldValue("rating", value)}
-              onBlur={() => formik.setFieldTouched("rating", true)}
-            />
-          </Form.Item>
-        </div>
 
         <div className='job-postings-field'>
           <p className='title'><span>*</span> Description: </p>

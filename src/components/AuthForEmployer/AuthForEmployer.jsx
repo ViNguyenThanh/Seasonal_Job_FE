@@ -50,6 +50,9 @@ const AuthForEmployer = ({ comp }) => {
                     .test('no-extra-space', '* No extra spaces allowed', value => {
                         return value ? !/ {2,}/.test(value) : false;
                     })
+                    .test('no-question-mark', '* Cannot contain "?" character', value => {
+                        return value ? !/\?/.test(value) : false;
+                    })
                     .max(60, "* Company Name cannot be longer than 60 characters")
                     .required("* Required")
                 : Yup.string(),
@@ -103,7 +106,7 @@ const AuthForEmployer = ({ comp }) => {
                     // console.log(user);
                 } else if (comp === "Login") {
                     await dispatch(login({
-                        identifier: values.email,
+                        email: values.email,
                         password: values.password
                     }))
                     const authState = store.getState().authReducer;

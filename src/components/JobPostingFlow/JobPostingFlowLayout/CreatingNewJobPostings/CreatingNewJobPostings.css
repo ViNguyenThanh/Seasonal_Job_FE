@@ -17,13 +17,13 @@
 .creating-new-job-postings-container .creating-new-job-postings-collapse{
 
 }
-/* bỏ header rồi */
+/* bỏ header của collaspe antd rồi */
 /* .creating-new-job-postings-collapse .ant-collapse>.ant-collapse-item >.ant-collapse-header {
     color: black;
     font-size: 16px;
     font-weight: 450;
 } */
- /* chỉnh label */
+ /* chỉnh label của collaspe antd*/
 .creating-new-job-postings-collapse .ant-collapse>.ant-collapse-item >.ant-collapse-header .ant-collapse-header-text {
     font-size: 17px;
     font-weight: 450;
@@ -169,24 +169,67 @@
     padding: 1% 0 0 9%;
 }
 
-.creating-new-job-postings-form .job-postings-rating{
-    width: 100%;
+.creating-new-job-postings-form .job-postings-info .job-postings-rating{
+    width: 50%;
     display: flex;
     align-items: baseline;
 }
-.creating-new-job-postings-form .job-postings-rating .title {
+.creating-new-job-postings-form .job-postings-info .job-postings-rating .title {
     font-weight: 500;
     font-size: 17px;
     margin: 10px 15px 10px 0;
 }
-.creating-new-job-postings-form .job-postings-rating .title span{
+.creating-new-job-postings-form .job-postings-info .job-postings-rating .title span{
     color: red
 }
 /* chỉnh message error */
-.creating-new-job-postings-form .job-postings-rating .ant-form-item .ant-form-item-explain-error {
+.creating-new-job-postings-form .job-postings-info .job-postings-rating .ant-form-item .ant-form-item-explain-error {
     color: red;
     font-size: 16px;
     padding: 1% 0;
+}
+
+.creating-new-job-postings-form .job-postings-info .job-postings-gender{
+    width: 50%;
+    display: flex;
+    align-items: baseline;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-gender .title {
+    font-weight: 500;
+    font-size: 17px;
+    margin: 10px 0;
+    margin-right: 2%;
+}
+/* chỉnh chiều dài của field Select */
+.creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-form-item-with-help {
+    transition: none;
+    width: 60%;
+}
+  /* chỉnh chiều cao của field Select */
+.creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    height: 130%;
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+    padding-left: 8%;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-select-single .ant-select-selector {
+    font-size: 16px;
+}
+/* chỉnh màu khi field Select bị disabled */
+.creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    cursor: not-allowed;
+    background: rgb(255, 255, 255) !important;
+}
+.creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+    border-color: #1677ff;
+    box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+    outline: 0;
+}
+/* chỉnh message error */
+.creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 2% 0;
 }
 
 
@@ -215,6 +258,12 @@
     }
 
     .creating-new-job-postings-form .job-postings-info .job-postings-salary{
+        width: 100%;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-rating{
+        width: 100%;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-gender{
         width: 100%;
     }
 }
@@ -255,10 +304,20 @@
         padding-left: 0%;
     }
 
-    .creating-new-job-postings-form .job-postings-rating{
+    .creating-new-job-postings-form .job-postings-info .job-postings-rating{
         flex-wrap: wrap;
     }
-    .creating-new-job-postings-form .job-postings-rating .title {
+    .creating-new-job-postings-form .job-postings-info .job-postings-rating .title {
         width: 100%;
+    }
+
+    .creating-new-job-postings-form .job-postings-info .job-postings-gender{
+        flex-wrap: wrap;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-gender .title {
+        width: 100%;
+    }
+    .creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-form-item-with-help {
+        width: 80%;
     }
 }

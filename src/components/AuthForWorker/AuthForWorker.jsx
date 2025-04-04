@@ -75,7 +75,7 @@ const AuthForWorker = ({ comp }) => {
             email: values.email,
             password: values.password,
             role: "user",
-            fullname: values.fullname
+            fullName: values.fullname
           })
           if (user.status == 201) {
             message.destroy()
@@ -85,7 +85,7 @@ const AuthForWorker = ({ comp }) => {
           // console.log(user);
         } else if (comp === "Login") {
           await dispatch(login({
-            identifier: values.email,
+            email: values.email,
             password: values.password
           }))
           const authState = store.getState().authReducer;
@@ -100,7 +100,7 @@ const AuthForWorker = ({ comp }) => {
           }
         }
       } catch (error) {
-        // console.log(error);
+        console.log(error);
         message.destroy()
         message.error(error.response.data.message);
       }
