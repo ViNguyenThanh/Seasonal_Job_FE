@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import './Header.css'
+import './EmployerHeader.css'
 import logo from '/assets/logo.png'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Avatar, Badge, Button, Dropdown, message, Space } from 'antd'
-import { AuditOutlined, BellOutlined, CreditCardOutlined, FileOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined, } from '@ant-design/icons';
+import { AuditOutlined, BellOutlined, CreditCardOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
 import { getUserFromToken } from '../../utils/Token'
 import { userApi } from '../../apis/user.request'
-import { useDispatch } from 'react-redux'
 import { logout } from '../../redux/actions/auth.action'
+import { useDispatch } from 'react-redux'
 
 
-const Header = () => {
+const EmployerHeader = () => {
     const dispatch = useDispatch()
     const { user } = getUserFromToken();
     const [userInfor, setUserInfo] = useState({});
@@ -21,8 +21,8 @@ const Header = () => {
                 if (user) {
                     const res = await userApi.getUserById(user.id);
                     setUserInfo(res.data.data);
-                    // console.log(res.data.data);
                 }
+                // console.log(res.data.data);
 
             } catch (error) {
                 console.log(error);
@@ -80,31 +80,22 @@ const Header = () => {
         };
     }, []);
 
-
-    // const menu = (
-    //     <Menu
-    //         items={[
-    //             { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
-    //             { key: '2', label: 'Resume & CV' },
-    //             { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div> },
-    //             { key: 'divider', type: 'divider' },
-    //             { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>For Employer</div> },
-    //             { key: '5', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
-    //         ]}
-    //     />
-    // );
     const menuItems = [
-        { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
-        { key: '2', label: 'Resume & CV' },
-        { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div> },
+        {
+            key: '1', label: <div onClick={() => {
+                navigate("/job-posting-flow/posting-notifications");
+                window.scrollTo(0, 0);
+            }}>Job posting</div>
+        },
+        { key: '2', label: 'Premium' },
         { key: 'divider', type: 'divider' },
-        { key: '4', label: <div onClick={() => { navigate("/employer-home"); window.scrollTo(0, 0); }}>For Employer</div> },
-        { key: '5', label: <div onClick={() => { navigate("/login-for-worker"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
+        { key: '3', label: <div onClick={() => { navigate("/"); window.scrollTo(0, 0); }}>For worker</div> },
+        { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
     ];
     // Nếu có user, bỏ các mục key: 'divider', key: '4', key: '5' ra khỏi menuItems
     useEffect(() => {
-        if (user && userInfor.role === "user") {
-            const updatedMenuItems = menuItems.filter(item => item.key !== 'divider' && item.key !== '4' && item.key !== '5');
+        if (user && userInfor.role === "employer") {
+            const updatedMenuItems = menuItems.filter(item => item.key !== 'divider' && item.key !== '3' && item.key !== '4');
             // Cập nhật lại menuItems nếu có user
             menuItems.length = 0;
             menuItems.push(...updatedMenuItems);
@@ -114,7 +105,7 @@ const Header = () => {
     const handleLogout = () => {
         dispatch(logout("token"));
         message.success("Logout successfully!");
-        navigate("/");
+        navigate("/employer-home");
     }
 
     const itemsUser = [
@@ -126,36 +117,29 @@ const Header = () => {
             // onClick: () => { navigate('/admin/admin-home') },
         },
         {
-            label: "CV attachment",
-            key: '2',
-            icon: <FileOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
-            // onClick: handleLogout,
-        },
-        {
             label: "Applications",
-            key: '3',
+            key: '2',
             icon: <AuditOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
         {
-            label: "My jobs",
-            key: '4',
+            label: "My jobs posting",
+            key: '3',
             icon: <ProfileOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
         {
             label: "Wallet & transaction",
-            key: '5',
+            key: '4',
             icon: <CreditCardOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
         {
             label: "Log out",
-            key: '6',
+            key: '5',
             icon: <LogoutOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
             onClick: handleLogout,
@@ -163,16 +147,16 @@ const Header = () => {
     ];
 
     return (
-        <div className={`header-whole-container ${showHeader ? 'show' : ''}`} >
-            <div className={`header-container ${showHeader ? 'show-down' : ''}`}>
-                <div className="header-left">
+        <div className={`employer-header-whole-container ${showHeader ? 'show' : ''}`} >
+            <div className={`employer-header-container ${showHeader ? 'show-down' : ''}`}>
+                <div className="employer-header-left">
                     {!isMobile && (
-                        <img src={logo} className='header-logo' onClick={handleClick} />
+                        <img src={logo} className='employer-header-logo' onClick={handleClick} />
                     )}
-                    {/* <img src={logo} className='header-logo' onClick={handleClick} /> */}
-                    {(isMobile && (!user || userInfor.role === 'employer')) ? (
-                        <div className="header-left">
-                            <img src={logo} className='header-logo' onClick={handleClick} />
+                    {/* <img src={logo} className='employer-header-logo' onClick={handleClick} /> */}
+                    {(isMobile && (!user || userInfor.role === 'user')) ? (
+                        <div className="employer-header-left">
+                            <img src={logo} className='employer-header-logo' onClick={handleClick} />
                         </div>
                     ) : null}
                     {!isMobile && (
@@ -190,13 +174,13 @@ const Header = () => {
                     <li>Resume & CV</li>
                     <li>Companies</li> */}
                     {isMobile ? (
-                        <div className={`dropdown-btn ${user && userInfor.role === 'user' ? 'user-logged-in' : ''}`}>
-                            {user && userInfor.role === 'user' ? (
+                        <div className={`dropdown-btn ${user && userInfor.role === 'employer' ? 'user-logged-in' : ''}`}>
+                            {user && userInfor.role === 'employer' ? (
                                 <>
                                     <Dropdown menu={{ items: /*menu.props.items*/ menuItems }} trigger={['click']} placement="bottomRight">
                                         <Button icon={<MenuOutlined />} type="primary" />
                                     </Dropdown>
-                                    <img src={logo} className='header-logo' onClick={handleClick} />
+                                    <img src={logo} className='employer-header-logo' onClick={handleClick} />
                                     <div>
                                         {/* <Badge size='default' style={{ marginRight: '15px' }} count={1}>
                                             <Avatar style={{ marginRight: '10px', backgroundColor: '#4096ff8a' }} size={'large'} shape="square" icon={<BellOutlined />} />
@@ -215,7 +199,6 @@ const Header = () => {
                                             </a>
                                         </Dropdown>
                                     </div>
-
                                 </>
                             ) : (
                                 <Dropdown menu={{ items: /*menu.props.items*/ menuItems }} trigger={['click']} placement="bottomRight">
@@ -227,12 +210,12 @@ const Header = () => {
                         <>
                             <li
                                 onClick={() => {
-                                    navigate("/finding-job")
+                                    navigate("/job-posting-flow/posting-notifications")
                                     window.scrollTo(0, 0);
                                 }}
-                                className={location.pathname === '/finding-job' ? 'active' : ''}
+                                className={location.pathname === '/job-posting-flow/posting-notifications' ? 'active' : ''}
                             >
-                                All Jobs
+                                Job posting
                             </li>
                             {/* <li>Resume & CV</li> */}
                             <li
@@ -242,29 +225,29 @@ const Header = () => {
                                 }}
                                 className={location.pathname === '/finding-company' ? 'active' : ''}
                             >
-                                Companies
+                                Premium
                             </li>
                         </>
                     )}
                 </div>
-                {/* <div className="header-right">
+                {/* <div className="employer-header-right">
                     <li>For Employer</li>
                     <div style={{border: '1px solid white', height: '35px', margin: '0 3%'}}></div>
                     <li>Sign in / Sign Up</li>
                 </div> */}
                 {!isMobile && (
-                    <div className="header-right">
+                    <div className="employer-header-right">
                         <li
                             onClick={() => {
-                                navigate("/employer-home")
+                                navigate("/")
                                 window.scrollTo(0, 0);
                             }}
                         >
-                            For Employer
+                            For Worker
                         </li>
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
-                        {user && userInfor.role === "user" ? (
-                            <div className='header-right-items'>
+                        {user && userInfor.role === 'employer' ? (
+                            <div className='employer-header-right-items'>
                                 {/* <Badge size='default' style={{ marginRight: '15px' }} count={1}>
                                     <Avatar style={{ marginRight: '10px', backgroundColor: '#4096ff8a' }} size={'large'} shape="square" icon={<BellOutlined />} />
                                 </Badge> */}
@@ -285,7 +268,7 @@ const Header = () => {
                         ) : (
                             <li
                                 onClick={() => {
-                                    navigate("/login-for-worker")
+                                    navigate("/login-for-employer")
                                     window.scrollTo(0, 0);
                                 }}
                             >
@@ -299,4 +282,4 @@ const Header = () => {
     )
 }
 
-export default Header
+export default EmployerHeader

@@ -7,7 +7,10 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Checkbox, Form, Input, message, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { login, register } from '../../apis/auth.request';
+import { authApi } from '../../apis/auth.request';
+import { login } from '../../redux/actions/auth.action';
+import store from "../../store/ReduxStore";
+import { useDispatch } from 'react-redux';
 
 const AuthForEmployer = ({ comp }) => {
     const [passwordVisible, setPasswordVisible] = useState(false)
@@ -15,6 +18,7 @@ const AuthForEmployer = ({ comp }) => {
     const [checked, setChecked] = useState(false);
     const [showCheckboxError, setShowCheckboxError] = useState(false);
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
 
     const formik = useFormik({
@@ -45,6 +49,9 @@ const AuthForEmployer = ({ comp }) => {
                     })
                     .test('no-extra-space', '* No extra spaces allowed', value => {
                         return value ? !/ {2,}/.test(value) : false;
+                    })
+                    .test('no-question-mark', '* Cannot contain "?" character', value => {
+                        return value ? !/\?/.test(value) : false;
                     })
                     .max(60, "* Company Name cannot be longer than 60 characters")
                     .required("* Required")
@@ -83,7 +90,7 @@ const AuthForEmployer = ({ comp }) => {
                         setShowCheckboxError(true);
                         return; // Dừng submit nếu checkbox chưa được chọn
                     }
-                    const user = await register({
+                    const user = await authApi.register({
                         email: values.email,
                         password: values.password,
                         address: values.district + ", " + values.city,
@@ -93,23 +100,24 @@ const AuthForEmployer = ({ comp }) => {
                     })
                     if (user.status == 201) {
                         message.destroy()
-                        message.success("Register successfully!");
+                        message.success("Register successfully! Check your email to verify account");
                         navigate("/login-for-employer");
                     }
                     // console.log(user);
                 } else if (comp === "Login") {
-                    // console.log(values);
-                    const user = await login({
-                        identifier: values.email,
+                    await dispatch(login({
+                        email: values.email,
                         password: values.password
-                    });
-                    // console.log(user);
-                    if (user.status == 200) {
+                    }))
+                    const authState = store.getState().authReducer;
+
+                    if (authState.payload) {
                         message.destroy()
                         message.success("Login successfully!");
-                        // console.log(user);
-                        saveLocalstorage("token", user.data.token);
-                        navigate("/");
+                        navigate("/employer-home");
+                    } else {
+                        message.destroy()
+                        message.error(authState.error.message);
                     }
                 }
             } catch (error) {
@@ -166,7 +174,7 @@ const AuthForEmployer = ({ comp }) => {
 
                 <img src={background_employer} className='auth-employer-background-img' />
 
-                <button className='home-btn' onClick={() => navigate("/")}><HomeFilled /></button>
+                <button className='home-btn' onClick={() => navigate("/employer-home")}><HomeFilled /></button>
 
                 <div className="auth-employer-left">
 
