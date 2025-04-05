@@ -127,6 +127,14 @@
     display: none;
 }
 
+@media (max-width: 1300px) {
+    .confirm-posting-container .confirm-posting-table thead tr th{
+        padding: 3% 0
+    }
+    .confirm-posting-container .confirm-posting-table tbody tr td{
+        padding: 5% 0;
+    }
+}
 @media (max-width: 1240px) {
     .confirm-posting-container .confirm-posting-table tbody tr td.rating {
         width: 9%;
@@ -138,25 +146,19 @@
         padding: 5% 0;
     }
 }
-@media (max-width: 980px) {
-    .confirm-posting-container .confirm-posting-table tbody tr td.rating {
-        width: 13%;
-        padding: 0 1%;
-    }
-}
-@media (max-width: 900px) {
-    .confirm-posting-container .confirm-posting-whole-table{
-        overflow-x: auto;
-    }
+@media (max-width: 1000px) {
     .confirm-posting-container .confirm-posting-header .start-end-date p{
         font-size: 18px;
         margin: 2% 0 3%;
     }
+    .confirm-posting-container .confirm-posting-whole-table{
+        overflow-x: auto;
+    }
     .confirm-posting-container .confirm-posting-whole-table .confirm-posting-table {
-        min-width: 900px; /* Đảm bảo bảng không bị co lại quá nhỏ */
+        min-width: 1000px; /* Đảm bảo bảng không bị co lại quá nhỏ */
     }
     .confirm-posting-container .confirm-posting-table tbody tr td{
-        padding: 3% 0;
+        padding: 5% 0;
     }
     .confirm-posting-container .confirm-posting-table tbody tr td.rating {
         width: 13%;

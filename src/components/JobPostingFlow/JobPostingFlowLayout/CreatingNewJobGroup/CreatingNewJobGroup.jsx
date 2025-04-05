@@ -8,7 +8,7 @@ const { RangePicker } = DatePicker;
 import dayjs from 'dayjs';
 const { TextArea } = Input;
 
-const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }) => {
+const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*, onSubmit, setIsValid*/ }) => {
 
     const formik = useFormik({
         enableReinitialize: true, 
@@ -49,7 +49,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
                         return true; // Nếu không phải chữ cái, bỏ qua
                     });
                 })
-                .max(60, "* Job Group Name cannot be longer than 60 characters")
+                .max(120, "* Job Group Name cannot be longer than 120 characters")
                 .required("* Required"),
             // startDate: Yup.string()
             //     .required("* Required"),
@@ -129,8 +129,13 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
 
     useEffect(() => {
         // console.log(formik.values);
+        if (formik.errors.jobGroupName){
+            setCheckErrorJobGroup(true);
+        } else {
+            setCheckErrorJobGroup(false);
+        }
         setJobGroup(formik.values);
-    }, [formik.values]);
+    }, [formik.values, formik.errors.jobGroupName]);
 
     return (
         <div className="creating-new-job-group-container">
@@ -256,7 +261,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup/*, onSubmit, setIsValid*/ }
                             id="descriptionJobGroup"
                             name="descriptionJobGroup"
                             placeholder="Enter Job Group Description here..."
-                            style={{ height: 200, resize: 'none' }}
+                            style={{ height: 300, resize: 'none' }}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.descriptionJobGroup}

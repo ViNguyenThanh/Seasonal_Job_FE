@@ -1,4 +1,4 @@
-.header-whole-container {
+.employer-header-whole-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -17,7 +17,7 @@
     height: 95px;
 }
 
-.header-container {
+.employer-header-container {
     font-family: var(--font-inter);
     font-weight: bold;
     max-width: var(--max-screen-width);
@@ -36,21 +36,21 @@
     transition: 0.3s ease;
 }
 
-.header-left {
+.employer-header-left {
     width: 60%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
 
-.header-left .header-logo {
+.employer-header-left .employer-header-logo {
     width: 200px;
     height: 80px;
     cursor: pointer;
     padding: 0 2%;
 }
 
-.header-left li {
+.employer-header-left li {
     list-style-type: none;
     cursor: pointer;
     padding: 0 1%;
@@ -61,15 +61,15 @@
     position: relative;
 }
 
-/* .header-left li:hover {
+/* .employer-header-left li:hover {
     border-bottom: 5px solid white;
     transition: 0.2s ease;
 }
 
-.header-left li.active{
+.employer-header-left li.active{
     border-bottom: 5px solid white;
 } */
-.header-left li::after {
+.employer-header-left li::after {
     content: "";
     position: absolute;
     left: 0%;
@@ -87,29 +87,25 @@
     /*để border-bottom chạy từ giữa*/
 }
 
-.header-left li:hover::after,
-.header-left li.active::after {
+.employer-header-left li:hover::after,
+.employer-header-left li.active::after {
     width: 100%;
     /* Điều chỉnh độ dài của border-bottom theo ý muốn */
 }
 
-.header-right {
+.employer-header-right {
     width: 40%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.header-right-items {
+.employer-header-right-items {
     display: flex;
     gap: 20px;
 }
 
-/* .ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item{
-    font-size: 16px;
-} */
-
-.header-right li {
+.employer-header-right li {
     list-style-type: none;
     cursor: pointer;
     padding: 0 1%;
@@ -120,20 +116,20 @@
     position: relative;
 }
 
-.header-right li:nth-of-type(2) {
+.employer-header-right li:nth-of-type(2) {
     margin-right: 5%;
 }
 
-/* .header-right li:hover {
+/* .employer-header-right li:hover {
     border-bottom: 5px solid white;
     transition: 0.2s ease;
 } 
 
-.header-right li.active{
+.employer-header-right li.active{
     border-bottom: 5px solid white;
 } */
 
-.header-right li::after {
+.employer-header-right li::after {
     content: "";
     position: absolute;
     left: 0%;
@@ -148,8 +144,8 @@
     transform: translateX(0%);/
 }
 
-.header-right li:hover::after,
-.header-right li.active::after {
+.employer-header-right li:hover::after,
+.employer-header-right li.active::after {
     width: 100%;
     /* Điều chỉnh độ dài của border-bottom theo ý muốn */
 }
@@ -183,7 +179,7 @@
         height: 125px;
     }
 
-    .header-container {
+    .employer-header-container {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -191,28 +187,28 @@
         padding-top: 20px;
     }
 
-    .header-left {
+    .employer-header-left {
         width: 100%;
     }
 
-    .header-left .header-logo {
+    .employer-header-left .employer-header-logo {
         width: 150px;
         height: 60px;
     }
 
-    .header-right {
+    .employer-header-right {
         width: 100%;
         justify-content: flex-end;
         margin-bottom: 2%;
     }
 
-    .header-left li,
-    .header-right li {
+    .employer-header-left li,
+    .employer-header-right li {
         font-size: 22px;
     }
 
-    .header-left li::after,
-    .header-right li::after {
+    .employer-header-left li::after,
+    .employer-header-right li::after {
         height: 4px
     }
 }
@@ -223,29 +219,29 @@
         height: 95px;
     }
 
-    .header-container {
+    .employer-header-container {
         /* height: 115px; */
         height: 95px;
     }
 
-    .header-left .header-logo {
+    .employer-header-left .employer-header-logo {
         width: 180px;
         height: 70px;
     }
 
-    .header-left li,
-    .header-right li {
+    .employer-header-left li,
+    .employer-header-right li {
         font-size: 18px;
     }
 
-    /* .header-left li:hover, .header-right li:hover{
+    /* .employer-header-left li:hover, .employer-header-right li:hover{
         border-bottom: 3px solid white;
     }
-    .header-left li.active, .header-right li.active{
+    .employer-header-left li.active, .employer-header-right li.active{
         border-bottom: 3px solid white;
     } */
-    .header-left li::after,
-    .header-right li::after {
+    .employer-header-left li::after,
+    .employer-header-right li::after {
         height: 3px
     }
 
