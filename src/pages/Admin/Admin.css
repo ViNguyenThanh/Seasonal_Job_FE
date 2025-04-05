@@ -1,0 +1,37 @@
+.admin-whole-container{
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-direction: column;
+}
+.admin-container{
+    max-width: 1560px;
+    width: 100%;
+}
+
+.header-admin {
+    width: 100%;
+    /* background-color: var(--color-bg-admin); */
+    /* background-color: #dfedff; */
+    display: flex;
+    justify-content: center;
+    padding-top: 3%;
+}
+
+.header-admin img {
+    width: 180px;
+}
+
+/* .ant-menu-item:focus, .ant-menu-item-selected {
+    outline: none !important;  Tắt hoàn toàn viền focus 
+} */
+
+.ant-menu-item {
+    user-select: none; /* Tắt chọn text khi click vào */
+    /*-webkit-tap-highlight-color: transparent;  Tắt hiệu ứng khi click trên mobile */
+}
+
+/* .ant-menu-item a {
+    pointer-events: none;  Chặn sự kiện focus trên các thẻ link bên trong 
+} */

@@ -24,6 +24,7 @@ import WorkerJobDetail from './components/Worker/WorkerJobs/WorkerJobDetail'
 import { getUserFromToken } from './utils/Token'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
+import Admin from './pages/Admin/Admin'
 
 
 
@@ -99,6 +100,11 @@ function App() {
         <Route path='/worker/*' element={<Worker />}>
           <Route path="worker-jobs" element={<WorkerJobs />} />
           <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail />} />
+        </Route>
+
+        {/* Admin */}
+        <Route path='/admin/*' element={<Admin />}>
+          
         </Route>
       </Routes>
     </>
