@@ -1,0 +1,27 @@
+.employer-whole-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-direction: column;
+    background-color: #f9f9f9;
+}
+
+.employer-container {
+    max-width: var(--max-screen-width);
+    width: 100%;
+    margin-top: 95px;
+    min-height: 100vh;
+    height: fit-content;
+}
+
+@media (max-width: 950px) {
+    .employer-container{
+        margin-top: 125px;
+    }
+}
+@media (max-width: 650px) {
+    .employer-container{
+        margin-top: 95px;
+    }
+}

@@ -21,10 +21,16 @@ import EmployerHome from './pages/EmployerHome/EmployerHome'
 import Worker from './pages/Worker/Worker'
 import WorkerJobs from './components/Worker/WorkerJobs/WorkerJobs'
 import WorkerJobDetail from './components/Worker/WorkerJobs/WorkerJobDetail'
+
 import { getUserFromToken } from './utils/Token'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import Admin from './pages/Admin/Admin'
+
+import Employer from './pages/Employer/Employer'
+import EmployerJobGroups from './components/Employer/EmployerJobGroups/EmployerJobGroups'
+import EmployerJobGroupDetail from './components/Employer/EmployerJobGroupDetail/EmployerJobGroupDetail'
+import EmployerJobPostingDetail from './components/Employer/EmployerJobPostingDetail/EmployerJobPostingDetail'
 
 
 
@@ -82,7 +88,7 @@ function App() {
 
         <Route path="/finding-worker" element={<FindingWorker />} />
         <Route path="/finding-job" element={<FindingJob />} />
-        <Route path="/job-detail-view" element={<JobDetailView />} />
+        <Route path="/job-detail-view/:id" element={<JobDetailView />} />
         <Route path="/finding-company" element={<FindingCompnay />} />
         <Route path="/company-detail" element={<CompanyDetail />} />
 
@@ -96,10 +102,17 @@ function App() {
           <Route path='/job-posting-flow/*' element={<Navigate to="/login-for-employer" />} />
         )}
 
-        {/* User */}
-        <Route path='/worker/*' element={<Worker />}>
-          <Route path="worker-jobs" element={<WorkerJobs />} />
-          <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail />} />
+        {/* Worker */}
+        <Route path='/worker/*' element={<Worker/>}>
+            <Route path="worker-jobs" element={<WorkerJobs/>}/>
+            <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail/>}/>
+        </Route>
+
+        {/* Employer */}
+        <Route path='/employer/*' element={<Employer/>}>
+            <Route path='employer-job-groups' element={<EmployerJobGroups/>}/>
+            <Route path='employer-job-groups/employer-job-group-detail/:id' element={<EmployerJobGroupDetail/>}/>
+            <Route path='employer-job-groups/employer-job-group-detail/:id/employer-job-posting-detail/:id' element={<EmployerJobPostingDetail/>}/>
         </Route>
 
         {/* Admin */}
