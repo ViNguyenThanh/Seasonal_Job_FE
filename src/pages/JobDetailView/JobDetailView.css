@@ -319,7 +319,7 @@
 }
 
 @media screen and (max-width: 1023px) {
-  .breadcrumb {
+  .job-detail-view-whole-container .breadcrumb {
     margin-right: 20px;
   }
 
@@ -363,7 +363,7 @@
 
 /* Add this media query for mobile devices */
 @media screen and (max-width: 768px) {
-  .breadcrumb {
+  .job-detail-view-whole-container .breadcrumb {
     margin-right: 20px;
   }
 
@@ -459,7 +459,7 @@
     margin-right: 4.9% !important;
   }
 
-  .breadcrumb {
+  .job-detail-view-whole-container .breadcrumb {
     margin-right: 5% !important;
   }
 }
