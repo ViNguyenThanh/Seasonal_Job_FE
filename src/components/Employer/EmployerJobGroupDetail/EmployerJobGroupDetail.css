@@ -1,6 +1,49 @@
+.employer-job-group-detail-whole-container{
+    margin-top: 25px;
+}
+.employer-job-group-detail-whole-container .ant-breadcrumb {
+    font-size: 18px;
+}
+.employer-job-group-detail-whole-container .ant-breadcrumb ol {
+    width: 95%;
+    margin-left: 5%;
+    /* margin: -2%; */
+    align-items: center;
+}
+.employer-job-group-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+    margin: 0 5px;
+}
+.employer-job-group-detail-whole-container .breadcrumb .b-title-1{
+    padding: 5px 10px 15px;
+}
+/* chỉnh dấu /  */
+.employer-job-group-detail-whole-container .ant-breadcrumb .ant-breadcrumb-separator {
+    color: black;
+    padding-bottom: 0.3%;
+    font-size: 18px;
+}
+.employer-job-group-detail-whole-container .breadcrumb .b-title-2 {
+    color: rgb(61, 61, 61);
+    text-transform: capitalize;
+    cursor: pointer;
+    margin: 0;
+    padding: 5px 10px 10px;
+    border-radius: 5px;
+}
+.employer-job-group-detail-whole-container .breadcrumb .b-title-2:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+.employer-job-group-detail-whole-container .ant-breadcrumb .anticon {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+
+
+
 .employer-job-group-detail-container{
     width: 75%;
-    margin: 60px 7.5% 100px;
+    margin: 0 7.5% 100px;
     padding: 2% 5%;
     background-color: white;
     box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
