@@ -1,75 +1,42 @@
+/* eslint-disable no-dupe-keys */
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Select, Space, Button, Flex, Modal, Checkbox, Radio, Card, Tag } from "antd";
-import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, CalendarOutlined, BookOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { jobApi } from '../../apis/job.request'; // Import the jobApi
+import { useEffect } from 'react';
 
 const { Option } = Select;
 
 const FindingJob = () => {
-    const [jobData, setJobData] = useState([
-        {
-            title: "Marketing Manager",
-            duration: "1 month",
-            location: "New Mexico, USA",
-            salary: "50k-80k/month",
-            remaining: "4 Days Remaining",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isSaved: false
-        },
-        {
-            title: "Software Engineer",
-            duration: "2 weeks",
-            location: "California, USA",
-            salary: "70k-100k/month",
-            remaining: "10 Days Remaining",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isSaved: false
-        },
-        {
-            title: "Product Manager",
-            duration: "3 weeks",
-            location: "Texas, USA",
-            salary: "60k-90k/month",
-            remaining: "7 Days Remaining",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isSaved: false
-        },
-        {
-            title: "Data Scientist",
-            duration: "1 month",
-            location: "New York, USA",
-            salary: "80k-120k/month",
-            remaining: "5 Days Remaining",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isSaved: false
-        },
-        {
-            title: "UX Designer",
-            duration: "1 weeks",
-            location: "Florida, USA",
-            salary: "50k-70k/month",
-            remaining: "3 Days Remaining",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isSaved: false
-        },
-        {
-            title: "DevOps Engineer",
-            duration: "1 month",
-            location: "Washington, USA",
-            salary: "90k-130k/month",
-            remaining: "8 Days Remaining",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isSaved: false
-        }
-    ]);
-
+    const [jobData, setJobData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFiltered, setIsFiltered] = useState(false);
+
+    // Fetch all jobs when the component loads
+    useEffect(() => {
+        const fetchJobs = async () => {
+            try {
+                const response = await jobApi.getAllJobs(); // Call the API
+                if (Array.isArray(response.data.data)) { // Access the nested 'data' property
+                    setJobData(response.data.data); // Extract the array of jobs
+                } else {
+                    console.error('Unexpected API response format:', response);
+                    setJobData([]); // Fallback to an empty array
+                }
+            } catch (error) {
+                console.error('Error fetching jobs:', error);
+                setJobData([]); // Fallback to an empty array
+            }
+        };
+
+        fetchJobs();
+    }, []);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -87,11 +54,11 @@ const FindingJob = () => {
         setIsFiltered(true);
     };
 
-    const handleSaveClick = (index) => {
-        const newJobData = [...jobData];
-        newJobData[index].isSaved = !newJobData[index].isSaved;
-        setJobData(newJobData);
-    };
+    // const handleSaveClick = (index) => {
+    //     const newJobData = [...jobData];
+    //     newJobData[index].isSaved = !newJobData[index].isSaved;
+    //     setJobData(newJobData);
+    // };
 
     const navigate = useNavigate();
 
@@ -287,8 +254,9 @@ const FindingJob = () => {
                     </Col>
                 </Row>
 
-                {jobData.map((job, index) => (
-                    <div key={index} style={{ display: 'flex', justifyContent: 'center' }}>
+
+                {Array.isArray(jobData) && jobData.map((job, index) => (
+                    <div key={job.id} style={{ display: 'flex', justifyContent: 'center' }}>
                         <Card
                             style={{
                                 width: '100%',
@@ -301,19 +269,26 @@ const FindingJob = () => {
                                 title={
                                     <div className="job-card-meta" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                         <span>{job.title}</span>
-                                        <Tag color="blue">{job.duration}</Tag>
+                                        <Tag color="blue">
+                                            {(() => {
+                                                const startDate = new Date(job.started_date);
+                                                const endDate = new Date(job.end_date);
+                                                const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
+                                                return `${durationInDays} days`; // Display duration
+                                            })()}
+                                        </Tag>
                                     </div>
                                 }
                                 description={
                                     <>
                                         <div className="job-card-description" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div style={{ display: 'flex', gap: '21px' }}>
+                                            <div style={{ display: 'flex', gap: '10px', flexDirection: 'row-reverse' }}>
+                                                <span><DollarOutlined /> ${job.salary}</span>
+                                                {/* <span><CalendarOutlined /> Expiry: {new Date(job.expired_date).toLocaleDateString()}</span> */}
                                                 <span><EnvironmentOutlined /> {job.location}</span>
-                                                <span><DollarOutlined /> {job.salary}</span>
-                                                <span><CalendarOutlined /> {job.remaining}</span>
                                             </div>
                                             <div className="job-card-buttons" style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
-                                                <Button
+                                                {/* <Button
                                                     type={job.isSaved ? 'primary' : 'default'}
                                                     shape="rectangle"
                                                     style={{ height: '40px' }}
@@ -321,13 +296,13 @@ const FindingJob = () => {
                                                     className="save-button"
                                                 >
                                                     <BookOutlined />
-                                                </Button>
+                                                </Button> */}
                                                 <Button
                                                     type="primary"
                                                     className="apply-now-button"
                                                     style={{ height: '40px' }}
                                                     onClick={() => {
-                                                        navigate("/job-detail-view")
+                                                        navigate(`/job-detail-view/${job.id}`);
                                                         window.scrollTo(0, 0);
                                                     }}
                                                 >
@@ -337,7 +312,7 @@ const FindingJob = () => {
                                         </div>
                                     </>
                                 }
-                                avatar={<img alt="example" src={job.avatar} style={{ width: '100px', height: '100px', borderRadius: '5px' }} />}
+                                avatar={<img alt="example" src={"https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} style={{ width: '100px', height: '100px', borderRadius: '5px' }} />}
                             />
                         </Card>
                     </div>

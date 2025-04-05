@@ -19,6 +19,14 @@
   margin-right: 3% !important;
 }
 
+.job-detail-view-container .breadcrumb .ant-breadcrumb-link {
+  font-size: 20px !important; /* Force the font size to be larger */
+}
+
+.job-detail-view-container .breadcrumb .ant-breadcrumb-separator {
+  font-size: 20px !important; /* Ensure the separator matches the text size */
+}
+
 /* .ebc-p-title {
   font-size: 1.2rem;
   font-weight: 600;

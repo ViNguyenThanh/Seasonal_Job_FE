@@ -87,7 +87,7 @@ function App() {
 
         <Route path="/finding-worker" element={<FindingWorker />} />
         <Route path="/finding-job" element={<FindingJob />} />
-        <Route path="/job-detail-view" element={<JobDetailView />} />
+        <Route path="/job-detail-view/:id" element={<JobDetailView />} />
         <Route path="/finding-company" element={<FindingCompnay />} />
         <Route path="/company-detail" element={<CompanyDetail />} />
 

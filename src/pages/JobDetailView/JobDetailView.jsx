@@ -1,26 +1,131 @@
 /* eslint-disable no-undef */
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./JobDetailView.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input } from 'antd';
-import { AntDesignOutlined, LinkOutlined, PhoneOutlined, MailOutlined, BookOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { AntDesignOutlined, LinkOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
-import { FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutlined, SolutionOutlined, WalletOutlined, EnvironmentOutlined, FileProtectOutlined, HistoryOutlined, TwitterOutlined, YoutubeOutlined, UploadOutlined } from '@ant-design/icons';
+import { FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, TwitterOutlined, YoutubeOutlined, UploadOutlined, ManOutlined, WomanOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
+import { useParams } from "react-router-dom";
+import { jobApi } from "../../apis/job.request"; // Import the jobApi
+import { uploadCV } from "../../apis/cv.request"; // Import the uploadCV API
+import { message } from "antd"; // Import Ant Design's message component
 
 const JobDetailView = () => {
-    // Save button click handler
-    const [isSaved, setIsSaved] = useState(false); // State to track saved status
 
-    const toggleSaveStatus = () => {
-        setIsSaved(!isSaved); // Toggle the saved status
+    const { id } = useParams(); // Get the job ID from the route
+    const [jobDetail, setJobDetail] = useState(null); // State to store job details
+    const [isLoading, setIsLoading] = useState(true); // State to track loading
+    const [selectedFile, setSelectedFile] = useState(null); // State to store the selected file
+    const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+    const [isApplied, setIsApplied] = useState(false); // State to track if the user has applied
+    const [value, setValue] = useState(''); // State for cover letter
+    const [loadings, setLoadings] = useState([]); // State for button loading
+
+    // Fetch job details when the component loads
+    useEffect(() => {
+        const fetchJobDetail = async () => {
+            try {
+                const response = await jobApi.getJobById(id); // Fetch job by ID
+                setJobDetail(response.data.data); // Access the nested 'data' property
+                setIsLoading(false); // Set loading to false
+            } catch (error) {
+                console.error("Error fetching job details:", error);
+                setIsLoading(false); // Set loading to false even on error
+            }
+        };
+
+        fetchJobDetail();
+
+        // Load the application status from localStorage
+        const appliedJobs = JSON.parse(localStorage.getItem("appliedJobs")) || {};
+        if (appliedJobs[id]) {
+            setIsApplied(true); // Set the state to true if the job is already applied
+        }
+    }, [id]);
+
+    if (isLoading) {
+        return <div>Loading...</div>; // Show a loading message while fetching data
+    }
+
+    if (!jobDetail) {
+        return <div>Job not found</div>; // Show a message if no job details are found
+    }
+
+    // Handle file selection
+    const handleUpload = (info) => {
+        if (info.file.status === "done") {
+            const file = info.file.originFileObj; // Get the selected file
+            console.log("File selected:", file); // Log the file details
+            setSelectedFile(file); // Store the file in state
+            message.success(`${info.file.name} file is ready to upload.`);
+        } else if (info.file.status === "error") {
+            message.error(`${info.file.name} file upload failed.`);
+        }
     };
 
-    // Modal
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const props = {
+        name: "file",
+        customRequest: ({ file, onSuccess }) => {
+            setTimeout(() => {
+                onSuccess("ok"); // Simulate success for Ant Design's Upload component
+            }, 0);
+        },
+        onChange: handleUpload, // Use the custom handler
+    };
+
+    const handleApplyNow = async () => {
+        if (!selectedFile) {
+            message.error("Please select a CV before applying.");
+            return;
+        }
+
+        // Trigger loading animation
+        enterLoading(1); // Pass the index of the button to enable loading
+
+        try {
+            const response = await uploadCV(selectedFile); // Call the uploadCV API with the selected file
+            console.log("Application submitted successfully:", response);
+            message.success("Your application has been submitted successfully!");
+
+            // Mark the job as applied
+            setIsApplied(true);
+            setIsModalOpen(false); // Close the modal
+
+            // Save the application status in localStorage
+            const appliedJobs = JSON.parse(localStorage.getItem("appliedJobs")) || {};
+            appliedJobs[id] = true; // Mark this job as applied
+            localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
+        } catch (error) {
+            console.error("Error submitting application:", error);
+            message.error(error.message || "Failed to submit your application.");
+        } finally {
+            // Stop the loading animation after the process is complete
+            setLoadings((prevLoadings) => {
+                const newLoadings = [...prevLoadings];
+                newLoadings[1] = false; // Reset loading state
+                return newLoadings;
+            });
+        }
+    };
+
+    const enterLoading = (index) => {
+        setLoadings((prevLoadings) => {
+            const newLoadings = [...prevLoadings];
+            newLoadings[index] = true; // Enable loading for the button at the given index
+            return newLoadings;
+        });
+    };
+
+    // const toggleSaveStatus = () => {
+    //     setIsSaved(!isSaved); // Toggle the saved status
+    // };
+
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -28,43 +133,6 @@ const JobDetailView = () => {
         setIsModalOpen(false);
     };
 
-    const props = {
-        name: 'file',
-        action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
-        headers: {
-            authorization: 'authorization-text',
-        },
-        onChange(info) {
-            if (info.file.status !== 'uploading') {
-                console.log(info.file, info.fileList);
-            }
-            if (info.file.status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully`);
-            } else if (info.file.status === 'error') {
-                message.error(`${info.file.name} file upload failed.`);
-            }
-        },
-    };
-
-    // Textarea
-    const [value, setValue] = useState('');
-
-    // Loading button
-    const [loadings, setLoadings] = useState([]);
-    const enterLoading = (index) => {
-        setLoadings((prevLoadings) => {
-            const newLoadings = [...prevLoadings];
-            newLoadings[index] = true;
-            return newLoadings;
-        });
-        setTimeout(() => {
-            setLoadings((prevLoadings) => {
-                const newLoadings = [...prevLoadings];
-                newLoadings[index] = false;
-                return newLoadings;
-            });
-        }, 3000);
-    };
     return (
         <div className='job-detail-view-whole-container'>
             <Header />
@@ -98,8 +166,15 @@ const JobDetailView = () => {
                         />
                         <div style={{ marginLeft: '10px' }}>
                             <div className="job-detail-title-section">
-                                <Title level={2} style={{ fontWeight: 'bold', margin: 0 }}>UX Designer</Title>
-                                <Tag className="job-tag" color="blue">1 weeks</Tag>
+                                <Title level={2} style={{ fontWeight: 'bold', margin: 0 }}>{jobDetail.title}</Title>
+                                <Tag color="blue">
+                                    {(() => {
+                                        const startDate = new Date(jobDetail.started_date);
+                                        const endDate = new Date(jobDetail.end_date);
+                                        const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
+                                        return `${durationInDays} days`; // Display duration
+                                    })()}
+                                </Tag>
                             </div>
 
                             <div className="job-detail-info-section">
@@ -112,25 +187,31 @@ const JobDetailView = () => {
 
                     <div className="job-detail-action-section">
                         <div className="job-detail-buttons">
-                            <Button
+                            {/* <Button
                                 type={isSaved ? "primary" : "default"} // Change button type based on isSaved
                                 shape="rectangle"
                                 className="bookmark-button"
                                 onClick={toggleSaveStatus} // Handle click to toggle status
                             >
                                 <BookOutlined />
-                            </Button>
+                            </Button> */}
 
                             <Button
                                 type="primary"
                                 className="apply-now-button"
                                 onClick={showModal}
+                                disabled={isApplied} // Disable the button if the user has applied
                             >
-                                Apply now <ArrowRightOutlined />
+                                {isApplied ? "Applied" : <>Apply now <ArrowRightOutlined /></>} {/* Conditionally render text and icon */}
                             </Button>
                         </div>
                         <p className="job-expiry-info">
-                            Job expire in:<span className="job-expiry-date">June 30, 2021</span>
+                            Job expire in:<span className="job-expiry-date">
+                                {new Intl.DateTimeFormat('en-GB', {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric',
+                                }).format(new Date(jobDetail.expired_date))}</span>
                         </p>
                     </div>
                 </div>
@@ -140,18 +221,18 @@ const JobDetailView = () => {
 
                             <Typography className="job-description-leftSide-typography">
                                 <Title level={3} className="job-description-leftSide-title">Job Description</Title>
-                                <Paragraph>
-                                    Integer aliquet pretium consequat. Donec et sapien id leo accumsan pellentesque eget maximus tellus. Duis et est ac leo rhoncus tincidunt vitae vehicula augue. Donec in suscipit diam. Pellentesque quis justo sit amet arcu commodo sollicitudin. Integer finibus blandit condimentum. Vivamus sit amet ligula ullamcorper, pulvinar ante id, tristique erat. Quisque sit amet aliquam urna. Maecenas blandit felis id massa sodales finibus. Integer bibendum eu nulla eu sollicitudin. Sed lobortis diam tincidunt accumsan faucibus. Quisque blandit augue quis turpis auctor, dapibus euismod ante ultricies. Ut non felis lacinia turpis feugiat euismod at id magna. Sed ut orci arcu. Suspendisse sollicitudin faucibus aliquet.
-                                </Paragraph>
-
-                                <Paragraph>
-                                    Nam dapibus consectetur erat in euismod. Cras urna augue, mollis venenatis augue sed, porttitor aliquet nibh. Sed tristique dictum elementum. Nulla imperdiet sit amet quam eget lobortis. Etiam in neque sit amet orci interdum tincidunt.
+                                <Paragraph style={{ fontSize: "18px", color: "#333333" }}>
+                                    <span
+                                        dangerouslySetInnerHTML={{
+                                            __html: jobDetail.description,
+                                        }}
+                                    />
                                 </Paragraph>
 
                             </Typography>
 
-                            <Typography className="job-description-leftSide-typography">
-                                <Title level={3} className="job-description-leftSide-title">Responsibilities</Title>
+                            {/* <Typography className="job-description-leftSide-typography">
+                                <Title level={3} className="job-description-leftSide-title">Job Details</Title>
 
                                 <Paragraph>
                                     <ul className="responsibilities-list">
@@ -202,9 +283,9 @@ const JobDetailView = () => {
                                         </li>
                                     </ul>
                                 </Paragraph>
-                            </Typography>
+                            </Typography> */}
 
-                            <div className="share-this-job desktop-n-tablet-only">
+                            {/* <div className="share-this-job desktop-n-tablet-only">
                                 <Title level={4} style={{ margin: 0 }}>Share this job:</Title>
                                 <div className="social-media-buttons">
                                     <Button
@@ -222,7 +303,7 @@ const JobDetailView = () => {
                                         Instagram
                                     </Button>
                                 </div>
-                            </div>
+                            </div> */}
 
                         </div>
                     </Col>
@@ -238,51 +319,70 @@ const JobDetailView = () => {
                                                 <CalendarOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     JOB POSTED:<br />
-                                                    <span className="job-overview-highlight">14 June, 2021</span>
+                                                    <span className="job-overview-highlight">
+                                                        {new Intl.DateTimeFormat('en-GB', {
+                                                            day: '2-digit',
+                                                            month: 'long',
+                                                            year: 'numeric',
+                                                        }).format(new Date(jobDetail.updatedAt))}
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <ClockCircleOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     JOB EXPIRE IN:<br />
-                                                    <span className="job-overview-highlight">June 30, 2021</span>
+                                                    <span className="job-overview-highlight">
+                                                        {new Intl.DateTimeFormat('en-GB', {
+                                                            day: '2-digit',
+                                                            month: 'long',
+                                                            year: 'numeric',
+                                                        }).format(new Date(jobDetail.expired_date))}</span>
                                                 </Paragraph>
                                             </Col>
-                                            <Col xs={24} sm={12} md={8} className="job-overview-item">
+                                            {/* <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <SolutionOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     EDUCATION:<br />
                                                     <span className="job-overview-highlight">Graduation</span>
                                                 </Paragraph>
-                                            </Col>
+                                            </Col> */}
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <WalletOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     SALARY:<br />
-                                                    <span className="job-overview-highlight">$50k-80k/month</span>
+                                                    <span className="job-overview-highlight">${jobDetail.salary}/{jobDetail.payment_type}</span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <EnvironmentOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     LOCATION:<br />
-                                                    <span className="job-overview-highlight">New York, USA</span>
+                                                    <span className="job-overview-highlight">{jobDetail.location}</span>
                                                 </Paragraph>
                                             </Col>
-                                            <Col xs={24} sm={12} md={8} className="job-overview-item">
+                                            {/* <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <FileProtectOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     JOB TYPE:<br />
                                                     <span className="job-overview-highlight">Full Time</span>
                                                 </Paragraph>
-                                            </Col>
+                                            </Col> */}
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
+                                                <ManOutlined className="job-overview-icon" />
+                                                <WomanOutlined className="job-overview-icon" />
+                                                <Paragraph className="job-overview-text">
+                                                    GENDER:<br />
+                                                    <span className="job-overview-highlight">{jobDetail.gender_requirement}</span>
+                                                </Paragraph>
+                                            </Col>
+                                            {/* <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <HistoryOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     EXPERIENCE:<br />
                                                     <span className="job-overview-highlight">10 - 15 Years</span>
                                                 </Paragraph>
-                                            </Col>
+                                            </Col> */}
                                         </Row>
                                     </Paragraph>
                                 </Space.Compact>
@@ -363,26 +463,27 @@ const JobDetailView = () => {
 
                             <div className="job-detail-action-section-mobile-only">
                                 <div className="job-detail-buttons">
-                                    <Button
+                                    {/* <Button
                                         type={isSaved ? "primary" : "default"} // Change button type based on isSaved
                                         shape="rectangle"
                                         className="bookmark-button"
                                         onClick={toggleSaveStatus} // Handle click to toggle status
                                     >
                                         <BookOutlined />
-                                    </Button>
+                                    </Button> */}
 
                                     <Button
                                         type="primary"
                                         className="apply-now-button"
                                         onClick={showModal}
+                                        disabled={isApplied} // Disable the button if the user has applied
                                     >
-                                        Apply now <ArrowRightOutlined />
+                                        {isApplied ? "Applied" : <>Apply now <ArrowRightOutlined /></>} {/* Conditionally render text and icon */}
                                     </Button>
                                 </div>
                             </div>
 
-                            <div className="share-this-job-mobile-only">
+                            {/* <div className="share-this-job-mobile-only">
                                 <Title level={4} style={{ margin: 0 }}>Share this job:</Title>
                                 <div className="social-media-buttons">
                                     <Button
@@ -400,10 +501,10 @@ const JobDetailView = () => {
                                         Instagram
                                     </Button>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <Modal
-                                title="Apply Job: UX Designer"
+                                title={jobDetail.title}
                                 open={isModalOpen}
                                 onCancel={handleCancel}
                                 centered
@@ -414,22 +515,26 @@ const JobDetailView = () => {
                                     <Button
                                         key="submit"
                                         type="primary"
-                                        style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
+                                        style={{ backgroundColor: "#1890ff", borderColor: "#1890ff" }}
                                         loading={loadings[1]}
-                                        onClick={() => enterLoading(1)}
+                                        onClick={handleApplyNow} // Call the updated handler
                                     >
-                                        Apply Now <ArrowRightOutlined />
+                                        Apply Now
                                     </Button>,
                                 ]}
                             >
-                                <Title level={5} style={{ margin: 0 }}>Choose CV</Title>
+                                <Title level={5} style={{ margin: 0 }}>
+                                    Choose CV
+                                </Title>
                                 <Upload {...props}>
-                                    <Button icon={<UploadOutlined />} style={{ marginTop: '15px' }}>
+                                    <Button icon={<UploadOutlined />} style={{ marginTop: "15px" }}>
                                         Upload
                                     </Button>
                                 </Upload>
-                                <Title level={5} style={{ marginTop: '20px' }}>Cover Letter</Title>
-                                <div style={{ position: 'relative', width: '100%' }}>
+                                <Title level={5} style={{ marginTop: "20px" }}>
+                                    Cover Letter
+                                </Title>
+                                <div style={{ position: "relative", width: "100%" }}>
                                     <TextArea
                                         value={value}
                                         onChange={(e) => setValue(e.target.value)}
@@ -438,7 +543,7 @@ const JobDetailView = () => {
                                             minRows: 3,
                                             maxRows: 5,
                                         }}
-                                        style={{ paddingBottom: '50px' }}
+                                        style={{ paddingBottom: "50px" }}
                                     />
                                 </div>
                             </Modal>
