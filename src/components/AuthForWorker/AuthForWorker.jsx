@@ -74,7 +74,7 @@ const AuthForWorker = ({ comp }) => {
           const user = await authApi.register({
             email: values.email,
             password: values.password,
-            role: "user",
+            role: "worker",
             fullName: values.fullname
           })
           if (user.status == 201) {

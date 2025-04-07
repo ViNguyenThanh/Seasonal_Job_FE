@@ -25,6 +25,7 @@ import WorkerJobDetail from './components/Worker/WorkerJobs/WorkerJobDetail'
 import { getUserFromToken } from './utils/Token'
 import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
+import Admin from './pages/Admin/Admin'
 
 import Employer from './pages/Employer/Employer'
 import EmployerJobGroups from './components/Employer/EmployerJobGroups/EmployerJobGroups'
@@ -112,6 +113,11 @@ function App() {
             <Route path='employer-job-groups' element={<EmployerJobGroups/>}/>
             <Route path='employer-job-groups/employer-job-group-detail/:id' element={<EmployerJobGroupDetail/>}/>
             <Route path='employer-job-groups/employer-job-group-detail/:id/employer-job-posting-detail/:id' element={<EmployerJobPostingDetail/>}/>
+        </Route>
+
+        {/* Admin */}
+        <Route path='/admin/*' element={<Admin />}>
+          
         </Route>
       </Routes>
     </>
