@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './EmployerJobGroups.css'
 import { ArrowRightOutlined, FolderOpenOutlined } from '@ant-design/icons';
-import { Empty, Input, Pagination, Select } from 'antd';
+import { Empty, Input, Pagination, Select, Skeleton, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllJobGroupsByUserId } from '../../../redux/actions/jobgroups.action';
 const { Search } = Input;
 
 const EmployerJobGroups = () => {
@@ -26,21 +28,27 @@ const EmployerJobGroups = () => {
   ];
 
   const getStatusClass = (status) => {
-    if (status === 'Processing') return 'processing';
-    if (status === 'Completed') return 'completed';
-    if (status === 'Cancelled') return 'cancelled';
+    if (status === 'active') return 'processing';
+    if (status === 'completed') return 'completed';
+    if (status === 'inactive') return 'cancelled';
     return '';
   };
 
   // Quản lý phân trang
   const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
   const pageSize = 12; // Mỗi trang hiển thị 12 dòng
+  const dispatch = useDispatch();
+  const { isLoading, error, payload } = useSelector(state => state.jobGroupsReducer);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
     // window.scrollTo(0, 0);
     window.scroll({ top: 0, left: 0, behavior: 'smooth' })
   };
+
+  useEffect(() => {
+    dispatch(getAllJobGroupsByUserId());
+  }, [dispatch]);
 
 
   // chức năng Search Job Posting
@@ -52,7 +60,7 @@ const EmployerJobGroups = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredJobGroups = jobGroups.filter(item => {
+  const filteredJobGroups = !isLoading && payload?.length > 0 ? payload.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!statusJobGroupValue || item.status === statusJobGroupValue) &&
@@ -60,7 +68,7 @@ const EmployerJobGroups = () => {
         || item.title.toLowerCase().includes(searchTermLower)
       )
     );
-  });
+  }) : [];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listData*/ filteredJobGroups.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -70,13 +78,13 @@ const EmployerJobGroups = () => {
   return (
     <div className='employer-job-groups-container'>
 
-      {jobGroups.length === 0 ? (
+      {payload?.length === 0 ? (
         <div className="no-job-groups">
           <Empty description="You do not have a job group yet!" />;
         </div>
       ) : (
         <>
-          <p className='employer-job-groups-title'><FolderOpenOutlined /> Total number of <br /> Job Groups: <span>{jobGroups.length}</span></p>
+          <p className='employer-job-groups-title'><FolderOpenOutlined /> Total number of <br /> Job Groups: <span>{payload?.length}</span></p>
 
           <div className="employer-job-groups-search">
             <Search
@@ -103,14 +111,20 @@ const EmployerJobGroups = () => {
               size="large"
               allowClear
               options={[
-                { value: 'Completed', label: 'Completed' },
-                { value: 'Processing', label: 'Processing' },
-                { value: 'Cancelled', label: 'Cancelled' },
+                { value: 'completed', label: 'Completed' },
+                { value: 'active', label: 'Active' },
+                { value: 'inactive', label: 'Inactive' },
               ]}
             />
           </div>
 
-          {filteredJobGroups.length === 0 ? (
+          {isLoading ? (
+            <div className="employer-job-groups-list-skeleton">
+              <Skeleton paragraph={{ rows: 3 }} />
+              <Skeleton paragraph={{ rows: 3 }} />
+              <Skeleton paragraph={{ rows: 3 }} />
+            </div>
+          ) : filteredJobGroups.length === 0 ? (
             <div className="no-job-groups">
               <Empty description="No job groups found!" />;
             </div>
@@ -120,7 +134,7 @@ const EmployerJobGroups = () => {
                 {/*jobGroups*/ paginatedData.map((group) => (
                   <div className="employer-job-groups-item" key={group.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${group.id}`, { state: group }, window.scrollTo(0, 0))}>
                     <p className='job-group-name'>{group.title}</p>
-                    <p className='number-of-job-postings'>Number of Job Postings: {group.numberOfJobPostings}</p>
+                    <p className='number-of-job-postings'>Number of Job Postings: {group.totalJobPostings}</p>
                     <p className={`status ${getStatusClass(group.status)}`}>{group.status}</p>
                     <button><ArrowRightOutlined /></button>
                   </div>
