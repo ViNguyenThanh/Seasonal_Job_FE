@@ -154,7 +154,7 @@ const EmployerHeader = () => {
                         <img src={logo} className='employer-header-logo' onClick={handleClick} />
                     )}
                     {/* <img src={logo} className='employer-header-logo' onClick={handleClick} /> */}
-                    {(isMobile && (!user || userInfor.role === 'user')) ? (
+                    {(isMobile && (!user || userInfor.role === 'worker')) ? (
                         <div className="employer-header-left">
                             <img src={logo} className='employer-header-logo' onClick={handleClick} />
                         </div>
