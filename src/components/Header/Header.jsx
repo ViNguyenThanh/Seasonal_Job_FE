@@ -144,7 +144,7 @@ const Header = () => {
             key: '4',
             icon: <ProfileOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
-            // onClick: handleLogout,
+            onClick: () => navigate('/worker/worker-jobs'),
         },
         {
             label: "Wallet & transaction",

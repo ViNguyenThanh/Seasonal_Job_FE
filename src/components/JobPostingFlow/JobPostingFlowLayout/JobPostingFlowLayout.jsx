@@ -170,7 +170,6 @@ const JobPostingFlowLayout = () => {
       // console.log(resJG);
 
       if (resJG.status === 201) {
-        saveLocalstorage('totalAmount',)
         saveLocalstorage('jobGroup', resJG.data.data)
         for (let i = 0; i < jobPostings.length; i++) {
           const jobPosting = jobPostings[i];
@@ -188,20 +187,20 @@ const JobPostingFlowLayout = () => {
             jobType: jobPosting.jobType,
             jobGroupId: resJG.data.data.id
           });
-          console.log(resJP);
+          // console.log(resJP);
         }
       }
 
       if (resJG.status === 201) {
-        navigate('/employer/employer-job-groups');
+        // navigate('/employer/employer-job-groups');
         // const jobGroupTmp = loadFromLocalstorage('jobGroup')
 
-        // const resPayment = await paymentApi.createPayment({
-        //   jobGroupId: jobGroupTmp.id,
-        //   orderId: 2,
-        //   totalAmount: jobGroupTmp.totalAmount
-        // })
-        // console.log(resPayment);
+        const resPayment = await paymentApi.createPayment({
+          jobGroupId: jobGroupTmp.id,
+          orderId: 2,
+          totalAmount: jobGroupTmp.totalAmount
+        })
+        console.log(resPayment);
 
       }
     } catch (error) {
