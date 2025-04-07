@@ -13,5 +13,17 @@ export const jobGroupApi = {
                 },
             }
         );
+    },
+    getAllJobGroups: (start_date, end_date) => {
+        const token = getToken()
+        return API.get(`/jobGroups/jobGroups?start_date=${start_date}&end_date=${end_date}`);
+    },
+    getAllJobGroupsByUserId: () => {
+        const token = getToken();
+        return API.get('/jobGroups/', {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
     }
 };

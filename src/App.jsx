@@ -41,7 +41,7 @@ function App() {
   useEffect(() => {
     const { user } = getUserFromToken();
     setNewUser(user);
-    console.log(user);
+    // console.log(user);
     
   }, [payload]);
 
