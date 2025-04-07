@@ -13,4 +13,7 @@ export const jobPostingApi = {
             },
         });
     },
+    getAllJobByJobGroupId: (jobGroupId) => {
+        return API.get(`/jobs/job-groups/${jobGroupId}`)
+    }
 }
