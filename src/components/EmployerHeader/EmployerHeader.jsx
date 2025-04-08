@@ -35,7 +35,7 @@ const EmployerHeader = () => {
     const location = useLocation()
 
     const handleClick = () => {
-        navigate("/");
+        navigate("/employer-home");
         window.scrollTo(0, 0); // Cuộn lên đầu trang
     }
 
@@ -128,7 +128,7 @@ const EmployerHeader = () => {
             key: '3',
             icon: <ProfileOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
-            // onClick: handleLogout,
+            onClick: () => navigate('/employer/employer-job-groups'),
         },
         {
             label: "Wallet & transaction",
@@ -154,7 +154,7 @@ const EmployerHeader = () => {
                         <img src={logo} className='employer-header-logo' onClick={handleClick} />
                     )}
                     {/* <img src={logo} className='employer-header-logo' onClick={handleClick} /> */}
-                    {(isMobile && (!user || userInfor.role === 'user')) ? (
+                    {(isMobile && (!user || userInfor.role === 'worker')) ? (
                         <div className="employer-header-left">
                             <img src={logo} className='employer-header-logo' onClick={handleClick} />
                         </div>

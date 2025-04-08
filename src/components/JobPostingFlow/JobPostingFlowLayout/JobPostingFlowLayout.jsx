@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './JobPostingFlowLayout.css'
 import { Breadcrumb, Button, message, Steps, theme } from 'antd'
 import { BellOutlined, ContainerOutlined, HomeOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CreatingNewJobGroup from './CreatingNewJobGroup/CreatingNewJobGroup';
 import CreatingNewJobPostings from './CreatingNewJobPostings/CreatingNewJobPostings';
 import ConfirmPosting from './ConfirmPosting/ConfirmPosting';
@@ -10,9 +10,10 @@ import dayjs from 'dayjs';
 import { jobGroupApi } from '../../../apis/job-group.request';
 import { jobPostingApi } from '../../../apis/job-posting.request';
 import { paymentApi } from '../../../apis/payment.request';
+import { loadFromLocalstorage, saveLocalstorage } from '../../../utils/Localstorage';
 
 const JobPostingFlowLayout = () => {
-
+  const navigate = useNavigate();
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 750);
@@ -170,6 +171,7 @@ const JobPostingFlowLayout = () => {
       // console.log(resJG);
 
       if (resJG.status === 201) {
+        saveLocalstorage('jobGroup', resJG.data.data)
         for (let i = 0; i < jobPostings.length; i++) {
           const jobPosting = jobPostings[i];
           const resJP = await jobPostingApi.createJobPosting({
@@ -186,17 +188,21 @@ const JobPostingFlowLayout = () => {
             jobType: jobPosting.jobType,
             jobGroupId: resJG.data.data.id
           });
-          console.log(resJP);
+          // console.log(resJP);
         }
       }
 
       if (resJG.status === 201) {
+        // navigate('/employer/employer-job-groups');
+        // const jobGroupTmp = loadFromLocalstorage('jobGroup')
+
         const resPayment = await paymentApi.createPayment({
-          jobGroupId: resJG.data.data.id,
-          orderId: 2
+          jobGroupId: jobGroupTmp.id,
+          orderId: 2,
+          totalAmount: jobGroupTmp.totalAmount
         })
         console.log(resPayment);
-        
+
       }
     } catch (error) {
       console.log(error);

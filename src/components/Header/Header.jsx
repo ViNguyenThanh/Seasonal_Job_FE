@@ -103,7 +103,7 @@ const Header = () => {
     ];
     // Nếu có user, bỏ các mục key: 'divider', key: '4', key: '5' ra khỏi menuItems
     useEffect(() => {
-        if (user && userInfor.role === "user") {
+        if (user && userInfor.role === "worker") {
             const updatedMenuItems = menuItems.filter(item => item.key !== 'divider' && item.key !== '4' && item.key !== '5');
             // Cập nhật lại menuItems nếu có user
             menuItems.length = 0;
@@ -144,7 +144,7 @@ const Header = () => {
             key: '4',
             icon: <ProfileOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
-            // onClick: handleLogout,
+            onClick: () => navigate('/worker/worker-jobs'),
         },
         {
             label: "Wallet & transaction",
@@ -263,7 +263,7 @@ const Header = () => {
                             For Employer
                         </li>
                         <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
-                        {user && userInfor.role === "user" ? (
+                        {user && userInfor.role === "worker" ? (
                             <div className='header-right-items'>
                                 {/* <Badge size='default' style={{ marginRight: '15px' }} count={1}>
                                     <Avatar style={{ marginRight: '10px', backgroundColor: '#4096ff8a' }} size={'large'} shape="square" icon={<BellOutlined />} />

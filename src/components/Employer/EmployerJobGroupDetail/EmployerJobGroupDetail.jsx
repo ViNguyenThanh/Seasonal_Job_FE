@@ -1,18 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './EmployerJobGroupDetail.css'
 import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, DollarOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ScheduleOutlined, SnippetsOutlined, UpOutlined } from '@ant-design/icons';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Breadcrumb } from 'antd';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Breadcrumb, Skeleton } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { getJobGroupById } from '../../../redux/actions/jobgroups.action';
+import { getJobPostingByJGId } from '../../../redux/actions/jobposting.action';
 
 
 const EmployerJobGroupDetail = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch()
     const [showMore, setShowMore] = useState(false);
     const location = useLocation();
-    
-    const jobGroupInfo = location.state || {};
-    // console.log(jobGroupInfo)
+    const { id } = useParams()
+    const { isLoading: isJGLoading, payload: jobGroupInfo } = useSelector(state => state.jobGroupsReducer)
+    const { isLoading: isJPLoading, payload: jobPostings } = useSelector(state => state.jobPostingReducer)
+    // const jobGroupInfo = location.state || {};
 
     const listData = [
         {
@@ -53,6 +58,10 @@ const EmployerJobGroupDetail = () => {
         }
     ];
 
+    useEffect(() => {
+        dispatch(getJobGroupById(id))
+        dispatch(getJobPostingByJGId(id))
+    }, [dispatch])
 
     return (
         <div className='employer-job-group-detail-whole-container'>
@@ -69,7 +78,7 @@ const EmployerJobGroupDetail = () => {
                     {
                         title: (
                             <div className='b-title-2'>
-                                <ContainerOutlined /> Job Group Detail
+                                <ContainerOutlined /> {jobGroupInfo?.title}
                             </div>
                         ),
                     },
@@ -85,17 +94,22 @@ const EmployerJobGroupDetail = () => {
 
                 <h1 className='employer-job-group-detail-title'>Job Group Detail</h1>
 
-                <div className="employer-job-group-detail-info">
-                    <p><ContainerOutlined /> Job Group Name: {jobGroupInfo.title}</p>
-                    <p><SnippetsOutlined /> Number of Job Postings: {jobGroupInfo.numberOfJobPostings}</p>
-                    <div className="employer-job-group-detail-short-info">
-                        <p><ScheduleOutlined /> Start Date: {jobGroupInfo.startDate}</p>
-                        <p><ScheduleOutlined /> End Date: {jobGroupInfo.endDate}</p>
+                {isJGLoading ? (
+                    <div className='employer-job-group-detail-skeleton'>
+                        <Skeleton active />
                     </div>
-                    {/* Hiển thị nội dung mở rộng nếu showMore = true */}
-                    {showMore && (
-                        <>
-                            <p><FileTextOutlined /> Description: <br /> Công việc này sẽ bao gồm nhiều nhiệm vụ liên quan đến việc đóng gói quà tặng cho sự kiện Global City. Nhân viên đóng gói sẽ chịu trách nhiệm chuẩn bị, sắp xếp và đóng gói các sản phẩm quà tặng theo yêu cầu của ban tổ chức. Các công việc sẽ được thực hiện dưới sự giám sát trực tiếp của quản lý, đảm bảo rằng chất lượng và tiến độ công việc luôn đạt tiêu chuẩn cao nhất. Mỗi món quà tặng phải được đóng gói cẩn thận, đúng cách, và không có bất kỳ lỗi nào trong quá trình sắp xếp. Để đạt được hiệu quả công việc tối ưu, nhân viên cần phải có khả năng làm việc nhóm và giao tiếp tốt với các thành viên trong nhóm.
+                ) : (
+                    <div className="employer-job-group-detail-info">
+                        <p><ProfileOutlined /> Job Group Name: {jobGroupInfo?.title}</p>
+                        <p><DiffOutlined /> Number of Job Postings: {jobGroupInfo?.totalJobPosting}</p>
+                        <div className="employer-job-group-detail-short-info">
+                            <p><ScheduleOutlined /> Start Date: {jobGroupInfo?.start_date?.split('T')[0]}</p>
+                            <p><ScheduleOutlined /> End Date: {jobGroupInfo?.end_date?.split('T')[0]}</p>
+                        </div>
+                        {/* Hiển thị nội dung mở rộng nếu showMore = true */}
+                        {showMore && (
+                            <>
+                                {/* <p><FileTextOutlined /> Description: <br /> Công việc này sẽ bao gồm nhiều nhiệm vụ liên quan đến việc đóng gói quà tặng cho sự kiện Global City. Nhân viên đóng gói sẽ chịu trách nhiệm chuẩn bị, sắp xếp và đóng gói các sản phẩm quà tặng theo yêu cầu của ban tổ chức. Các công việc sẽ được thực hiện dưới sự giám sát trực tiếp của quản lý, đảm bảo rằng chất lượng và tiến độ công việc luôn đạt tiêu chuẩn cao nhất. Mỗi món quà tặng phải được đóng gói cẩn thận, đúng cách, và không có bất kỳ lỗi nào trong quá trình sắp xếp. Để đạt được hiệu quả công việc tối ưu, nhân viên cần phải có khả năng làm việc nhóm và giao tiếp tốt với các thành viên trong nhóm.
 
                                 Trong quá trình thực hiện công việc, nhân viên sẽ phải lựa chọn vật liệu đóng gói phù hợp với từng sản phẩm, từ giấy bọc, dây ruy băng, đến hộp đựng, sao cho các quà tặng không bị hư hỏng trong quá trình vận chuyển. Mỗi công đoạn đóng gói phải được thực hiện chính xác và tỉ mỉ, đảm bảo rằng các sản phẩm đều có diện mạo đẹp mắt và thu hút người nhận. Việc đảm bảo an toàn trong quá trình đóng gói là yếu tố quan trọng, vì các sản phẩm quà tặng phải chịu được va đập trong suốt quá trình vận chuyển đến tay người nhận mà không bị hư hỏng.
 
@@ -107,39 +121,49 @@ const EmployerJobGroupDetail = () => {
 
                                 Bên cạnh đó, nhân viên đóng gói cần phải tuân thủ các quy định và tiêu chuẩn về an toàn lao động, đặc biệt là khi làm việc với các vật liệu đóng gói có thể gây hại nếu không sử dụng đúng cách. Công ty tổ chức sự kiện sẽ cung cấp đầy đủ trang thiết bị bảo hộ lao động và đào tạo về các biện pháp an toàn khi làm việc với các vật liệu đóng gói.
 
-                                Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p>
-
-                            {/* Nút Show less */}
+                                Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p> */}
+                                <p><FileTextOutlined /> Description: <br />
+                                    {jobGroupInfo?.description}
+                                </p>
+                                {/* Nút Thu gọn */}
+                                <div className="show-more-less-btn">
+                                    <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Thu gọn</button>
+                                </div>
+                            </>
+                        )}
+                        {/* Nút Xem thêm (chỉ hiển thị khi showMore = false) */}
+                        {!showMore && (
                             <div className="show-more-less-btn">
-                                <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
+                                <button onClick={() => setShowMore(true)}><DownOutlined /> Xem thêm</button>
                             </div>
-                        </>
-                    )}
-                    {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
-                    {!showMore && (
-                        <div className="show-more-less-btn">
-                            <button onClick={() => setShowMore(true)}><DownOutlined /> Show more</button>
-                        </div>
-                    )}
+                        )}
 
-                    <div className="start-end-btn">
-                        <button className='start-btn'>Start</button>
-                        <button className='end-btn'>End</button>
+                        <div className="start-end-btn">
+                            <button className='start-btn'>Start</button>
+                            <button className='end-btn'>End</button>
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <div className="job-postings-list">
                     <h1>Job Postings List</h1>
-                    {listData.map((posting) => (
-                        <div className="job-postings-item" key={posting.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}/employer-job-posting-detail/${posting.id}`, { state: { jobPostingInfo: posting, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))}>
-                            <p className='job-postings-item-title'>{posting.title}</p>
-                            <div className='job-postings-item-info'>
-                                <p><EnvironmentOutlined /> {posting.location} &emsp; </p>
-                                <p><DollarOutlined /> {posting.salary.toLocaleString('vi-VN')} VND</p>
-                            </div>
-                            <button><ArrowRightOutlined /></button>
+                    {isJPLoading ? (
+                        <div>
+                            <Skeleton active />
+                            <Skeleton active />
+                            <Skeleton active />
                         </div>
-                    ))}
+                    ) :
+                        jobPostings?.map((item) => (
+                            <div className="job-postings-item" key={item.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo?.id}/employer-job-posting-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
+                                <p className='job-postings-item-title'>{item.title}</p>
+                                <div className='job-postings-item-info'>
+                                    <p><EnvironmentOutlined /> {item.location} &emsp; </p>
+                                    <p><DollarOutlined /> {item.salary.toLocaleString('vi-VN')} VND</p>
+                                </div>
+                                <button><ArrowRightOutlined /></button>
+                            </div>
+                        ))}
                 </div>
             </div>
         </div>

@@ -141,7 +141,7 @@
     /* Độ dày của border */
     background-color: white;
     transition: width 0.3s ease, left 0.3s ease;
-    transform: translateX(0%);/
+    transform: translateX(0%);
 }
 
 .employer-header-right li:hover::after,
