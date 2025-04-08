@@ -1,0 +1,55 @@
+.worker-detail-whole-container{
+  margin-top: 25px;
+}
+.worker-detail-whole-container .ant-breadcrumb {
+  font-size: 18px;
+}
+.worker-detail-whole-container .ant-breadcrumb ol {
+  width: 95%;
+  margin-left: 5%;
+  align-items: center;
+}
+.worker-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+  margin: 0 5px;
+}
+.worker-detail-whole-container .breadcrumb .b-title-1{
+  padding: 5px 10px 15px;
+}
+/* chỉnh dấu /  */
+.worker-detail-whole-container .ant-breadcrumb .ant-breadcrumb-separator {
+  color: black;
+  padding-bottom: 0.3%;
+  font-size: 18px;
+}
+.worker-detail-whole-container .breadcrumb .b-title-2 {
+  color: rgb(61, 61, 61);
+  text-transform: capitalize;
+  cursor: pointer;
+  margin: 0;
+  padding: 5px 10px 10px;
+  border-radius: 5px;
+}
+.worker-detail-whole-container .breadcrumb .b-title-2.gray {
+  color: rgba(0, 0, 0, 0.45);
+}
+.worker-detail-whole-container .breadcrumb .b-title-2:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.worker-detail-whole-container .ant-breadcrumb .anticon {
+  font-size: 22px;
+  margin-right: 5px;
+}
+
+@media (max-width: 780px) {
+  .worker-detail-whole-container .ant-breadcrumb ol {
+    width: 100%;
+    margin-left: 0;
+    justify-content: center;
+    margin-bottom: 2%;
+    height: 99px;
+  }
+  .worker-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+    margin: 0 5px;
+    display: flex;
+  }
+}

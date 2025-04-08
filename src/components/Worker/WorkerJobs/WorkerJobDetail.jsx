@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import './WorkerJobDetail.css'
-import { ArrowLeftOutlined, CreditCardOutlined, DashboardOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, PlusOutlined, ProductOutlined, ProfileOutlined, ScheduleOutlined, StarOutlined, TagOutlined, UpOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ContainerOutlined, CreditCardOutlined, DashboardOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, PlusOutlined, ProductOutlined, ScheduleOutlined, SnippetsOutlined, StarOutlined, TagOutlined, UpOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Image, Pagination, Upload } from 'antd';
 
@@ -17,7 +17,7 @@ const WorkerJobDetail = () => {
     const [dummyData, setDummyData] = useState([
         {
             no: 1,
-            jobDescription: "Đóng gói quà tặng cho khách hàng theo đơn đặt hàng",
+            jobRequirement: "Đóng gói quà tặng cho khách hàng theo đơn đặt hàng",
             assignmentDate: '10/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
@@ -27,7 +27,7 @@ const WorkerJobDetail = () => {
         },
         {
             no: 2,
-            jobDescription: "Sắp xếp quà tặng vào hộp đựng theo yêu cầu",
+            jobRequirement: "Sắp xếp quà tặng vào hộp đựng theo yêu cầu",
             assignmentDate: '11/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
@@ -37,7 +37,7 @@ const WorkerJobDetail = () => {
         },
         {
             no: 3,
-            jobDescription: "Vận chuyển quà tặng đến khu vực tổ chức",
+            jobRequirement: "Vận chuyển quà tặng đến khu vực tổ chức",
             assignmentDate: '13/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
@@ -47,7 +47,7 @@ const WorkerJobDetail = () => {
         },
         {
             no: 4,
-            jobDescription: "Kiểm tra lại các hộp quà đã đóng gói",
+            jobRequirement: "Kiểm tra lại các hộp quà đã đóng gói",
             assignmentDate: '15/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
@@ -57,7 +57,7 @@ const WorkerJobDetail = () => {
         },
         {
             no: 5,
-            jobDescription: "Ghi nhận và báo cáo số lượng quà tặng",
+            jobRequirement: "Ghi nhận và báo cáo số lượng quà tặng",
             assignmentDate: '16/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
@@ -67,7 +67,7 @@ const WorkerJobDetail = () => {
         },
         {
             no: 6,
-            jobDescription: "Dọn dẹp và kiểm tra lại khu vực đóng gói",
+            jobRequirement: "Dọn dẹp và kiểm tra lại khu vực đóng gói",
             assignmentDate: '18/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
@@ -147,12 +147,12 @@ const WorkerJobDetail = () => {
             {/* <h1>Job Detail: {jobInfo.title}</h1> */}
 
             <div className="worker-job-detail-info">
-                <p><ProfileOutlined /> Job Group Name: Sự kiện Global City, chuyên trách các công việc từ chuẩn bị địa điểm đến hỗ trợ đóng gói và tổ chức.</p>
+                <p><ContainerOutlined /> Job Group Name: Sự kiện Global City, chuyên trách các công việc từ chuẩn bị địa điểm đến hỗ trợ đóng gói và tổ chức.</p>
                 <div className="worker-job-detail-short-info">
                     <p><ScheduleOutlined /> Start Date: 22/05/2025</p>
                     <p><ScheduleOutlined /> End Date: 27/05/2025</p>
                 </div>
-                <p><ProfileOutlined /> Job Name:  Nhân viên đóng gói quà sự kiện, thực hiện các công việc đóng gói, sắp xếp quà tặng theo hướng dẫn và đảm bảo tiêu chuẩn chất lượng.</p>
+                <p><SnippetsOutlined /> Job Name:  Nhân viên đóng gói quà sự kiện, thực hiện các công việc đóng gói, sắp xếp quà tặng theo hướng dẫn và đảm bảo tiêu chuẩn chất lượng.</p>
                 <p><EnvironmentOutlined /> Address: 15 đường Cách Mạng Tháng 8, phường 4, quận 1, TP.HCM</p>
                 <p><ProductOutlined /> Company: Công ty tổ chức sự kiện và quản lý chương trình ABC chuyên nghiệp tại TP.HCM.</p>
                 <div className="worker-job-detail-short-info">
@@ -178,16 +178,16 @@ const WorkerJobDetail = () => {
 
                             Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p>
 
-                        {/* Nút Thu gọn */}
+                        {/* Nút Show less */}
                         <div className="show-more-less-btn">
-                            <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Thu gọn</button>
+                            <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
                         </div>
                     </>
                 )}
-                {/* Nút Xem thêm (chỉ hiển thị khi showMore = false) */}
+                {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
                 {!showMore && (
                     <div className="show-more-less-btn">
-                        <button onClick={() => setShowMore(true)}><DownOutlined /> Xem thêm</button>
+                        <button onClick={() => setShowMore(true)}><DownOutlined /> Show more</button>
                     </div>
                 )}
             </div>
@@ -198,7 +198,7 @@ const WorkerJobDetail = () => {
                     <thead>
                         <tr>
                             <th className="no-column">No</th>
-                            <th className="job-description">Job Description</th>
+                            <th className="job-requirement">Job Requirement</th>
                             <th className='assignment-date'>Assignment <br/> Date</th>
                             <th className="check-in">Check in</th>
                             <th className="check-out">Check out</th>
@@ -211,7 +211,7 @@ const WorkerJobDetail = () => {
                         {/*dummyData*/ paginatedData.map((data, index) => (
                             <tr key={index}>
                                 <td className="no-column">{data.no}</td>
-                                <td className="job-description">{data.jobDescription}</td>
+                                <td className="job-requirement">{data.jobRequirement}</td>
                                 <td className='assignment-date'>{data.assignmentDate}</td>
                                 <td className="check-in">
                                     <Upload

@@ -37,7 +37,7 @@
     width: 90%;
     padding: 3% 5% 2%;
     color: #444444;
-    font-size: 19px;
+    font-size: 20px;
     display: flex;
     flex-wrap: wrap;
     border-bottom: 1px solid rgba(118, 118, 118, 0.16);
@@ -98,7 +98,7 @@
 .worker-job-detail-container .worker-job-execute-whole-table .worker-job-execute-table{
     width: 100%;
     border: 1px solid rgba(118, 118, 118, 0.16);
-    font-size: 16.5px;
+    font-size: 17px;
     border-radius: 10px;
     /* do có cái này nên ko border-radius được */
     /* border-collapse: collapse; */
@@ -123,7 +123,7 @@
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.no-column {
     width: 4%;
 }
-.worker-job-execute-whole-table .worker-job-execute-table thead tr th.job-description {
+.worker-job-execute-whole-table .worker-job-execute-table thead tr th.job-requirement {
     width: 24%; 
 }
 .worker-job-execute-whole-table .worker-job-execute-table thead tr th.assignment-date {
@@ -162,7 +162,7 @@
     width: 4%;
     text-align: center;
 }
-.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.job-description {
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.job-requirement {
     width: 20%; 
     padding: 0 2%;
 }
