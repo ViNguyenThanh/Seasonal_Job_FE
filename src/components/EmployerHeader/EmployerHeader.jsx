@@ -3,7 +3,7 @@ import './EmployerHeader.css'
 import logo from '/assets/logo.png'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Avatar, Badge, Button, Dropdown, message, Space } from 'antd'
-import { AuditOutlined, BellOutlined, CreditCardOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
+import { SolutionOutlined, BellOutlined, CreditCardOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined } from '@ant-design/icons';
 import { getUserFromToken } from '../../utils/Token'
 import { userApi } from '../../apis/user.request'
 import { logout } from '../../redux/actions/auth.action'
@@ -119,7 +119,7 @@ const EmployerHeader = () => {
         {
             label: "Applications",
             key: '2',
-            icon: <AuditOutlined style={{ fontSize: '16px' }} />,
+            icon: <SolutionOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
