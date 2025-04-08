@@ -29,9 +29,26 @@ export const uploadCV = async (file) => {
       },
     });
     console.log("Upload response:", response); // Log the server response
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error uploading CV:", error.response || error.message);
     throw error;
   }
 };
+
+export const cvApi = {
+  applyjob: async (jobpostingId, data) => {
+    const token = getToken();
+    try {
+      const response = await API.post(`/cvs/job/${jobpostingId}/apply`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error applying for job:", error.response || error.message);
+      throw error;
+    }
+  }
+}

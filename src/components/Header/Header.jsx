@@ -3,7 +3,7 @@ import './Header.css'
 import logo from '/assets/logo.png'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Avatar, Badge, Button, Dropdown, message, Space } from 'antd'
-import { AuditOutlined, BellOutlined, CreditCardOutlined, FileOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined, } from '@ant-design/icons';
+import { SolutionOutlined, BellOutlined, CreditCardOutlined, FileOutlined, LogoutOutlined, MenuOutlined, ProfileOutlined, UserOutlined, } from '@ant-design/icons';
 import { getUserFromToken } from '../../utils/Token'
 import { userApi } from '../../apis/user.request'
 import { useDispatch } from 'react-redux'
@@ -135,7 +135,7 @@ const Header = () => {
         {
             label: "Applications",
             key: '3',
-            icon: <AuditOutlined style={{ fontSize: '16px' }} />,
+            icon: <SolutionOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
             // onClick: handleLogout,
         },
