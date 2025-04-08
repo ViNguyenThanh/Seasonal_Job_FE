@@ -10,27 +10,27 @@ const { Search } = Input;
 const EmployerJobGroups = () => {
   // Giả sử bạn đã có một mảng dữ liệu jobGroups như dưới đây
   const jobGroups = [
-    { id: 1, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Sản Phẩm Tiêu Dùng Tại Các Trung Tâm Thương Mại.', numberOfJobPostings: 5, status: 'Cancelled', startDate: '07/04/2025', endDate: '24/04/2025' },
-    { id: 2, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 7, status: 'Processing', startDate: '03/05/2025', endDate: '13/05/2025' },
-    { id: 3, title: 'Tổ Chức Các Chuyến Tham Quan Cho Khách Tham Dự Hội Nghị Quốc Tế Về Nghiên Cứu Môi Trường.', numberOfJobPostings: 8, status: 'Cancelled', startDate: '04/05/2025', endDate: '14/05/2025' },
-    { id: 4, title: 'Hỗ Trợ Việc Setup Âm Thanh, Ánh Sáng Và Thiết Bị Cho Các Sự Kiện Văn Hóa, Sự Kiện Lễ Hội.', numberOfJobPostings: 6, status: 'Processing', startDate: '05/05/2025', endDate: '15/05/2025' },
-    { id: 5, title: 'Quản Lý Các Công Việc Hậu Cần Cho Các Sự Kiện Thể Thao, Đảm Bảo An Ninh Và Vận Chuyển Hàng Hóa.', numberOfJobPostings: 1, status: 'Completed', startDate: '06/05/2025', endDate: '16/05/2025' },
-    { id: 6, title: 'Giám Sát Công Tác Phục Vụ Các Bữa Ăn Và Sự Kiện Hội Nghị Cho Các Khách Tham Gia.', numberOfJobPostings: 2, status: 'Cancelled', startDate: '07/05/2025', endDate: '17/05/2025' },
-    { id: 7, title: 'Quản Lý Các Công Việc Hậu Cần Cho Các Sự Kiện Giáo Dục Và Đào Tạo Tại Trường Học.', numberOfJobPostings: 6, status: 'Cancelled', startDate: '08/05/2025', endDate: '18/05/2025' },
-    { id: 8, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 9, status: 'Processing', startDate: '09/05/2025', endDate: '19/05/2025' },
-    { id: 9, title: 'Phụ Trách Vận Hành Dịch Vụ Vận Chuyển Hành Lý Cho Các Sự Kiện Hội Nghị Quốc Tế Tại Các Khách Sạn.', numberOfJobPostings: 3, status: 'Processing', startDate: '10/05/2025', endDate: '20/05/2025' },
-    { id: 10, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Sản Phẩm Tiêu Dùng Tại Các Trung Tâm Thương Mại.', numberOfJobPostings: 1, status: 'Cancelled', startDate: '11/05/2025', endDate: '21/05/2025' },
-    { id: 11, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 7, status: 'Completed', startDate: '12/05/2025', endDate: '22/05/2025' },
-    { id: 12, title: 'Giám Sát Công Tác Phục Vụ Các Bữa Ăn Và Sự Kiện Hội Nghị Cho Các Khách Tham Gia.', numberOfJobPostings: 3, status: 'Completed', startDate: '13/05/2025', endDate: '23/05/2025' },
-    { id: 13, title: 'Quản Lý Tài Liệu Và Giúp Đỡ Nhân Viên Trong Việc Phân Phối Thông Tin Về Sự Kiện Văn Hóa.', numberOfJobPostings: 6, status: 'Completed', startDate: '14/05/2025', endDate: '24/05/2025' },
-    { id: 14, title: 'Chạy Và Giám Sát Các Công Tác Chuẩn Bị, Cài Đặt Thiết Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 3, status: 'Completed', startDate: '15/05/2025', endDate: '25/05/2025' },
-    { id: 15, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 10, status: 'Completed', startDate: '16/05/2025', endDate: '26/05/2025' }
+    { id: 1, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Sản Phẩm Tiêu Dùng Tại Các Trung Tâm Thương Mại.', numberOfJobPostings: 5, status: 'inactive', startDate: '07/04/2025', endDate: '24/04/2025' },
+    { id: 2, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 7, status: 'active', startDate: '03/05/2025', endDate: '13/05/2025' },
+    { id: 3, title: 'Tổ Chức Các Chuyến Tham Quan Cho Khách Tham Dự Hội Nghị Quốc Tế Về Nghiên Cứu Môi Trường.', numberOfJobPostings: 8, status: 'inactive', startDate: '04/05/2025', endDate: '14/05/2025' },
+    { id: 4, title: 'Hỗ Trợ Việc Setup Âm Thanh, Ánh Sáng Và Thiết Bị Cho Các Sự Kiện Văn Hóa, Sự Kiện Lễ Hội.', numberOfJobPostings: 6, status: 'active', startDate: '05/05/2025', endDate: '15/05/2025' },
+    { id: 5, title: 'Quản Lý Các Công Việc Hậu Cần Cho Các Sự Kiện Thể Thao, Đảm Bảo An Ninh Và Vận Chuyển Hàng Hóa.', numberOfJobPostings: 1, status: 'completed', startDate: '06/05/2025', endDate: '16/05/2025' },
+    { id: 6, title: 'Giám Sát Công Tác Phục Vụ Các Bữa Ăn Và Sự Kiện Hội Nghị Cho Các Khách Tham Gia.', numberOfJobPostings: 2, status: 'inactive', startDate: '07/05/2025', endDate: '17/05/2025' },
+    { id: 7, title: 'Quản Lý Các Công Việc Hậu Cần Cho Các Sự Kiện Giáo Dục Và Đào Tạo Tại Trường Học.', numberOfJobPostings: 6, status: 'inactive', startDate: '08/05/2025', endDate: '18/05/2025' },
+    { id: 8, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 9, status: 'active', startDate: '09/05/2025', endDate: '19/05/2025' },
+    { id: 9, title: 'Phụ Trách Vận Hành Dịch Vụ Vận Chuyển Hành Lý Cho Các Sự Kiện Hội Nghị Quốc Tế Tại Các Khách Sạn.', numberOfJobPostings: 3, status: 'active', startDate: '10/05/2025', endDate: '20/05/2025' },
+    { id: 10, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Sản Phẩm Tiêu Dùng Tại Các Trung Tâm Thương Mại.', numberOfJobPostings: 1, status: 'inactive', startDate: '11/05/2025', endDate: '21/05/2025' },
+    { id: 11, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 7, status: 'completed', startDate: '12/05/2025', endDate: '22/05/2025' },
+    { id: 12, title: 'Giám Sát Công Tác Phục Vụ Các Bữa Ăn Và Sự Kiện Hội Nghị Cho Các Khách Tham Gia.', numberOfJobPostings: 3, status: 'completed', startDate: '13/05/2025', endDate: '23/05/2025' },
+    { id: 13, title: 'Quản Lý Tài Liệu Và Giúp Đỡ Nhân Viên Trong Việc Phân Phối Thông Tin Về Sự Kiện Văn Hóa.', numberOfJobPostings: 6, status: 'completed', startDate: '14/05/2025', endDate: '24/05/2025' },
+    { id: 14, title: 'Chạy Và Giám Sát Các Công Tác Chuẩn Bị, Cài Đặt Thiết Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 3, status: 'completed', startDate: '15/05/2025', endDate: '25/05/2025' },
+    { id: 15, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 10, status: 'completed', startDate: '16/05/2025', endDate: '26/05/2025' }
 ];
 
   const getStatusClass = (status) => {
-    if (status === 'active') return 'processing';
+    if (status === 'active') return 'active';
     if (status === 'completed') return 'completed';
-    if (status === 'inactive') return 'cancelled';
+    if (status === 'inactive') return 'inactive';
     return '';
   };
 
@@ -60,7 +60,7 @@ const EmployerJobGroups = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredJobGroups = !isLoading && payload?.length > 0 ? payload.filter(item => {
+  const filteredJobGroups = /*!isLoading && payload?.length > 0 ? payload.*/ jobGroups.filter (item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!statusJobGroupValue || item.status === statusJobGroupValue) &&
@@ -68,7 +68,7 @@ const EmployerJobGroups = () => {
         || item.title.toLowerCase().includes(searchTermLower)
       )
     );
-  }) : [];
+  }) /*: []*/;
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listData*/ filteredJobGroups.slice((currentPage - 1) * pageSize, currentPage * pageSize);

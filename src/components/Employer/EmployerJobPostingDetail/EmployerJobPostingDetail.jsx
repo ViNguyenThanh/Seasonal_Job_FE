@@ -15,8 +15,8 @@ const EmployerJobPostingDetail = () => {
   const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
   const location = useLocation();
-  const item = location.state; //item này bao gồm cả jobGroupInfo ( thông tin của 1 group) và posting (thông tin của 1 posting)
-  console.log(item);
+  const item = location.state; //item này bao gồm cả jobGroupInfo ( thông tin của 1 group) và jobPostingInfo (thông tin của 1 posting)
+  // console.log(item);
   const [showMore2, setShowMore2] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
 

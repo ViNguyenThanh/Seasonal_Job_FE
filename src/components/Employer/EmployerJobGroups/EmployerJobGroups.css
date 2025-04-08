@@ -152,7 +152,7 @@
     border-radius: 20px
 }
 
-.employer-job-groups-list .employer-job-groups-item .status.processing {
+.employer-job-groups-list .employer-job-groups-item .status.active {
     background-color: rgb(4, 109, 246);
 }
 
@@ -160,7 +160,7 @@
     background-color: rgb(0, 180, 0);
 }
 
-.employer-job-groups-list .employer-job-groups-item .status.cancelled {
+.employer-job-groups-list .employer-job-groups-item .status.inactive {
     background-color: rgb(252, 46, 46);
 }
 
