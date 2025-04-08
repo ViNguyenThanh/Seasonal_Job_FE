@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './JobPostingFlowLayout.css'
 import { Breadcrumb, Button, message, Steps, theme } from 'antd'
-import { BellOutlined, FileTextOutlined, HomeOutlined } from '@ant-design/icons';
+import { BellOutlined, ContainerOutlined, HomeOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import CreatingNewJobGroup from './CreatingNewJobGroup/CreatingNewJobGroup';
 import CreatingNewJobPostings from './CreatingNewJobPostings/CreatingNewJobPostings';
@@ -81,7 +81,8 @@ const JobPostingFlowLayout = () => {
       for (let i = 0; i < jobPostings.length; i++) {
         const posting = jobPostings[i];
         if (!posting.jobPostingName || !posting.address || !posting.city || parseInt(posting.city) === 0 || !posting.district || parseInt(posting.district) === 0 || !posting.ward || parseInt(posting.ward) === 0 || !posting.numberOfPeople || !posting.salary || !posting.rating || !posting.descriptionJobPosting) {
-          message.error("Please fill in all information before going to the next step.", 0);
+          // message.error("Please fill in all information before going to the next step.", 0);
+          message.error("Please fill in all information before going to the next step.");
           return; // Dừng lại ở đây nếu có mục job posting thiếu dữ liệu
         } else if (checkErrorJobPostings) {
           message.error("Please correct the error before proceeding to the next step.");
@@ -238,7 +239,7 @@ const JobPostingFlowLayout = () => {
           {
             title: (
               <div className='b-title-2'>
-                <FileTextOutlined /> job Group
+                <ContainerOutlined /> Creating New Job Group
               </div>
             ),
           },

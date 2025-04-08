@@ -1,0 +1,819 @@
+.employer-job-posting-detail-whole-container{
+    margin-top: 25px;
+}
+.employer-job-posting-detail-whole-container .ant-breadcrumb {
+    font-size: 18px;
+}
+.employer-job-posting-detail-whole-container .ant-breadcrumb ol {
+    width: 95%;
+    margin-left: 5%;
+    align-items: center;
+}
+.employer-job-posting-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+    margin: 0 5px;
+}
+.employer-job-posting-detail-whole-container .breadcrumb .b-title-1{
+    padding: 5px 10px 15px;
+}
+/* chỉnh dấu /  */
+.employer-job-posting-detail-whole-container .ant-breadcrumb .ant-breadcrumb-separator {
+    color: black;
+    padding-bottom: 0.3%;
+    font-size: 18px;
+}
+.employer-job-posting-detail-whole-container .breadcrumb .b-title-2 {
+    color: rgb(61, 61, 61);
+    text-transform: capitalize;
+    cursor: pointer;
+    margin: 0;
+    padding: 5px 10px 10px;
+    border-radius: 5px;
+}
+.employer-job-posting-detail-whole-container .breadcrumb .b-title-2.gray {
+    color: rgba(0, 0, 0, 0.45);
+}
+.employer-job-posting-detail-whole-container .breadcrumb .b-title-2:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+.employer-job-posting-detail-whole-container .ant-breadcrumb .anticon {
+    font-size: 22px;
+    margin-right: 5px;
+}
+
+
+
+
+.employer-job-posting-detail-container{
+    width: 75%;
+    margin: 0 7.5% 100px;
+    padding: 2% 5%;
+    background-color: white;
+    box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+    border-radius: 10px;
+    position: relative;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-title{
+    text-align: center;
+    margin: 0;
+    padding-bottom: 2%;
+    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+
+
+/* Job Posting Detail */
+.employer-job-posting-detail-container .employer-job-posting-detail-info{
+    width: 90%;
+    padding: 3% 5% 20px;
+    color: #444444;
+    font-size: 21px;
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info p{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    margin: 1.5% 0;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info p .anticon {
+    font-size: 28px;
+    margin-right: 11px;
+}
+
+.employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info p{
+    width: 50%;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin: 1.5% 0;
+}
+/* chỉnh rating star */
+.employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating{
+    width: 50%;
+    display: flex;
+    align-items: flex-start;
+    margin: 1.5% 0;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating .anticon {
+    font-size: 28px;
+    margin-right: 11px;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating br{
+    display: none;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating .star{
+    margin-left: 15px;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating .star .anticon{
+    font-size: 22px;
+    margin-right: 2px;
+}
+
+.employer-job-posting-detail-container .employer-job-posting-detail-info .show-more-less-btn{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 1% 0;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .show-more-less-btn button {
+    border: none;
+    font-size: 19px;
+    background-color: white;
+    color: #0a65cc;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .show-more-less-btn button:hover {
+    color: #0412b2;
+    transition: 0.3s ease;
+}
+
+
+/* Employer Job Posting Not Executed */
+/* Creating Job Execute */
+.employer-job-posting-detail-container .employer-job-posting-not-executed{
+    margin-top: 30px;
+    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+    padding-bottom: 20px;
+}
+/* chỉnh tabs của antd */
+.employer-job-posting-detail-container .employer-job-posting-not-executed .tab-title{
+    text-align: center;
+    margin: 0;
+}
+.employer-job-posting-detail-container .employer-job-posting-not-executed .tab-title br{
+    display: none;
+}
+.employer-job-posting-not-executed .ant-tabs-tab{
+    font-size: 18px;
+}
+.employer-job-posting-not-executed .ant-tabs-card >.ant-tabs-nav .ant-tabs-tab {
+    margin: 0;
+    padding: 8px 25px;
+}
+
+
+.employer-job-posting-not-executed .creating-job-execute{
+    width: 90%;
+    padding: 0 5%;
+    color: #343333;
+}
+
+/* Notification */
+.employer-job-posting-not-executed .creating-job-execute .creating-job-execute-notification{
+
+}
+.creating-job-execute .creating-job-execute-notification h1{
+    /* width: 100%;
+    font-size: 30px;
+    font-weight: 500; */
+    text-align: center;
+    margin: 30px 0 15px;
+}
+.creating-job-execute .creating-job-execute-notification .content{
+    width: 100%;
+    font-size: 20px;
+    margin: 0;
+}
+
+.creating-job-execute .creating-job-execute-notification .content .warning{
+    font-size: 28px;
+}
+.creating-job-execute .creating-job-execute-notification .content .yellow{
+    color: #FFCD37;
+    font-weight: 500;
+}
+.creating-job-execute .creating-job-execute-notification .content .bold{
+    font-weight: 500;
+}
+.creating-job-execute .creating-job-execute-notification .content .dark-green{
+    color: #00c05a;
+    font-weight: 450;
+}
+.creating-job-execute .creating-job-execute-notification .content .red{
+    color: #ec0000;
+    font-weight: 400;
+}
+.creating-job-execute .creating-job-execute-notification .content .blue-lagoon{
+    color: #028cba;
+    font-weight: 400;
+}
+.creating-job-execute .creating-job-execute-notification .content .dark-orange{
+    color: #ec7600;
+    font-weight: 410;
+}
+.creating-job-execute .creating-job-execute-notification .content .test{
+    /* color: #02b756; */
+    color: #28A745;
+    font-weight: 450;
+}
+.creating-job-execute .creating-job-execute-notification .show-more-less-btn{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 10px 0 30px;
+}
+.creating-job-execute .creating-job-execute-notification .show-more-less-btn.show-less{
+    margin: 20px 0 40px;
+}
+.creating-job-execute .creating-job-execute-notification .show-more-less-btn button {
+    border: none;
+    font-size: 19px;
+    background-color: white;
+    color: #0a65cc;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.creating-job-execute .creating-job-execute-notification .show-more-less-btn button:hover {
+    color: #0412b2;
+    transition: 0.3s ease;
+}
+
+/* Job Execute Table */
+.employer-job-posting-not-executed .creating-job-execute .creating-job-execute-form{
+    width: 100%;
+    margin-bottom: 5%;
+}
+.creating-job-execute .creating-job-execute-form .assignment-date-note{
+    font-size: 17px;
+    font-weight: 400;
+    color: red;
+}
+.creating-job-execute .creating-job-execute-form .creating-job-execute-table{
+    width: 100%;
+    border: 1px solid rgba(118, 118, 118, 0.16);
+    font-size: 19px;
+    border-radius: 10px;
+    /* do có cái này nên ko border-radius được */
+    /* border-collapse: collapse; */
+    border-collapse: separate; /* Rất quan trọng */
+    border-spacing: 0; /* Để các ô sát nhau */
+    overflow: hidden;  /* Bắt buộc nếu muốn thấy rõ bo góc */
+}
+
+.creating-job-execute-form .creating-job-execute-table thead{
+    background-color: rgb(229, 229, 229);
+    color: rgb(51, 51, 51);
+}
+.creating-job-execute-form .creating-job-execute-table thead tr{
+    width: 100%;
+}
+.creating-job-execute-form .creating-job-execute-table thead th{
+    border: 1px solid #d8d8d8;
+    padding: 1% 0;
+}
+.creating-job-execute-form .creating-job-execute-table thead th.no-column{
+    width: 5%;
+}
+.creating-job-execute-form .creating-job-execute-table thead th.assignment-date{
+    width: 15%
+}
+.creating-job-execute-form .creating-job-execute-table thead th.job-requirement{
+    width: 55%;
+}
+.creating-job-execute-form .creating-job-execute-table thead th.required-progress{
+    width: 15%
+}
+.creating-job-execute-form .creating-job-execute-table thead th.delete-btn{
+    width: 10%
+}
+
+.creating-job-execute-form .creating-job-execute-table tbody tr{
+    width: 100%;
+    /* display: flex; */
+}
+.creating-job-execute-form .creating-job-execute-table tbody td{
+    width: 100%;
+    border: 1px solid #d8d8d8;
+    padding: 0;
+    font-size: 18.5px;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td .input {
+    width: 100%;
+    padding-left: 3%;
+    font-family: var(--font-oswald);
+    font-size: 16px;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 0% 0;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.no-column{
+    width: 5%;
+    text-align: center;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.assignment-date{
+    width: 12%;
+    padding: 0 1.5%;
+    /* text-align: center; */
+    padding-top:  2%;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.assignment-date .ant-picker .ant-picker-input >input {
+    text-align: center;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.job-requirement{
+    width: 50%;
+    padding: 2% 2.5% 0;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.required-progress{
+    width: 10%;
+    padding: 2% 2.5% 0;
+    /* text-align: center; */
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.required-progress .ant-input-number .ant-input-number-input {
+    font-family: var(--font-oswald);
+    text-align: center;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.delete-btn{
+    width: 10%;
+    text-align: center;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.delete-btn button{
+    font-size: 25px;
+    font-weight: 450;
+    border: none;
+    border-radius: 5px;
+    padding: 3px 8px;
+    color: white;
+    background-color: rgb(252, 46, 46);
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.delete-btn button:hover{
+    background-color: rgb(255, 77, 77);
+    transition: 0.3s ease;
+}
+.creating-job-execute-form .creating-job-execute-table tbody td.delete-btn button:disabled{
+    background-color: #b3b3b3;
+    cursor: not-allowed;
+}
+
+
+.creating-job-execute-form .add-and-total{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.creating-job-execute-form .add-and-total .add-btn{
+    width: 20%;
+}
+.creating-job-execute-form .add-and-total .add-btn button{
+    font-size: 16px;
+    font-weight: 450;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 15px;
+    color: white;
+    background-color: rgb(0, 180, 0);
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.creating-job-execute-form .add-and-total .add-btn button:hover{
+    background-color: rgb(3, 214, 3);
+    transition: 0.3s ease;
+}
+.creating-job-execute-form .add-and-total .add-btn button:disabled{
+    background-color: #b3b3b3;
+    cursor: not-allowed;
+}
+.creating-job-execute-form .add-and-total .total-progress{
+    width: 80%;
+    text-align: right;
+    font-size: 18.5px;
+}
+.creating-job-execute-form .add-and-total .total-progress br{
+    display: none;
+}
+.creating-job-execute-form .add-and-total .total-progress-number{
+    font-size: 22px;
+}
+.creating-job-execute-form .add-and-total .total-progress-number.error {
+    color: red;
+}
+.creating-job-execute-form .add-and-total .total-progress-number.correct {
+    color: green;
+}
+
+.creating-job-execute-form .submit-btn{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.creating-job-execute-form .submit-btn button{
+    font-size: 18px;
+    font-weight: 450;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 20px 8px;
+    color: white;
+    background-color:rgb(0, 128, 255);
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.creating-job-execute-form .submit-btn button:hover{
+    background-color:rgb(0, 116, 233);
+    transition: 0.3s ease;
+}
+.creating-job-execute-form .submit-btn button:disabled {
+    background-color: #b3b3b3;
+    cursor: not-allowed;
+}
+
+.creating-job-execute .edit-btn{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: -5% 0 4%;
+}
+.creating-job-execute .edit-btn button{
+    font-size: 18px;
+    font-weight: 450;
+    border: none;
+    border-radius: 20px;
+    padding: 5px 20px 8px;
+    color: white;
+    background-color:rgb(0, 128, 255);
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.creating-job-execute .edit-btn button:hover{
+    background-color:rgb(0, 116, 233);
+    transition: 0.3s ease;
+}
+
+
+/* List Workers */
+.employer-job-posting-not-executed .workers-list{
+    width: 100%;
+}
+.employer-job-posting-not-executed .workers-list h1{
+    text-align: center;
+    margin: 30px 0;
+}
+
+.employer-job-posting-not-executed .workers-list .no-workers{
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+    align-content: center;
+}
+.employer-job-posting-not-executed .workers-list .no-workers .ant-empty .ant-empty-description {
+    font-size: 20px;
+}
+.employer-job-posting-not-executed .workers-list .workers-list-search{
+    width: 100%;
+    margin-bottom: 30px;
+}
+.employer-job-posting-not-executed .workers-list .workers-list-search .ant-input {
+    font-family: var(--font-oswald);
+    padding-left: 3%;
+}
+
+.employer-job-posting-not-executed .workers-list .worker-item{
+    width: 94%;
+    padding: 1% 3%;
+    border: 1px solid #E4E5E8;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-bottom: 1.5%;
+    position: relative;
+}
+.employer-job-posting-not-executed .workers-list .worker-item:hover{
+    background-color: rgb(249, 249, 249);
+    transition: 0.3s ease;
+}
+
+.employer-job-posting-not-executed .workers-list .worker-item img{
+    width: 80px;
+    height: 80px;
+    background-color: black;
+    border-radius: 10px;
+}
+.employer-job-posting-not-executed .workers-list .worker-item .worker-info{
+    margin-left: 25px;
+}
+.employer-job-posting-not-executed .workers-list .worker-item .worker-info p {
+    width: 100%;
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.employer-job-posting-not-executed .workers-list .worker-item .worker-info p.worker-name{
+    color: #000000;
+    font-size: 20px;
+    font-weight: 500;
+}
+.employer-job-posting-not-executed .workers-list .worker-item .worker-info p.worker-email{
+    color: #187bcd;
+}
+.employer-job-posting-not-executed .workers-list .worker-item button{
+    position: absolute;
+    top: 35%;
+    right: 5%;
+    border: none;
+    background-color: transparent;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.employer-job-posting-not-executed .workers-list .worker-item button:hover{
+    color: rgb(109, 109, 109);
+    transition: 0.3s ease;
+}
+
+.employer-job-posting-not-executed .workers-list .ant-pagination {
+    margin: 30px 0;
+}
+
+
+/* Employer Job Posting Executed */
+/* List Workers */
+.employer-job-posting-executed .workers-list{
+    width: 100%;
+}
+.employer-job-posting-executed .workers-list h1{
+    text-align: center;
+    margin: 30px 0;
+}
+
+.employer-job-posting-executed .workers-list .no-workers{
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+    align-content: center;
+}
+.employer-job-posting-executed .workers-list .no-workers .ant-empty .ant-empty-description {
+    font-size: 20px;
+}
+.employer-job-posting-executed .workers-list .workers-list-search{
+    width: 100%;
+    margin-bottom: 30px;
+}
+.employer-job-posting-executed .workers-list .workers-list-search .ant-input {
+    font-family: var(--font-oswald);
+    padding-left: 3%;
+}
+
+.employer-job-posting-executed .workers-list .worker-item{
+    width: 94%;
+    padding: 1% 3%;
+    border: 1px solid #E4E5E8;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-bottom: 1.5%;
+    position: relative;
+}
+.employer-job-posting-executed .workers-list .worker-item:hover{
+    background-color: rgb(249, 249, 249);
+    transition: 0.3s ease;
+}
+
+.employer-job-posting-executed .workers-list .worker-item img{
+    width: 80px;
+    height: 80px;
+    background-color: black;
+    border-radius: 10px;
+}
+.employer-job-posting-executed .workers-list .worker-item .worker-info{
+    margin-left: 25px;
+}
+.employer-job-posting-executed .workers-list .worker-item .worker-info p {
+    width: 100%;
+    margin: 0;
+    font-size: 18px;
+    display: flex;
+    flex-wrap: wrap;
+}
+.employer-job-posting-executed .workers-list .worker-item .worker-info p.worker-name{
+    color: #000000;
+    font-size: 20px;
+    font-weight: 500;
+}
+.employer-job-posting-executed .workers-list .worker-item .worker-info p.worker-email{
+    color: #187bcd;
+}
+.employer-job-posting-executed .workers-list .worker-item button{
+    position: absolute;
+    top: 35%;
+    right: 5%;
+    border: none;
+    background-color: transparent;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.employer-job-posting-executed .workers-list .worker-item button:hover{
+    color: rgb(109, 109, 109);
+    transition: 0.3s ease;
+}
+
+.employer-job-posting-executed .workers-list .ant-pagination {
+    margin: 30px 0;
+}
+
+
+
+/* Job Posting Detail */
+@media (max-width: 1280px) {
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating {
+        width: 100%;
+    }
+}
+@media (max-width: 800px) {
+    .employer-job-posting-detail-container .employer-job-posting-detail-title{
+        padding: 2% 0 4%;
+    }
+    .employer-job-posting-detail-container .employer-job-posting-detail-info p{
+        margin: 2% 0;
+    }
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info p{
+        width: 100%;
+        margin: 2% 0;
+    }
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .show-more-less-btn{
+        margin: 3% 0;
+    }
+}
+@media (max-width: 650px) {
+    .employer-job-posting-detail-container .employer-job-posting-detail-info p{
+        margin: 3% 0;
+    }
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info p{
+        width: 100%;
+        margin: 3% 0;
+    }
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating{
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating .star{
+        margin-left: 15px;
+        margin-top: 15px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating .star .anticon{
+        font-size: 22px;
+        margin-right: 2px;
+    }
+}
+@media (max-width: 570px) {
+    .employer-job-posting-detail-whole-container .ant-breadcrumb ol {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
+        margin-bottom: 2%;
+        height: 99px;
+    }
+    .employer-job-posting-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+        margin: 0 5px;
+        display: flex;
+    }
+}
+@media (max-width: 500px) {
+
+    .employer-job-posting-detail-container .employer-job-posting-detail-title{
+        padding: 4% 0;
+    }
+
+    .employer-job-posting-detail-container .employer-job-posting-detail-info{
+        padding: 5% 5% 20px;
+    }
+
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .show-more-less-btn{
+        margin: 5% 0;
+    }
+}
+@media (max-width: 380px) {
+    .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating br{
+        display: block;
+    }
+}
+
+
+/* Employer Job Posting Not Executed */
+/* Job Execute Table */
+@media (max-width: 1290px) {
+    .creating-job-execute-form .creating-job-execute-table thead th.assignment-date{
+        width: 20%
+    }
+    .creating-job-execute-form .creating-job-execute-table thead th.job-requirement{
+        width: 50%;
+    }
+    .creating-job-execute-form .creating-job-execute-table tbody td.assignment-date{
+        width: 17%;
+    }
+    .creating-job-execute-form .creating-job-execute-table tbody td.job-requirement{
+        width: 45%;
+    }
+}
+@media (max-width: 1000px) {
+    .creating-job-execute .creating-job-execute-notification .show-more-less-btn{
+        margin: 20px 0 30px;
+    }
+
+    .creating-job-execute-form .creating-job-execute-whole-table{
+        overflow-x: auto;
+    }
+    .creating-job-execute-form .creating-job-execute-whole-table .creating-job-execute-table{
+        min-width: 1000px;
+    }
+    .creating-job-execute-form .creating-job-execute-table thead th.assignment-date{
+        width: 15%
+    }
+    .creating-job-execute-form .creating-job-execute-table thead th.job-requirement{
+        width: 55%;
+    }
+    .creating-job-execute-form .creating-job-execute-table tbody td.assignment-date{
+        width: 12%;
+    }
+    .creating-job-execute-form .creating-job-execute-table tbody td.job-requirement{
+        width: 50%;
+    }
+
+    .creating-job-execute-form .add-and-total{
+        margin-bottom: 20px;
+    }
+}
+@media (max-width: 650px) {
+    .creating-job-execute-form .add-and-total{
+        align-items: baseline;
+    }
+    .creating-job-execute-form .add-and-total .total-progress br{
+        display: block;
+    }
+}
+@media (max-width: 500px) {
+    /* chỉnh tabs của antd */
+    .employer-job-posting-detail-container .employer-job-posting-not-executed .tab-title br{
+        display: block;
+    }
+    .employer-job-posting-not-executed .ant-tabs-card >.ant-tabs-nav .ant-tabs-tab {
+        margin: 0;
+        padding: 4px 25px;
+    }
+}
+
+/* Employer Job Posting Not Executed */
+/* List Workers */
+@media (max-width: 1000px){
+    .employer-job-posting-not-executed .workers-list .worker-item{
+        width: 90%;
+        padding: 20px 5% 15px;
+        margin-bottom: 15px;
+    }
+}
+@media (max-width: 650px){
+    .employer-job-posting-not-executed .workers-list .worker-item{
+        width: 84%;
+        padding: 20px 8% 15px;
+    }
+    .workers-list .worker-item .worker-info {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* Employer Job Posting Executed */
+/* List Workers */
+@media (max-width: 1000px){
+    .employer-job-posting-executed .workers-list .worker-item{
+        width: 90%;
+        padding: 20px 5% 15px;
+        margin-bottom: 15px;
+    }
+}
+@media (max-width: 650px){
+    .employer-job-posting-executed .workers-list .worker-item{
+        width: 84%;
+        padding: 20px 8% 15px;
+    }
+    .employer-job-posting-executed .workers-list .worker-item .worker-info {
+        width: 100%;
+        margin-left: 0;
+    }
+}

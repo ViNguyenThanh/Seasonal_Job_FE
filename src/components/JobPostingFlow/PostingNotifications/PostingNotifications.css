@@ -11,7 +11,8 @@
 .posting-notifications-container .ant-breadcrumb ol {
     /* display: flex;
     flex-wrap: wrap; */
-    margin: -2%;
+    /* margin: -2%; */
+    margin:  0% -2% -2%;
     /* padding: 0;
     list-style: none; */
     align-items: center;
@@ -75,7 +76,7 @@
     justify-content: center;
 }
 .posting-notifications-info .posting-notification-content p{
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 350;
     line-height: 1.8;
 }
@@ -89,6 +90,10 @@
 }
 .posting-notifications-info .posting-notification-content p .black{
     font-weight: 500;
+}
+.posting-notifications-info .posting-notification-content p .dark-red{
+    color: #8B0000;
+    font-weight: 450;
 }
 .posting-notifications-info .posting-notification-content p .rose-first{
     color: #f03388;
@@ -135,6 +140,10 @@
 }
 .posting-notifications-info .posting-notification-content p .yellow{
     color: #FFCD37;
+    font-weight: 400;
+}
+.posting-notifications-info .posting-notification-content p .dark-orange{
+    color: #D87A3C;
     font-weight: 400;
 }
 .posting-notifications-info .posting-notification-content p .icon{

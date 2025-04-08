@@ -9,11 +9,7 @@
     font-size: 18px;
 }
 .job-posting-flow-layout-container .ant-breadcrumb ol {
-    /* display: flex;
-    flex-wrap: wrap; */
-    margin: -2%;
-    /* padding: 0;
-    list-style: none; */
+    margin:  0% -2% -2%;
     align-items: center;
 }
 
@@ -41,7 +37,7 @@
     background-color: rgba(0, 0, 0, 0.06);
 }
 .job-posting-flow-layout-container .ant-breadcrumb .anticon {
-    font-size: 18px;
+    font-size: 22px;
     margin-right: 5px;
 }
 
@@ -75,6 +71,9 @@
 }
 .job-posting-flow-layout-content .ant-steps .ant-steps-item-process>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title {
     color: rgba(0, 0, 0, 0.88);
+    font-size: 18px;
+}
+.job-posting-flow-layout-content .ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-content>.ant-steps-item-title {
     font-size: 18px;
 }
 /* chỉnh màu của steps hiện tại */
@@ -151,7 +150,7 @@
 .ant-message-notice-content {
     display: flex;
     align-items: center;
-    font-family: "Josefin Sans", sans-serif;
+    font-family: var(--font-oswald);
     font-size: 17px !important;
     margin-top: 1%;
 }

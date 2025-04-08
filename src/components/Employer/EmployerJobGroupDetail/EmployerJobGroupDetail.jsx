@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './EmployerJobGroupDetail.css'
-import { ArrowLeftOutlined, ArrowRightOutlined, BellOutlined, CreditCardOutlined, DashboardOutlined, DiffOutlined, DollarOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, HomeOutlined, ProductOutlined, ProfileOutlined, ScheduleOutlined, StarOutlined, TagOutlined, UpOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, DollarOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ScheduleOutlined, SnippetsOutlined, UpOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 
@@ -10,7 +10,9 @@ const EmployerJobGroupDetail = () => {
     const navigate = useNavigate();
     const [showMore, setShowMore] = useState(false);
     const location = useLocation();
-    const jobGroupInfo = location.state;
+    
+    const jobGroupInfo = location.state || {};
+    // console.log(jobGroupInfo)
 
     const listData = [
         {
@@ -58,44 +60,37 @@ const EmployerJobGroupDetail = () => {
                 items={[
                     {
                         title: <Link
-                            to="/"
+                            to="/employer/employer-job-groups"
                             className='b-title-1'
                         >
-                            <HomeOutlined /> Home
-                        </Link>,
-                    },
-                    {
-                        title: <Link
-                            to="/job-posting-flow/posting-notifications"
-                            className='b-title-1'
-                        >
-                            <BellOutlined /> Notification
+                            <FolderOpenOutlined /> List Job Groups
                         </Link>,
                     },
                     {
                         title: (
                             <div className='b-title-2'>
-                                <FileTextOutlined /> job Group
+                                <ContainerOutlined /> Job Group Detail
                             </div>
                         ),
                     },
                 ]}
             />
             <div className="employer-job-group-detail-container">
-                <button
+                {/* dùng Breadcrumb r nên bỏ nút này */}
+                {/* <button
                     className='go-back-btn'
                     onClick={() => navigate('/employer/employer-job-groups', window.scrollTo(0, 0))}>
                     <ArrowLeftOutlined />
-                </button>
+                </button> */}
 
                 <h1 className='employer-job-group-detail-title'>Job Group Detail</h1>
 
                 <div className="employer-job-group-detail-info">
-                    <p><ProfileOutlined /> Job Group Name: {jobGroupInfo.title}</p>
-                    <p><DiffOutlined /> Number of Job Postings: {jobGroupInfo.numberOfJobPostings}</p>
+                    <p><ContainerOutlined /> Job Group Name: {jobGroupInfo.title}</p>
+                    <p><SnippetsOutlined /> Number of Job Postings: {jobGroupInfo.numberOfJobPostings}</p>
                     <div className="employer-job-group-detail-short-info">
-                        <p><ScheduleOutlined /> Start Date: 22/05/2025</p>
-                        <p><ScheduleOutlined /> End Date: 27/05/2025</p>
+                        <p><ScheduleOutlined /> Start Date: {jobGroupInfo.startDate}</p>
+                        <p><ScheduleOutlined /> End Date: {jobGroupInfo.endDate}</p>
                     </div>
                     {/* Hiển thị nội dung mở rộng nếu showMore = true */}
                     {showMore && (
@@ -114,16 +109,16 @@ const EmployerJobGroupDetail = () => {
 
                                 Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p>
 
-                            {/* Nút Thu gọn */}
+                            {/* Nút Show less */}
                             <div className="show-more-less-btn">
-                                <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Thu gọn</button>
+                                <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
                             </div>
                         </>
                     )}
-                    {/* Nút Xem thêm (chỉ hiển thị khi showMore = false) */}
+                    {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
                     {!showMore && (
                         <div className="show-more-less-btn">
-                            <button onClick={() => setShowMore(true)}><DownOutlined /> Xem thêm</button>
+                            <button onClick={() => setShowMore(true)}><DownOutlined /> Show more</button>
                         </div>
                     )}
 
@@ -135,12 +130,12 @@ const EmployerJobGroupDetail = () => {
 
                 <div className="job-postings-list">
                     <h1>Job Postings List</h1>
-                    {listData.map((item) => (
-                        <div className="job-postings-item" key={item.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}/employer-job-posting-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
-                            <p className='job-postings-item-title'>{item.title}</p>
+                    {listData.map((posting) => (
+                        <div className="job-postings-item" key={posting.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}/employer-job-posting-detail/${posting.id}`, { state: { jobPostingInfo: posting, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))}>
+                            <p className='job-postings-item-title'>{posting.title}</p>
                             <div className='job-postings-item-info'>
-                                <p><EnvironmentOutlined /> {item.location} &emsp; </p>
-                                <p><DollarOutlined /> {item.salary.toLocaleString('vi-VN')} VND</p>
+                                <p><EnvironmentOutlined /> {posting.location} &emsp; </p>
+                                <p><DollarOutlined /> {posting.salary.toLocaleString('vi-VN')} VND</p>
                             </div>
                             <button><ArrowRightOutlined /></button>
                         </div>
