@@ -8,7 +8,7 @@ import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input 
 import { AntDesignOutlined, LinkOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
-import { FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, TwitterOutlined, YoutubeOutlined, UploadOutlined, ManOutlined, WomanOutlined } from '@ant-design/icons';
+import { FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, TwitterOutlined, YoutubeOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, CompassOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 import { useParams } from "react-router-dom";
 import { jobApi } from "../../apis/job.request"; // Import the jobApi
@@ -25,6 +25,7 @@ const JobDetailView = () => {
     const [isApplied, setIsApplied] = useState(false); // State to track if the user has applied
     const [value, setValue] = useState(''); // State for cover letter
     const [loadings, setLoadings] = useState([]); // State for button loading
+    const [previewVisible, setPreviewVisible] = useState(false);
 
     // Fetch job details when the component loads
     useEffect(() => {
@@ -224,11 +225,14 @@ const JobDetailView = () => {
                                 <Paragraph style={{ fontSize: "18px", color: "#333333" }}>
                                     <span
                                         dangerouslySetInnerHTML={{
-                                            __html: jobDetail.description,
+                                            __html: jobDetail.description.replace(/\n/g, "<br />"),
                                         }}
                                     />
                                 </Paragraph>
-
+                                <div style={{ display: "flex", alignItems: "center", marginTop: "30px", color: "#555" }}>
+                                    <CompassOutlined className="job-overview-icon" />
+                                    <span style={{ fontSize: "16px", color: "#333", marginLeft: "10px" }}>{jobDetail.address}</span>
+                                </div>
                             </Typography>
 
                             {/* <Typography className="job-description-leftSide-typography">
@@ -331,27 +335,34 @@ const JobDetailView = () => {
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <ClockCircleOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
-                                                    JOB EXPIRE IN:<br />
+                                                    START DATE<br />
                                                     <span className="job-overview-highlight">
                                                         {new Intl.DateTimeFormat('en-GB', {
                                                             day: '2-digit',
                                                             month: 'long',
                                                             year: 'numeric',
-                                                        }).format(new Date(jobDetail.expired_date))}</span>
+                                                        }).format(new Date(jobDetail.started_date))}</span>
                                                 </Paragraph>
                                             </Col>
-                                            {/* <Col xs={24} sm={12} md={8} className="job-overview-item">
-                                                <SolutionOutlined className="job-overview-icon" />
+                                            <Col xs={24} sm={12} md={8} className="job-overview-item">
+                                                <HourglassOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
-                                                    EDUCATION:<br />
-                                                    <span className="job-overview-highlight">Graduation</span>
+                                                    END DATE<br />
+                                                    <span className="job-overview-highlight">
+                                                        {new Intl.DateTimeFormat('en-GB', {
+                                                            day: '2-digit',
+                                                            month: 'long',
+                                                            year: 'numeric',
+                                                        }).format(new Date(jobDetail.end_date))}</span>
                                                 </Paragraph>
-                                            </Col> */}
+                                            </Col>
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <WalletOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     SALARY:<br />
-                                                    <span className="job-overview-highlight">${jobDetail.salary}/{jobDetail.payment_type}</span>
+                                                    <span className="job-overview-highlight">
+                                                        {new Intl.NumberFormat('vi-VN').format(jobDetail.salary)} VND
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
@@ -361,13 +372,13 @@ const JobDetailView = () => {
                                                     <span className="job-overview-highlight">{jobDetail.location}</span>
                                                 </Paragraph>
                                             </Col>
-                                            {/* <Col xs={24} sm={12} md={8} className="job-overview-item">
-                                                <FileProtectOutlined className="job-overview-icon" />
+                                            <Col xs={24} sm={12} md={8} className="job-overview-item">
+                                                <TeamOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
-                                                    JOB TYPE:<br />
-                                                    <span className="job-overview-highlight">Full Time</span>
+                                                    REQUIRED PEOPLE:<br />
+                                                    <span className="job-overview-highlight">{jobDetail.number_of_person}</span>
                                                 </Paragraph>
-                                            </Col> */}
+                                            </Col>
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <ManOutlined className="job-overview-icon" />
                                                 <WomanOutlined className="job-overview-icon" />
@@ -376,13 +387,6 @@ const JobDetailView = () => {
                                                     <span className="job-overview-highlight">{jobDetail.gender_requirement}</span>
                                                 </Paragraph>
                                             </Col>
-                                            {/* <Col xs={24} sm={12} md={8} className="job-overview-item">
-                                                <HistoryOutlined className="job-overview-icon" />
-                                                <Paragraph className="job-overview-text">
-                                                    EXPERIENCE:<br />
-                                                    <span className="job-overview-highlight">10 - 15 Years</span>
-                                                </Paragraph>
-                                            </Col> */}
                                         </Row>
                                     </Paragraph>
                                 </Space.Compact>
@@ -517,7 +521,7 @@ const JobDetailView = () => {
                                         type="primary"
                                         style={{ backgroundColor: "#1890ff", borderColor: "#1890ff" }}
                                         loading={loadings[1]}
-                                        onClick={handleApplyNow} // Call the updated handler
+                                        onClick={handleApplyNow}
                                     >
                                         Apply Now
                                     </Button>,
@@ -531,6 +535,42 @@ const JobDetailView = () => {
                                         Upload
                                     </Button>
                                 </Upload>
+                                {selectedFile && (
+                                    <div style={{ marginTop: "15px" }}>
+                                        <Title level={5} style={{ margin: 0 }}>
+                                            Preview CV
+                                        </Title>
+                                        <Button
+                                            type="link"
+                                            style={{ color: "#1890ff", textDecoration: "underline" }}
+                                            onClick={() => setPreviewVisible(true)}
+                                        >
+                                            {selectedFile.name}
+                                        </Button>
+                                        <Modal
+                                            open={previewVisible}
+                                            title="Preview CV"
+                                            footer={null}
+                                            onCancel={() => setPreviewVisible(false)}
+                                            width="80%"
+                                        >
+                                            {selectedFile.type === "application/pdf" ? (
+                                                <embed
+                                                    src={URL.createObjectURL(selectedFile)}
+                                                    type="application/pdf"
+                                                    width="100%"
+                                                    height="500px"
+                                                />
+                                            ) : (
+                                                <img
+                                                    alt="Preview"
+                                                    src={URL.createObjectURL(selectedFile)}
+                                                    style={{ width: "100%" }}
+                                                />
+                                            )}
+                                        </Modal>
+                                    </div>
+                                )}
                                 <Title level={5} style={{ marginTop: "20px" }}>
                                     Cover Letter
                                 </Title>

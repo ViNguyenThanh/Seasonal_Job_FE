@@ -283,7 +283,9 @@ const FindingJob = () => {
                                     <>
                                         <div className="job-card-description" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <div style={{ display: 'flex', gap: '10px', flexDirection: 'row-reverse' }}>
-                                                <span><DollarOutlined /> ${job.salary}</span>
+                                                <span>
+                                                    <DollarOutlined /> {new Intl.NumberFormat('vi-VN').format(job.salary)} VND
+                                                </span>
                                                 {/* <span><CalendarOutlined /> Expiry: {new Date(job.expired_date).toLocaleDateString()}</span> */}
                                                 <span><EnvironmentOutlined /> {job.location}</span>
                                             </div>
