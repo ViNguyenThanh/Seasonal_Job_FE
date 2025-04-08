@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './EmployerJobGroupDetail.css'
-import { ArrowLeftOutlined, ArrowRightOutlined, BellOutlined, CreditCardOutlined, DashboardOutlined, DiffOutlined, DollarOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, HomeOutlined, ProductOutlined, ProfileOutlined, ScheduleOutlined, StarOutlined, TagOutlined, UpOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, DollarOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ScheduleOutlined, SnippetsOutlined, UpOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Breadcrumb, Skeleton } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ const EmployerJobGroupDetail = () => {
     const { id } = useParams()
     const { isLoading: isJGLoading, payload: jobGroupInfo } = useSelector(state => state.jobGroupsReducer)
     const { isLoading: isJPLoading, payload: jobPostings } = useSelector(state => state.jobPostingReducer)
-    // const jobGroupInfo = location.state;
+    // const jobGroupInfo = location.state || {};
 
     const listData = [
         {
@@ -69,35 +69,28 @@ const EmployerJobGroupDetail = () => {
                 items={[
                     {
                         title: <Link
-                            to="/employer-home"
-                            className='b-title-1'
-                        >
-                            <HomeOutlined /> Home
-                        </Link>,
-                    },
-                    {
-                        title: <Link
                             to="/employer/employer-job-groups"
                             className='b-title-1'
                         >
-                            <BellOutlined /> Job Groups
+                            <FolderOpenOutlined /> List Job Groups
                         </Link>,
                     },
                     {
                         title: (
                             <div className='b-title-2'>
-                                <FileTextOutlined /> {jobGroupInfo?.title}
+                                <ContainerOutlined /> {jobGroupInfo?.title}
                             </div>
                         ),
                     },
                 ]}
             />
             <div className="employer-job-group-detail-container">
-                <button
+                {/* dùng Breadcrumb r nên bỏ nút này */}
+                {/* <button
                     className='go-back-btn'
                     onClick={() => navigate('/employer/employer-job-groups', window.scrollTo(0, 0))}>
                     <ArrowLeftOutlined />
-                </button>
+                </button> */}
 
                 <h1 className='employer-job-group-detail-title'>Job Group Detail</h1>
 
