@@ -116,12 +116,12 @@ function App() {
           <Route path='employer-job-groups/employer-job-group-detail/:id/employer-job-posting-detail/:id' element={<EmployerJobPostingDetail />} />
           <Route path='employer-job-groups/employer-job-group-detail/:groupId/employer-job-posting-detail/:postingId/worker-detail/:workerId' element={<WorkerDetail />} />
         </Route>
+
+        {/* Admin */}
+        <Route path='/admin/*' element={<Admin />}>
+
+        </Route>
       </Routes>
-
-      {/* Admin */}
-      <Route path='/admin/*' element={<Admin />}>
-
-      </Route>
     </>
   )
 }
