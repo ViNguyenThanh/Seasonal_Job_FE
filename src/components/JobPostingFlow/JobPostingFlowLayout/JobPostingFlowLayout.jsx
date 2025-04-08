@@ -171,7 +171,7 @@ const JobPostingFlowLayout = () => {
       // console.log(resJG);
 
       if (resJG.status === 201) {
-        saveLocalstorage('jobGroup', resJG.data.data)
+        // saveLocalstorage('jobGroup', resJG.data.data)
         for (let i = 0; i < jobPostings.length; i++) {
           const jobPosting = jobPostings[i];
           const resJP = await jobPostingApi.createJobPosting({
@@ -195,14 +195,16 @@ const JobPostingFlowLayout = () => {
       if (resJG.status === 201) {
         // navigate('/employer/employer-job-groups');
         // const jobGroupTmp = loadFromLocalstorage('jobGroup')
+        const data = {
+          jobGroupId: resJG.data.data.id,
+          orderId: resJG.data.data.id + Date.now()
+        }
+        const resPayment = await paymentApi.createPayment(data)
+        // console.log(resPayment);
 
-        const resPayment = await paymentApi.createPayment({
-          jobGroupId: jobGroupTmp.id,
-          orderId: 2,
-          totalAmount: jobGroupTmp.totalAmount
-        })
-        console.log(resPayment);
-
+        if (resPayment.status === 200) {
+          window.location.href = resPayment.data.checkoutUrl
+        }
       }
     } catch (error) {
       console.log(error);
