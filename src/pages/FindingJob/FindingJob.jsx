@@ -5,7 +5,7 @@ import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Select, Space, Button, Flex, Modal, Checkbox, Radio, Card, Tag } from "antd";
-import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { jobApi } from '../../apis/job.request'; // Import the jobApi
@@ -15,32 +15,50 @@ const { Option } = Select;
 
 const FindingJob = () => {
     const [jobData, setJobData] = useState([]);
+    const [allJobs, setAllJobs] = useState([]); // Original list of all jobs
+    const [selectedMinStarRequirement, setSelectedMinStarRequirement] = useState(null);
+    const [filteredJobs, setFilteredJobs] = useState(allJobs); // State to manage filtered jobs
+
+
+    const [currentPage, setCurrentPage] = useState(1); // State to track the current page
+    const [jobsPerPage, setJobsPerPage] = useState(12); // State to track the number of jobs per page
+
+    // Calculate the jobs to display based on the current page and jobs per page
+    const indexOfLastJob = currentPage * jobsPerPage;
+    const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+    const currentJobs = jobData.slice(indexOfFirstJob, indexOfLastJob);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFiltered, setIsFiltered] = useState(false);
 
+    const [selectedTitle, setSelectedTitle] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState(null);
+
     // Fetch all jobs when the component loads
-    useEffect(() => {
-        const fetchJobs = async () => {
-            try {
-                const response = await jobApi.getAllJobs(); // Call the API
-                if (Array.isArray(response.data.data)) { // Access the nested 'data' property
-                    setJobData(response.data.data); // Extract the array of jobs
-                } else {
-                    console.error('Unexpected API response format:', response);
-                    setJobData([]); // Fallback to an empty array
-                }
-            } catch (error) {
-                console.error('Error fetching jobs:', error);
+    const fetchJobs = async () => {
+        try {
+            const response = await jobApi.getAllJobs(); // Call the API
+            if (Array.isArray(response.data.data)) {
+                setAllJobs(response.data.data); // Store the original list of jobs
+                setJobData(response.data.data); // Initialize the filtered list
+            } else {
+                console.error('Unexpected API response format:', response);
+                setAllJobs([]); // Fallback to an empty array
                 setJobData([]); // Fallback to an empty array
             }
-        };
+        } catch (error) {
+            console.error('Error fetching jobs:', error);
+            setAllJobs([]); // Fallback to an empty array
+            setJobData([]); // Fallback to an empty array
+        }
+    };
 
-        fetchJobs();
+    useEffect(() => {
+        fetchJobs(); // Fetch all jobs when the component loads
     }, []);
 
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
+    // const showModal = () => {
+    //     setIsModalOpen(true);
+    // };
 
     const handleOk = () => {
         setIsModalOpen(false);
@@ -92,10 +110,35 @@ const FindingJob = () => {
                                     width: '90%',
                                     height: '50px',
                                 }}
+                                onSearch={(value) => {
+                                    if (!value.trim()) {
+                                        setFilteredJobs(allJobs); // Reset to all jobs if input is empty
+                                    } else {
+                                        const filtered = allJobs.filter((job) =>
+                                            job.title.toLowerCase().includes(value.toLowerCase())
+                                        );
+                                        setFilteredJobs(filtered); // Update the filtered jobs
+                                    }
+                                }}
+                                value={selectedTitle} // Bind state
+                                onChange={(value) => {
+                                    setSelectedTitle(value); // Update state
+                                    if (!value) {
+                                        setFilteredJobs(allJobs); // Reset to all jobs if no value is selected
+                                    } else {
+                                        const selectedJobs = allJobs.filter((job) => job.title === value);
+                                        setJobData(selectedJobs); // Display all jobs with the selected title
+                                    }
+                                }}
+                                filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                <Option value="job1">Job 1</Option>
-                                <Option value="job2">Job 2</Option>
+                                {[...new Set(filteredJobs.map((job) => job.title))].map((title, index) => (
+                                    <Option key={index} value={title}>
+                                        {title}
+                                    </Option>
+                                ))}
                             </Select>
+
                             <Select
                                 showSearch
                                 placeholder="Location"
@@ -104,24 +147,75 @@ const FindingJob = () => {
                                     width: '60%',
                                     height: '50px',
                                 }}
+                                onSearch={(value) => {
+                                    if (!value.trim()) {
+                                        setFilteredJobs(allJobs); // Reset to all jobs if input is empty
+                                    } else {
+                                        const filtered = allJobs.filter((job) =>
+                                            job.location.toLowerCase().includes(value.toLowerCase())
+                                        );
+                                        setFilteredJobs(filtered); // Update the filtered jobs
+                                    }
+                                }}
+                                value={selectedLocation} // Bind state
+                                onChange={(value) => {
+                                    setSelectedLocation(value); // Update state
+                                    if (!value) {
+                                        setFilteredJobs(allJobs); // Reset to all jobs if no value is selected
+                                    } else {
+                                        const selectedJobs = allJobs.filter((job) => job.location === value);
+                                        setJobData(selectedJobs); // Display all jobs with the selected location
+                                    }
+                                }}
+                                filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                <Option value="location1">Location 1</Option>
-                                <Option value="location2">Location 2</Option>
+                                {[...new Set(filteredJobs.map((job) => job.location))].map((location, index) => (
+                                    <Option key={index} value={location}>
+                                        {location}
+                                    </Option>
+                                ))}
                             </Select>
+
                             <Select
                                 showSearch
-                                placeholder="Select Category"
-                                prefix={<ContainerOutlined className="custom-icon" />}
+                                placeholder="Minimum Star Requirement"
+                                prefix={<StarOutlined className="custom-icon" />}
                                 style={{
                                     width: '60%',
                                     height: '50px',
                                 }}
+                                onSearch={(value) => {
+                                    if (!value.trim()) {
+                                        setFilteredJobs(allJobs); // Reset to all jobs if input is empty
+                                    } else {
+                                        const filtered = allJobs.filter((job) =>
+                                            job.min_star_requirement.toString().includes(value)
+                                        );
+                                        setFilteredJobs(filtered); // Update the filtered jobs
+                                    }
+                                }}
+                                value={selectedMinStarRequirement} // Bind state
+                                onChange={(value) => {
+                                    setSelectedMinStarRequirement(value); // Update state
+                                    if (!value) {
+                                        setFilteredJobs(allJobs); // Reset to all jobs if no value is selected
+                                    } else {
+                                        const selectedJobs = allJobs.filter(
+                                            (job) => job.min_star_requirement.toString() === value
+                                        );
+                                        setJobData(selectedJobs); // Display all jobs with the selected min_star_requirement
+                                    }
+                                }}
+                                filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                <Option value="category1">Category 1</Option>
-                                <Option value="category2">Category 2</Option>
+                                {[...new Set(filteredJobs.map((job) => job.min_star_requirement))].map((minStar, index) => (
+                                    <Option key={index} value={minStar.toString()}>
+                                        {minStar}
+                                    </Option>
+                                ))}
                             </Select>
 
-                            <Select
+                            {/* <Select
                                 placeholder=""
                                 prefix={<span style={{ color: isFiltered ? 'blue' : 'inherit' }}>Advance Filter</span>}
                                 style={{
@@ -131,7 +225,7 @@ const FindingJob = () => {
                                 open={false}
                                 onClick={showModal}
                             >
-                            </Select>
+                            </Select> */}
 
                             <Modal
                                 title=" "
@@ -202,9 +296,23 @@ const FindingJob = () => {
                             </Modal>
 
                             <Flex gap="small" wrap>
-                                <Button type="primary" style={{
-                                    height: '50px', borderRadius: '5px', width: '100%'
-                                }}>Find Job</Button>
+                                <Button
+                                    type="primary"
+                                    icon={<ReloadOutlined />} // Add the reset icon
+                                    style={{
+                                        height: '50px',
+                                        borderRadius: '5px',
+                                        width: '100%'
+                                    }}
+                                    onClick={() => {
+                                        setJobData(allJobs); // Reset the job data to show all jobs
+                                        setSelectedTitle(null); // Clear the job title input
+                                        setSelectedLocation(null); // Clear the location input
+                                        setSelectedMinStarRequirement(null); // Clear the min star requirement input
+                                    }}
+                                >
+                                    Reset
+                                </Button>
                             </Flex>
                         </Space.Compact>
                     </div>
@@ -213,13 +321,21 @@ const FindingJob = () => {
                 <Row justify="end" align="middle" style={{ marginTop: '30px', marginRight: '39px' }}>
                     <Col>
                         <Select
-                            defaultValue="Latest"
+                            defaultValue="latest"
                             className="sort-select"
                             style={{
                                 width: 120,
                                 marginRight: '10px',
                                 border: '1px solid gray',
                                 borderRadius: '5px',
+                            }}
+                            onChange={(value) => {
+                                const sortedJobs = [...jobData].sort((a, b) => {
+                                    const dateA = new Date(a.updatedAt);
+                                    const dateB = new Date(b.updatedAt);
+                                    return value === 'latest' ? dateB - dateA : dateA - dateB; // Sort by latest or oldest
+                                });
+                                setJobData(sortedJobs); // Update the job data with the sorted list
                             }}
                             options={[
                                 {
@@ -240,6 +356,11 @@ const FindingJob = () => {
                                 borderRadius: '5px',
                                 marginRight: '30px',
                             }}
+                            onChange={(value) => {
+                                const jobsPerPageValue = value === '12perpage' ? 12 : 24; // Determine jobs per page
+                                setJobsPerPage(jobsPerPageValue); // Update the jobs per page
+                                setCurrentPage(1); // Reset to the first page
+                            }}
                             options={[
                                 {
                                     value: '12perpage',
@@ -254,8 +375,7 @@ const FindingJob = () => {
                     </Col>
                 </Row>
 
-
-                {Array.isArray(jobData) && jobData.map((job, index) => (
+                {Array.isArray(currentJobs) && currentJobs.map((job, index) => (
                     <div key={job.id} style={{ display: 'flex', justifyContent: 'center' }}>
                         <Card
                             style={{
@@ -277,6 +397,9 @@ const FindingJob = () => {
                                                 return `${durationInDays} days`; // Display duration
                                             })()}
                                         </Tag>
+                                        <Tag color="yellow" style={{marginLeft: '-10px'}}>
+                                            {job.min_star_requirement} <StarOutlined />
+                                        </Tag>
                                     </div>
                                 }
                                 description={
@@ -286,19 +409,19 @@ const FindingJob = () => {
                                                 <span>
                                                     <DollarOutlined /> {new Intl.NumberFormat('vi-VN').format(job.salary)} VND
                                                 </span>
-                                                {/* <span><CalendarOutlined /> Expiry: {new Date(job.expired_date).toLocaleDateString()}</span> */}
                                                 <span><EnvironmentOutlined /> {job.location}</span>
+                                                <span>
+                                                    <ContainerOutlined /> {new Date(job.updatedAt).toLocaleString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'long',
+                                                        day: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                        second: '2-digit',
+                                                    })}
+                                                </span>
                                             </div>
                                             <div className="job-card-buttons" style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
-                                                {/* <Button
-                                                    type={job.isSaved ? 'primary' : 'default'}
-                                                    shape="rectangle"
-                                                    style={{ height: '40px' }}
-                                                    onClick={() => handleSaveClick(index)}
-                                                    className="save-button"
-                                                >
-                                                    <BookOutlined />
-                                                </Button> */}
                                                 <Button
                                                     type="primary"
                                                     className="apply-now-button"
@@ -322,7 +445,12 @@ const FindingJob = () => {
 
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
-                <Pagination defaultCurrent={1} total={50} />
+                <Pagination
+                    current={currentPage} // Bind the current page
+                    total={jobData.length} // Total number of jobs
+                    pageSize={jobsPerPage} // Number of jobs per page
+                    onChange={(page) => setCurrentPage(page)} // Update the current page
+                />
             </div>
             <div style={{ height: '100px' }}></div>
             <Footer />
