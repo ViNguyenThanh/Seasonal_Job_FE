@@ -1,0 +1,235 @@
+.worker-applications-container{
+  width: 90%;
+  margin-left: 2%;
+  padding: 2% 4% 5%;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+}
+
+.worker-applications-container h1{
+  width: 100%;
+}
+
+.worker-applications-container .no-job{
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  justify-content: center;    
+  align-items: center;
+  align-content: center;
+}
+/* .worker-applications-container .no-job p{
+  color: rgb(106, 106, 106);
+  font-size: 20px;
+} */
+.worker-applications-container .no-job .ant-empty .ant-empty-description {
+  font-size: 20px;
+}
+
+
+/* chức năng Search */
+.worker-applications-container .worker-applications-search{
+  width: 100%;
+  margin: 3% 0;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.worker-applications-container .worker-applications-search .ant-input-group-wrapper{
+  width: 55%;
+}
+.worker-applications-container .worker-applications-search .ant-input {
+  font-family: var(--font-oswald);
+  padding-left: 3%;
+}
+/* chỉnh nút search */
+.worker-applications-container .worker-applications-search .ant-btn-variant-solid {
+  background: rgba(22, 119, 255, 0.9);
+}
+.worker-applications-container .worker-applications-search .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid #d9d9d9;
+}
+/* chỉnh độ dài thanh Select */
+.worker-applications-container .worker-applications-search .ant-select-single.ant-select-lg {
+  width: 20%;
+}
+.worker-applications-container .worker-applications-search .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  padding-left: 8%;
+}
+
+
+.worker-applications-container .worker-applications-item{
+  width: 94%;
+  padding: 25px 3%;
+  border: 1px solid #E4E5E8;
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-bottom: 1.5%;
+}
+.worker-applications-container .worker-applications-item:hover{
+  background-color: rgb(249, 249, 249);
+  transition: 0.3s ease;
+}
+
+.worker-applications-item .worker-applications-item-left{
+  width: 85%;
+  display: flex;
+  align-items: center;
+}
+.worker-applications-item .worker-applications-item-left img{
+  width: 80px;
+  height: 80px;
+  background-color: black;
+  border-radius: 10px;
+  margin-right: 20px
+}
+.worker-applications-item .worker-applications-item-left .worker-applications-content {
+  /* margin-left: 2%; */
+}
+.worker-applications-item .worker-applications-item-left .worker-applications-content .worker-applications-item-title{
+  width: 100%;
+  margin: 0 0 3%;
+  font-size: 18px;
+  font-weight: 420;
+}
+
+.worker-applications-item .worker-applications-item-left .worker-applications-content .worker-applications-item-info{
+  width: 100%;
+  margin: 1% 0;
+  font-size: 16px;
+  /* font-weight: 420; */
+  color: #5e6670;
+}
+.worker-applications-item .worker-applications-item-left .worker-applications-content .worker-applications-item-info .anticon{
+  margin-right: 2px;
+}
+.worker-applications-item .worker-applications-item-left .worker-applications-content .break-line-info{
+  display: none;
+}
+
+.worker-applications-item .worker-applications-item-right{
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.worker-applications-item .worker-applications-item-right p {
+  width: 70px;
+  padding: 10px 15px;
+  color: white;
+  text-align: center;
+  border-radius: 15px;
+  text-transform: capitalize;
+  font-size: 17px;
+  font-weight: 430;
+  margin: 0;
+}
+.worker-applications-item .worker-applications-item-right p.active{
+  background-color: rgb(4, 109, 246);
+}
+.worker-applications-item .worker-applications-item-right p.completed{
+  background-color: rgb(0, 180, 0);
+}
+.worker-applications-item .worker-applications-item-right p.inactive{
+  background-color: rgb(252, 46, 46);
+}
+
+.worker-applications-container .ant-pagination {
+  margin: 30px 0 10px;
+}
+
+@media (max-width: 1300px) {
+  .worker-applications-item .worker-applications-item-left{
+      width: 80%;
+  }
+  .worker-applications-item .worker-applications-item-right{
+      width: 20%;
+  }
+}
+@media (max-width: 1100px) {
+  .worker-applications-container{
+      margin-left: 0%;
+  }
+}
+@media (max-width: 850px) {
+  .worker-applications-container{
+      width: 84%;
+      padding: 2% 8% 5%;
+  }
+
+  .worker-applications-container .worker-applications-search{
+      margin: 3% 0 5%;
+  }
+  .worker-applications-container .worker-applications-search .ant-input-group-wrapper {
+      width: 100%;
+      margin: 0 0 5%;
+  }
+  .worker-applications-container .worker-applications-search .ant-select-single.ant-select-lg {
+      width: 45%;
+      margin: 0 0 3%;
+  }
+
+  .worker-applications-container .worker-applications-item{
+      width: 90%;
+      padding: 25px 5%;
+      /* margin: 2% 0; */
+      margin-bottom: 15px;
+  }
+  .worker-applications-item .worker-applications-item-left{
+      width: 60%;
+      align-content: center;
+  }
+  .worker-applications-item .worker-applications-item-left .worker-applications-content .break-line-info{
+    display: block;
+  }
+  .worker-applications-item .worker-applications-item-right{
+    width: 40%;
+    justify-content: flex-end;
+  }
+}
+@media (max-width: 700px) {
+  .worker-applications-container .worker-applications-item{
+    width: 90%;
+    padding: 20px 5%;
+  }
+  .worker-applications-item .worker-applications-item-left{
+    width: 100%;
+  }
+  .worker-applications-item .worker-applications-item-left .worker-applications-content .break-line-info{
+    display: none;
+  }
+  .worker-applications-item .worker-applications-item-right{
+    width: 100%;
+    justify-content: center;
+  }
+  .worker-applications-item .worker-applications-item-right p {
+    margin-top: 10px;
+    padding: 8px 12px;
+  }
+
+  .worker-applications-container .ant-pagination {
+    margin: 30px 0 20px;
+  }
+}
+@media (max-width: 650px) {
+  .worker-applications-item .worker-applications-item-left .worker-applications-content .break-line-info{
+    display: block;
+  }
+  .worker-applications-item .worker-applications-item-left{
+    justify-content: center;
+  }
+  .worker-applications-item .worker-applications-item-right{
+    margin-top: 10px;
+  }
+}
+@media (max-width: 600px) {
+  .worker-applications-container h1{
+      padding-left: 2%;
+      width: 98%;
+  }
+}

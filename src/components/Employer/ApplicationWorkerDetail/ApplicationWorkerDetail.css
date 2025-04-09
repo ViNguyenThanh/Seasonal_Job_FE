@@ -50,6 +50,7 @@
   border-radius: 10px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .application-worker-detail-container .application-worker-detail-left{
@@ -70,9 +71,6 @@
 }
 .application-worker-detail-left .worker-identity .worker-name-star{
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
 }
 .application-worker-detail-left .worker-identity .worker-name-star p{
   width: 100%;
@@ -80,12 +78,16 @@
   font-weight: 500;
   margin: 0 0 12px;
 }
+.application-worker-detail-left .worker-identity .worker-name-star div{
+  width: 100%;
+}
 .application-worker-detail-left .worker-identity .worker-name-star .anticon{
   font-size: 27px;
 }
 
 
 .application-worker-detail-left .preview-cv{
+  width: 100%;
   margin: 30px 0;
 }
 .application-worker-detail-left .preview-cv .ant-btn-color-default {
@@ -101,7 +103,7 @@
 
 .application-worker-detail-left .worker-cover-letter{
   width: 85%;
-  padding: 0 15% 0 0;
+  padding-right: 15%;
 }
 .application-worker-detail-left .worker-cover-letter p{
   font-size: 18.5px;
@@ -131,6 +133,7 @@
 }
 .application-worker-detail-container .application-worker-detail-right h2{
   text-align: center;
+  font-size: 25px;
 }
 
 .application-worker-detail-right .worker-info{
@@ -185,7 +188,7 @@
 .application-worker-detail-container .approve-reject-btn button{
   font-size: 18px;
   padding: 10px 0;
-  width: 9%;
+  width: 110px;
   color: white;
   border: none;
   border-radius: 10px;
@@ -210,8 +213,7 @@
 }
 
 .application-worker-detail-container .approve-reject-btn button.disabled-btn{
-  width: 10%;
-  background-color: #d9d9d9;
+  width: 120px;
   cursor: not-allowed;
 }
 .application-worker-detail-container .approve-reject-btn button.disabled-btn.approved{
@@ -248,5 +250,98 @@
 @media (max-width: 1200px) {
   .application-worker-detail-right .worker-info p{
     width: 100%;
+  }
+}
+@media (max-width: 1100px) {
+  .application-worker-detail-container{
+    width: 70%;
+    margin: 0 5% 100px;
+    padding: 2% 10%;
+  }
+  .application-worker-detail-container .application-worker-detail-left{
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .application-worker-detail-left .worker-identity{
+    width: 80%;
+    margin-bottom: 15px;
+  }
+  .application-worker-detail-left .preview-cv{
+    width: 20%;
+    margin: 30px 0;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .application-worker-detail-left .worker-cover-letter{
+    width: 100%;
+    padding-right: 0%;
+  }
+  .application-worker-detail-container .application-worker-detail-right{
+    width: 100%;
+  }
+  .application-worker-detail-container .application-worker-detail-right h2{
+    text-align: center;
+    margin: 40px 0 0;
+    font-size: 27px;
+    font-weight: 650;
+  }
+  .application-worker-detail-right .worker-info p{
+    width: 70%;
+    min-width: fit-content;
+  }
+  .application-worker-detail-right .worker-info p:last-child{
+    width: 30%;
+  }
+}
+@media (max-width: 900px) {
+  .application-worker-detail-whole-container .ant-breadcrumb ol {
+    width: 90%;
+    padding: 0 5%;
+    margin-left: 0;
+    justify-content: center;
+    margin-bottom: 20px;
+    height: 99px;
+  }
+  .application-worker-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+    display: flex;
+  }
+
+  .application-worker-detail-left .worker-identity{
+    width: 100%;
+    margin-bottom: 0px;
+  }
+  .application-worker-detail-left .preview-cv{
+    width: 100%;
+    margin: 30px 0 10px;
+    display: flex;
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 700px) {
+  .application-worker-detail-whole-container .ant-breadcrumb ol {
+    margin-bottom: 50px;
+  }
+
+  .application-worker-detail-right .worker-info p{
+    width: 100%;
+  }
+}
+@media (max-width: 470px) {
+  .application-worker-detail-left .worker-identity .worker-name-star p{
+    width: 100%;
+    font-size: 28px;
+    font-weight: 500;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+  .application-worker-detail-left .worker-identity .worker-name-star div{
+    width: 80%;
+    padding: 0 10%;
+    text-align: center;
+  }
+  .application-worker-detail-right .worker-info p.worker-email{
+    word-break: break-all;
   }
 }

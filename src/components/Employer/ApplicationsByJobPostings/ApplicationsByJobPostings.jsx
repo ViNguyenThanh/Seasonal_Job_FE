@@ -23,7 +23,7 @@ const ApplicationsByJobPostings = () => {
     { id: 6, workerName: 'Nguyễn Minh Hoàng', email: 'nguyen.minh.hoang@example.com', avatar: avatar, jobPostingName: 'Cần tuyển nhân viên làm việc thời vụ tại nhà máy, kiểm tra chất lượng sản phẩm và hỗ trợ sản xuất' },
     { id: 7, workerName: 'Vũ Thị Lan', email: 'vu.lan@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng công nhân làm việc thời vụ trong kho, sắp xếp hàng hóa và kiểm tra sản phẩm' },
     { id: 8, workerName: 'Bùi Hoàng Anh', email: 'bui.hoanganh@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng nhân viên hỗ trợ bán hàng, chăm sóc khách hàng trực tiếp và qua điện thoại' },
-    { id: 9, workerName: 'Ngô Quang Huy', email: 'ngo.quanghuy@example.com', avatar: avatar, jobPostingName: 'Cần tuyển nhân viên làm việc thời vụ tại cửa hàng, đóng gói sản phẩm và hỗ trợ khách hàng' },
+    { id: 9, workerName: 'Trương Thị Quỳnh Giang', email: 'truongthiquynhgiang@example.com', avatar: avatar, jobPostingName: 'Cần tuyển nhân viên làm việc thời vụ tại cửa hàng, đóng gói sản phẩm và hỗ trợ khách hàng' },
     { id: 10, workerName: 'Mai Đức Duy', email: 'mai.ducduy@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng công nhân làm việc tại xưởng sản xuất, gia công và đóng gói sản phẩm' },
     { id: 11, workerName: 'Phan Thị Bình', email: 'phan.binh@example.com', avatar: avatar, jobPostingName: 'Tuyển nhân viên phụ kho, hỗ trợ kiểm tra tồn kho và đóng gói hàng hóa theo yêu cầu' }
   ];
@@ -89,7 +89,7 @@ const ApplicationsByJobPostings = () => {
           {
             title: (
               <div className='b-title-2'>
-                <ContainerOutlined /> {jobGroupInfo?.title}  
+                <ContainerOutlined /> {jobGroupInfo?.title}
               </div>
             ),
           },
@@ -153,7 +153,9 @@ const ApplicationsByJobPostings = () => {
                 <>
                   {/*listWorkers*/ paginatedData.map((worker) => (
                     <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/application/job-groups/${jobGroupInfo.id}/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))}>
-                      <img src={worker.avatar} />
+                      <div className="worker-avatar">
+                        <img src={worker.avatar} />
+                      </div>
                       <div className="worker-info">
                         <p className='job-posting-name'>{worker.jobPostingName}</p>
                         <p className='worker-name'>{worker.workerName}</p>
@@ -162,7 +164,9 @@ const ApplicationsByJobPostings = () => {
                       <div style={{ display: 'none' }}>
                         {worker.jobPostingName}
                       </div>
-                      <button><ArrowRightOutlined /></button>
+                      <div className="next-page-btn">
+                        <button><ArrowRightOutlined /></button>
+                      </div>
                     </div>
                   ))}
 
