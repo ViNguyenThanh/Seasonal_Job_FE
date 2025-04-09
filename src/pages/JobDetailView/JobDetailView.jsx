@@ -12,7 +12,7 @@ import { FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutli
 const { TextArea } = Input;
 import { useParams } from "react-router-dom";
 import { jobApi } from "../../apis/job.request"; // Import the jobApi
-import { uploadCV } from "../../apis/cv.request"; // Import the uploadCV API
+import { cvApi, uploadCV } from "../../apis/cv.request"; // Import the uploadCV API
 import { message } from "antd"; // Import Ant Design's message component
 
 const JobDetailView = () => {
@@ -90,7 +90,15 @@ const JobDetailView = () => {
 
         try {
             const response = await uploadCV(selectedFile); // Call the uploadCV API with the selected file
-            console.log("Application submitted successfully:", response);
+            // console.log("Application submitted successfully:", response);
+            if(response.status === 201) {
+                const resApply = await cvApi.applyjob(jobDetail.id, {
+                    jobPostingId: jobDetail.id,
+                    cvId: response.data.data
+                })
+                // console.log(resApply);
+                
+            }
             message.success("Your application has been submitted successfully!");
 
             // Mark the job as applied

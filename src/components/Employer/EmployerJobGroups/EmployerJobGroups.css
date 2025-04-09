@@ -149,7 +149,8 @@
     padding: 1.5% 5% 2.5%;
     color: white;
     text-align: end;
-    border-radius: 20px
+    border-radius: 20px;
+    text-transform: capitalize;
 }
 
 .employer-job-groups-list .employer-job-groups-item .status.processing {

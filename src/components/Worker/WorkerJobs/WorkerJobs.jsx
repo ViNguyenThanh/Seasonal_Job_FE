@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './WorkerJobs.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { DollarOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Empty, Input, Pagination, Select } from 'antd';
+import { getApplicationsByUserId } from '../../../apis/application.request';
 const { Search } = Input;
 
 const WorkerJobs = () => {
@@ -62,9 +63,9 @@ const WorkerJobs = () => {
   ];
 
   const getStatusClass = (status) => {
-    if (status === 'Processing') return 'processing';
-    if (status === 'Completed') return 'completed';
-    if (status === 'Cancelled') return 'cancelled';
+    if (status === 'active') return 'processing';
+    if (status === 'completed') return 'completed';
+    if (status === 'inactive') return 'cancelled';
     return '';
   };
 
@@ -89,6 +90,16 @@ const WorkerJobs = () => {
     setStatusJobValue(null);
     setCurrentPage(1);     // Reset to the first page
   };
+
+  useEffect(() => {
+    const fetchJobApplied = async () => {
+      const res = await getApplicationsByUserId()
+      console.log(res);
+      
+    }
+
+    fetchJobApplied()
+  })
 
   const filteredJobs = listData.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
