@@ -83,7 +83,7 @@ const ApplicationJobGroups = () => {
         </div>
       ) : (
         <>
-          <h1>Applications</h1>
+          <h1>Applications Management</h1>
           <p className='application-job-groups-title'><FolderOpenOutlined /> Total number of <br /> Job Groups: <span>{payload?.length}</span></p>
 
           <div className="application-job-groups-search">

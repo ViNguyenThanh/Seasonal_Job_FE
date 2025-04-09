@@ -134,7 +134,7 @@ const Header = () => {
             label: "Applications",
             key: '3',
             icon: <SolutionOutlined />,
-            // onClick: handleLogout,
+            onClick: () => navigate('/worker/worker-applications'),
         },
         {
             label: "My jobs",
