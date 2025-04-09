@@ -5,8 +5,8 @@ import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Select, Space, Button, Flex, Modal, Checkbox, Radio, Card, Tag } from "antd";
-import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined } from '@ant-design/icons';
-import { Row, Col, Pagination, Breadcrumb } from 'antd';
+import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined, HomeOutlined } from '@ant-design/icons';
+import { Row, Col, Pagination, Breadcrumb, ConfigProvider } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { jobApi } from '../../apis/job.request'; // Import the jobApi
 import { useEffect } from 'react';
@@ -27,8 +27,8 @@ const FindingJob = () => {
     const indexOfLastJob = currentPage * jobsPerPage;
     const indexOfFirstJob = indexOfLastJob - jobsPerPage;
     const currentJobs = jobData.slice(indexOfFirstJob, indexOfLastJob);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isFiltered, setIsFiltered] = useState(false);
+    // const [isModalOpen, setIsModalOpen] = useState(false);
+    // const [isFiltered, setIsFiltered] = useState(false);
 
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
@@ -38,8 +38,9 @@ const FindingJob = () => {
         try {
             const response = await jobApi.getAllJobs(); // Call the API
             if (Array.isArray(response.data.data)) {
-                setAllJobs(response.data.data); // Store the original list of jobs
-                setJobData(response.data.data); // Initialize the filtered list
+                const sortedJobs = response.data.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); // Sort by latest
+                setAllJobs(sortedJobs); // Store the sorted list of jobs
+                setJobData(sortedJobs); // Initialize the filtered list
             } else {
                 console.error('Unexpected API response format:', response);
                 setAllJobs([]); // Fallback to an empty array
@@ -60,17 +61,17 @@ const FindingJob = () => {
     //     setIsModalOpen(true);
     // };
 
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
+    // const handleOk = () => {
+    //     setIsModalOpen(false);
+    // };
 
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
+    // const handleCancel = () => {
+    //     setIsModalOpen(false);
+    // };
 
-    const handleFilterChange = () => {
-        setIsFiltered(true);
-    };
+    // const handleFilterChange = () => {
+    //     setIsFiltered(true);
+    // };
 
     // const handleSaveClick = (index) => {
     //     const newJobData = [...jobData];
@@ -88,17 +89,40 @@ const FindingJob = () => {
                 <div className="search-filter-layer1">
                     <div className="header-title">
                         <p className="ebc-p">Find Jobs</p>
-                        <Breadcrumb
-                            className="breadcrumb"
-                            items={[
-                                {
-                                    title: <a href="/">Home</a>,
+                        <ConfigProvider
+                            theme={{
+                                components: {
+                                    Breadcrumb: {
+                                        fontSize: 18, // Increase font size for breadcrumb text
+                                        iconFontSize: 20, // Increase icon size
+                                    },
                                 },
-                                {
-                                    title: 'Find Jobs',
-                                },
-                            ]}
-                        />
+                            }}
+                        >
+                            <Breadcrumb
+                                className="breadcrumb"
+                                items={[
+                                    {
+                                        href: '/',
+                                        title: (
+                                            <span>
+                                                <HomeOutlined />
+                                                <span style={{ marginLeft: '5px' }}>Home</span>
+                                            </span>
+                                        ),
+                                    },
+                                    {
+                                        href: '',
+                                        title: (
+                                            <span style={{ color: 'black' }}> {/* Highlight current page */}
+                                                <SearchOutlined />
+                                                <span style={{ marginLeft: '5px' }}>Find Jobs</span>
+                                            </span>
+                                        ),
+                                    },
+                                ]}
+                            />
+                        </ConfigProvider>
                     </div>
                     <div className="search-filter-layer2">
                         <Space.Compact size="large" className="custom-space-compact">
@@ -227,7 +251,7 @@ const FindingJob = () => {
                             >
                             </Select> */}
 
-                            <Modal
+                            {/* <Modal
                                 title=" "
                                 open={isModalOpen}
                                 onOk={handleOk}
@@ -293,7 +317,7 @@ const FindingJob = () => {
                                         </Radio.Group>
                                     </div>
                                 </div>
-                            </Modal>
+                            </Modal> */}
 
                             <Flex gap="small" wrap>
                                 <Button
@@ -397,7 +421,7 @@ const FindingJob = () => {
                                                 return `${durationInDays} days`; // Display duration
                                             })()}
                                         </Tag>
-                                        <Tag color="yellow" style={{marginLeft: '-10px'}}>
+                                        <Tag color="yellow" style={{ marginLeft: '-10px' }}>
                                             {job.min_star_requirement} <StarOutlined />
                                         </Tag>
                                     </div>
