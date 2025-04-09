@@ -65,7 +65,8 @@ const ApplicationJobGroups = () => {
       (!statusJobGroupValue || item.status === statusJobGroupValue) &&
       (!searchTerm
         || item.title.toLowerCase().includes(searchTermLower)
-      )
+      ) &&
+      item.isPaid === true
     );
   }) : [];
 

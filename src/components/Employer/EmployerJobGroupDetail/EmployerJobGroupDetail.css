@@ -125,6 +125,69 @@
     transition: 0.3s ease;
 }
 
+
+.employer-job-group-detail-container .employer-job-group-detail-info .expired-message{
+    width: 100%;
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .expired-message button{
+    font-size: 20px;
+    width: 200px;
+    padding: 12px 0;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    background-color: #d9d9d9;
+    color: white;
+    cursor: not-allowed;
+    transition: 0.3s ease;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .expired-message p{
+    width: 100%;
+    color: red;
+    font-size: 19px;
+    margin-top: 15px;
+    /* text-align: center; */
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.employer-job-group-detail-container .employer-job-group-detail-info .payment-btn{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .payment-btn p{
+    color: red;
+    font-weight: 400;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .payment-btn p br{
+    display: none;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .payment-btn button{
+    font-size: 20px;
+    width: 200px;
+    padding: 12px 0;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    background-color: rgb(0, 180, 0);
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .payment-btn button:hover{
+    background-color: rgb(3, 214, 3);
+    transition: 0.3s ease;
+}
+
+
 .employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn{
     width: 100%;
     display: flex;
@@ -277,6 +340,15 @@
         width: 100%;
         margin: 3% 0;
     }
+    .employer-job-group-detail-container .employer-job-group-detail-info .payment-btn p{
+        font-size: 19px;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .payment-btn p br{
+        display: block;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .payment-btn button{
+        height: 60px;
+    }
     .employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn button{
         width: 150px;
     }
@@ -308,6 +380,9 @@
 
     .employer-job-group-detail-container .employer-job-group-detail-info .show-more-less-btn{
         margin: 5% 0;
+    }
+    .employer-job-group-detail-container .employer-job-group-detail-info .payment-btn button{
+        height: 55px;
     }
     .employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn{
         justify-content: space-around;

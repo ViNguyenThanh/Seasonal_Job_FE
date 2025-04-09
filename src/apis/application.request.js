@@ -35,7 +35,7 @@ export const getApplicationsForJob = async (jobPostingId) => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        return response.data;
+        return response.data.data;
     } catch (error) {
         console.error("Error fetching applications for job:", error.response || error.message);
         throw error;
