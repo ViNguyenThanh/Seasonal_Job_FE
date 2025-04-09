@@ -1,0 +1,252 @@
+.application-worker-detail-whole-container{
+  margin-top: 25px;
+}
+.application-worker-detail-whole-container .ant-breadcrumb {
+  font-size: 18px;
+}
+.application-worker-detail-whole-container .ant-breadcrumb ol {
+  width: 95%;
+  margin-left: 5%;
+  align-items: center;
+}
+.application-worker-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+  margin: 0 5px;
+}
+.application-worker-detail-whole-container .breadcrumb .b-title-1{
+  padding: 5px 10px 15px;
+}
+/* chỉnh dấu /  */
+.application-worker-detail-whole-container .ant-breadcrumb .ant-breadcrumb-separator {
+  color: black;
+  padding-bottom: 0.3%;
+  font-size: 18px;
+}
+.application-worker-detail-whole-container .breadcrumb .b-title-2 {
+  color: rgb(61, 61, 61);
+  text-transform: capitalize;
+  cursor: pointer;
+  margin: 0;
+  padding: 5px 10px 10px;
+  border-radius: 5px;
+}
+.application-worker-detail-whole-container .breadcrumb .b-title-2.gray {
+  color: rgba(0, 0, 0, 0.45);
+}
+.application-worker-detail-whole-container .breadcrumb .b-title-2:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.application-worker-detail-whole-container .ant-breadcrumb .anticon {
+  font-size: 22px;
+  margin-right: 5px;
+}
+
+
+.application-worker-detail-container{
+  width: 80%;
+  margin: 0 5% 100px;
+  padding: 2% 5%;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.application-worker-detail-container .application-worker-detail-left{
+  width: 50%;
+}
+
+.application-worker-detail-left .worker-identity{
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.application-worker-detail-left .worker-identity img{
+  width: 120px;
+  height: 120px;
+  background-color: black;
+  border-radius: 50%;
+  margin-right: 25px;
+}
+.application-worker-detail-left .worker-identity .worker-name-star{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.application-worker-detail-left .worker-identity .worker-name-star p{
+  width: 100%;
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+.application-worker-detail-left .worker-identity .worker-name-star .anticon{
+  font-size: 27px;
+}
+
+
+.application-worker-detail-left .preview-cv{
+  margin: 30px 0;
+}
+.application-worker-detail-left .preview-cv .ant-btn-color-default {
+  font-size: 17px;
+  padding: 20px 17px;
+}
+.modal-title{
+  font-size: 20px;
+}
+.ant-modal .ant-modal-title {
+  font-size: 20px !important;
+}
+
+.application-worker-detail-left .worker-cover-letter{
+  width: 85%;
+  padding: 0 15% 0 0;
+}
+.application-worker-detail-left .worker-cover-letter p{
+  font-size: 18.5px;
+  /* color: #056deb; */
+  color: #2486fd;
+  font-weight: 440;
+  margin-bottom: 10px;
+}
+.application-worker-detail-left .worker-cover-letter p:last-child{
+  width: 90%;
+  padding: 2% 5%;
+  font-size: 18px;
+  color: #3d3d3d;
+  margin-top: 15px;
+  border: 1px solid #2486fd;
+  font-weight: 400;
+  border-radius: 10px;
+}
+.application-worker-detail-left .worker-cover-letter .anticon{
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+
+.application-worker-detail-container .application-worker-detail-right{
+  width: 50%;
+}
+.application-worker-detail-container .application-worker-detail-right h2{
+  text-align: center;
+}
+
+.application-worker-detail-right .worker-info{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.application-worker-detail-right .worker-info p{
+  width: 70%;
+  min-width: fit-content;
+  font-size: 20px;
+  color: #3d3d3d;
+  margin-bottom: 10px;
+}
+.application-worker-detail-right .worker-info p:last-child{
+  width: 30%;
+}
+.application-worker-detail-right .worker-info p .anticon{
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+.application-worker-detail-right .worker-description{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.application-worker-detail-right .worker-description p{
+  max-width: fit-content;
+  font-size: 20px;
+  color: #3d3d3d;
+  margin-right: 15px;
+  margin-bottom: 0px;
+}
+.application-worker-detail-right .worker-description p:last-child{
+  max-width: fit-content;
+  margin-top: 15px;
+}
+.application-worker-detail-right .worker-description .anticon{
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+
+.application-worker-detail-container .approve-reject-btn{
+  width: 100%;
+  margin: 50px 0 30px ;
+  display: flex;
+  justify-content: space-evenly;
+}
+.application-worker-detail-container .approve-reject-btn button{
+  font-size: 18px;
+  padding: 10px 0;
+  width: 9%;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 480;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.application-worker-detail-container .approve-reject-btn button.approve-btn{
+  background-color: rgb(0, 180, 0);
+}
+.application-worker-detail-container .approve-reject-btn button.approve-btn:hover{
+  background-color: rgb(3, 214, 3);
+  transition: 0.3s ease;
+}
+.application-worker-detail-container .approve-reject-btn button.reject-btn{
+  background-color: rgb(252, 46, 46);
+}
+.application-worker-detail-container .approve-reject-btn button.reject-btn:hover{
+  /* background-color: rgb(231, 2, 2); */
+  background-color: rgb(255, 77, 77);
+  transition: 0.3s ease;
+}
+
+.application-worker-detail-container .approve-reject-btn button.disabled-btn{
+  width: 10%;
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+.application-worker-detail-container .approve-reject-btn button.disabled-btn.approved{
+  color: green;
+  background-color: rgb(205, 250, 205);
+}
+.application-worker-detail-container .approve-reject-btn button.disabled-btn.rejected{
+  color: red;
+  background-color: #ffd4d4;
+}
+
+
+.confirm-title{
+  font-size: 20px;
+  margin: 20px 0 0;
+}
+.confirm-title .anticon{
+  font-size: 25px;
+  margin-right: 10px;
+  color: #fa8c16;
+}
+.confirm-content{
+  font-size: 18.5px;
+  margin-bottom: 30px;
+}
+.confirm-content .confirm-type.approved{
+  color: green;
+}
+.confirm-content .confirm-type.rejected{
+  color: red;
+}
+
+
+@media (max-width: 1200px) {
+  .application-worker-detail-right .worker-info p{
+    width: 100%;
+  }
+}

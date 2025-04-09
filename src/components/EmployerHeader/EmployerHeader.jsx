@@ -119,7 +119,7 @@ const EmployerHeader = () => {
             label: "Applications",
             key: '2',
             icon: <SolutionOutlined/>,
-            // onClick: handleLogout,
+            onClick: () => navigate('/employer/application/job-groups')
         },
         {
             label: "Jobs Management",

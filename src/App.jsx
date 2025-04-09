@@ -32,6 +32,9 @@ import EmployerJobGroups from './components/Employer/EmployerJobGroups/EmployerJ
 import EmployerJobGroupDetail from './components/Employer/EmployerJobGroupDetail/EmployerJobGroupDetail'
 import EmployerJobPostingDetail from './components/Employer/EmployerJobPostingDetail/EmployerJobPostingDetail'
 import WorkerDetail from './components/Employer/WorkerDetail/WorkerDetail'
+import ApplicationJobGroups from './components/Employer/ApplicationJobGroups/ApplicationJobGroups'
+import ApplicationsByJobPostings from './components/Employer/ApplicationsByJobPostings/ApplicationsByJobPostings'
+import ApplicationWorkerDetail from './components/Employer/ApplicationWorkerDetail/ApplicationWorkerDetail'
 
 
 
@@ -111,6 +114,11 @@ function App() {
 
         {/* Employer */}
         <Route path='/employer/*' element={<Employer />}>
+          {/* Application */}
+          <Route path='application/job-groups' element={<ApplicationJobGroups />} />
+          <Route path='application/job-groups/:jobGroupId' element={<ApplicationsByJobPostings />} />
+          <Route path='application/job-groups/:jobGroupId/:workerId' element={<ApplicationWorkerDetail/>} />
+          {/* Jobs Management */}
           <Route path='employer-job-groups' element={<EmployerJobGroups />} />
           <Route path='employer-job-groups/employer-job-group-detail/:id' element={<EmployerJobGroupDetail />} />
           <Route path='employer-job-groups/employer-job-group-detail/:id/employer-job-posting-detail/:id' element={<EmployerJobPostingDetail />} />

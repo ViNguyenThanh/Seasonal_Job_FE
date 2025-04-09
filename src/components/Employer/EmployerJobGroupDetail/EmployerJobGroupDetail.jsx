@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './EmployerJobGroupDetail.css'
-import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, DollarOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ScheduleOutlined, SnippetsOutlined, UpOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, DiffOutlined, DollarOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ProfileOutlined, ScheduleOutlined, SnippetsOutlined, UpOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Breadcrumb, Skeleton } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ const EmployerJobGroupDetail = () => {
     const { id } = useParams()
     const { isLoading: isJGLoading, payload: jobGroupInfo } = useSelector(state => state.jobGroupsReducer)
     const { isLoading: isJPLoading, payload: jobPostings } = useSelector(state => state.jobPostingReducer)
-    // const jobGroupInfo = location.state || {};
+    const jobGroupInfoTmp = location.state || {};
 
     const listData = [
         {
@@ -154,16 +154,20 @@ const EmployerJobGroupDetail = () => {
                             <Skeleton active />
                         </div>
                     ) :
-                        jobPostings?.map((item) => (
-                            <div className="job-postings-item" key={item.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo?.id}/employer-job-posting-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
-                                <p className='job-postings-item-title'>{item.title}</p>
-                                <div className='job-postings-item-info'>
-                                    <p><EnvironmentOutlined /> {item.location} &emsp; </p>
-                                    <p><DollarOutlined /> {item.salary.toLocaleString('vi-VN')} VND</p>
-                                </div>
-                                <button><ArrowRightOutlined /></button>
+                        /*jobPostings?*/listData.map((item) => (
+                        <div className="job-postings-item"
+                            key={item.id}
+                            onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}/employer-job-posting-detail/${item.id}`, { state: { jobPostingInfo: item, jobGroupInfo: jobGroupInfoTmp } }, window.scrollTo(0, 0))}
+                            // onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo?.id}/employer-job-posting-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}
+                        >
+                            <p className='job-postings-item-title'>{item.title}</p>
+                            <div className='job-postings-item-info'>
+                                <p><EnvironmentOutlined /> {item.location} &emsp; </p>
+                                <p><DollarOutlined /> {item.salary.toLocaleString('vi-VN')} VND</p>
                             </div>
-                        ))}
+                            <button><ArrowRightOutlined /></button>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
