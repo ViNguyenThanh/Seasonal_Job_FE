@@ -187,7 +187,7 @@ const JobDetailView = () => {
                             </div>
 
                             <div className="job-detail-info-section">
-                                <p className="ebc-p-info"><LinkOutlined style={{ color: '#1DA1F2' }} /> https://instagram.com</p>
+                                {/* <p className="ebc-p-info"><LinkOutlined style={{ color: '#1DA1F2' }} /> https://instagram.com</p> */}
                                 <p className="ebc-p-info"><PhoneOutlined style={{ color: '#1DA1F2', transform: 'scaleX(-1)' }} /> (406) 555-0120</p>
                                 <p className="ebc-p-info"><MailOutlined style={{ color: '#1DA1F2' }} /> career@instagram.com</p>
                             </div>
@@ -214,14 +214,14 @@ const JobDetailView = () => {
                                 {isApplied ? "Applied" : <>Apply now <ArrowRightOutlined /></>} {/* Conditionally render text and icon */}
                             </Button>
                         </div>
-                        <p className="job-expiry-info">
+                        {/* <p className="job-expiry-info">
                             Job expire in:<span className="job-expiry-date">
                                 {new Intl.DateTimeFormat('en-GB', {
                                     day: '2-digit',
                                     month: 'long',
                                     year: 'numeric',
                                 }).format(new Date(jobDetail.expired_date))}</span>
-                        </p>
+                        </p> */}
                     </div>
                 </div>
                 <Row >
@@ -392,7 +392,7 @@ const JobDetailView = () => {
                                                 <WomanOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     GENDER:<br />
-                                                    <span className="job-overview-highlight">{jobDetail.gender_requirement}</span>
+                                                    <span className="job-overview-highlight">{jobDetail.gender_requirement? jobDetail.gender_requirement : "Any"}</span>
                                                 </Paragraph>
                                             </Col>
                                         </Row>
@@ -400,7 +400,7 @@ const JobDetailView = () => {
                                 </Space.Compact>
                             </div>
 
-                            <div className="job-others-info">
+                            {/* <div className="job-others-info">
                                 <div className="job-avatar-container">
                                     <img
                                         alt="example"
@@ -471,7 +471,7 @@ const JobDetailView = () => {
                                         </Button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="job-detail-action-section-mobile-only">
                                 <div className="job-detail-buttons">
