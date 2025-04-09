@@ -47,7 +47,7 @@
 .worker-jobs-container .worker-jobs-search .ant-btn-variant-solid {
     background: rgba(22, 119, 255, 0.9);
 }
-.worker-jobs-search .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+.worker-jobs-container .worker-jobs-search .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
     border: 1px solid #d9d9d9;
 }
 /* chỉnh độ dài thanh Select */
@@ -126,15 +126,16 @@
     padding: 2.5% 10% 3.5%;
     color: white;
     text-align: end;
-    border-radius: 15px
+    border-radius: 15px;
+    text-transform: capitalize;
 }
-.worker-jobs-item .worker-jobs-item-right p span.processing{
+.worker-jobs-item .worker-jobs-item-right p span.active{
     background-color: rgb(4, 109, 246);
 }
 .worker-jobs-item .worker-jobs-item-right p span.completed{
     background-color: rgb(0, 180, 0);
 }
-.worker-jobs-item .worker-jobs-item-right p span.cancelled{
+.worker-jobs-item .worker-jobs-item-right p span.inactive{
     background-color: rgb(252, 46, 46);
 }
 
