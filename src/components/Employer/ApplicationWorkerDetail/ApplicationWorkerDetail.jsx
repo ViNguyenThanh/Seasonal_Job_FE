@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './ApplicationWorkerDetail.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Breadcrumb, Button, message, Modal, Rate } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, EnvironmentOutlined, ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined, FileTextOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SnippetsOutlined, SolutionOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { ContainerOutlined, EnvironmentOutlined, ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SolutionOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
 
 const ApplicationWorkerDetail = () => {

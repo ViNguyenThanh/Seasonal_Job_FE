@@ -122,7 +122,7 @@ const Header = () => {
             label: "Profile",
             key: '1',
             icon: <UserOutlined />,
-            // onClick: () => { navigate('/admin/admin-home') },
+            onClick: () => navigate('/worker/worker-profile'),
         },
         {
             label: "CV attachment",
