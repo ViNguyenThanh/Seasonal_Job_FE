@@ -28,4 +28,7 @@ export const jobApi = {
             headers: { authorization: `Bearer ${token}` },
         });
     },
+    getJobPostingsByJobGroupsIsPaid: () => {
+        return API.get('/jobs/jobPostingsIsPaid');
+    },
 };
