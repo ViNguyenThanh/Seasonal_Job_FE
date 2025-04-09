@@ -3,7 +3,7 @@ import React from 'react'
 import './EmployerHome.css'
 import EmployerHeader from '../../components/EmployerHeader/EmployerHeader';
 import Footer from '../../components/Footer/Footer'
-import { Typography, Button } from 'antd';
+import { Typography, Button, Row, Col } from 'antd';
 const { Title, Paragraph } = Typography;
 
 const EmployerHome = () => {
@@ -40,16 +40,73 @@ const EmployerHome = () => {
                 </div>
 
                 <div className="employer-home-second-section">
-                    <Title level={1} style={{ color: '#023b5f', fontSize: '50px', fontWeight: '700' }}>
-                        Lý do lựa chọn SJCP
-                    </Title>
-                    <Paragraph style={{ fontSize: '25px' }}>
-                        Các lợi ích khi sử dụng trang web:
-                    </Paragraph>
-
+                    <div style={{ marginLeft: '6em'}}>
+                        <Title level={1} style={{ color: '#023b5f', fontSize: '50px', fontWeight: '700' }}>
+                            Lý do lựa chọn SJCP
+                        </Title>
+                        <Paragraph style={{ fontSize: '25px' }}>
+                            Các lợi ích khi sử dụng trang web
+                        </Paragraph>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '-13em' }}>
+                        <div className="employer-home-reason-container">
+                            <Row gutter={[16, 16]} justify="center">
+                                <Col xs={24} sm={12} md={12} lg={12}>
+                                    <div className="employer-home-reason-content">
+                                        <img
+                                            className="employer-home-image2"
+                                            src="../assets/laptop.png"
+                                        />
+                                        <Paragraph style={{ fontSize: '25px', fontWeight: '600', margin: 0 }}>
+                                            Giao diện <br></br>dễ sử dụng
+                                        </Paragraph>
+                                    </div>
+                                </Col>
+                                <Col xs={24} sm={12} md={12} lg={12}>
+                                    <div className="employer-home-reason-content">
+                                        <img
+                                            className="employer-home-image3"
+                                            src="../assets/customer-service.png"
+                                        />
+                                        <Paragraph style={{ fontSize: '25px', fontWeight: '600' }}>
+                                            Hỗ trợ <br></br>nhanh chóng
+                                        </Paragraph>
+                                    </div>
+                                </Col>
+                                <Col xs={24} sm={12} md={12} lg={12}>
+                                    <div className="employer-home-reason-content">
+                                        <img
+                                            className="employer-home-image4"
+                                            src="../assets/shield.png"
+                                        />
+                                        <Paragraph style={{ fontSize: '25px', fontWeight: '600' }}>
+                                            Đảm bảo <br></br>chất lượng
+                                        </Paragraph>
+                                    </div>
+                                </Col>
+                                <Col xs={24} sm={12} md={12} lg={12}>
+                                    <div className="employer-home-reason-content">
+                                        <img
+                                            className="employer-home-image5"
+                                            src="../assets/flexible.png"
+                                        />
+                                        <Paragraph style={{ fontSize: '25px', fontWeight: '600' }}>
+                                            Linh hoạt <br></br>và tiện lợi
+                                        </Paragraph>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </div>
+                        <div>
+                            <img
+                                className="employer-home-image6"
+                                src="../assets/Introducing-Man.png"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div style={{ height: '500px' }}></div>
+            <div style={{ height: '2000px' }}></div>
             <Footer />
         </div>
     )

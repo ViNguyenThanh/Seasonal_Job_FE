@@ -16,7 +16,7 @@ const WorkerApplications = () => {
         title: "Nhân viên bán hàng",
         location: "Hồ Chí Minh, Quận 1",
         salary: 5000000,
-        status: "completed",
+        status: "approved",
         today: "13/5/2025"
       },
       {
@@ -24,7 +24,7 @@ const WorkerApplications = () => {
         title: "Kế toán viên",
         location: "Hà Nội, Cầu Giấy",
         salary: 7000000,
-        status: "active",
+        status: "viewed",
         today: "12/5/2025"
       },
       {
@@ -32,7 +32,7 @@ const WorkerApplications = () => {
         title: "Lao động phổ thông",
         location: "Đà Nẵng, Hải Châu",
         salary: 200000,
-        status: "active",
+        status: "viewed",
         today: "10/5/2025"
       },
       {
@@ -40,7 +40,7 @@ const WorkerApplications = () => {
         title: "Nhân viên thu ngân",
         location: "Bình Dương, Thủ Dầu Một",
         salary: 12000000,
-        status: "inactive",
+        status: "submitted",
         today: "11/5/2025"
       },
       {
@@ -48,7 +48,7 @@ const WorkerApplications = () => {
         title: "Tạp vụ",
         location: "Hồ Chí Minh, Quận 3",
         salary: 4000000,
-        status: "inactive",
+        status: "rejected",
         today: "13/5/2025"
       },
       {
@@ -56,15 +56,16 @@ const WorkerApplications = () => {
         title: "Bảo vệ",
         location: "Hà Nội, Hai Bà Trưng",
         salary: 6000000,
-        status: "inactive",
+        status: "rejected",
         today: "12/5/2025"
       }
     ];
   
     const getStatusClass = (status) => {
-      if (status === 'active') return 'active';
-      if (status === 'completed') return 'completed';
-      if (status === 'inactive') return 'inactive';
+      if (status === 'submitted') return 'submitted';
+      if (status === 'viewed') return 'viewed';
+      if (status === 'approved') return 'approved';
+      if (status === 'rejected') return 'rejected';
       return '';
     };
   
@@ -121,9 +122,9 @@ const WorkerApplications = () => {
         <h1>My Applications</h1>
   
         {listData.length === 0 ? (
-          <div className="no-job">
-            {/* <p>You do not have a job yet! </p> */}
-            <Empty description="You do not have a job yet!" />
+          <div className="no-applications">
+            {/* <p>You do not have an application yet! </p> */}
+            <Empty description="You do not have an application yet!" />
           </div>
         ) : (
           <>
@@ -180,16 +181,17 @@ const WorkerApplications = () => {
                 size="large"
                 allowClear
                 options={[
-                  { value: 'completed', label: 'Completed' },
-                  { value: 'active', label: 'Active' },
-                  { value: 'inactive', label: 'Inactive' },
+                  { value: 'submitted', label: 'Submitted' },
+                  { value: 'viewed', label: 'Viewed' },
+                  { value: 'approved', label: 'Approved' },
+                  { value: 'rejected', label: 'Rejected' },
                 ]}
               />
             </div>
   
             {filteredJobs.length === 0 ? (
-              <div className="no-job">
-                <Empty description="No job found!" />
+              <div className="no-applications">
+                <Empty description="No applications found!" />
               </div>
             ) : (
               <>
@@ -207,7 +209,6 @@ const WorkerApplications = () => {
                       </div>
                     </div>
                     <div className="worker-applications-item-right">
-                      {/* <p><span className={`${getStatusClass(item.status)}`}>{item.status}</span><br className='break-line-status' /> (Updated {item.today})</p> */}
                       <p className={`${getStatusClass(item.status)}`}>{item.status}</p>
                     </div>
                   </div>

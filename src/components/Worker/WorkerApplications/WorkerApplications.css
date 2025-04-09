@@ -11,7 +11,7 @@
   width: 100%;
 }
 
-.worker-applications-container .no-job{
+.worker-applications-container .no-applications{
   width: 100%;
   height: 50vh;
   display: flex;
@@ -19,11 +19,11 @@
   align-items: center;
   align-content: center;
 }
-/* .worker-applications-container .no-job p{
+/* .worker-applications-container .no-applications p{
   color: rgb(106, 106, 106);
   font-size: 20px;
 } */
-.worker-applications-container .no-job .ant-empty .ant-empty-description {
+.worker-applications-container .no-applications .ant-empty .ant-empty-description {
   font-size: 20px;
 }
 
@@ -126,17 +126,24 @@
   border-radius: 15px;
   text-transform: capitalize;
   font-size: 17px;
-  font-weight: 430;
+  font-weight: 500;
   margin: 0;
 }
-.worker-applications-item .worker-applications-item-right p.active{
-  background-color: rgb(4, 109, 246);
+.worker-applications-item .worker-applications-item-right p.submitted{
+  color: rgb(130, 130, 130);
+  background-color: #e4e4e4;
 }
-.worker-applications-item .worker-applications-item-right p.completed{
-  background-color: rgb(0, 180, 0);
+.worker-applications-item .worker-applications-item-right p.viewed{
+  color: rgb(75, 75, 255);
+  background-color: rgb(202, 233, 255);
 }
-.worker-applications-item .worker-applications-item-right p.inactive{
-  background-color: rgb(252, 46, 46);
+.worker-applications-item .worker-applications-item-right p.approved{
+  color: green;
+  background-color: rgb(205, 250, 205);
+}
+.worker-applications-item .worker-applications-item-right p.rejected{
+  color: red;
+  background-color: #ffd4d4;
 }
 
 .worker-applications-container .ant-pagination {

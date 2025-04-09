@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Select, Space, Button, Flex, Modal, Checkbox, Radio, Card, Tag } from "antd";
+import { Select, Space, Button, Flex, Card, Tag } from "antd";
 import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined, HomeOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb, ConfigProvider } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -33,11 +33,14 @@ const FindingJob = () => {
     const [selectedTitle, setSelectedTitle] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
 
-    // Fetch all jobs when the component loads
-    const fetchJobs = async () => {
+    // Fetch job postings by paid job groups when the component loads
+    const fetchPaidJobPostings = async () => {
         try {
-            const response = await jobApi.getAllJobs(); // Call the API
-            if (Array.isArray(response.data.data)) {
+            const response = await jobApi.getJobPostingsByJobGroupsIsPaid(); // Call the API
+            console.log('API Response:', response); // Log the response to inspect its structure
+
+            // Adjust based on the actual response structure
+            if (response.data && Array.isArray(response.data.data)) {
                 const sortedJobs = response.data.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); // Sort by latest
                 setAllJobs(sortedJobs); // Store the sorted list of jobs
                 setJobData(sortedJobs); // Initialize the filtered list
@@ -47,14 +50,14 @@ const FindingJob = () => {
                 setJobData([]); // Fallback to an empty array
             }
         } catch (error) {
-            console.error('Error fetching jobs:', error);
+            console.error('Error fetching paid job postings:', error);
             setAllJobs([]); // Fallback to an empty array
             setJobData([]); // Fallback to an empty array
         }
     };
 
     useEffect(() => {
-        fetchJobs(); // Fetch all jobs when the component loads
+        fetchPaidJobPostings(); // Fetch paid job postings when the component loads
     }, []);
 
     // const showModal = () => {
@@ -399,7 +402,7 @@ const FindingJob = () => {
                     </Col>
                 </Row>
 
-                {Array.isArray(currentJobs) && currentJobs.map((job, index) => (
+                {Array.isArray(currentJobs) && currentJobs.map((job) => (
                     <div key={job.id} style={{ display: 'flex', justifyContent: 'center' }}>
                         <Card
                             style={{

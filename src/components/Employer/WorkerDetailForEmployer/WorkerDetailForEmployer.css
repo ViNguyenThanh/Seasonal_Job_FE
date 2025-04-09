@@ -48,105 +48,137 @@
   background-color: white;
   box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
   border-radius: 10px;
+}
+
+.worker-detail-for-employer-container .worker-detail-for-employer-info{
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.worker-detail-for-employer-container .worker-detail-for-employer-left{
+.worker-detail-for-employer-info .worker-detail-for-employer-info-left{
   width: 50%;
 }
 
-.worker-detail-for-employer-left .worker-identity{
+.worker-detail-for-employer-info-left .worker-identity{
   width: 100%;
   display: flex;
   align-items: center;
 }
-.worker-detail-for-employer-left .worker-identity img{
+.worker-detail-for-employer-info-left .worker-identity img{
   width: 120px;
   height: 120px;
   background-color: black;
   border-radius: 50%;
   margin-right: 25px;
 }
-.worker-detail-for-employer-left .worker-identity .worker-name-star{
+.worker-detail-for-employer-info-left .worker-identity .worker-name-star{
   width: 100%;
 }
-.worker-detail-for-employer-left .worker-identity .worker-name-star p{
+.worker-detail-for-employer-info-left .worker-identity .worker-name-star p{
   width: 100%;
   font-size: 30px;
   font-weight: 500;
   margin: 0 0 12px;
 }
-.worker-detail-for-employer-left .worker-identity .worker-name-star div{
+.worker-detail-for-employer-info-left .worker-identity .worker-name-star div{
   width: 100%;
 }
-.worker-detail-for-employer-left .worker-identity .worker-name-star .anticon{
+.worker-detail-for-employer-info-left .worker-identity .worker-name-star .anticon{
   font-size: 27px;
 }
 
 
-.worker-detail-for-employer-container .worker-detail-for-employer-right{
+.worker-detail-for-employer-info .worker-detail-for-employer-info-right{
   width: 50%;
 }
-.worker-detail-for-employer-container .worker-detail-for-employer-right h2{
+.worker-detail-for-employer-info .worker-detail-for-employer-info-right h2{
   text-align: center;
   font-size: 25px;
 }
 
-.worker-detail-for-employer-right .worker-info{
+.worker-detail-for-employer-info-right .worker-info{
   width: 100%;
   display: flex;
   flex-wrap: wrap;
 }
-.worker-detail-for-employer-right .worker-info p{
+.worker-detail-for-employer-info-right .worker-info p{
   width: 70%;
   min-width: fit-content;
   font-size: 20px;
   color: #3d3d3d;
   margin-bottom: 10px;
 }
-.worker-detail-for-employer-right .worker-info p:last-child{
+.worker-detail-for-employer-info-right .worker-info p:last-child{
   width: 30%;
 }
-.worker-detail-for-employer-right .worker-info p .anticon{
+.worker-detail-for-employer-info-right .worker-info p .anticon{
   font-size: 30px;
   margin-right: 10px;
 }
 
-.worker-detail-for-employer-right .worker-description{
+.worker-detail-for-employer-info-right .worker-description{
   width: 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
 }
-.worker-detail-for-employer-right .worker-description p{
+.worker-detail-for-employer-info-right .worker-description p{
   max-width: fit-content;
   font-size: 20px;
   color: #3d3d3d;
   margin-right: 15px;
   margin-bottom: 0px;
 }
-.worker-detail-for-employer-right .worker-description p:last-child{
+.worker-detail-for-employer-info-right .worker-description p:last-child{
   max-width: fit-content;
   margin-top: 15px;
 }
-.worker-detail-for-employer-right .worker-description .anticon{
+.worker-detail-for-employer-info-right .worker-description .anticon{
   font-size: 30px;
   margin-right: 10px;
 }
 
+.worker-detail-for-employer-info-right .show-more-less-btn{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+}
+.worker-detail-for-employer-info-right .show-more-less-btn{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 5px 0;
+}
+.worker-detail-for-employer-info-right .show-more-less-btn.show-less{
+  margin: 35px 0;
+}
+.worker-detail-for-employer-info-right .show-more-less-btn button {
+  border: none;
+  font-size: 19px;
+  background-color: white;
+  color: #0a65cc;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.worker-detail-for-employer-info-right .show-more-less-btn button:hover {
+  color: #0412b2;
+  transition: 0.3s ease;
+}
+
 
 @media (max-width: 1300px) {
-  .worker-detail-for-employer-container .worker-detail-for-employer-left{
+  .worker-detail-for-employer-container .worker-detail-for-employer-info-left{
     width: 40%;
   }
-  .worker-detail-for-employer-container .worker-detail-for-employer-right{
+  .worker-detail-for-employer-container .worker-detail-for-employer-info-right{
     width: 60%;
   }
 }
 @media (max-width: 1200px) {
-  .worker-detail-for-employer-right .worker-info p{
+  .worker-detail-for-employer-info-right .worker-info p{
     width: 100%;
   }
 }
@@ -157,40 +189,40 @@
     padding: 40px 10% 100px;
   }
   
-  .worker-detail-for-employer-container .worker-detail-for-employer-left{
+  .worker-detail-for-employer-info .worker-detail-for-employer-info-left{
     width: 100%;
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
   }
-  .worker-detail-for-employer-left .worker-identity{
+  .worker-detail-for-employer-info-left .worker-identity{
     margin-bottom: 15px;
     justify-content: center;
   }
-  .worker-detail-for-employer-left .worker-identity .worker-name-star{
+  .worker-detail-for-employer-info-left .worker-identity .worker-name-star{
     width: fit-content;
   }
-  .worker-detail-for-employer-left .worker-identity .worker-name-star p{
+  .worker-detail-for-employer-info-left .worker-identity .worker-name-star p{
     width: fit-content;
   }
-  .worker-detail-for-employer-left .worker-identity .worker-name-star div{
+  .worker-detail-for-employer-info-left .worker-identity .worker-name-star div{
     width: fit-content;
   }
 
-  .worker-detail-for-employer-container .worker-detail-for-employer-right{
+  .worker-detail-for-employer-info .worker-detail-for-employer-info-right{
     width: 100%;
   }
-  .worker-detail-for-employer-container .worker-detail-for-employer-right h2{
+  .worker-detail-for-employer-info .worker-detail-for-employer-info-right h2{
     text-align: center;
     margin: 40px 0 0;
     font-size: 27px;
     font-weight: 650;
   }
-  .worker-detail-for-employer-right .worker-info p{
+  .worker-detail-for-employer-info-right .worker-info p{
     width: 70%;
     min-width: fit-content;
   }
-  .worker-detail-for-employer-right .worker-info p:last-child{
+  .worker-detail-for-employer-info-right .worker-info p:last-child{
     width: 30%;
   }
 }
@@ -208,7 +240,7 @@
   }
 }
 @media (max-width: 900px) {
-  .worker-detail-for-employer-left .worker-identity{
+  .worker-detail-for-employer-info-left .worker-identity{
     width: 100%;
     margin-bottom: 0px;
   }
@@ -218,24 +250,26 @@
     margin-bottom: 50px;
   }
 
-  .worker-detail-for-employer-right .worker-info p{
+  .worker-detail-for-employer-info-right .worker-info p{
     width: 100%;
   }
 }
 @media (max-width: 470px) {
-  .worker-detail-for-employer-left .worker-identity .worker-name-star p{
+  .worker-detail-for-employer-info-left .worker-identity{
+    flex-wrap: wrap;
+  }
+  .worker-detail-for-employer-info-left .worker-identity .worker-name-star p{
     width: 100%;
     font-size: 28px;
-    font-weight: 500;
-    margin: 0 0 12px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .worker-detail-for-employer-info-left .worker-identity .worker-name-star div{
+    /* width: 80%;
+    padding: 0 10%; */
     text-align: center;
   }
-  .worker-detail-for-employer-left .worker-identity .worker-name-star div{
-    width: 80%;
-    padding: 0 10%;
-    text-align: center;
-  }
-  .worker-detail-for-employer-right .worker-info p.worker-email{
+  .worker-detail-for-employer-info-right .worker-info p.worker-email{
     word-break: break-all;
   }
 }
