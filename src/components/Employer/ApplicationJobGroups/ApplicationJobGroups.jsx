@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './ApplicationJobGroups.css'
 import { ArrowRightOutlined, FolderOpenOutlined } from '@ant-design/icons';
-import { Empty, Input, Pagination, Select, Skeleton, Spin } from 'antd';
+import { Empty, Input, Pagination, Select, Skeleton } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllJobGroupsByUserId } from '../../../redux/actions/jobgroups.action';
