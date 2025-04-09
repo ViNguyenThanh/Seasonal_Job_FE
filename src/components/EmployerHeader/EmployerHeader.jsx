@@ -85,7 +85,7 @@ const EmployerHeader = () => {
             key: '1', label: <div onClick={() => {
                 navigate("/job-posting-flow/posting-notifications");
                 window.scrollTo(0, 0);
-            }}>Job posting</div>
+            }}>Job Posting</div>
         },
         { key: '2', label: 'Premium' },
         { key: 'divider', type: 'divider' },
@@ -112,36 +112,32 @@ const EmployerHeader = () => {
         {
             label: "Profile",
             key: '1',
-            icon: <UserOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <UserOutlined />,
             // onClick: () => { navigate('/admin/admin-home') },
         },
         {
             label: "Applications",
             key: '2',
-            icon: <SolutionOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
-            onClick: () => navigate('/employer/application/job-groups/')
+            icon: <SolutionOutlined/>,
+            onClick: () => navigate('/employer/application/job-groups')
         },
         {
-            label: "My jobs posting",
+            label: "Jobs Management",
             key: '3',
-            icon: <ProfileOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <ProfileOutlined/>,
             onClick: () => navigate('/employer/employer-job-groups'),
         },
         {
-            label: "Wallet & transaction",
+            label: "Wallet & Transaction",
             key: '4',
-            icon: <CreditCardOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <CreditCardOutlined/>,
+            style: { width: '160px' },
             // onClick: handleLogout,
         },
         {
-            label: "Log out",
+            label: "Log Out",
             key: '5',
-            icon: <LogoutOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <LogoutOutlined/>,
             onClick: handleLogout,
         },
     ];
@@ -193,7 +189,6 @@ const EmployerHeader = () => {
                                                 <Space>
                                                     <Avatar
                                                         src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
-                                                        style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
                                                     />
                                                 </Space>
                                             </a>
@@ -237,15 +232,19 @@ const EmployerHeader = () => {
                 </div> */}
                 {!isMobile && (
                     <div className="employer-header-right">
-                        <li
-                            onClick={() => {
-                                navigate("/")
-                                window.scrollTo(0, 0);
-                            }}
-                        >
-                            For Worker
-                        </li>
-                        <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
+                        {!user && (
+                            <>
+                                <li
+                                    onClick={() => {
+                                        navigate("/")
+                                        window.scrollTo(0, 0);
+                                    }}
+                                >
+                                    For Worker
+                                </li>
+                                <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
+                            </>
+                        )}
                         {user && userInfor.role === 'employer' ? (
                             <div className='employer-header-right-items'>
                                 {/* <Badge size='default' style={{ marginRight: '15px' }} count={1}>
@@ -259,7 +258,6 @@ const EmployerHeader = () => {
                                         <Space>
                                             <Avatar
                                                 src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
-                                                style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
                                             />
                                         </Space>
                                     </a>

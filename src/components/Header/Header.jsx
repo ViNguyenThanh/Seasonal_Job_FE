@@ -121,43 +121,37 @@ const Header = () => {
         {
             label: "Profile",
             key: '1',
-            icon: <UserOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <UserOutlined />,
             // onClick: () => { navigate('/admin/admin-home') },
         },
         {
             label: "CV attachment",
             key: '2',
-            icon: <FileOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <FileOutlined />,
             // onClick: handleLogout,
         },
         {
             label: "Applications",
             key: '3',
-            icon: <SolutionOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <SolutionOutlined />,
             // onClick: handleLogout,
         },
         {
             label: "My jobs",
             key: '4',
-            icon: <ProfileOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <ProfileOutlined />,
             onClick: () => navigate('/worker/worker-jobs'),
         },
         {
             label: "Wallet & transaction",
             key: '5',
-            icon: <CreditCardOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <CreditCardOutlined />,
             // onClick: handleLogout,
         },
         {
             label: "Log out",
             key: '6',
-            icon: <LogoutOutlined style={{ fontSize: '16px' }} />,
-            style: { fontSize: '16px' },
+            icon: <LogoutOutlined />,
             onClick: handleLogout,
         },
     ];
@@ -190,8 +184,8 @@ const Header = () => {
                     <li>Resume & CV</li>
                     <li>Companies</li> */}
                     {isMobile ? (
-                        <div className={`dropdown-btn ${user && userInfor.role === 'user' ? 'user-logged-in' : ''}`}>
-                            {user && userInfor.role === 'user' ? (
+                        <div className={`dropdown-btn ${user && userInfor.role === 'worker' ? 'user-logged-in' : ''}`}>
+                            {user && userInfor.role === 'worker' ? (
                                 <>
                                     <Dropdown menu={{ items: /*menu.props.items*/ menuItems }} trigger={['click']} placement="bottomRight">
                                         <Button icon={<MenuOutlined />} type="primary" />
@@ -209,7 +203,6 @@ const Header = () => {
                                                 <Space>
                                                     <Avatar
                                                         src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
-                                                        style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
                                                     />
                                                 </Space>
                                             </a>
@@ -254,15 +247,19 @@ const Header = () => {
                 </div> */}
                 {!isMobile && (
                     <div className="header-right">
-                        <li
-                            onClick={() => {
-                                navigate("/employer-home")
-                                window.scrollTo(0, 0);
-                            }}
-                        >
-                            For Employer
-                        </li>
-                        <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
+                        {!user && (
+                            <>
+                                <li
+                                    onClick={() => {
+                                        navigate("/employer-home")
+                                        window.scrollTo(0, 0);
+                                    }}
+                                >
+                                    For Employer
+                                </li>
+                                <div style={{ border: '1px solid white', height: '35px', margin: '0 3%' }}></div>
+                            </>
+                        )}
                         {user && userInfor.role === "worker" ? (
                             <div className='header-right-items'>
                                 {/* <Badge size='default' style={{ marginRight: '15px' }} count={1}>
@@ -276,7 +273,6 @@ const Header = () => {
                                         <Space>
                                             <Avatar
                                                 src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
-                                                style={{ cursor: "pointer", width: '40px', height: '40px', marginRight: '15px' }}
                                             />
                                         </Space>
                                     </a>
