@@ -150,28 +150,42 @@
     /* Điều chỉnh độ dài của border-bottom theo ý muốn */
 }
 
-.dropdown-btn {
+.employer-header-left .dropdown-btn {
     width: 100%;
     display: flex;
     justify-content: flex-end;
     /* align-items: center; */
     cursor: pointer;
     padding: 0 1%;
-    margin: 0 2%;
+    margin: 1% 2% 0;
 }
-.dropdown-btn .ant-btn.ant-btn-icon-only {
+.employer-header-left .dropdown-btn .ant-btn.ant-btn-icon-only {
     width: 40px;
     height: 40px;
 }
-.dropdown-btn .ant-btn-variant-solid{
+.employer-header-left .dropdown-btn .ant-btn-variant-solid{
     background-color: #16488e;
 }
-.dropdown-btn.ant-btn.ant-btn-icon-only .anticon {
+.employer-header-left .dropdown-btn .ant-btn.ant-btn-icon-only .anticon {
     font-size: 20px;
 }
-.dropdown-btn .ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
+.employer-header-left .dropdown-btn .ant-btn-variant-solid:not(:disabled):not(.ant-btn-disabled):hover {
     background: #1e5baf;
     color: #fff;
+}
+
+/* chỉnh avatar */
+.employer-header-left .dropdown-btn .ant-avatar-image,
+.employer-header-right-items .ant-avatar-image {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+}
+.employer-header-left .dropdown-btn .ant-avatar-image{
+    margin-right: 0px;
+}
+.employer-header-right-items .ant-avatar-image{
+    margin-right: 15px;
 }
 
 @media (max-width: 950px) {
@@ -246,9 +260,8 @@
     }
 
 
-    .dropdown-btn.user-logged-in {
+    .employer-header-left .dropdown-btn.user-logged-in {
         align-items: center;
         justify-content: space-between;
     }
-
 }

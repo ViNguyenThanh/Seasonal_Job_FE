@@ -80,7 +80,7 @@ const ApplicationsByJobPostings = () => {
         items={[
           {
             title: <Link
-              to="/employer/employer-job-groups"
+              to="/employer/application/job-groups"
               className='b-title-1'
             >
               <FolderOpenOutlined /> List Job Groups
