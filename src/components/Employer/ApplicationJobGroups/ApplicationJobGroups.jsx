@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import './EmployerJobGroups.css'
+import './ApplicationJobGroups.css'
 import { ArrowRightOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { Empty, Input, Pagination, Select, Skeleton, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllJobGroupsByUserId } from '../../../redux/actions/jobgroups.action';
 const { Search } = Input;
 
-const EmployerJobGroups = () => {
-  // Giả sử bạn đã có một mảng dữ liệu jobGroups như dưới đây
+const ApplicationJobGroups = () => {
   const jobGroups = [
     { id: 1, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Sản Phẩm Tiêu Dùng Tại Các Trung Tâm Thương Mại.', numberOfJobPostings: 5, status: 'inactive', startDate: '07/04/2025', endDate: '24/04/2025' },
     { id: 2, title: 'Tổ Chức Và Giám Sát Công Tác Chuẩn Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 7, status: 'active', startDate: '03/05/2025', endDate: '13/05/2025' },
@@ -25,7 +24,7 @@ const EmployerJobGroups = () => {
     { id: 13, title: 'Quản Lý Tài Liệu Và Giúp Đỡ Nhân Viên Trong Việc Phân Phối Thông Tin Về Sự Kiện Văn Hóa.', numberOfJobPostings: 6, status: 'completed', startDate: '14/05/2025', endDate: '24/05/2025' },
     { id: 14, title: 'Chạy Và Giám Sát Các Công Tác Chuẩn Bị, Cài Đặt Thiết Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 3, status: 'completed', startDate: '15/05/2025', endDate: '25/05/2025' },
     { id: 15, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 10, status: 'completed', startDate: '16/05/2025', endDate: '26/05/2025' }
-];
+  ];
 
   const getStatusClass = (status) => {
     if (status === 'active') return 'active';
@@ -43,7 +42,7 @@ const EmployerJobGroups = () => {
   const handlePageChange = (page) => {
     setCurrentPage(page);
     // window.scrollTo(0, 0);
-    window.scroll({ top: 0, left: 0, behavior: 'smooth' })
+    window.scroll({ top: 100, left: 0, behavior: 'smooth' })
   };
 
   useEffect(() => {
@@ -60,7 +59,7 @@ const EmployerJobGroups = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredJobGroups = /*!isLoading && payload?.length > 0 ? payload.*/ jobGroups.filter (item => {
+  const filteredJobGroups = /*jobGroups*/ !isLoading && payload?.length > 0 ? payload.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!statusJobGroupValue || item.status === statusJobGroupValue) &&
@@ -68,7 +67,7 @@ const EmployerJobGroups = () => {
         || item.title.toLowerCase().includes(searchTermLower)
       )
     );
-  }) /*: []*/;
+  }) : [];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listData*/ filteredJobGroups.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -76,7 +75,7 @@ const EmployerJobGroups = () => {
   const navigate = useNavigate()
 
   return (
-    <div className='employer-job-groups-container'>
+    <div className='application-job-groups-container'>
 
       {payload?.length === 0 ? (
         <div className="no-job-groups">
@@ -84,9 +83,10 @@ const EmployerJobGroups = () => {
         </div>
       ) : (
         <>
-          <p className='employer-job-groups-title'><FolderOpenOutlined /> Total number of <br /> Job Groups: <span>{payload?.length}</span></p>
+          <h1>Applications</h1>
+          <p className='application-job-groups-title'><FolderOpenOutlined /> Total number of <br /> Job Groups: <span>{payload?.length}</span></p>
 
-          <div className="employer-job-groups-search">
+          <div className="application-job-groups-search">
             <Search
               placeholder="Search Job Group Name..."
               value={searchTerm} // Giữ từ tìm kiếm
@@ -118,7 +118,7 @@ const EmployerJobGroups = () => {
           </div>
 
           {isLoading ? (
-            <div className="employer-job-groups-list-skeleton">
+            <div className="application-job-groups-list-skeleton">
               <Skeleton paragraph={{ rows: 3 }} />
               <Skeleton paragraph={{ rows: 3 }} />
               <Skeleton paragraph={{ rows: 3 }} />
@@ -129,13 +129,13 @@ const EmployerJobGroups = () => {
             </div>
           ) : (
             <>
-              <div className="employer-job-groups-list">
+              <div className="application-job-groups-list">
                 {/*jobGroups*/ paginatedData.map((group) => (
-                  <div className="employer-job-groups-item" key={group.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${group.id}`, { state: group }, window.scrollTo(0, 0))}>
+                  <div className="application-job-groups-item" key={group.id} onClick={() => navigate(`/employer/application/job-groups/${group.id}`, { state: group }, window.scrollTo(0, 0))}>
                     <p className='job-group-name'>{group.title}</p>
                     <p className='number-of-job-postings'>Number of Job Postings: {group.totalJobPostings}</p>
                     <p className={`status ${getStatusClass(group.status)}`}>{group.status}</p>
-                    <div style={{display: 'none'}}>
+                    <div style={{ display: 'none' }}>
                       {group.startDate}
                       {group.endDate}
                     </div>
@@ -161,4 +161,4 @@ const EmployerJobGroups = () => {
   )
 }
 
-export default EmployerJobGroups
+export default ApplicationJobGroups

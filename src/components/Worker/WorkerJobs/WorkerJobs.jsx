@@ -17,7 +17,7 @@ const WorkerJobs = () => {
       title: "Nhân viên bán hàng",
       location: "Hồ Chí Minh, Quận 1",
       salary: 5000000,
-      status: "Completed",
+      status: "completed",
       today: "13/5/2025"
     },
     {
@@ -25,7 +25,7 @@ const WorkerJobs = () => {
       title: "Kế toán viên",
       location: "Hà Nội, Cầu Giấy",
       salary: 7000000,
-      status: "Processing",
+      status: "active",
       today: "12/5/2025"
     },
     {
@@ -33,7 +33,7 @@ const WorkerJobs = () => {
       title: "Lao động phổ thông",
       location: "Đà Nẵng, Hải Châu",
       salary: 200000,
-      status: "Processing",
+      status: "active",
       today: "10/5/2025"
     },
     {
@@ -41,7 +41,7 @@ const WorkerJobs = () => {
       title: "Nhân viên thu ngân",
       location: "Bình Dương, Thủ Dầu Một",
       salary: 12000000,
-      status: "Cancelled",
+      status: "inactive",
       today: "11/5/2025"
     },
     {
@@ -49,7 +49,7 @@ const WorkerJobs = () => {
       title: "Tạp vụ",
       location: "Hồ Chí Minh, Quận 3",
       salary: 4000000,
-      status: "Cancelled",
+      status: "inactive",
       today: "13/5/2025"
     },
     {
@@ -57,15 +57,15 @@ const WorkerJobs = () => {
       title: "Bảo vệ",
       location: "Hà Nội, Hai Bà Trưng",
       salary: 6000000,
-      status: "Cancelled",
+      status: "inactive",
       today: "12/5/2025"
     }
   ];
 
   const getStatusClass = (status) => {
-    if (status === 'active') return 'processing';
+    if (status === 'active') return 'active';
     if (status === 'completed') return 'completed';
-    if (status === 'inactive') return 'cancelled';
+    if (status === 'inactive') return 'inactive';
     return '';
   };
 
@@ -181,9 +181,9 @@ const WorkerJobs = () => {
               size="large"
               allowClear
               options={[
-                { value: 'Completed', label: 'Completed' },
-                { value: 'Processing', label: 'Processing' },
-                { value: 'Cancelled', label: 'Cancelled' },
+                { value: 'completed', label: 'Completed' },
+                { value: 'active', label: 'Active' },
+                { value: 'inactive', label: 'Inactive' },
               ]}
             />
           </div>

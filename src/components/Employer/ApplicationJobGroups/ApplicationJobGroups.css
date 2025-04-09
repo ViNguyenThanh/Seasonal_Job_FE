@@ -1,0 +1,261 @@
+.application-job-groups-container {
+  width: 100%;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  /* padding: 25px 5%; */
+}
+
+.application-job-groups-container h1 {
+  text-align: center;
+  color: #08172f;
+}
+
+.application-job-groups-container .no-job-groups {
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.application-job-groups-container .no-job-groups .ant-empty .ant-empty-description {
+  font-size: 20px;
+}
+
+.application-job-groups-container .application-job-groups-title {
+  width: 92%;
+  margin-left: 8%;
+  font-size: 25px;
+  font-weight: 600;
+  color: rgba(8, 23, 47, 0.89);
+}
+
+.application-job-groups-container .application-job-groups-title .anticon {
+  font-size: 37px;
+  /* color: #ECC94B; */
+  color: #1f3760;
+  margin-right: 0.7%;
+}
+
+.application-job-groups-container .application-job-groups-title br {
+  display: none;
+}
+
+.application-job-groups-container .application-job-groups-title span {
+  /* color: #8d58f8; */
+  color: rgb(4, 109, 246);
+  font-size: 30px;
+}
+
+
+/* chức năng Search */
+.application-job-groups-container .application-job-groups-search {
+  width: 84%;
+  margin: 1% 8%;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.application-job-groups-container .application-job-groups-search .ant-input-group-wrapper {
+  width: 65%;
+}
+
+.application-job-groups-container .application-job-groups-search .ant-input {
+  font-family: var(--font-oswald);
+  padding-left: 3%;
+}
+
+/* chỉnh nút search */
+.application-job-groups-container .application-job-groups-search .ant-btn-variant-solid {
+  background: rgba(22, 119, 255, 0.9);
+}
+
+.application-job-groups-container .application-job-groups-search .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid #d9d9d9;
+}
+
+/* chỉnh độ dài thanh Select */
+.application-job-groups-container .application-job-groups-search .ant-select-single.ant-select-lg {
+  width: 30%;
+}
+
+.application-job-groups-container .application-job-groups-search .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  padding-left: 8%;
+}
+
+
+.application-job-groups-container .application-job-groups-list {
+  width: 90%;
+  margin: 0 5%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.application-job-groups-container .application-job-groups-list-skeleton {
+  width: 90%;
+  margin: 0 5%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.application-job-groups-list .application-job-groups-item {
+  width: 20%;
+  /* content không bị dài ra nữa nên ko cần kiểm soát height */
+  /* height: 250px; */
+  /* để này thì đảm bảo chiếm hết độ width nhưng khi thu nhỏ mấy application-job-groups-item bị xuống dòng */
+  /* margin: 1% 3.6%; */
+  margin: 2% 3.4%;
+  padding: 1% 3%;
+  background-color: white;
+  border: 1px solid #d8d8d8;
+  border-radius: 15px;
+  /* box-shadow: 0 1px 10px 3px rgba(156, 155, 155, 0.15); */
+  box-shadow: -15px 15px 10px 5px rgba(156, 155, 155, 0.15);
+  cursor: pointer;
+  z-index: 0;
+  transition: 0.3s ease;
+  position: relative;
+}
+
+.application-job-groups-list .application-job-groups-item:hover {
+  z-index: 1;
+  transform: scale(1.1);
+  background-color: rgb(231, 243, 253);
+  transition: 0.3s ease;
+}
+
+.application-job-groups-list .application-job-groups-item .job-group-name {
+  font-size: 18px;
+  font-weight: 500;
+  /* BỎ vì có 3 chấm làm content đỡ dài rồi */
+  /* height: 47%; */
+  color: #000080;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  /* Giới hạn văn bản ở 2 dòng */
+  overflow: hidden;
+  /* Ẩn phần văn bản bị thừa */
+  text-overflow: ellipsis;
+  /* Hiển thị dấu ba chấm khi quá dài */
+}
+
+.application-job-groups-list .application-job-groups-item .number-of-job-postings {
+  /* color: #2F4F4F */
+  /* color: rgb(231, 231, 81); */
+  color: #ffa824;
+  font-weight: 450;
+}
+
+.application-job-groups-list .application-job-groups-item .status {
+  width: fit-content;
+  padding: 1.5% 5% 2.5%;
+  color: white;
+  text-align: end;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+
+.application-job-groups-list .application-job-groups-item .status.active {
+  background-color: rgb(4, 109, 246);
+}
+
+.application-job-groups-list .application-job-groups-item .status.completed {
+  background-color: rgb(0, 180, 0);
+}
+
+.application-job-groups-list .application-job-groups-item .status.inactive {
+  background-color: rgb(252, 46, 46);
+}
+
+.application-job-groups-list .application-job-groups-item button {
+  position: absolute;
+  bottom: 10%;
+  right: 7%;
+  border: none;
+  background-color: transparent;
+  /* color: rgb(0, 98, 125); */
+  color: #000080;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.application-job-groups-container .ant-pagination {
+  margin: 3% 0;
+}
+
+@media (max-width: 1100px) {
+  .application-job-groups-container .application-job-groups-list {
+    width: 80%;
+    margin: 0 10%;
+  }
+
+  .application-job-groups-list .application-job-groups-item {
+    width: 35%;
+    margin: 3% 4%;
+    padding: 1% 3%;
+  }
+}
+
+@media (max-width: 900px) {
+  .application-job-groups-container .application-job-groups-list {
+    width: 90%;
+    margin: 0 5%;
+  }
+
+  .application-job-groups-list .application-job-groups-item {
+    margin: 3% 4.2%;
+    padding: 1% 3%;
+  }
+}
+
+@media (max-width: 700px) {
+  .application-job-groups-container .application-job-groups-list {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .application-job-groups-list .application-job-groups-item {
+    width: 50%;
+    margin: 3% 0;
+    padding: 2% 5%;
+  }
+}
+
+@media (max-width: 500px) {
+  .application-job-groups-container h1{
+    margin-bottom: 30px;
+  }
+
+  .application-job-groups-container .application-job-groups-title {
+    width: 100%;
+    margin-left: 0%;
+    text-align: center;
+  }
+
+  .application-job-groups-container .application-job-groups-title br {
+    display: block;
+  }
+
+  .application-job-groups-container .application-job-groups-search {
+    justify-content: center;
+  }
+
+  .application-job-groups-container .application-job-groups-search .ant-input-group-wrapper {
+    width: 85%;
+  }
+
+  .application-job-groups-container .application-job-groups-search .ant-select-single.ant-select-lg {
+    width: 85%;
+    margin: 5% 0 3%;
+  }
+
+  .application-job-groups-list .application-job-groups-item {
+    width: 60%;
+    padding: 2% 8%;
+  }
+}

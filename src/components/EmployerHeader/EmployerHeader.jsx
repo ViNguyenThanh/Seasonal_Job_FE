@@ -121,7 +121,7 @@ const EmployerHeader = () => {
             key: '2',
             icon: <SolutionOutlined style={{ fontSize: '16px' }} />,
             style: { fontSize: '16px' },
-            // onClick: handleLogout,
+            onClick: () => navigate('/employer/application/job-groups/')
         },
         {
             label: "My jobs posting",
