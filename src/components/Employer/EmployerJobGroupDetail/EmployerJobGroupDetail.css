@@ -290,6 +290,9 @@
     /* .employer-job-group-detail-container .go-back-btn{
         top: 1%;
     } */
+    .employer-job-group-detail-container .employer-job-group-detail-info .show-more-less-btn{
+        margin: 30px 0;
+    }
 
     .employer-job-group-detail-container .job-postings-list h1{
         margin: 5% 0 3%;
@@ -305,6 +308,18 @@
     }
 }
 @media (max-width: 800px) {
+    .employer-job-group-detail-whole-container .ant-breadcrumb ol {
+        width: 90%;
+        padding: 0 5%;
+        margin-left: 0;
+        justify-content: center;
+        margin-bottom: 20px;
+        height: 99px;
+    }
+    .employer-job-group-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+        display: flex;
+    }
+
     .employer-job-group-detail-container .employer-job-group-detail-title{
         padding: 2% 0 4%;
     }
