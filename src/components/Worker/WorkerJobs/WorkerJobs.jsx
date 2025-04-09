@@ -122,7 +122,7 @@ const WorkerJobs = () => {
       <h1>My Jobs</h1>
 
       {listData.length === 0 ? (
-        <div className="no-job">
+        <div className="no-jobs">
           {/* <p>You do not have a job yet! </p> */}
           <Empty description="You do not have a job yet!" />
         </div>
@@ -189,7 +189,7 @@ const WorkerJobs = () => {
           </div>
 
           {filteredJobs.length === 0 ? (
-            <div className="no-job">
+            <div className="no-jobs">
               <Empty description="No job found!" />
             </div>
           ) : (

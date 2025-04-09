@@ -136,16 +136,16 @@ const EmployerJobGroupDetail = () => {
                                 <p><FileTextOutlined /> Description: <br />
                                     {jobGroupInfo?.description}
                                 </p>
-                                {/* Nút Thu gọn */}
+                                {/* Nút Show less */}
                                 <div className="show-more-less-btn">
-                                    <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Thu gọn</button>
+                                    <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
                                 </div>
                             </>
                         )}
-                        {/* Nút Xem thêm (chỉ hiển thị khi showMore = false) */}
+                        {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
                         {!showMore && (
                             <div className="show-more-less-btn">
-                                <button onClick={() => setShowMore(true)}><DownOutlined /> Xem thêm</button>
+                                <button onClick={() => setShowMore(true)}><DownOutlined /> Show more</button>
                             </div>
                         )}
 

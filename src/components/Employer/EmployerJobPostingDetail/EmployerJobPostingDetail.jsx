@@ -470,7 +470,7 @@ const EmployerJobPostingDetail = () => {
                               <br />
                               ✅ <span className='bold'> General Progress: </span> <br />
                               <span className='red'> &#160; The schedule for all workers in the Job Group will be the same, meaning all workers
-                                will have the same job requirements and progress as you have allocated. </span><br />
+                                will have the same Job Requirements and Required Progress as you have allocated. </span><br />
                               <br />
                               ➤ <span className='test'> After you start the Job Group, we will send this schedule to all workers in this
                                 Job Posting to monitor and execute the work.</span>
@@ -692,7 +692,7 @@ const EmployerJobPostingDetail = () => {
 
                           {filteredWorkers.length === 0 ? (
                             <div className="no-workers">
-                              <Empty description="No workers found!" />;
+                              <Empty description="No workers found!" />
                             </div>
                           ) : (
                             <>
@@ -752,7 +752,7 @@ const EmployerJobPostingDetail = () => {
 
                   {filteredWorkers.length === 0 ? (
                     <div className="no-workers">
-                      <Empty description="No workers found!" />;
+                      <Empty description="No workers found!" />
                     </div>
                   ) : (
                     <>

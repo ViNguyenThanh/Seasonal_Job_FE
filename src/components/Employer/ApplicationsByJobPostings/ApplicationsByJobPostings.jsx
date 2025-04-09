@@ -143,8 +143,8 @@ const ApplicationsByJobPostings = () => {
           <h1>Pending <br /> Applications</h1>
 
           {listWorkers.length === 0 ? (
-            <div className="no-workers">
-              <Empty description="You currently have no workers" />
+            <div className="no-applications">
+              <Empty description="You currently have no applications" />
             </div>
           ) : (
             <>
@@ -184,8 +184,8 @@ const ApplicationsByJobPostings = () => {
               </div>
 
               {filteredWorkers.length === 0 ? (
-                <div className="no-workers">
-                  <Empty description="No workers found!" />;
+                <div className="no-applications">
+                  <Empty description="No applications found!" />
                 </div>
               ) : (
                 <>
