@@ -41,3 +41,18 @@ export const getApplicationsForJob = async (jobPostingId) => {
         throw error;
     }
 };
+
+export const updateApplicationStatus = async (applicationId, status) => {
+    const token = getToken();
+    try {
+        const response = await API.put(`/applications/${applicationId}/status`, { status }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error updating application status:", error.response || error.message);
+        throw error;
+    }
+}
