@@ -8,7 +8,7 @@ import {  ContainerOutlined, FolderOpenOutlined, SnippetsOutlined, SolutionOutli
 const WorkerDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const item = location.state; //item này bao gồm cả jobGroupInfo ( thông tin của 1 group) và posting (thông tin của 1 posting) và workerInfo (thông tin của 1 worker)
+  const item = location.state; //item này bao gồm cả jobGroupInfo ( thông tin của 1 group) và jobPostingInfo (thông tin của 1 posting) và workerInfo (thông tin của 1 worker)
   // console.log(item);
   return (
     <div className='worker-detail-whole-container'>
