@@ -18,6 +18,9 @@ const EmployerJobGroupDetail = () => {
     const { isLoading: isJGLoading, payload: jobGroupInfo } = useSelector(state => state.jobGroupsReducer)
     const { isLoading: isJPLoading, payload: jobPostings } = useSelector(state => state.jobPostingReducer)
     const jobGroupInfoTmp = location.state || {};
+    const today = new Date();
+    const startDate = new Date(jobGroupInfo?.start_date);
+    const endDate = new Date(jobGroupInfo?.end_date);
 
     const listData = [
         {
@@ -57,6 +60,14 @@ const EmployerJobGroupDetail = () => {
             salary: 6000000,
         }
     ];
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm số 0 nếu ngày < 10
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng, nhớ cộng 1 vì tháng trong JavaScript bắt đầu từ 0
+        const year = date.getFullYear(); // Lấy năm
+        return `${day}/${month}/${year}`; // Định dạng lại thành dd/mm/yyyy
+    };
 
     useEffect(() => {
         dispatch(getJobGroupById(id))
@@ -103,8 +114,8 @@ const EmployerJobGroupDetail = () => {
                         <p><ProfileOutlined /> Job Group Name: {jobGroupInfo?.title}</p>
                         <p><DiffOutlined /> Number of Job Postings: {jobGroupInfo?.totalJobPosting}</p>
                         <div className="employer-job-group-detail-short-info">
-                            <p><ScheduleOutlined /> Start Date: {jobGroupInfo?.start_date?.split('T')[0]}</p>
-                            <p><ScheduleOutlined /> End Date: {jobGroupInfo?.end_date?.split('T')[0]}</p>
+                            <p><ScheduleOutlined /> Start Date: {formatDate(jobGroupInfo?.start_date)}</p>
+                            <p><ScheduleOutlined /> End Date: {formatDate(jobGroupInfo?.end_date)}</p>
                         </div>
                         {/* Hiển thị nội dung mở rộng nếu showMore = true */}
                         {showMore && (
@@ -138,10 +149,22 @@ const EmployerJobGroupDetail = () => {
                             </div>
                         )}
 
-                        <div className="start-end-btn">
-                            <button className='start-btn'>Start</button>
-                            <button className='end-btn'>End</button>
-                        </div>
+                        {((today > startDate  && !jobGroupInfo?.isPaid) || (today > endDate)) ? (
+                            <div className='expired-message'>
+                                <button>Expired</button>
+                                <p>The Job Group has expired because the payment was not made before the Start Date.</p>
+                            </div>
+                        ) : jobGroupInfo?.isPaid ? (
+                            <div className="start-end-btn">
+                                <button className='start-btn'>Start</button>
+                                <button className='end-btn'>End</button>
+                            </div>
+                        ) : (
+                            <div className='payment-btn'>
+                                <p>You haven't paid <br /> to post job</p>
+                                <button>Payment</button>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -154,20 +177,20 @@ const EmployerJobGroupDetail = () => {
                             <Skeleton active />
                         </div>
                     ) :
-                        /*jobPostings?*/listData.map((item) => (
-                        <div className="job-postings-item"
-                            key={item.id}
-                            onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}/employer-job-posting-detail/${item.id}`, { state: { jobPostingInfo: item, jobGroupInfo: jobGroupInfoTmp } }, window.scrollTo(0, 0))}
+                        jobPostings?./*/listData*/map((item) => (
+                            <div className="job-postings-item"
+                                key={item.id}
+                                onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}/employer-job-posting-detail/${item.id}`, { state: { jobPostingInfo: item, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))}
                             // onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo?.id}/employer-job-posting-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}
-                        >
-                            <p className='job-postings-item-title'>{item.title}</p>
-                            <div className='job-postings-item-info'>
-                                <p><EnvironmentOutlined /> {item.location} &emsp; </p>
-                                <p><DollarOutlined /> {item.salary.toLocaleString('vi-VN')} VND</p>
+                            >
+                                <p className='job-postings-item-title'>{item.title}</p>
+                                <div className='job-postings-item-info'>
+                                    <p><EnvironmentOutlined /> {item.location} &emsp; </p>
+                                    <p><DollarOutlined /> {parseFloat(item.salary).toLocaleString('vi-VN')} VND</p>
+                                </div>
+                                <button><ArrowRightOutlined /></button>
                             </div>
-                            <button><ArrowRightOutlined /></button>
-                        </div>
-                    ))}
+                        ))}
                 </div>
             </div>
         </div>

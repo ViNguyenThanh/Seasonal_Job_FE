@@ -1,0 +1,241 @@
+.worker-detail-for-employer-whole-container{
+  margin-top: 25px;
+}
+.worker-detail-for-employer-whole-container .ant-breadcrumb {
+  font-size: 18px;
+}
+.worker-detail-for-employer-whole-container .ant-breadcrumb ol {
+  width: 95%;
+  margin-left: 5%;
+  align-items: center;
+}
+.worker-detail-for-employer-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+  margin: 0 5px;
+}
+.worker-detail-for-employer-whole-container .breadcrumb .b-title-1{
+  padding: 5px 10px 15px;
+}
+/* chỉnh dấu /  */
+.worker-detail-for-employer-whole-container .ant-breadcrumb .ant-breadcrumb-separator {
+  color: black;
+  padding-bottom: 0.3%;
+  font-size: 18px;
+}
+.worker-detail-for-employer-whole-container .breadcrumb .b-title-2 {
+  color: rgb(61, 61, 61);
+  text-transform: capitalize;
+  cursor: pointer;
+  margin: 0;
+  padding: 5px 10px 10px;
+  border-radius: 5px;
+}
+.worker-detail-for-employer-whole-container .breadcrumb .b-title-2.gray {
+  color: rgba(0, 0, 0, 0.45);
+}
+.worker-detail-for-employer-whole-container .breadcrumb .b-title-2:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.worker-detail-for-employer-whole-container .ant-breadcrumb .anticon {
+  font-size: 22px;
+  margin-right: 5px;
+}
+
+
+.worker-detail-for-employer-container{
+  width: 80%;
+  margin: 0 5% 100px;
+  padding: 40px 5% 100px;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.worker-detail-for-employer-container .worker-detail-for-employer-left{
+  width: 50%;
+}
+
+.worker-detail-for-employer-left .worker-identity{
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.worker-detail-for-employer-left .worker-identity img{
+  width: 120px;
+  height: 120px;
+  background-color: black;
+  border-radius: 50%;
+  margin-right: 25px;
+}
+.worker-detail-for-employer-left .worker-identity .worker-name-star{
+  width: 100%;
+}
+.worker-detail-for-employer-left .worker-identity .worker-name-star p{
+  width: 100%;
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+.worker-detail-for-employer-left .worker-identity .worker-name-star div{
+  width: 100%;
+}
+.worker-detail-for-employer-left .worker-identity .worker-name-star .anticon{
+  font-size: 27px;
+}
+
+
+.worker-detail-for-employer-container .worker-detail-for-employer-right{
+  width: 50%;
+}
+.worker-detail-for-employer-container .worker-detail-for-employer-right h2{
+  text-align: center;
+  font-size: 25px;
+}
+
+.worker-detail-for-employer-right .worker-info{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.worker-detail-for-employer-right .worker-info p{
+  width: 70%;
+  min-width: fit-content;
+  font-size: 20px;
+  color: #3d3d3d;
+  margin-bottom: 10px;
+}
+.worker-detail-for-employer-right .worker-info p:last-child{
+  width: 30%;
+}
+.worker-detail-for-employer-right .worker-info p .anticon{
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+.worker-detail-for-employer-right .worker-description{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.worker-detail-for-employer-right .worker-description p{
+  max-width: fit-content;
+  font-size: 20px;
+  color: #3d3d3d;
+  margin-right: 15px;
+  margin-bottom: 0px;
+}
+.worker-detail-for-employer-right .worker-description p:last-child{
+  max-width: fit-content;
+  margin-top: 15px;
+}
+.worker-detail-for-employer-right .worker-description .anticon{
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+
+@media (max-width: 1300px) {
+  .worker-detail-for-employer-container .worker-detail-for-employer-left{
+    width: 40%;
+  }
+  .worker-detail-for-employer-container .worker-detail-for-employer-right{
+    width: 60%;
+  }
+}
+@media (max-width: 1200px) {
+  .worker-detail-for-employer-right .worker-info p{
+    width: 100%;
+  }
+}
+@media (max-width: 1100px) {
+  .worker-detail-for-employer-container{
+    width: 70%;
+    margin: 0 5% 100px;
+    padding: 40px 10% 100px;
+  }
+  
+  .worker-detail-for-employer-container .worker-detail-for-employer-left{
+    width: 100%;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .worker-detail-for-employer-left .worker-identity{
+    margin-bottom: 15px;
+    justify-content: center;
+  }
+  .worker-detail-for-employer-left .worker-identity .worker-name-star{
+    width: fit-content;
+  }
+  .worker-detail-for-employer-left .worker-identity .worker-name-star p{
+    width: fit-content;
+  }
+  .worker-detail-for-employer-left .worker-identity .worker-name-star div{
+    width: fit-content;
+  }
+
+  .worker-detail-for-employer-container .worker-detail-for-employer-right{
+    width: 100%;
+  }
+  .worker-detail-for-employer-container .worker-detail-for-employer-right h2{
+    text-align: center;
+    margin: 40px 0 0;
+    font-size: 27px;
+    font-weight: 650;
+  }
+  .worker-detail-for-employer-right .worker-info p{
+    width: 70%;
+    min-width: fit-content;
+  }
+  .worker-detail-for-employer-right .worker-info p:last-child{
+    width: 30%;
+  }
+}
+@media (max-width: 1000px) {
+  .worker-detail-for-employer-whole-container .ant-breadcrumb ol {
+    width: 100%;
+    margin-left: 0;
+    justify-content: center;
+    margin-bottom: 30px;
+    height: 99px;
+  }
+  .worker-detail-for-employer-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+    margin: 0 5px;
+    display: flex;
+  }
+}
+@media (max-width: 900px) {
+  .worker-detail-for-employer-left .worker-identity{
+    width: 100%;
+    margin-bottom: 0px;
+  }
+}
+@media (max-width: 700px) {
+  .worker-detail-for-employer-whole-container .ant-breadcrumb ol {
+    margin-bottom: 50px;
+  }
+
+  .worker-detail-for-employer-right .worker-info p{
+    width: 100%;
+  }
+}
+@media (max-width: 470px) {
+  .worker-detail-for-employer-left .worker-identity .worker-name-star p{
+    width: 100%;
+    font-size: 28px;
+    font-weight: 500;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+  .worker-detail-for-employer-left .worker-identity .worker-name-star div{
+    width: 80%;
+    padding: 0 10%;
+    text-align: center;
+  }
+  .worker-detail-for-employer-right .worker-info p.worker-email{
+    word-break: break-all;
+  }
+}

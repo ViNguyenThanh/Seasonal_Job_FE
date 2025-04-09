@@ -19,8 +19,11 @@ import JobPostingFlowLayout from './components/JobPostingFlow/JobPostingFlowLayo
 import CompanyDetail from './pages/CompanyDetail/CompanyDetail'
 import EmployerHome from './pages/EmployerHome/EmployerHome'
 import Worker from './pages/Worker/Worker'
+import WorkerProfile from './components/Worker/WorkerProfile/WorkerProfile'
+import WorkerApplications from './components/Worker/WorkerApplications/WorkerApplications'
 import WorkerJobs from './components/Worker/WorkerJobs/WorkerJobs'
 import WorkerJobDetail from './components/Worker/WorkerJobs/WorkerJobDetail'
+
 
 import { getUserFromToken } from './utils/Token'
 import { useSelector } from 'react-redux'
@@ -31,10 +34,11 @@ import Employer from './pages/Employer/Employer'
 import EmployerJobGroups from './components/Employer/EmployerJobGroups/EmployerJobGroups'
 import EmployerJobGroupDetail from './components/Employer/EmployerJobGroupDetail/EmployerJobGroupDetail'
 import EmployerJobPostingDetail from './components/Employer/EmployerJobPostingDetail/EmployerJobPostingDetail'
-import WorkerDetail from './components/Employer/WorkerDetail/WorkerDetail'
+import WorkerDetailForEmployer from './components/Employer/WorkerDetailForEmployer/WorkerDetailForEmployer'
 import ApplicationJobGroups from './components/Employer/ApplicationJobGroups/ApplicationJobGroups'
 import ApplicationsByJobPostings from './components/Employer/ApplicationsByJobPostings/ApplicationsByJobPostings'
 import ApplicationWorkerDetail from './components/Employer/ApplicationWorkerDetail/ApplicationWorkerDetail'
+
 
 
 
@@ -108,6 +112,8 @@ function App() {
 
         {/* Worker */}
         <Route path='/worker/*' element={<Worker />}>
+          <Route path='worker-profile' element={<WorkerProfile />} />
+          <Route path='worker-applications' element={<WorkerApplications />} />
           <Route path="worker-jobs" element={<WorkerJobs />} />
           <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail />} />
         </Route>
@@ -117,12 +123,12 @@ function App() {
           {/* Application */}
           <Route path='application/job-groups' element={<ApplicationJobGroups />} />
           <Route path='application/job-groups/:jobGroupId' element={<ApplicationsByJobPostings />} />
-          <Route path='application/job-groups/:jobGroupId/:workerId' element={<ApplicationWorkerDetail/>} />
+          <Route path='application/job-groups/:jobGroupId/:workerId' element={<ApplicationWorkerDetail />} />
           {/* Jobs Management */}
           <Route path='employer-job-groups' element={<EmployerJobGroups />} />
           <Route path='employer-job-groups/employer-job-group-detail/:id' element={<EmployerJobGroupDetail />} />
           <Route path='employer-job-groups/employer-job-group-detail/:id/employer-job-posting-detail/:id' element={<EmployerJobPostingDetail />} />
-          <Route path='employer-job-groups/employer-job-group-detail/:groupId/employer-job-posting-detail/:postingId/worker-detail/:workerId' element={<WorkerDetail />} />
+          <Route path='employer-job-groups/employer-job-group-detail/:groupId/employer-job-posting-detail/:postingId/worker-detail/:workerId' element={<WorkerDetailForEmployer />} />
         </Route>
 
         {/* Admin */}

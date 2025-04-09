@@ -1,18 +1,56 @@
 import React, { useEffect, useState } from 'react'
 import './ApplicationsByJobPostings.css'
 import avatar from '/assets/Work-On-Computer.png'
-import { Breadcrumb, Empty, Input, Pagination, Select } from 'antd';
+import { Breadcrumb, Empty, Input, message, Pagination, Select } from 'antd';
 const { Search } = Input;
 import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getJobPostingByJGId } from '../../../redux/actions/jobposting.action';
+import { getApplicationsForJob } from '../../../apis/application.request';
 
 
 const ApplicationsByJobPostings = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const jobGroupInfo = location.state
+  const [listApplications, setListApplications] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { isLoading: isJPLoading, payload } = useSelector(state => state.jobPostingReducer)
   // console.log(jobGroupInfo)
+
+  useEffect(() => {
+    dispatch(getJobPostingByJGId(jobGroupInfo.id))
+  }, [dispatch])
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const newList = await Promise.all(payload.map(async (jobPosting) => {
+          const res = await getApplicationsForJob(jobPosting.id);
+          // Chuyển đổi res thành danh sách mong muốn
+          return res.map(item => ({
+            id: item.CV.User.id,
+            workerName: item.CV.User.fullName,
+            email: item.CV.User.email,
+            avatar: avatar,
+            jobPostingName: item.jobPostingId === jobPosting.id ? jobPosting.title : ''
+          }));
+        }));
+
+        setIsLoading(false);
+        setListApplications(newList.flat());
+        // console.log(newList.flat()); // Hiển thị kết quả đã xử lý
+      } catch (error) {
+        console.log(error);
+        // message.error(error.data.message);
+      }
+    };
+
+    fetchApplications();
+  }, [payload])
 
   const listWorkers = [
     { id: 1, workerName: 'Nguyễn Anh', email: 'nguyen.anh@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng công nhân làm việc thời vụ trong kho, sắp xếp hàng hóa và kiểm tra sản phẩm' },
@@ -23,7 +61,7 @@ const ApplicationsByJobPostings = () => {
     { id: 6, workerName: 'Nguyễn Minh Hoàng', email: 'nguyen.minh.hoang@example.com', avatar: avatar, jobPostingName: 'Cần tuyển nhân viên làm việc thời vụ tại nhà máy, kiểm tra chất lượng sản phẩm và hỗ trợ sản xuất' },
     { id: 7, workerName: 'Vũ Thị Lan', email: 'vu.lan@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng công nhân làm việc thời vụ trong kho, sắp xếp hàng hóa và kiểm tra sản phẩm' },
     { id: 8, workerName: 'Bùi Hoàng Anh', email: 'bui.hoanganh@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng nhân viên hỗ trợ bán hàng, chăm sóc khách hàng trực tiếp và qua điện thoại' },
-    { id: 9, workerName: 'Ngô Quang Huy', email: 'ngo.quanghuy@example.com', avatar: avatar, jobPostingName: 'Cần tuyển nhân viên làm việc thời vụ tại cửa hàng, đóng gói sản phẩm và hỗ trợ khách hàng' },
+    { id: 9, workerName: 'Trương Thị Quỳnh Giang', email: 'truongthiquynhgiang@example.com', avatar: avatar, jobPostingName: 'Cần tuyển nhân viên làm việc thời vụ tại cửa hàng, đóng gói sản phẩm và hỗ trợ khách hàng' },
     { id: 10, workerName: 'Mai Đức Duy', email: 'mai.ducduy@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng công nhân làm việc tại xưởng sản xuất, gia công và đóng gói sản phẩm' },
     { id: 11, workerName: 'Phan Thị Bình', email: 'phan.binh@example.com', avatar: avatar, jobPostingName: 'Tuyển nhân viên phụ kho, hỗ trợ kiểm tra tồn kho và đóng gói hàng hóa theo yêu cầu' }
   ];
@@ -51,7 +89,7 @@ const ApplicationsByJobPostings = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredWorkers = listWorkers.filter(item => {
+  const filteredWorkers = /*listWorkers*/!isLoading && listApplications.length > 0 ? listApplications.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
 
     return (
@@ -61,7 +99,7 @@ const ApplicationsByJobPostings = () => {
         || item.email.toLowerCase().includes(searchTermLower)
       )
     );
-  });
+  }) : [];
 
   // dùng useEffect để khi giá trị của jobPostingNameValue thay đổi, reset searchTerm
   useEffect(() => {
@@ -69,7 +107,7 @@ const ApplicationsByJobPostings = () => {
   }, [jobPostingNameValue]);
 
   // Lọc các jobPostingName duy nhất
-  const uniqueJobPostingNames = [...new Set(listWorkers.map(worker => worker.jobPostingName))];
+  const uniqueJobPostingNames = [...new Set(/*listWorkers*/listApplications.map(worker => worker.jobPostingName))];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listWorkers*/ filteredWorkers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -89,7 +127,7 @@ const ApplicationsByJobPostings = () => {
           {
             title: (
               <div className='b-title-2'>
-                <ContainerOutlined /> {jobGroupInfo?.title}  
+                <ContainerOutlined /> {jobGroupInfo?.title}
               </div>
             ),
           },
@@ -153,7 +191,9 @@ const ApplicationsByJobPostings = () => {
                 <>
                   {/*listWorkers*/ paginatedData.map((worker) => (
                     <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/application/job-groups/${jobGroupInfo.id}/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))}>
-                      <img src={worker.avatar} />
+                      <div className="worker-avatar">
+                        <img src={worker.avatar} />
+                      </div>
                       <div className="worker-info">
                         <p className='job-posting-name'>{worker.jobPostingName}</p>
                         <p className='worker-name'>{worker.workerName}</p>
@@ -162,7 +202,9 @@ const ApplicationsByJobPostings = () => {
                       <div style={{ display: 'none' }}>
                         {worker.jobPostingName}
                       </div>
-                      <button><ArrowRightOutlined /></button>
+                      <div className="next-page-btn">
+                        <button><ArrowRightOutlined /></button>
+                      </div>
                     </div>
                   ))}
 

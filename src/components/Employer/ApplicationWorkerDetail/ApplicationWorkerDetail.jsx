@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './ApplicationWorkerDetail.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Breadcrumb, Button, message, Modal, Rate } from 'antd';
-import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, EnvironmentOutlined, ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined, FileTextOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SnippetsOutlined, SolutionOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { ContainerOutlined, EnvironmentOutlined, ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SolutionOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
 
 const ApplicationWorkerDetail = () => {
@@ -47,12 +47,6 @@ const ApplicationWorkerDetail = () => {
 
   // Xử lý xác nhận hành động (Approve hoặc Reject)
   const handleConfirm = () => {
-    // setConfirmVisible(false);
-    // if (actionType === "approve") {
-    //   alert("Job Application Approved");
-    // } else if (actionType === "reject") {
-    //   alert("Job Application Rejected");
-    // }
     setConfirmLoading(true); // Bắt đầu loading
     setTimeout(() => {
       setConfirmVisible(false); // Đóng modal sau 2 giây
@@ -110,7 +104,7 @@ const ApplicationWorkerDetail = () => {
             <img src={avatar} />
             <div className="worker-name-star">
               <p>{item.workerInfo?.workerName}</p>
-              <Rate defaultValue={4} disabled />
+              <div><Rate defaultValue={4} disabled /></div>
             </div>
           </div>
 
@@ -165,7 +159,7 @@ const ApplicationWorkerDetail = () => {
         <div className="application-worker-detail-right">
           <h2>Worker Information</h2>
           <div className="worker-info">
-            <p><MailOutlined /> {item.workerInfo?.email}</p>
+            <p className='worker-email'><MailOutlined /> {item.workerInfo?.email}</p>
             <p><UserSwitchOutlined /> Female  </p> {/* -- None -- */}
           </div>
           <div className="worker-info">

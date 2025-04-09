@@ -122,7 +122,7 @@ const Header = () => {
             label: "Profile",
             key: '1',
             icon: <UserOutlined />,
-            // onClick: () => { navigate('/admin/admin-home') },
+            onClick: () => navigate('/worker/worker-profile'),
         },
         {
             label: "CV attachment",
@@ -134,7 +134,7 @@ const Header = () => {
             label: "Applications",
             key: '3',
             icon: <SolutionOutlined />,
-            // onClick: handleLogout,
+            onClick: () => navigate('/worker/worker-applications'),
         },
         {
             label: "My jobs",

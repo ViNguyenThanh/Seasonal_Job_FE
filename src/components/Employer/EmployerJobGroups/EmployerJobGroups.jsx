@@ -25,7 +25,7 @@ const EmployerJobGroups = () => {
     { id: 13, title: 'Quản Lý Tài Liệu Và Giúp Đỡ Nhân Viên Trong Việc Phân Phối Thông Tin Về Sự Kiện Văn Hóa.', numberOfJobPostings: 6, status: 'completed', startDate: '14/05/2025', endDate: '24/05/2025' },
     { id: 14, title: 'Chạy Và Giám Sát Các Công Tác Chuẩn Bị, Cài Đặt Thiết Bị Cho Sự Kiện Triển Lãm Nghệ Thuật.', numberOfJobPostings: 3, status: 'completed', startDate: '15/05/2025', endDate: '25/05/2025' },
     { id: 15, title: 'Cung Cấp Dịch Vụ Phục Vụ Tiệc Và Đảm Bảo Vệ Sinh Trong Các Sự Kiện Tiệc Cưới Và Tiệc Lớn.', numberOfJobPostings: 10, status: 'completed', startDate: '16/05/2025', endDate: '26/05/2025' }
-];
+  ];
 
   const getStatusClass = (status) => {
     if (status === 'active') return 'active';
@@ -60,7 +60,7 @@ const EmployerJobGroups = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredJobGroups = /*!isLoading && payload?.length > 0 ? payload.*/ jobGroups.filter (item => {
+  const filteredJobGroups = !isLoading && payload?.length > 0 ? payload./*jobGroups.*/filter (item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!statusJobGroupValue || item.status === statusJobGroupValue) &&
@@ -68,7 +68,7 @@ const EmployerJobGroups = () => {
         || item.title.toLowerCase().includes(searchTermLower)
       )
     );
-  }) /*: []*/;
+  }) : [];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listData*/ filteredJobGroups.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -84,6 +84,7 @@ const EmployerJobGroups = () => {
         </div>
       ) : (
         <>
+          <h1>Jobs Management</h1>
           <p className='employer-job-groups-title'><FolderOpenOutlined /> Total number of <br /> Job Groups: <span>{payload?.length}</span></p>
 
           <div className="employer-job-groups-search">
@@ -135,7 +136,7 @@ const EmployerJobGroups = () => {
                     <p className='job-group-name'>{group.title}</p>
                     <p className='number-of-job-postings'>Number of Job Postings: {group.totalJobPostings}</p>
                     <p className={`status ${getStatusClass(group.status)}`}>{group.status}</p>
-                    <div style={{display: 'none'}}>
+                    <div style={{ display: 'none' }}>
                       {group.startDate}
                       {group.endDate}
                     </div>

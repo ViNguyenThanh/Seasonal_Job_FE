@@ -5,6 +5,11 @@
     /* padding: 25px 5%; */
 }
 
+.employer-job-groups-container h1 {
+    text-align: center;
+    color: #08172f;
+}
+
 .employer-job-groups-container .no-job-groups {
     width: 100%;
     height: 70vh;
@@ -21,7 +26,7 @@
 .employer-job-groups-container .employer-job-groups-title {
     width: 92%;
     margin-left: 8%;
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 600;
     color: #1f3760;
 }
@@ -235,11 +240,9 @@
     .employer-job-groups-container .employer-job-groups-search {
         justify-content: center;
     }
-
     .employer-job-groups-container .employer-job-groups-search .ant-input-group-wrapper {
         width: 85%;
     }
-
     .employer-job-groups-container .employer-job-groups-search .ant-select-single.ant-select-lg {
         width: 85%;
         margin: 5% 0 3%;

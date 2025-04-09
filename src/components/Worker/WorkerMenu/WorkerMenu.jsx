@@ -60,7 +60,7 @@ const WorkerMenu = () => {
       navigate('/worker/cv-attachment');
     } 
     if (buttonIndex === 3){
-      navigate('/worker/application')
+      navigate('/worker/worker-applications')
     }
     if (buttonIndex === 4){
       navigate('/worker/worker-jobs')
@@ -82,7 +82,7 @@ const WorkerMenu = () => {
     if(location.pathname === '/worker/cv-attachment'){
       setActiveButton(2)
     }
-    if(location.pathname === '/worker/application'){
+    if(location.pathname === '/worker/worker-applications'){
       setActiveButton(3)
     }
     if(location.pathname === '/worker/worker-jobs' || location.pathname.includes('/worker/worker-jobs/worker-job-detail')){
