@@ -1,18 +1,56 @@
 import React, { useEffect, useState } from 'react'
 import './ApplicationsByJobPostings.css'
 import avatar from '/assets/Work-On-Computer.png'
-import { Breadcrumb, Empty, Input, Pagination, Select } from 'antd';
+import { Breadcrumb, Empty, Input, message, Pagination, Select } from 'antd';
 const { Search } = Input;
 import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getJobPostingByJGId } from '../../../redux/actions/jobposting.action';
+import { getApplicationsForJob } from '../../../apis/application.request';
 
 
 const ApplicationsByJobPostings = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const jobGroupInfo = location.state
+  const [listApplications, setListApplications] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { isLoading: isJPLoading, payload } = useSelector(state => state.jobPostingReducer)
   // console.log(jobGroupInfo)
+
+  useEffect(() => {
+    dispatch(getJobPostingByJGId(jobGroupInfo.id))
+  }, [dispatch])
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const newList = await Promise.all(payload.map(async (jobPosting) => {
+          const res = await getApplicationsForJob(jobPosting.id);
+          // Chuyển đổi res thành danh sách mong muốn
+          return res.map(item => ({
+            id: item.CV.User.id,
+            workerName: item.CV.User.fullName,
+            email: item.CV.User.email,
+            avatar: avatar,
+            jobPostingName: item.jobPostingId === jobPosting.id ? jobPosting.title : ''
+          }));
+        }));
+
+        setIsLoading(false);
+        setListApplications(newList.flat());
+        // console.log(newList.flat()); // Hiển thị kết quả đã xử lý
+      } catch (error) {
+        console.log(error);
+        // message.error(error.data.message);
+      }
+    };
+
+    fetchApplications();
+  }, [payload])
 
   const listWorkers = [
     { id: 1, workerName: 'Nguyễn Anh', email: 'nguyen.anh@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng công nhân làm việc thời vụ trong kho, sắp xếp hàng hóa và kiểm tra sản phẩm' },
@@ -51,7 +89,7 @@ const ApplicationsByJobPostings = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredWorkers = listWorkers.filter(item => {
+  const filteredWorkers = /*listWorkers*/!isLoading && listApplications.length > 0 ? listApplications.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
 
     return (
@@ -61,7 +99,7 @@ const ApplicationsByJobPostings = () => {
         || item.email.toLowerCase().includes(searchTermLower)
       )
     );
-  });
+  }) : [];
 
   // dùng useEffect để khi giá trị của jobPostingNameValue thay đổi, reset searchTerm
   useEffect(() => {
@@ -69,7 +107,7 @@ const ApplicationsByJobPostings = () => {
   }, [jobPostingNameValue]);
 
   // Lọc các jobPostingName duy nhất
-  const uniqueJobPostingNames = [...new Set(listWorkers.map(worker => worker.jobPostingName))];
+  const uniqueJobPostingNames = [...new Set(/*listWorkers*/listApplications.map(worker => worker.jobPostingName))];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listWorkers*/ filteredWorkers.slice((currentPage - 1) * pageSize, currentPage * pageSize);

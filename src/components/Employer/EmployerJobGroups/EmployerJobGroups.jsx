@@ -60,7 +60,7 @@ const EmployerJobGroups = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredJobGroups = /*!isLoading && payload?.length > 0 ? payload.*/ jobGroups.filter(item => {
+  const filteredJobGroups = !isLoading && payload?.length > 0 ? payload./*jobGroups.*/filter (item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!statusJobGroupValue || item.status === statusJobGroupValue) &&
@@ -68,7 +68,7 @@ const EmployerJobGroups = () => {
         || item.title.toLowerCase().includes(searchTermLower)
       )
     );
-  }) /*: []*/;
+  }) : [];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listData*/ filteredJobGroups.slice((currentPage - 1) * pageSize, currentPage * pageSize);

@@ -87,7 +87,7 @@ const EmployerHeader = () => {
                 window.scrollTo(0, 0);
             }}>Job Posting</div>
         },
-        { key: '2', label: 'Premium' },
+        // { key: '2', label: 'Premium' },
         { key: 'divider', type: 'divider' },
         { key: '3', label: <div onClick={() => { navigate("/"); window.scrollTo(0, 0); }}>For worker</div> },
         { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
@@ -213,7 +213,7 @@ const EmployerHeader = () => {
                                 Job posting
                             </li>
                             {/* <li>Resume & CV</li> */}
-                            <li
+                            {/* <li
                                 onClick={() => {
                                     navigate("/finding-company")
                                     window.scrollTo(0, 0);
@@ -221,7 +221,7 @@ const EmployerHeader = () => {
                                 className={location.pathname === '/finding-company' ? 'active' : ''}
                             >
                                 Premium
-                            </li>
+                            </li> */}
                         </>
                     )}
                 </div>

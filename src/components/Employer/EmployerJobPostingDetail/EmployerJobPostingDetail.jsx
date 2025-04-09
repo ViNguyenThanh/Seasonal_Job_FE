@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './EmployerJobPostingDetail.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Breadcrumb, DatePicker, Empty, Form, Input, InputNumber, message, Pagination, Rate, Tabs } from 'antd';
-import { ArrowRightOutlined, ContainerOutlined, CreditCardOutlined, DeleteOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, SnippetsOutlined, StarOutlined, TagOutlined, TeamOutlined, UpOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, ContainerOutlined, CreditCardOutlined, DeleteOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ScheduleOutlined, SnippetsOutlined, StarOutlined, TagOutlined, TeamOutlined, UpOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import dayjs from 'dayjs';
 import avatar from '/assets/Work-On-Computer.png'
+import { jobExecuteApi } from '../../../apis/job-execute.request';
 const { Search } = Input;
 
 
@@ -19,6 +20,48 @@ const EmployerJobPostingDetail = () => {
   // console.log(item);
   const [showMore2, setShowMore2] = useState(false);
   const [isEditing, setIsEditing] = useState(true);
+  const [jobExecutes, setJobExecutes] = useState([]);
+  const [isHasJobExecute, setIsHasJobExecute] = useState(false);
+
+  useEffect(() => {
+    const fetchJobExecute = async () => {
+      try {
+        const res = await jobExecuteApi.getJobExecuteByJobPostingId(item.jobPostingInfo.id)
+        console.log(res.data);
+        const sortedJobExecutes = res.data.data.sort((a, b) => {
+          const dateA = dayjs(a.assigned_at, 'DD/MM/YYYY');
+          const dateB = dayjs(b.assigned_at, 'DD/MM/YYYY');
+          return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0; // Sắp xếp theo ngày tăng dần
+        });
+
+        setJobExecutes(sortedJobExecutes);
+        if (res.data.data.length > 0) {
+          setIsHasJobExecute(true)
+          setIsEditing(false)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchJobExecute()
+  }, [])
+
+  useEffect(() => {
+    if (isHasJobExecute) {
+      // Cập nhật từng giá trị của rows trong Formik
+      jobExecutes.forEach((execute, index) => {
+        formik.setFieldValue(`rows[${index}].temporaryId`, `${Date.now()}`)
+        formik.setFieldValue(`rows[${index}].id`, execute.id);
+        formik.setFieldValue(`rows[${index}].assignmentDate`, dayjs(execute.assigned_at, 'DD/MM/YYYY'));
+        formik.setFieldValue(`rows[${index}].jobRequirement`, execute.note);
+        formik.setFieldValue(`rows[${index}].requiredProgress`, execute.work_process);
+      });
+      console.log(formik.values.rows);
+
+    }
+  }, [jobExecutes, isHasJobExecute]);
+
 
   // Bỏ => chuyển sang formik
   /*const [rows, setRows] = useState([
@@ -49,11 +92,12 @@ const EmployerJobPostingDetail = () => {
     initialValues: {
       rows: [
         {
+          temporaryId: `temp-${Date.now()}`,
           assignmentDate: '',
           jobRequirement: '',
           requiredProgress: 100,
-        }
-      ]
+        },
+      ],
     },
     validationSchema: Yup.object({
       rows: Yup.array().of(
@@ -81,10 +125,43 @@ const EmployerJobPostingDetail = () => {
         assignmentDate: row.assignmentDate ? dayjs(row.assignmentDate).format('DD/MM/YYYY') : null,
       }));
 
-      console.log("Submitted values:", formattedRows);
-      message.success("Form submitted successfully!");
+      try {
+        for (const row of formattedRows) {
+          if (row.temporaryId && row.temporaryId.startsWith('temp-')) {
+            // Gọi API để tạo từng jobexecute
+            await jobExecuteApi.createJobExecute({
+              jobPostingId: item.jobPostingInfo.id,
+              userId: item.jobPostingInfo.userId,
+              assigned_at: row.assignmentDate,
+              status: 'active',
+              note: row.jobRequirement,
+              work_process: row.requiredProgress
+            })
+            console.log(`JobExecute for row ${row.id} created successfully!`);
+          } else if (row.id) {
+            await jobExecuteApi.updateJobExecute(row.id, {
+              jobPostingId: item.jobPostingInfo.id,
+              userId: item.jobPostingInfo.userId,
+              assigned_at: row.assignmentDate,
+              status: 'active',
+              note: row.jobRequirement,
+              work_process: row.requiredProgress,
+            });
+            console.log(`JobExecute for row ${row.id} updated successfully!`);
+            // message.success("All job executes updated successfully!");
+          }
+        }
+        message.success("Save change successfully!");
+        setIsEditing(false);
+      } catch (error) {
+        console.error("Error creating job executes:", error);
+        message.error("There was an error creating the job executes.");
+      }
+
+      // console.log("Submitted values:", formattedRows);
+      // message.success("Form submitted successfully!");
       // submit xong, đổi trạng thái isEditing thành false => ko cho chỉnh sửa
-      setIsEditing(false);
+
     }
   });
 
@@ -101,6 +178,7 @@ const EmployerJobPostingDetail = () => {
     }
 
     const newRow = {
+      temporaryId: `temp-${Date.now()}`,
       no: formik.values.rows.length + 1,
       assignmentDate: null, // Sử dụng null thay vì chuỗi rỗng
       jobRequirement: '',
@@ -129,13 +207,24 @@ const EmployerJobPostingDetail = () => {
   };*/
 
   // Delete index
-  const handleDeleteRow = (index, e) => {
+  const handleDeleteRow = async (index, e, id) => {
     e.preventDefault(); // Ngừng hành động mặc định (submit)
     // Tạo một mảng mới mà không có dòng đã chọn để xóa
     const newRows = formik.values.rows.filter((_, i) => i !== index);
 
     // Cập nhật giá trị rows trong Formik
     formik.setFieldValue('rows', newRows);
+    console.log(id);
+
+    if (id) {
+      try {
+        await jobExecuteApi.deleteJobExecute(id)
+        message.success("Delete successfully")
+      } catch (error) {
+        console.error("Error deleting job executes:", error);
+        message.error("There was an error deleting the job executes.");
+      }
+    }
 
     // Cập nhật lại tiến độ nếu cần
     if (!editedRows.length) {
@@ -175,10 +264,18 @@ const EmployerJobPostingDetail = () => {
     return totalProgress === 100;
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm số 0 nếu ngày < 10
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng, nhớ cộng 1 vì tháng trong JavaScript bắt đầu từ 0
+    const year = date.getFullYear(); // Lấy năm
+    return `${day}/${month}/${year}`; // Định dạng lại thành dd/mm/yyyy
+  };
+
   // Tính ngày min cho hàng tiếp theo
   // console.log(item.jobGroupInfo.startDate)
-  const startDate = dayjs(item.jobGroupInfo.startDate, 'DD/MM/YYYY');
-  const endDate = dayjs(item.jobGroupInfo.endDate, 'DD/MM/YYYY');
+  const startDate = dayjs(formatDate(item.jobGroupInfo.start_date), 'DD/MM/YYYY');
+  const endDate = dayjs(formatDate(item.jobGroupInfo.end_date), 'DD/MM/YYYY');
 
   const getMinDateForNextRow = (index) => {
     if (index === 0) {
@@ -286,17 +383,17 @@ const EmployerJobPostingDetail = () => {
           <p><EnvironmentOutlined /> Address: {item.jobPostingInfo.location}</p>
           <div className="employer-job-posting-detail-short-info">
             <p><TeamOutlined /> Number of workers: 1</p>
-            <p><CreditCardOutlined /> Salary: {item.jobPostingInfo.salary.toLocaleString('vi-VN')} VND</p>
+            <p><CreditCardOutlined /> Salary: {parseFloat(item.jobPostingInfo.salary).toLocaleString('vi-VN')} VND</p>
           </div>
-          <p><TagOutlined /> Job Type: Chuyên viên hỗ trợ khách hàng: Xử lý yêu cầu, giải quyết vấn đề, cung cấp thông tin và duy trì mối quan hệ khách hàng lâu dài.</p>
+          <p><TagOutlined /> Job Type: {item.jobPostingInfo.JobType ? item.jobPostingInfo.JobType?.name : "-- None --"}</p>
           {/* Hiển thị nội dung mở rộng nếu showMore = true */}
           <div className="employer-job-posting-detail-short-info">
-            <div className='rating'><StarOutlined /> Minimum rating <br /> for worker: <span className='star'><Rate disabled defaultValue={2} /></span></div>
-            <p><UserSwitchOutlined />Gender: All Genders</p>
+            <div className='rating'><StarOutlined /> Minimum rating <br /> for worker: <span className='star'><Rate disabled defaultValue={item.jobPostingInfo.min_star_requirement} /></span></div>
+            <p><UserSwitchOutlined />Gender: {item.jobPostingInfo.gender_requirement ? item.jobPostingInfo.gender_requirement : "Any"}</p>
           </div>
           {showMore && (
             <>
-              <p><FileTextOutlined /> Description: <br /> Công việc này sẽ bao gồm nhiều nhiệm vụ liên quan đến việc đóng gói quà tặng cho sự kiện Global City. Nhân viên đóng gói sẽ chịu trách nhiệm chuẩn bị, sắp xếp và đóng gói các sản phẩm quà tặng theo yêu cầu của ban tổ chức. Các công việc sẽ được thực hiện dưới sự giám sát trực tiếp của quản lý, đảm bảo rằng chất lượng và tiến độ công việc luôn đạt tiêu chuẩn cao nhất. Mỗi món quà tặng phải được đóng gói cẩn thận, đúng cách, và không có bất kỳ lỗi nào trong quá trình sắp xếp. Để đạt được hiệu quả công việc tối ưu, nhân viên cần phải có khả năng làm việc nhóm và giao tiếp tốt với các thành viên trong nhóm.
+              {/* <p><FileTextOutlined /> Description: <br /> Công việc này sẽ bao gồm nhiều nhiệm vụ liên quan đến việc đóng gói quà tặng cho sự kiện Global City. Nhân viên đóng gói sẽ chịu trách nhiệm chuẩn bị, sắp xếp và đóng gói các sản phẩm quà tặng theo yêu cầu của ban tổ chức. Các công việc sẽ được thực hiện dưới sự giám sát trực tiếp của quản lý, đảm bảo rằng chất lượng và tiến độ công việc luôn đạt tiêu chuẩn cao nhất. Mỗi món quà tặng phải được đóng gói cẩn thận, đúng cách, và không có bất kỳ lỗi nào trong quá trình sắp xếp. Để đạt được hiệu quả công việc tối ưu, nhân viên cần phải có khả năng làm việc nhóm và giao tiếp tốt với các thành viên trong nhóm.
 
                 Trong quá trình thực hiện công việc, nhân viên sẽ phải lựa chọn vật liệu đóng gói phù hợp với từng sản phẩm, từ giấy bọc, dây ruy băng, đến hộp đựng, sao cho các quà tặng không bị hư hỏng trong quá trình vận chuyển. Mỗi công đoạn đóng gói phải được thực hiện chính xác và tỉ mỉ, đảm bảo rằng các sản phẩm đều có diện mạo đẹp mắt và thu hút người nhận. Việc đảm bảo an toàn trong quá trình đóng gói là yếu tố quan trọng, vì các sản phẩm quà tặng phải chịu được va đập trong suốt quá trình vận chuyển đến tay người nhận mà không bị hư hỏng.
 
@@ -308,8 +405,8 @@ const EmployerJobPostingDetail = () => {
 
                 Bên cạnh đó, nhân viên đóng gói cần phải tuân thủ các quy định và tiêu chuẩn về an toàn lao động, đặc biệt là khi làm việc với các vật liệu đóng gói có thể gây hại nếu không sử dụng đúng cách. Công ty tổ chức sự kiện sẽ cung cấp đầy đủ trang thiết bị bảo hộ lao động và đào tạo về các biện pháp an toàn khi làm việc với các vật liệu đóng gói.
 
-                Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p>
-
+                Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p> */}
+              <p><FileTextOutlined /> Description: <br /> {item.jobPostingInfo.description} </p>
               {/* Nút Show less */}
               <div className="show-more-less-btn">
                 <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
@@ -395,7 +492,7 @@ const EmployerJobPostingDetail = () => {
 
                       <form className="creating-job-execute-form" onSubmit={formik.handleSubmit}>
                         <p className='assignment-date-note'> * You can only select Assignment Date between Start Date and End Date
-                          of the Job Group to ensure data validity. If the current date is beyond Start Date, you can only select 
+                          of the Job Group to ensure data validity. If the current date is beyond Start Date, you can only select
                           Assignment Date starting from the next day.</p>
                         <div className="creating-job-execute-whole-table">
                           <table className="creating-job-execute-table">
@@ -528,7 +625,7 @@ const EmployerJobPostingDetail = () => {
                                   <td className='delete-btn'>
                                     {index !== 0 && (
                                       <button
-                                        onClick={(e) => handleDeleteRow(index, e)} // Xử lý sự kiện xóa dòng
+                                        onClick={(e) => handleDeleteRow(index, e, formik.values.rows[index].id)} // Xử lý sự kiện xóa dòng
                                         disabled={!isEditing}
                                       >
                                         <DeleteOutlined />
