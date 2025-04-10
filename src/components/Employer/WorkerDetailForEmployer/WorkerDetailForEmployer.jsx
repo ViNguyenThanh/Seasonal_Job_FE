@@ -14,7 +14,7 @@ const WorkerDetailForEmployer = () => {
   const [showMore, setShowMore] = useState(false);
 
   return (
-    <div className='worker-detail-whole-container'>
+    <div className='worker-detail-for-employer-whole-container'>
       <Breadcrumb className='breadcrumb'
         items={[
           {
