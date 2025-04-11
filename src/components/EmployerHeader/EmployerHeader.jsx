@@ -89,7 +89,7 @@ const EmployerHeader = () => {
         },
         // { key: '2', label: 'Premium' },
         { key: 'divider', type: 'divider' },
-        { key: '3', label: <div onClick={() => { navigate("/"); window.scrollTo(0, 0); }}>For worker</div> },
+        { key: '3', label: <div onClick={() => { navigate("/"); window.scrollTo(0, 0); }}>For Worker</div> },
         { key: '4', label: <div onClick={() => { navigate("/login-for-employer"); window.scrollTo(0, 0); }}>Sign In / Sign Up</div> },
     ];
     // Nếu có user, bỏ các mục key: 'divider', key: '4', key: '5' ra khỏi menuItems
@@ -210,7 +210,7 @@ const EmployerHeader = () => {
                                 }}
                                 className={location.pathname === '/job-posting-flow/posting-notifications' ? 'active' : ''}
                             >
-                                Job posting
+                                Job Posting
                             </li>
                             {/* <li>Resume & CV</li> */}
                             {/* <li

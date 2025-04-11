@@ -44,7 +44,7 @@
 .worker-detail-for-employer-container{
   width: 80%;
   margin: 0 5% 100px;
-  padding: 40px 5% 100px;
+  padding: 40px 5% 50px;
   background-color: white;
   box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
   border-radius: 10px;
@@ -144,14 +144,14 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 30px 0;
+  margin: 5px 0 35px;
 }
-.worker-detail-for-employer-info-right .show-more-less-btn{
+/* .worker-detail-for-employer-info-right .show-more-less-btn{
   width: 100%;
   display: flex;
   justify-content: center;
   margin: 5px 0;
-}
+} */
 .worker-detail-for-employer-info-right .show-more-less-btn.show-less{
   margin: 35px 0;
 }
@@ -169,6 +169,184 @@
 }
 
 
+/* Worker Job Execute */
+.worker-detail-for-employer-container .worker-detail-job-execute-title{
+  width: 100%;
+  text-align: center;
+  padding: 4% 0 1.5%;
+  border-top: 1px solid rgba(118, 118, 118, 0.16);
+}
+.worker-detail-for-employer-container .worker-detail-job-execute-whole-table{
+  width: 95%;
+  padding: 0 2.5% 2%;
+}
+.worker-detail-for-employer-container .worker-detail-job-execute-whole-table .worker-detail-job-execute-table{
+  width: 100%;
+  border: 1px solid rgba(118, 118, 118, 0.16);
+  font-size: 17px;
+  border-radius: 10px;
+  /* do có cái này nên ko border-radius được */
+  /* border-collapse: collapse; */
+  border-collapse: separate; /* Rất quan trọng */
+  border-spacing: 0; /* Để các ô sát nhau */
+  overflow: hidden;  /* Bắt buộc nếu muốn thấy rõ bo góc */
+}
+
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead{
+  /* background-color: #2A9DF4;
+  color: white; */
+  background-color: rgb(229, 229, 229);
+  color: rgb(51, 51, 51);
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr{
+  width: 100%;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th{
+  border: 1px solid #d8d8d8;
+  padding: 1% 0;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th.no-column {
+  width: 4%;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th.job-requirement {
+  width: 24%; 
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th.assignment-date {
+  width: 11%;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th.check-in {
+  width: 13.5%; 
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th.check-out {
+  width: 13.5%; 
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th.progress {
+  width: 9%; 
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th.progress-completed {
+  width: 9%; 
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table thead tr th.reason {
+  width: 23%;
+}
+
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody{
+ 
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr{
+  width: 100%;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td{
+  border: 1px solid #eaeaea;
+  padding: 2% 0;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody td .ant-form-item .ant-form-item-explain-error {
+  color: red;
+  font-size: 16px;
+  padding: 0% 0;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.no-column {
+  width: 4%;
+  text-align: center;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.job-requirement {
+  width: 20%; 
+  padding: 2%;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.assignment-date {
+  width: 11%;
+  text-align: center;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.check-in {
+  width: 13.5%; 
+  text-align: center;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.check-in img{
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.check-in .ant-image .ant-image-mask {
+  border-radius: 5px;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.check-in.no-img{
+  padding: 4.39% 0;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.check-out {
+  width: 13.5%; 
+  text-align: center;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.check-out img{
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.check-out .ant-image .ant-image-mask {
+  border-radius: 5px;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.check-out.no-img{
+  padding: 4.39% 0;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.progress {
+  width: 9%; 
+  text-align: center;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.progress-completed {
+  width: 9%; 
+  text-align: center;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.progress-completed.edit{
+  padding-top: 4%;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.progress-completed .ant-input-number .ant-input-number-input {
+  font-family: var(--font-oswald);
+  text-align: center;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.reason {
+  width: 19%;
+  padding: 2% 2%;
+  color: red;
+  min-height: 126px;
+}
+.worker-detail-job-execute-whole-table .worker-detail-job-execute-table tbody tr td.reason.edit{
+  padding: 2% 2% 0%;
+}
+
+.worker-detail-for-employer-container .ant-pagination {
+  margin: 10px 0 30px;
+}
+
+
+.worker-detail-for-employer-container .save-edit-btn{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.worker-detail-for-employer-container .save-edit-btn button{
+  font-size: 18px;
+  font-weight: 450;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 20px 8px;
+  color: white;
+  background-color:rgb(0, 128, 255);
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.worker-detail-for-employer-container .save-edit-btn button:hover{
+  background-color:rgb(0, 116, 233);
+  transition: 0.3s ease;
+}
+.worker-detail-for-employer-container .save-edit-btn button.save-btn{
+  background-color: rgb(0, 180, 0);
+}
+.worker-detail-for-employer-container .save-edit-btn button.save-btn:hover{
+  background-color: rgb(3, 214, 3);
+  transition: 0.3s ease;
+}
+
+
+
 @media (max-width: 1300px) {
   .worker-detail-for-employer-container .worker-detail-for-employer-info-left{
     width: 40%;
@@ -177,16 +355,23 @@
     width: 60%;
   }
 }
-@media (max-width: 1200px) {
+@media (max-width: 1200px) { 
+  .worker-detail-for-employer-container .worker-detail-job-execute-whole-table{
+    overflow-x: auto;
+    margin-bottom: 4%;
+  }
+  .worker-detail-for-employer-container .worker-detail-job-execute-whole-table .worker-detail-job-execute-table{
+    min-width: 1200px; /* Đảm bảo bảng không bị co lại quá nhỏ */
+  }
+
   .worker-detail-for-employer-info-right .worker-info p{
     width: 100%;
   }
 }
 @media (max-width: 1100px) {
-  .worker-detail-for-employer-container{
-    width: 70%;
-    margin: 0 5% 100px;
-    padding: 40px 10% 100px;
+  .worker-detail-for-employer-container .worker-detail-for-employer-info{
+    width: 85%;
+    padding: 0 7.5%;
   }
   
   .worker-detail-for-employer-info .worker-detail-for-employer-info-left{
@@ -252,6 +437,10 @@
 
   .worker-detail-for-employer-info-right .worker-info p{
     width: 100%;
+  }
+
+  .worker-detail-for-employer-container .ant-pagination {
+    margin: 30px 0;
   }
 }
 @media (max-width: 470px) {

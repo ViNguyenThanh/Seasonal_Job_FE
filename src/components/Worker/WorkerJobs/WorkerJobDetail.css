@@ -73,7 +73,7 @@
 }
 .worker-job-detail-container .worker-job-detail-info .show-more-less-btn button {
     border: none;
-    font-size: 17px;
+    font-size: 19px;
     background-color: white;
     color: #0a65cc;
     cursor: pointer;
@@ -89,11 +89,17 @@
 .worker-job-detail-container .worker-job-execute-title{
     width: 100%;
     text-align: center;
-    margin-top: 3%;
+    margin: 4% 0 2.5%;
+}
+.worker-job-detail-container .warning-notice{
+    width: 95%;
+    padding: 0 2.5%;
+    color: red;
+    font-size: 17px;
 }
 .worker-job-detail-container .worker-job-execute-whole-table{
-    width: 90%;
-    padding: 0 5% 2%;
+    width: 95%;
+    padding: 0 2.5% 2%;
 }
 .worker-job-detail-container .worker-job-execute-whole-table .worker-job-execute-table{
     width: 100%;
@@ -146,10 +152,7 @@
 }
 
 .worker-job-execute-whole-table .worker-job-execute-table tbody{
-    /* background-color: #2A9DF4;
-    color: white; */
-    /* background-color: rgb(205, 205, 205);
-    color: rgb(51, 51, 51); */
+    
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr{
     width: 100%;
@@ -164,7 +167,7 @@
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.job-requirement {
     width: 20%; 
-    padding: 0 2%;
+    padding: 2%;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.assignment-date {
     width: 11%;
@@ -177,6 +180,17 @@
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in .ant-upload-wrapper {
     display: flex;
     justify-content: center;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in img{
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in .ant-image .ant-image-mask {
+    border-radius: 5px;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in.not-allowed{
+    padding: 5.1% 0;
 }
 /* chỉnh viền upload error */
 /* .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-in .ant-upload-wrapper .ant-upload-list.ant-upload-list-picture-card .ant-upload-list-item-error {
@@ -191,9 +205,15 @@
     justify-content: center;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out img{
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
+    width: 80px;
+    height: 80px;
+    border-radius: 5px;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out .ant-image .ant-image-mask {
+    border-radius: 5px;
+}
+.worker-job-execute-whole-table .worker-job-execute-table tbody tr td.check-out.not-allowed{
+    padding: 5.1% 0;
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.progress {
     width: 9%; 
@@ -205,7 +225,7 @@
 }
 .worker-job-execute-whole-table .worker-job-execute-table tbody tr td.reason {
     width: 19%;
-    padding: 0 2%;
+    padding: 2%;
     color: red
 }
 

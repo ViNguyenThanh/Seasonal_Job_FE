@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './WorkerJobDetail.css'
 import { ArrowLeftOutlined, ContainerOutlined, CreditCardOutlined, DashboardOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, PlusOutlined, ProductOutlined, ScheduleOutlined, SnippetsOutlined, StarOutlined, TagOutlined, UpOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -7,12 +7,21 @@ import { Image, Pagination, Upload } from 'antd';
 const WorkerJobDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const jobInfo = location.state;  // Dữ liệu truyền qua state từ WorkerJobs component
+    // const jobInfo = location.state;  // Dữ liệu truyền qua state từ WorkerJobs component
     const [showMore, setShowMore] = useState(false);
 
-    if (!jobInfo) {
-        return <p>Job not found.</p>;
-    }
+    // if (!jobInfo) {
+    //     return <p>Job not found.</p>;
+    // }
+
+    // Trong khi Upload và Image của Ant Design yêu cầu fileList là một mảng đối tượng có format như sau:
+    // {
+    //     uid: string,
+    //     name: string,
+    //     status: 'done',
+    //     url: string
+    // }
+
 
     const [dummyData, setDummyData] = useState([
         {
@@ -20,7 +29,14 @@ const WorkerJobDetail = () => {
             jobRequirement: "Đóng gói quà tặng cho khách hàng theo đơn đặt hàng",
             assignmentDate: '10/04/2025',
             checkInFileList: [],
-            checkOutFileList: [],
+            checkOutFileList: [
+                {
+                    uid: '-1',
+                    name: 'AccessDenied.jpg',
+                    status: 'done',
+                    url: '/assets/image_admin_login.png',
+                }
+            ],
             progress: 17,
             progressCompleted: 17,
             reason: "Quà đã sẵn sàng, chờ hoàn tất đóng gói",
@@ -29,7 +45,14 @@ const WorkerJobDetail = () => {
             no: 2,
             jobRequirement: "Sắp xếp quà tặng vào hộp đựng theo yêu cầu",
             assignmentDate: '11/04/2025',
-            checkInFileList: [],
+            checkInFileList: [
+                {
+                    uid: '-1',
+                    name: 'AccessDenied.jpg',
+                    status: 'done',
+                    url: '/assets/AccessDenied.jpg',
+                }
+            ],
             checkOutFileList: [],
             progress: 17,
             progressCompleted: 17,
@@ -38,7 +61,7 @@ const WorkerJobDetail = () => {
         {
             no: 3,
             jobRequirement: "Vận chuyển quà tặng đến khu vực tổ chức",
-            assignmentDate: '13/04/2025',
+            assignmentDate: '12/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
             progress: 17,
@@ -89,6 +112,17 @@ const WorkerJobDetail = () => {
         // bỏ vì up hình hàng 1 trang 2 bị ghi đè lên hàng 1 trang 1
         // updatedData[index].checkInFileList = newFileList;
         updatedData[(currentPage - 1) * pageSize + index].checkInFileList = newFileList;
+
+        // Kiểm tra nếu thiếu check-in hoặc check-out, đặt progressCompleted = 0
+        if (
+            !updatedData[(currentPage - 1) * pageSize + index].checkInFileList.length ||
+            !updatedData[(currentPage - 1) * pageSize + index].checkOutFileList.length
+        ) {
+            updatedData[(currentPage - 1) * pageSize + index].progressCompleted = 0;
+        } else {
+            updatedData[(currentPage - 1) * pageSize + index].progressCompleted = updatedData[(currentPage - 1) * pageSize + index].progress;
+        }
+
         // Cập nhật lại dummyData với check-in mới
         setDummyData(updatedData);
     };
@@ -96,6 +130,17 @@ const WorkerJobDetail = () => {
         const updatedData = [...dummyData];
         // updatedData[index].checkOutFileList = newFileList;
         updatedData[(currentPage - 1) * pageSize + index].checkOutFileList = newFileList;
+
+        // Kiểm tra nếu thiếu check-in hoặc check-out, đặt progressCompleted = 0
+        if (
+            !updatedData[(currentPage - 1) * pageSize + index].checkInFileList.length ||
+            !updatedData[(currentPage - 1) * pageSize + index].checkOutFileList.length
+        ) {
+            updatedData[(currentPage - 1) * pageSize + index].progressCompleted = 0;
+        } else {
+            updatedData[(currentPage - 1) * pageSize + index].progressCompleted = updatedData[(currentPage - 1) * pageSize + index].progress;
+        }
+
         // Cập nhật lại dummyData với check-out mới
         setDummyData(updatedData);
     };
@@ -134,6 +179,38 @@ const WorkerJobDetail = () => {
 
     // Phân trang dữ liệu (cắt dữ liệu theo trang)
     const paginatedData = dummyData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+    const today = new Date().toLocaleDateString('en-GB');
+
+    // hiện tới row có assignmentDate bằng today đúng trang
+    const rowRefs = useRef([]);
+    const [hasScrolledToToday, setHasScrolledToToday] = useState(false);
+    useEffect(() => {
+        if (hasScrolledToToday) return;
+
+        // const today = new Date().toLocaleDateString('en-GB'); 
+        const targetIndex = dummyData.findIndex(item => item.assignmentDate === today);
+
+        if (targetIndex !== -1) {
+            const targetPage = Math.floor(targetIndex / pageSize) + 1;
+            if (targetPage !== currentPage) {
+                setCurrentPage(targetPage);
+                // Dùng timeout để đợi render page xong rồi mới scroll
+                setTimeout(() => {
+                    rowRefs.current[targetIndex]?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                    });
+                }, 200);
+            } else {
+                // Nếu đang ở đúng page, scroll luôn
+                rowRefs.current[targetIndex]?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                });
+            }
+        }
+    }, [hasScrolledToToday]);
 
     return (
         <div className='worker-job-detail-container'>
@@ -193,87 +270,107 @@ const WorkerJobDetail = () => {
             </div>
 
             <h1 className='worker-job-execute-title' ref={jobTitleRef} >Work Progress Table</h1>
+            <p className='warning-notice'> * You are required to submit both Check-in and Check-out photos every day. If not submitted, your Progress Completed for that day will be automatically set to 0%.</p>
             <div className="worker-job-execute-whole-table">
                 <table className="worker-job-execute-table">
                     <thead>
                         <tr>
                             <th className="no-column">No</th>
                             <th className="job-requirement">Job Requirement</th>
-                            <th className='assignment-date'>Assignment <br/> Date</th>
-                            <th className="check-in">Check in</th>
-                            <th className="check-out">Check out</th>
+                            <th className='assignment-date'>Assignment <br /> Date</th>
+                            <th className="check-in">Check-in</th>
+                            <th className="check-out">Check-out</th>
                             <th className="progress">Progress <br /> (%)</th>
                             <th className="progress-completed">Progress Completed (%)</th>
                             <th className="reason">Reason</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {/*dummyData*/ paginatedData.map((data, index) => (
-                            <tr key={index}>
-                                <td className="no-column">{data.no}</td>
-                                <td className="job-requirement">{data.jobRequirement}</td>
-                                <td className='assignment-date'>{data.assignmentDate}</td>
-                                <td className="check-in">
-                                    <Upload
-                                        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                                        listType="picture-card"
-                                        // fileList={checkInFileList}
-                                        // onChange={handleCheckInChange}
-                                        fileList={data.checkInFileList}
-                                        onChange={(e) => handleCheckInChange(index, e)}
-                                        onPreview={handlePreview}
-                                        maxCount={1}
-                                    >
-                                        {data.checkInFileList.length === 0 && (
-                                            <div>
-                                                <PlusOutlined />
-                                                <div style={{ marginTop: 8 }}>Upload</div>
-                                            </div>
-                                        )}
-                                    </Upload>
-                                    <Image
-                                        wrapperStyle={{ display: 'none' }}
-                                        preview={{
-                                            visible: previewOpen,
-                                            onVisibleChange: visible => setPreviewOpen(visible),
-                                            afterOpenChange: visible => !visible && setPreviewImage(''),
-                                        }}
-                                        src={previewImage}
-                                    />
-                                </td>
-                                <td className="check-out">
-                                    <Upload
-                                        action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-                                        listType="picture-card"
-                                        // fileList={checkOutFileList}
-                                        // onChange={handleCheckOutChange}
-                                        fileList={data.checkOutFileList}
-                                        onChange={(e) => handleCheckOutChange(index, e)}
-                                        onPreview={handlePreview}
-                                        maxCount={1}
-                                    >
-                                        {data.checkOutFileList.length === 0 && (
-                                            <div>
-                                                <PlusOutlined />
-                                                <div style={{ marginTop: 8 }}>Upload</div>
-                                            </div>
-                                        )}
-                                    </Upload>
-                                    <Image
-                                        wrapperStyle={{ display: 'none' }}
-                                        preview={{
-                                            visible: previewOpen,
-                                            onVisibleChange: visible => setPreviewOpen(visible),
-                                            afterOpenChange: visible => !visible && setPreviewImage(''),
-                                        }}
-                                        src={previewImage}
-                                    />
-                                </td>
-                                <td className="progress">{data.progress}</td>
-                                <td className="progress-completed">{data.progressCompleted}</td>
-                                <td className="reason">{data.reason}</td>
-                            </tr>
-                        ))}
+                        {/*dummyData*/ paginatedData.map((data, index) => {
+                            const globalIndex = (currentPage - 1) * pageSize + index;
+                            return (
+                                <tr key={index}
+                                    ref={(el) => (rowRefs.current[globalIndex] = el)}
+                                >
+                                    <td className="no-column">{data.no}</td>
+                                    <td className="job-requirement">{data.jobRequirement}</td>
+                                    <td className='assignment-date'>{data.assignmentDate}</td>
+                                    {data.assignmentDate === today ? (
+                                        <td className="check-in">
+                                            <Upload
+                                                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                                                listType="picture-card"
+                                                fileList={data.checkInFileList}
+                                                onChange={(e) => handleCheckInChange(index, e)}
+                                                onPreview={handlePreview}
+                                                maxCount={1}
+                                            >
+                                                {data.checkInFileList.length === 0 && (
+                                                    <div>
+                                                        <PlusOutlined />
+                                                        <div style={{ marginTop: 8 }}>Upload</div>
+                                                    </div>
+                                                )}
+                                            </Upload>
+                                        </td>
+                                    ) : data.checkInFileList.length > 0 ? (
+                                        <td className="check-in">
+                                            <Image
+                                                width={80}
+                                                src={data.checkInFileList[0].url}
+                                                onClick={() => handlePreview(data.checkInFileList[0])}
+                                                style={{ cursor: 'pointer' }}
+                                            />
+                                        </td>
+                                    ) : (
+                                        <td className="check-in not-allowed">
+                                            Not allowed
+                                        </td>
+                                    )}
+                                    {/* </td> */}
+
+                                    {data.assignmentDate === today ? (
+                                        <td className="check-out">
+                                            <Upload
+                                                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                                                listType="picture-card"
+                                                fileList={data.checkOutFileList}
+                                                onChange={(e) => handleCheckOutChange(index, e)}
+                                                onPreview={handlePreview}
+                                                maxCount={1}
+                                            >
+                                                {data.checkOutFileList.length === 0 && (
+                                                    <div>
+                                                        <PlusOutlined />
+                                                        <div style={{ marginTop: 8 }}>Upload</div>
+                                                    </div>
+                                                )}
+                                            </Upload>
+                                        </td>
+                                    ) : data.checkOutFileList.length > 0 ? (
+                                        <td className="check-out">
+                                            <Image
+                                                width={80}
+                                                src={data.checkOutFileList[0].url}
+                                                onClick={() => handlePreview(data.checkOutFileList[0])}
+                                                style={{ cursor: 'pointer' }}
+                                            />
+                                        </td>
+                                    ) : (
+                                        <td className="check-out not-allowed">
+                                            Not allowed
+                                        </td>
+                                    )}
+                                    <td className="progress">{data.progress}</td>
+                                    <td className="progress-completed">
+                                        {data.checkInFileList.length === 0 || data.checkOutFileList.length === 0
+                                            ? 0
+                                            : data.progressCompleted}
+                                    </td>
+                                    <td className="reason">{data.reason}</td>
+                                </tr>
+                            )
+                        })}
                     </tbody>
                 </table>
             </div>
