@@ -70,6 +70,7 @@ const WorkerMenu = () => {
     }
 
     setActiveButton(buttonIndex);
+    window.scrollTo(0, 0);
   }
 
   // khi người dùng có reload lại trang thì đang ở component nào thì nút đó sẽ phát sáng

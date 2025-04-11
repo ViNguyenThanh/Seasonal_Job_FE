@@ -83,7 +83,7 @@
 .worker-applications-item .worker-applications-item-left img{
   width: 80px;
   height: 80px;
-  background-color: black;
+  /* background-color: black; */
   border-radius: 10px;
   margin-right: 20px
 }

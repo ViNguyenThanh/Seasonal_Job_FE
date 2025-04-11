@@ -140,6 +140,7 @@
   /* Ẩn phần văn bản bị thừa */
   text-overflow: ellipsis;
   /* Hiển thị dấu ba chấm khi quá dài */
+  height: 48px;
 }
 
 .application-job-groups-list .application-job-groups-item .number-of-job-postings {
