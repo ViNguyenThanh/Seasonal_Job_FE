@@ -117,6 +117,10 @@
   margin-left: 5px;
 }
 
+.jobType-but-job-expiry-date {
+  display: none !important;
+}
+
 @media screen and (max-width: 965px) {
   .job-detail-header {
     flex-direction: column;
@@ -149,6 +153,12 @@
 
   .job-detail-action-section {
     display: none;
+  }
+
+  .jobType-but-job-expiry-date {
+    display: flex !important; /* Show when viewport width is below 965px */
+    color: grey;
+    justify-content: center;
   }
 }
 

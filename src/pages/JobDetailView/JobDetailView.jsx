@@ -4,16 +4,16 @@ import React, { useState, useEffect } from "react";
 import "./JobDetailView.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input } from 'antd';
-import { AntDesignOutlined, LinkOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message } from 'antd';
+import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
-import { FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, TwitterOutlined, YoutubeOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, CompassOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, PushpinOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 import { useParams } from "react-router-dom";
-import { jobApi } from "../../apis/job.request"; // Import the jobApi
-import { cvApi, uploadCV } from "../../apis/cv.request"; // Import the uploadCV API
-import { message } from "antd"; // Import Ant Design's message component
+import { jobApi } from "../../apis/job.request";
+import { jobGroupApi } from "../../apis/job-group.request";
+import { cvApi, uploadCV } from "../../apis/cv.request";
 
 const JobDetailView = () => {
 
@@ -26,27 +26,50 @@ const JobDetailView = () => {
     const [value, setValue] = useState(''); // State for cover letter
     const [loadings, setLoadings] = useState([]); // State for button loading
     const [previewVisible, setPreviewVisible] = useState(false);
+    const [jobGroupDetail, setJobGroupDetail] = useState(null); // State to store job group details
+    const [jobTypeDetail, setJobTypeDetail] = useState(null); // State to store job type details
 
     // Fetch job details when the component loads
     useEffect(() => {
-        const fetchJobDetail = async () => {
+        const fetchJobDetails = async () => {
             try {
-                const response = await jobApi.getJobById(id); // Fetch job by ID
-                setJobDetail(response.data.data); // Access the nested 'data' property
-                setIsLoading(false); // Set loading to false
+                const jobResponse = await jobApi.getJobById(id);
+                const jobData = jobResponse.data.data;
+                console.log("Job Detail:", jobData); // Debug log
+                setJobDetail(jobData);
+
+                // Fetch job group details
+                if (jobData.jobGroupId) {
+                    try {
+                        console.log("Fetching Job Group ID:", jobData.jobGroupId); // Debug log
+                        const jobGroupResponse = await jobGroupApi.getJobGroupById(jobData.jobGroupId);
+                        console.log("Job Group Response:", jobGroupResponse.data); // Debug log
+                        setJobGroupDetail(jobGroupResponse.data.data);
+                    } catch (error) {
+                        console.error("Error fetching job group details:", error);
+                    }
+                }
+
+                // Fetch job type details
+                if (jobData.jobTypeId) {
+                    try {
+                        console.log("Fetching Job Type ID:", jobData.jobTypeId); // Debug log
+                        const jobTypeResponse = await jobApi.getJobTypeById(jobData.jobTypeId);
+                        console.log("Job Type Response:", jobTypeResponse.data); // Debug log
+                        setJobTypeDetail(jobTypeResponse.data.data); // Correctly set the nested data
+                    } catch (error) {
+                        console.error("Error fetching job type details:", error);
+                    }
+                }
+
+                setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching job details:", error);
-                setIsLoading(false); // Set loading to false even on error
+                setIsLoading(false);
             }
         };
 
-        fetchJobDetail();
-
-        // Load the application status from localStorage
-        const appliedJobs = JSON.parse(localStorage.getItem("appliedJobs")) || {};
-        if (appliedJobs[id]) {
-            setIsApplied(true); // Set the state to true if the job is already applied
-        }
+        fetchJobDetails();
     }, [id]);
 
     if (isLoading) {
@@ -56,6 +79,7 @@ const JobDetailView = () => {
     if (!jobDetail) {
         return <div>Job not found</div>; // Show a message if no job details are found
     }
+
 
     // Handle file selection
     const handleUpload = (info) => {
@@ -91,13 +115,13 @@ const JobDetailView = () => {
         try {
             const response = await uploadCV(selectedFile); // Call the uploadCV API with the selected file
             // console.log("Application submitted successfully:", response);
-            if(response.status === 201) {
+            if (response.status === 201) {
                 const resApply = await cvApi.applyjob(jobDetail.id, {
                     jobPostingId: jobDetail.id,
                     cvId: response.data.data
                 })
                 // console.log(resApply);
-                
+
             }
             message.success("Your application has been submitted successfully!");
 
@@ -214,21 +238,31 @@ const JobDetailView = () => {
                                 {isApplied ? "Applied" : <>Apply now <ArrowRightOutlined /></>} {/* Conditionally render text and icon */}
                             </Button>
                         </div>
-                        {/* <p className="job-expiry-info">
-                            Job expire in:<span className="job-expiry-date">
-                                {new Intl.DateTimeFormat('en-GB', {
-                                    day: '2-digit',
-                                    month: 'long',
-                                    year: 'numeric',
-                                }).format(new Date(jobDetail.expired_date))}</span>
-                        </p> */}
+                        <p className="job-expiry-info">
+                            Job type:<span className="job-expiry-date">
+                                {jobTypeDetail?.name || "None"}
+                            </span>
+                        </p>
                     </div>
                 </div>
                 <Row >
                     <Col xs={24} sm={24} md={12}>
                         <div className="job-description-leftSide">
-
                             <Typography className="job-description-leftSide-typography">
+                                <div style={{ display: "flex", alignItems: "center", marginTop: "30px", color: "#555" }}>
+                                    <PushpinOutlined className="job-overview-icon" />
+                                    <span style={{ fontSize: "16px", color: "#333", marginLeft: "10px" }}>{jobDetail.address}</span>
+                                </div>
+                                <Title level={3} className="job-description-leftSide-title">
+                                    {jobGroupDetail.title}
+                                </Title>
+                                <Paragraph style={{ fontSize: "18px", color: "#333333" }}>
+                                    <span
+                                        dangerouslySetInnerHTML={{
+                                            __html: jobGroupDetail.description.replace(/\n/g, "<br />"),
+                                        }}
+                                    />
+                                </Paragraph>
                                 <Title level={3} className="job-description-leftSide-title">Job Description</Title>
                                 <Paragraph style={{ fontSize: "18px", color: "#333333" }}>
                                     <span
@@ -237,10 +271,6 @@ const JobDetailView = () => {
                                         }}
                                     />
                                 </Paragraph>
-                                <div style={{ display: "flex", alignItems: "center", marginTop: "30px", color: "#555" }}>
-                                    <CompassOutlined className="job-overview-icon" />
-                                    <span style={{ fontSize: "16px", color: "#333", marginLeft: "10px" }}>{jobDetail.address}</span>
-                                </div>
                             </Typography>
 
                             {/* <Typography className="job-description-leftSide-typography">
@@ -392,7 +422,7 @@ const JobDetailView = () => {
                                                 <WomanOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     GENDER:<br />
-                                                    <span className="job-overview-highlight">{jobDetail.gender_requirement? jobDetail.gender_requirement : "Any"}</span>
+                                                    <span className="job-overview-highlight">{jobDetail.gender_requirement ? jobDetail.gender_requirement : "Any"}</span>
                                                 </Paragraph>
                                             </Col>
                                         </Row>
@@ -494,6 +524,11 @@ const JobDetailView = () => {
                                     </Button>
                                 </div>
                             </div>
+                            <p className="jobType-but-job-expiry-date" style={{ color: "grey", display: 'flex', justifyContent: 'center' }}>
+                                Job type:<span className="job-expiry-date">
+                                    {jobTypeDetail?.name || "None"}
+                                </span>
+                            </p>
 
                             {/* <div className="share-this-job-mobile-only">
                                 <Title level={4} style={{ margin: 0 }}>Share this job:</Title>

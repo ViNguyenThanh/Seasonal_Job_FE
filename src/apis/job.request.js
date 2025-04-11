@@ -31,4 +31,7 @@ export const jobApi = {
     getJobPostingsByJobGroupsIsPaid: () => {
         return API.get('/jobs/jobPostingsIsPaid');
     },
+    getJobTypeById: (id) => {
+        return API.get(`/jobs/jobType/${id}`);
+    },
 };
