@@ -7,7 +7,7 @@ import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, FolderOpenOut
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJobPostingByJGId } from '../../../redux/actions/jobposting.action';
-import { getApplicationsForJob } from '../../../apis/application.request';
+import { getApplicationsForJob, updateApplicationStatus } from '../../../apis/application.request';
 
 
 const ApplicationsByJobPostings = () => {
@@ -30,19 +30,26 @@ const ApplicationsByJobPostings = () => {
       try {
         const newList = await Promise.all(payload.map(async (jobPosting) => {
           const res = await getApplicationsForJob(jobPosting.id);
-          // Chuyển đổi res thành danh sách mong muốn
-          return res.map(item => ({
+          console.log(res);
+
+          const filteredApplications = res.filter(item => 
+            item.status === 'submitted' || item.status === 'viewed'
+          );
+          
+          return filteredApplications.map(item => ({
             id: item.CV.User.id,
+            applicationId: item.id,
             workerName: item.CV.User.fullName,
             email: item.CV.User.email,
             avatar: avatar,
-            jobPostingName: item.jobPostingId === jobPosting.id ? jobPosting.title : ''
+            jobPostingName: item.jobPostingId === jobPosting.id ? jobPosting.title : '',
+            status: item.status
           }));
         }));
 
         setIsLoading(false);
         setListApplications(newList.flat());
-        // console.log(newList.flat()); // Hiển thị kết quả đã xử lý
+        console.log(newList.flat()); // Hiển thị kết quả đã xử lý
       } catch (error) {
         console.log(error);
         // message.error(error.data.message);
@@ -112,6 +119,15 @@ const ApplicationsByJobPostings = () => {
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listWorkers*/ filteredWorkers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+  const handleUpdateStatus = async (applicationId) => {
+    try {
+      await updateApplicationStatus(applicationId, "viewed");
+      // message.success('Status updated successfully.');
+    } catch (error) {
+      // message.error('Failed to update status.');
+    }
+  }
+
   return (
     <div className="applications-by-job-postings-whole-container">
       <Breadcrumb className='breadcrumb'
@@ -143,8 +159,8 @@ const ApplicationsByJobPostings = () => {
           <h1>Pending <br /> Applications</h1>
 
           {listWorkers.length === 0 ? (
-            <div className="no-workers">
-              <Empty description="You currently have no workers" />
+            <div className="no-applications">
+              <Empty description="You currently have no applications" />
             </div>
           ) : (
             <>
@@ -184,13 +200,18 @@ const ApplicationsByJobPostings = () => {
               </div>
 
               {filteredWorkers.length === 0 ? (
-                <div className="no-workers">
-                  <Empty description="No workers found!" />;
+                <div className="no-applications">
+                  <Empty description="No applications found!" />
                 </div>
               ) : (
                 <>
                   {/*listWorkers*/ paginatedData.map((worker) => (
-                    <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/application/job-groups/${jobGroupInfo.id}/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))}>
+                    <div className="worker-item" key={worker.id} onClick={() => {
+                      if (worker.status === "submitted") {
+                        handleUpdateStatus(worker.applicationId)
+                      }
+                      navigate(`/employer/application/job-groups/${jobGroupInfo.id}/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))
+                    }}>
                       <div className="worker-avatar">
                         <img src={worker.avatar} />
                       </div>

@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Breadcrumb, Button, message, Modal, Rate } from 'antd';
 import { ContainerOutlined, EnvironmentOutlined, ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SolutionOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
+import { updateApplicationStatus } from '../../../apis/application.request';
 
 const ApplicationWorkerDetail = () => {
 
@@ -46,19 +47,29 @@ const ApplicationWorkerDetail = () => {
   };
 
   // Xử lý xác nhận hành động (Approve hoặc Reject)
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     setConfirmLoading(true); // Bắt đầu loading
-    setTimeout(() => {
-      setConfirmVisible(false); // Đóng modal sau 2 giây
-      setConfirmLoading(false); // Dừng loading
-      if (actionType === "approve") {
+    try {
+      if (actionType === "approved") {
+        await updateApplicationStatus(item.workerInfo.applicationId, "approved");
         setIsApproved(true);
         message.success("The application has been successfully approved.");
-      } else if (actionType === "reject") {
+      } else if (actionType === "rejected") {
+        await updateApplicationStatus(item.workerInfo.applicationId, "rejected");
         setIsRejected(true);
         message.success("The application has been successfully rejected.");
       }
-    }, 2000);
+      setConfirmVisible(false); // Đóng modal sau 2 giây
+      setConfirmLoading(false); // Dừng loading
+    } catch (error) {
+      console.log(error);
+      setConfirmVisible(false); // Đóng modal sau 2 giây
+      setConfirmLoading(false); // Dừng loading
+    }
+    // setTimeout(() => {
+    //   setConfirmVisible(false); // Đóng modal sau 2 giây
+    //   setConfirmLoading(false); // Dừng loading
+    // }, 2000);
   };
 
   // Đóng modal xác nhận
@@ -183,8 +194,8 @@ const ApplicationWorkerDetail = () => {
         <div className="approve-reject-btn" >
           {!isApproved && !isRejected ? (
             <>
-              <button className='approve-btn' onClick={() => showConfirm("approve")}>Approve</button>
-              <button className='reject-btn' onClick={() => showConfirm("reject")}>Reject</button>
+              <button className='approve-btn' onClick={() => showConfirm("approved")}>Approve</button>
+              <button className='reject-btn' onClick={() => showConfirm("rejected")}>Reject</button>
             </>
           ) : (
             <button className={`disabled-btn ${isApproved ? 'approved' : 'rejected'}`} disabled>
@@ -205,10 +216,10 @@ const ApplicationWorkerDetail = () => {
           >
             <p className='confirm-content'>
               Are you sure you want to{' '}
-              <span className={`confirm-type ${actionType === 'approve' ? 'approved' : 'rejected'}`}>
-                {actionType === "approve" ? "APPROVE" : "REJECT"}
+              <span className={`confirm-type ${actionType === 'approved' ? 'approved' : 'rejected'}`}>
+                {actionType === "approved" ? "APPROVE" : "REJECT"}
               </span>
-              {' '}{item.workerInfo?.workerName}'s application for the {item.jobGroupInfo?.title}? - Tuyển Nhân Viên Hậu Cần
+              {' '}{item.workerInfo?.workerName}'s application for the {item.jobGroupInfo?.title}? - {item.workerInfo?.jobPostingName}
             </p>
           </Modal>
         </div>
