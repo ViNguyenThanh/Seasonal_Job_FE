@@ -149,7 +149,7 @@
 .applications-by-job-postings-container .workers-list .worker-item .worker-avatar img{
   width: 80px;
   height: 80px;
-  background-color: black;
+  /* background-color: black; */
   border-radius: 10px;
   /* margin-right: 25px; */
 }
