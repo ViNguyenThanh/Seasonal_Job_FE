@@ -13,18 +13,31 @@
   padding: 0 5%;
 }
 
-.job-detail-view-container .breadcrumb {
+.job-detail-view-container .custom-breadcrumb {
   display: flex;
   justify-content: flex-end;
-  margin-right: 3% !important;
+  margin-right: 1% !important;
 }
 
-.job-detail-view-container .breadcrumb .ant-breadcrumb-link {
-  font-size: 20px !important; /* Force the font size to be larger */
+.custom-breadcrumb ol {
+  padding: 14px; /* Add padding */
+  border-radius: 5px; /* Rounded corners */
+  list-style: none; /* Remove default list styling */
+  display: flex; /* Flex layout for breadcrumb items */
 }
 
-.job-detail-view-container .breadcrumb .ant-breadcrumb-separator {
-  font-size: 20px !important; /* Ensure the separator matches the text size */
+.custom-breadcrumb ol li {
+  padding: 5px 10px; /* Add padding to each breadcrumb item */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.custom-breadcrumb ol li:hover {
+  background-color: #bbbbbb; /* Light blue hover background */
+  border-radius: 5px; /* Match the parent border radius */
+}
+
+.job-detail-view-whole-container .ant-breadcrumb a:hover {
+  background-color: transparent !important;
 }
 
 /* .ebc-p-title {

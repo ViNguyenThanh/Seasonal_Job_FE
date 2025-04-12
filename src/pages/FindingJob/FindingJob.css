@@ -32,6 +32,27 @@
   margin-top: 24px;
 }
 
+.custom-breadcrumb ol {
+  padding: 14px; /* Add padding */
+  border-radius: 5px; /* Rounded corners */
+  list-style: none; /* Remove default list styling */
+  display: flex; /* Flex layout for breadcrumb items */
+}
+
+.custom-breadcrumb ol li {
+  padding: 5px 10px; /* Add padding to each breadcrumb item */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.custom-breadcrumb ol li:hover {
+  background-color: #bbbbbb; /* Light blue hover background */
+  border-radius: 5px; /* Match the parent border radius */
+}
+
+.finding-job-whole-container .ant-breadcrumb a:hover {
+  background-color: transparent !important;
+}
+
 .modal-content {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
