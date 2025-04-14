@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import './EmployerJobGroupDetail.css'
 import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, DiffOutlined, DollarOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ProfileOutlined, ScheduleOutlined, SnippetsOutlined, UpOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Breadcrumb, Skeleton } from 'antd';
+import { Breadcrumb, message, Modal, Popconfirm, Skeleton } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJobGroupById } from '../../../redux/actions/jobgroups.action';
 import { getJobPostingByJGId } from '../../../redux/actions/jobposting.action';
+import { jobExecuteApi } from '../../../apis/job-execute.request';
+import { jobGroupApi } from '../../../apis/job-group.request';
 
 
 const EmployerJobGroupDetail = () => {
@@ -13,6 +15,10 @@ const EmployerJobGroupDetail = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const [showMore, setShowMore] = useState(false);
+    const [openResponsive, setOpenResponsive] = useState(false);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+
+
     const location = useLocation();
     const { id } = useParams()
     const { isLoading: isJGLoading, payload: jobGroupInfo } = useSelector(state => state.jobGroupsReducer)
@@ -21,6 +27,7 @@ const EmployerJobGroupDetail = () => {
     const today = new Date();
     const startDate = new Date(jobGroupInfo?.start_date);
     const endDate = new Date(jobGroupInfo?.end_date);
+    const isStartValid = jobGroupInfo?.isPaid && today < new Date(endDate.setDate(endDate.getDate() - 1));
 
     const listData = [
         {
@@ -73,6 +80,48 @@ const EmployerJobGroupDetail = () => {
         dispatch(getJobGroupById(id))
         dispatch(getJobPostingByJGId(id))
     }, [dispatch])
+
+    const handleStartJobGroup = async () => {
+        setConfirmLoading(true);
+        try {
+            for (const element of jobPostings) {
+                const res = await jobExecuteApi.getJobExecuteByJobPostingId(element.id)
+                console.log(res.data);
+                if (res.data.message === "No job execute for this job posting") {
+                    message.error(`Job Execute is not created for Job Posting: ${element.title}`);
+                    setOpenResponsive(false)
+                    setConfirmLoading(false);
+                    return; // Dừng vòng lặp, không tiếp tục kiểm tra các jobPosting khác    
+                }
+                for (const jobExecute of res.data.data) {
+                    const assignedDate = jobExecute.assigned_at; // assigned_at là chuỗi có định dạng DD/MM/YYYY
+                    const [day, month, year] = assignedDate.split('/'); // Tách ngày, tháng, năm
+
+                    const assignedDateObj = new Date(`${year}-${month}-${day}`); // Tạo đối tượng Date từ chuỗi
+                    assignedDateObj.setHours(0, 0, 0, 0);
+                    today.setHours(0, 0, 0, 0);
+                    // console.log(assignedDateObj);
+                    // console.log(today);
+
+                    if (assignedDateObj <= today) { // Nếu assigned_at trễ so với ngày hôm nay
+                        // message.error(`${element.title} is assigned to a past date and cannot be used. Please check again`);
+                        message.error(`${element.title} is set for the past or today. You can only schedule it from tomorrow`);
+                        setOpenResponsive(false)
+                        setConfirmLoading(false);
+                        return; // Dừng vòng lặp, không tiếp tục kiểm tra các jobExecute khác
+                    }
+                }
+            }
+            const res = await jobGroupApi.updateJobGroup(jobGroupInfo.id, { status: "active" })
+            setConfirmLoading(false);
+            setOpenResponsive(false)
+            message.success("Job Group started successfully!");
+        } catch (error) {
+            console.log(error);
+            setOpenResponsive(false)
+            setConfirmLoading(false);
+        }
+    }
 
     return (
         <div className='employer-job-group-detail-whole-container'>
@@ -149,15 +198,23 @@ const EmployerJobGroupDetail = () => {
                             </div>
                         )}
 
-                        {((today > startDate  && !jobGroupInfo?.isPaid) || (today > endDate)) ? (
+                        {(today > startDate && !jobGroupInfo?.isPaid) ? (
                             <div className='expired-message'>
                                 <button>Expired</button>
                                 <p>The Job Group has expired because the payment was not made before the Start Date.</p>
                             </div>
-                        ) : jobGroupInfo?.isPaid ? (
+                        ) : isStartValid ? (
                             <div className="start-end-btn">
-                                <button className='start-btn'>Start</button>
-                                <button className='end-btn'>End</button>
+                                {jobGroupInfo?.status === 'inactive' && (
+                                    <button
+                                        className='start-btn'
+                                        onClick={() => setOpenResponsive(true)}
+                                    >Start</button>
+                                )}
+                                {/* <button
+                                    className='end-btn'
+                                    disabled={jobGroupInfo?.status !== 'active'}
+                                >End</button> */}
                             </div>
                         ) : (
                             <div className='payment-btn'>
@@ -167,6 +224,50 @@ const EmployerJobGroupDetail = () => {
                         )}
                     </div>
                 )}
+
+                <Modal
+                    title="Before you start your Job Group, please note the following:"
+                    centered
+                    open={openResponsive}
+                    onOk={() => handleStartJobGroup()}
+                    onCancel={() => setOpenResponsive(false)}
+                    confirmLoading={confirmLoading}
+                    width={{
+                        xs: '90%',
+                        sm: '80%',
+                        md: '70%',
+                        lg: '60%',
+                        xl: '50%',
+                        xxl: '40%',
+                    }}
+                >
+                    <div className='notice-before-start'>
+                        <ul>
+                            <li>
+                                As soon as the <span>Job Group is launched</span>, the{' '}
+                                <span>Job Execute lists</span> you created in the Job Postings will be{' '}
+                                <span>automatically sent to Workers</span>.
+                            </li>
+                            <li>
+                                Once sent, you will be able to <span>monitor progress</span> and{' '}
+                                <span>evaluate the performance</span> of each Worker.
+                            </li>
+                        </ul>
+                        <h3>⚠️ Important Note:</h3>
+                        <ul>
+                            <li>
+                                <em>
+                                    Ensure you have created a <span>complete and correct Job Execute</span> that matches your wishes and job requirements.
+                                </em>
+                            </li>
+                            <li>
+                                <em>
+                                    <span>Once sent, you will not be able to edit</span> that information anymore.
+                                </em>
+                            </li>
+                        </ul>
+                    </div>
+                </Modal>
 
                 <div className="job-postings-list">
                     <h1>Job Postings List</h1>

@@ -27,5 +27,13 @@ export const jobGroupApi = {
     },
     getJobGroupById: (id) => {
         return API.get(`/jobGroups/${id}`)
-    }
+    },
+    updateJobGroup: (id, data) => {
+        const token = getToken();
+        return API.post(`/jobGroups/jobGroups/${id}`, data, {
+            headers: {
+                authorization: `Bearer ${token}`
+            }
+        })
+    },
 };

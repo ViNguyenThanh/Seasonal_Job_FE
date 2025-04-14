@@ -8,12 +8,16 @@ import { useFormik } from 'formik';
 import dayjs from 'dayjs';
 import avatar from '/assets/Work-On-Computer.png'
 import { jobExecuteApi } from '../../../apis/job-execute.request';
+import { getApplicationsForJob } from '../../../apis/application.request';
+import { getJobPostingByJGId } from '../../../redux/actions/jobposting.action';
+import { useDispatch, useSelector } from 'react-redux';
 const { Search } = Input;
 
 
 const EmployerJobPostingDetail = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showMore, setShowMore] = useState(false);
   const location = useLocation();
   const item = location.state; //item này bao gồm cả jobGroupInfo ( thông tin của 1 group) và jobPostingInfo (thông tin của 1 posting)
@@ -22,6 +26,7 @@ const EmployerJobPostingDetail = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [jobExecutes, setJobExecutes] = useState([]);
   const [isHasJobExecute, setIsHasJobExecute] = useState(false);
+  const today = dayjs().format('DD/MM/YYYY');
 
   useEffect(() => {
     const fetchJobExecute = async () => {
@@ -57,8 +62,7 @@ const EmployerJobPostingDetail = () => {
         formik.setFieldValue(`rows[${index}].jobRequirement`, execute.note);
         formik.setFieldValue(`rows[${index}].requiredProgress`, execute.work_process);
       });
-      console.log(formik.values.rows);
-
+      // console.log(formik.values.rows);
     }
   }, [jobExecutes, isHasJobExecute]);
 
@@ -119,7 +123,7 @@ const EmployerJobPostingDetail = () => {
 
     onSubmit: async (values) => {
       // console.log("Submitted values:", values);
-
+      message.loading('Updating...');
       const formattedRows = values.rows.map(row => ({
         ...row,
         assignmentDate: row.assignmentDate ? dayjs(row.assignmentDate).format('DD/MM/YYYY') : null,
@@ -135,7 +139,7 @@ const EmployerJobPostingDetail = () => {
               assigned_at: row.assignmentDate,
               status: 'active',
               note: row.jobRequirement,
-              work_process: row.requiredProgress
+              work_process: row.requiredProgress,
             })
             console.log(`JobExecute for row ${row.id} created successfully!`);
           } else if (row.id) {
@@ -151,10 +155,12 @@ const EmployerJobPostingDetail = () => {
             // message.success("All job executes updated successfully!");
           }
         }
+        message.destroy();
         message.success("Save change successfully!");
         setIsEditing(false);
       } catch (error) {
         console.error("Error creating job executes:", error);
+        message.destroy();
         message.error("There was an error creating the job executes.");
       }
 
@@ -302,14 +308,15 @@ const EmployerJobPostingDetail = () => {
   };
 
   /*List Workers*/
-  const listWorkers = [
-    { id: 1, workerName: 'Nguyễn Anh', email: 'nguyen.anh@example.com', avatar: avatar },
-    { id: 2, workerName: 'Trần Minh', email: 'tran.minh@example.com', avatar: avatar },
-    { id: 3, workerName: 'Lê Thị Mai', email: 'le.thi.mai@example.com', avatar: avatar },
-    { id: 4, workerName: 'Phạm Thanh', email: 'pham.thanh@example.com', avatar: avatar },
-    { id: 5, workerName: 'Hoàng Tú', email: 'hoang.tu@example.com', avatar: avatar },
-    { id: 6, workerName: 'Nguyễn Minh Hoàng', email: 'nguyen.minh.hoang@example.com', avatar: avatar },
-  ];
+  const [listWorkers, setListWorkers] = useState([])
+  // const listWorkers = [
+  //   { id: 1, workerName: 'Nguyễn Anh', email: 'nguyen.anh@example.com', avatar: avatar },
+  //   { id: 2, workerName: 'Trần Minh', email: 'tran.minh@example.com', avatar: avatar },
+  //   { id: 3, workerName: 'Lê Thị Mai', email: 'le.thi.mai@example.com', avatar: avatar },
+  //   { id: 4, workerName: 'Phạm Thanh', email: 'pham.thanh@example.com', avatar: avatar },
+  //   { id: 5, workerName: 'Hoàng Tú', email: 'hoang.tu@example.com', avatar: avatar },
+  //   { id: 6, workerName: 'Nguyễn Minh Hoàng', email: 'nguyen.minh.hoang@example.com', avatar: avatar },
+  // ];
 
   // Quản lý phân trang
   const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
@@ -327,7 +334,43 @@ const EmployerJobPostingDetail = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredWorkers = listWorkers.filter(item => {
+  const { isLoading: isJPLoading, payload } = useSelector(state => state.jobPostingReducer)
+  // console.log(jobGroupInfo)
+
+  useEffect(() => {
+    dispatch(getJobPostingByJGId(item.jobGroupInfo.id))
+  }, [dispatch])
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const newList = await Promise.all(payload.map(async (jobPosting) => {
+          const res = await getApplicationsForJob(jobPosting.id);
+          // console.log(res);
+
+          const filteredApplications = res.filter(item =>
+            item.status === 'approved'
+          );
+
+          return filteredApplications.map(item => ({
+            id: item.CV.User.id,
+            workerName: item.CV.User.fullName,
+            email: item.CV.User.email,
+            avatar: avatar,
+          }));
+        }));
+        setListWorkers(newList.flat());
+        console.log(newList.flat());
+      } catch (error) {
+        console.log(error);
+        // message.error(error.data.message);
+      }
+    };
+
+    fetchApplications();
+  }, [payload])
+
+  const filteredWorkers = listWorkers.length > 0 ? listWorkers.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!searchTerm
@@ -335,7 +378,7 @@ const EmployerJobPostingDetail = () => {
         || item.email.toLowerCase().includes(searchTermLower)
       )
     );
-  });
+  }) : [];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listWorkers*/ filteredWorkers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -361,14 +404,14 @@ const EmployerJobPostingDetail = () => {
               // ko xài Link vì khó truyền state
               (
                 <div className='b-title-2 gray' onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}`, { state: item.jobGroupInfo })}>
-                  <ContainerOutlined /> Job Group Detail
+                  <ContainerOutlined /> {item.jobGroupInfo.title}
                 </div>
               )
           },
           {
             title: (
               <div className='b-title-2'>
-                <SnippetsOutlined /> Job Posting Detail
+                <SnippetsOutlined /> {item.jobPostingInfo.title}
               </div>
             ),
           },
@@ -421,367 +464,369 @@ const EmployerJobPostingDetail = () => {
           )}
         </div>
 
-        {!statusStart && (
-          <div className="employer-job-posting-not-executed">
-            <Tabs
-              defaultActiveKey="1"
-              type="card"
-              items={[
-                {
-                  label: <p className='tab-title'>Creating <br /> Job Execute</p>,
-                  key: '1',
-                  children:
-                    <div className="creating-job-execute">
-                      <div className="creating-job-execute-notification">
-                        <h1>Creating Job Execute</h1>
-                        <p className='content'>
-                          <span className='warning'>⚠️</span> <span className='yellow'>Important: </span>
-                          <span className='dark-green'>You must complete the Job Execute before starting
-                            the Job Group.
-                          </span>  <br />
-                          <br />
-                          👇 Here is the work schedule for each day: <br />
-                        </p>
-                        {showMore2 && (
-                          <>
+        {item.jobGroupInfo.isPaid && (<>
+          {/*!statusStart*/ item.jobGroupInfo.status === 'inactive' && (
+            <div className="employer-job-posting-not-executed">
+              <Tabs
+                defaultActiveKey="1"
+                type="card"
+                items={[
+                  {
+                    label: <p className='tab-title'>Creating <br /> Job Execute</p>,
+                    key: '1',
+                    children:
+                      <div className="creating-job-execute">
+                        <div className="creating-job-execute-notification">
+                          <h1>Creating Job Execute</h1>
+                          <p className='content'>
+                            <span className='warning'>⚠️</span> <span className='yellow'>Important: </span>
+                            <span className='dark-green'>You must complete the Job Execute before starting
+                              the Job Group.
+                            </span>  <br />
                             <br />
-                            <p className='content'>
-                              📆 <span className='bold'> Work Schedule: </span> <br />
-                              &ensp; Includes the Assignment Date, Job Requirement for each worker, and Required Progress to be
-                              completed each day.<br />
-                              <br />
-                              📈 <span className='bold'> Progress Requirements: </span> <br />
-                              <span className='red'>&ensp; After completing the allocation for all work days, make sure that
-                                the overall progress is 100%. </span> <br />
-                              &emsp; • &#160; <span className='blue-lagoon'>Ex: </span> in 5 working days, each day needs to complete an average of 20% to reach
-                              100% progress. <br />
-                              <br />
-                              💰 <span className='bold'> Payroll Calculation: </span> <br />
-                              <span className='red'> &ensp; The worker's salary will be calculated based on the percentage (%) of progress they
-                                achieve compared to the requirements you set. </span> <br />
-                              &emsp; • &#160;  <span className='blue-lagoon'>Ex: </span> if you require 20% completion each day and in the first 4 days, the
-                              worker achieves 20%, but on the 5th day, although you require 20%, the worker only
-                              achieves 18%, the total progress is only 98%.
-                              In this case, the salary will be calculated as 98% of the original amount you decided
-                              to pay the worker. The remaining 2% will be paid to you after the entire Job Group is
-                              completed. <br />
-                              &ensp; <span className='dark-orange'>➞ This means that even if the worker does not achieve 100% of the progress, you will still
-                                receive the remaining portion once the Job Group is finished. </span> <br />
-                              <br />
-                              ✅ <span className='bold'> General Progress: </span> <br />
-                              <span className='red'> &#160; The schedule for all workers in the Job Group will be the same, meaning all workers
-                                will have the same Job Requirements and Required Progress as you have allocated. </span><br />
-                              <br />
-                              ➤ <span className='test'> After you start the Job Group, we will send this schedule to all workers in this
-                                Job Posting to monitor and execute the work.</span>
-                            </p>
-                            {/* Nút Show less */}
-                            <div className="show-more-less-btn show-less">
-                              <button onClick={() => { setShowMore2(false); window.scroll({ top: 670, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
-                            </div>
-                          </>
-                        )}
-                        {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
-                        {!showMore2 && (
-                          <div className="show-more-less-btn">
-                            <button onClick={() => setShowMore2(true)}><DownOutlined /> Show more</button>
-                          </div>
-                        )}
-
-                      </div>
-
-                      <form className="creating-job-execute-form" onSubmit={formik.handleSubmit}>
-                        <p className='assignment-date-note'> * You can only select Assignment Date between Start Date and End Date
-                          of the Job Group to ensure data validity. If the current date is beyond Start Date, you can only select
-                          Assignment Date starting from the next day.</p>
-                        <div className="creating-job-execute-whole-table">
-                          <table className="creating-job-execute-table">
-                            <thead>
-                              <tr>
-                                <th className='no-column'>No</th>
-                                <th className='assignment-date'>Assignment <br /> Date</th>
-                                <th className='job-requirement'>Job Requirement</th>
-                                <th className='required-progress'>Required <br /> Progress (%)</th>
-                                <th className='delete-btn'>Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {formik.values.rows.map((row, index) => (
-                                <tr key={index}>
-                                  <td className='no-column'>
-                                    {index + 1}
-                                  </td>
-                                  <td className='assignment-date'>
-                                    {/* <input
-                                  type="text"
-                                  value={row.assignmentDate}
-                                  onChange={(e) => {
-                                    const updatedRows = [...rows];
-                                    updatedRows[index].assignmentDate = e.target.value;
-                                    setRows(updatedRows);
-                                  }}
-                                /> */}
-                                    <Form.Item
-                                      validateStatus={
-                                        formik.errors.rows && formik.errors.rows[index]?.assignmentDate && formik.touched.rows && formik.touched.rows[index]?.assignmentDate
-                                          ? "error"
-                                          : ""
-                                      }
-                                      help={
-                                        formik.errors.rows && formik.errors.rows[index]?.assignmentDate && formik.touched.rows && formik.touched.rows[index]?.assignmentDate
-                                          ? formik.errors.rows[index].assignmentDate
-                                          : null
-                                      }
-                                    >
-                                      <DatePicker
-                                        className='input'
-                                        size="large"
-                                        format="DD/MM/YYYY"
-                                        onChange={(date, dateString) => {
-                                          formik.setFieldValue(`rows[${index}].assignmentDate`, date ? date.toDate() : null); // Chuyển đổi thành đối tượng Date
-                                        }}
-                                        onBlur={() => formik.setFieldTouched(`rows[${index}].assignmentDate`, true)} // Đánh dấu trường đã được chạm tới (touched)
-                                        // defaultValue={formik.values.rows[index].assignmentDate ? dayjs(formik.values.rows[index].assignmentDate, 'DD/MM/YYYY') : null} // Gán giá trị từ Formik
-                                        // disabledDate={(currentDate) => {
-                                        //   return currentDate.isBefore(getMinDateForNextRow(index)) || currentDate.isAfter(endDate);
-                                        // }}
-                                        disabled={!isEditing} // disabled chỉ kt đc boolean
-                                        disabledDate={(currentDate) => {
-                                          // Kiểm tra xem ngày hiện tại đã qua startDate chưa
-                                          const today = dayjs(); // Lấy ngày hôm nay
-                                          // Nếu hôm nay đã qua startDate, bắt đầu từ hôm nay, nếu không thì vẫn từ startDate
-                                          const adjustedStartDate = today.isAfter(startDate) ? today : startDate;
-                                          // Không cho phép chọn ngày ngoài phạm vi startDate đến endDate
-                                          if (currentDate.isBefore(adjustedStartDate) || currentDate.isAfter(endDate)) {
-                                            return true; // Disable all dates outside the range
-                                          }
-                                          // Nếu là dòng đầu tiên, chỉ cho phép chọn từ adjustedStartDate
-                                          if (index === 0) {
-                                            return currentDate.isBefore(adjustedStartDate) || currentDate.isAfter(getMaxDateForRow(index));
-                                          }
-                                          // Nếu là dòng tiếp theo, chỉ cho phép chọn khi dòng trước đã có giá trị ngày
-                                          else if (!formik.values.rows[index - 1].assignmentDate) {
-                                            return true; // Nếu dòng trước chưa có ngày, vô hiệu hóa
-                                          }
-                                          // Nếu là dòng cuối cùng, chỉ cho phép chọn đến endDate
-                                          else if (index === formik.values.rows.length - 1) {
-                                            return currentDate.isBefore(getMinDateForNextRow(index)) || currentDate.isAfter(endDate);
-                                          }
-                                          // Các dòng ở giữa, chỉ cho phép chọn giữa ngày của dòng trước và dòng sau
-                                          return currentDate.isBefore(getMinDateForNextRow(index)) || currentDate.isAfter(getMaxDateForRow(index));
-                                        }}
-                                        value={formik.values.rows[index].assignmentDate ? dayjs(formik.values.rows[index].assignmentDate) : null} // Chuyển đổi ngày từ Formik thành dayjs
-                                      />
-                                    </Form.Item>
-                                  </td>
-                                  <td className='job-requirement'>
-                                    <Form.Item
-                                      validateStatus={
-                                        formik.errors.rows && formik.errors.rows[index]?.jobRequirement && formik.touched.rows && formik.touched.rows[index]?.jobRequirement
-                                          ? "error"
-                                          : ""
-                                      }
-                                      help={
-                                        formik.errors.rows && formik.errors.rows[index]?.jobRequirement && formik.touched.rows && formik.touched.rows[index]?.jobRequirement
-                                          ? formik.errors.rows[index].jobRequirement
-                                          : null
-                                      }
-                                    >
-                                      <Input
-                                        className='input'
-                                        placeholder='Input Job Requirement here...'
-                                        value={formik.values.rows[index].jobRequirement}
-                                        onChange={(e) => formik.setFieldValue(`rows[${index}].jobRequirement`, e.target.value)}
-                                        onBlur={() => formik.setFieldTouched(`rows[${index}].jobRequirement`, true)}
-                                        disabled={!isEditing}
-                                      />
-                                    </Form.Item>
-                                  </td>
-                                  <td className='required-progress'>
-                                    <Form.Item
-                                      validateStatus={
-                                        formik.errors.rows && formik.errors.rows[index]?.requiredProgress && formik.touched.rows && formik.touched.rows[index]?.requiredProgress
-                                          ? "error"
-                                          : ""
-                                      }
-                                      help={
-                                        formik.errors.rows && formik.errors.rows[index]?.requiredProgress && formik.touched.rows && formik.touched.rows[index]?.requiredProgress
-                                          ? formik.errors.rows[index].requiredProgress
-                                          : null
-                                      }
-                                    >
-                                      <InputNumber
-                                        className='input'
-                                        min={1}
-                                        max={100}
-                                        value={formik.values.rows[index].requiredProgress}
-                                        // onChange={(value) => formik.setFieldValue(`rows[${index}].requiredProgress`, value)}
-                                        onChange={(value) => handleProgressChange(index, value)}
-                                        onBlur={() => formik.setFieldTouched(`rows[${index}].requiredProgress`, true)}
-                                        disabled={!isEditing}
-                                      />
-                                    </Form.Item>
-                                  </td>
-                                  <td className='delete-btn'>
-                                    {index !== 0 && (
-                                      <button
-                                        onClick={(e) => handleDeleteRow(index, e, formik.values.rows[index].id)} // Xử lý sự kiện xóa dòng
-                                        disabled={!isEditing}
-                                      >
-                                        <DeleteOutlined />
-                                      </button>
-                                    )}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                        <div className="add-and-total">
-                          <div className="add-btn">
-                            <button
-                              onClick={(e) => handleAddRow(e)}
-                              disabled={!isEditing}
-                            >
-                              Add
-                            </button>
-                          </div>
-                          <p className='total-progress'>
-                            Total Required Progress: <br /> <span className={`total-progress-number ${!isTotalProgressValid(formik.values.rows) ? 'error' : 'correct'}`}>{calculateTotalProgress(formik.values.rows)}%</span> / 100%
+                            👇 Here is the work schedule for each day: <br />
                           </p>
-                        </div>
-                        <div className="submit-btn">
-                          {isEditing && (
-                            <button type="submit" disabled={!isTotalProgressValid(formik.values.rows)}>Submit</button>
-                          )}
-                        </div>
-                      </form>
-
-                      <div className="edit-btn">
-                        {!isEditing && (
-                          <button type="button" onClick={handleEdit}>Edit</button> // Nút Edit chỉ thay đổi trạng thái
-                        )}
-                      </div>
-                    </div>
-                  ,
-                },
-                {
-                  label: 'List Workers',
-                  key: '2',
-                  children: (
-                    <div className="workers-list">
-                      <h1>List Workers</h1>
-
-                      {listWorkers.length === 0 ? (
-                        <div className="no-workers">
-                          <Empty description="You currently have no workers" />
-                        </div>
-                      ) : (
-                        <>
-                          <div className="workers-list-search">
-                            <Search
-                              placeholder="Search Worker Name or Email..."
-                              value={searchTerm} // Giữ từ tìm kiếm
-                              allowClear
-                              enterButton
-                              size="large"
-                              onSearch={onSearch}
-                              onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                          </div>
-
-                          {filteredWorkers.length === 0 ? (
-                            <div className="no-workers">
-                              <Empty description="No workers found!" />
-                            </div>
-                          ) : (
+                          {showMore2 && (
                             <>
-                              {/*listWorkers*/ paginatedData.map((worker) => (
-                                <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}/worker-detail/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } }, window.scrollTo(0, 0))}>
-                                  <img src={worker.avatar} />
-                                  <div className="worker-info">
-                                    <p className='worker-name'>{worker.workerName}</p>
-                                    <p className='worker-email'>{worker.email}</p>
-                                  </div>
-                                  <button><ArrowRightOutlined /></button>
-                                </div>
-                              ))}
-
-                              <Pagination
-                                current={currentPage}
-                                pageSize={pageSize}
-                                total={filteredWorkers.length}
-                                onChange={handlePageChange}
-                                showSizeChanger={false}
-                                align="center"
-                              />
+                              <br />
+                              <p className='content'>
+                                📆 <span className='bold'> Work Schedule: </span> <br />
+                                &ensp; Includes the Assignment Date, Job Requirement for each worker, and Required Progress to be
+                                completed each day.<br />
+                                <br />
+                                📈 <span className='bold'> Progress Requirements: </span> <br />
+                                <span className='red'>&ensp; After completing the allocation for all work days, make sure that
+                                  the overall progress is 100%. </span> <br />
+                                &emsp; • &#160; <span className='blue-lagoon'>Ex: </span> in 5 working days, each day needs to complete an average of 20% to reach
+                                100% progress. <br />
+                                <br />
+                                💰 <span className='bold'> Payroll Calculation: </span> <br />
+                                <span className='red'> &ensp; The worker's salary will be calculated based on the percentage (%) of progress they
+                                  achieve compared to the requirements you set. </span> <br />
+                                &emsp; • &#160;  <span className='blue-lagoon'>Ex: </span> if you require 20% completion each day and in the first 4 days, the
+                                worker achieves 20%, but on the 5th day, although you require 20%, the worker only
+                                achieves 18%, the total progress is only 98%.
+                                In this case, the salary will be calculated as 98% of the original amount you decided
+                                to pay the worker. The remaining 2% will be paid to you after the entire Job Group is
+                                completed. <br />
+                                &ensp; <span className='dark-orange'>➞ This means that even if the worker does not achieve 100% of the progress, you will still
+                                  receive the remaining portion once the Job Group is finished. </span> <br />
+                                <br />
+                                ✅ <span className='bold'> General Progress: </span> <br />
+                                <span className='red'> &#160; The schedule for all workers in the Job Group will be the same, meaning all workers
+                                  will have the same Job Requirements and Required Progress as you have allocated. </span><br />
+                                <br />
+                                ➤ <span className='test'> After you start the Job Group, we will send this schedule to all workers in this
+                                  Job Posting to monitor and execute the work.</span>
+                              </p>
+                              {/* Nút Show less */}
+                              <div className="show-more-less-btn show-less">
+                                <button onClick={() => { setShowMore2(false); window.scroll({ top: 670, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
+                              </div>
                             </>
                           )}
-                        </>
-                      )}
-                    </div>
-                  ),
-                },
-              ]}
-            />
-          </div>
-        )}
+                          {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
+                          {!showMore2 && (
+                            <div className="show-more-less-btn">
+                              <button onClick={() => setShowMore2(true)}><DownOutlined /> Show more</button>
+                            </div>
+                          )}
 
-        {statusStart && (
-          <div className="employer-job-posting-executed">
-            <div className="workers-list">
-              <h1>List Workers</h1>
-
-              {listWorkers.length === 0 ? (
-                <div className="no-workers">
-                  <Empty description="You currently have no workers" />
-                </div>
-              ) : (
-                <>
-                  <div className="workers-list-search">
-                    <Search
-                      placeholder="Search Worker Name or Email..."
-                      value={searchTerm} // Giữ từ tìm kiếm
-                      allowClear
-                      enterButton
-                      size="large"
-                      onSearch={onSearch}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-
-                  {filteredWorkers.length === 0 ? (
-                    <div className="no-workers">
-                      <Empty description="No workers found!" />
-                    </div>
-                  ) : (
-                    <>
-                      {/*listWorkers*/ paginatedData.map((worker) => (
-                        <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}/worker-detail/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } }, window.scrollTo(0, 0))}>
-                          <img src={worker.avatar} />
-                          <div className="worker-info">
-                            <p className='worker-name'>{worker.workerName}</p>
-                            <p className='worker-email'>{worker.email}</p>
-                          </div>
-                          <button><ArrowRightOutlined /></button>
                         </div>
-                      ))}
 
-                      <Pagination
-                        current={currentPage}
-                        pageSize={pageSize}
-                        total={filteredWorkers.length}
-                        onChange={handlePageChange}
-                        showSizeChanger={false}
-                        align="center"
-                      />
-                    </>
-                  )}
-                </>
-              )}
+                        <form className="creating-job-execute-form" onSubmit={formik.handleSubmit}>
+                          <p className='assignment-date-note'> * You can only select Assignment Date between Start Date and End Date
+                            of the Job Group to ensure data validity. If the current date is beyond Start Date, you can only select
+                            Assignment Date starting from the next day.</p>
+                          <div className="creating-job-execute-whole-table">
+                            <table className="creating-job-execute-table">
+                              <thead>
+                                <tr>
+                                  <th className='no-column'>No</th>
+                                  <th className='assignment-date'>Assignment <br /> Date</th>
+                                  <th className='job-requirement'>Job Requirement</th>
+                                  <th className='required-progress'>Required <br /> Progress (%)</th>
+                                  <th className='delete-btn'>Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {formik.values.rows.map((row, index) => (
+                                  <tr key={index}>
+                                    <td className='no-column'>
+                                      {index + 1}
+                                    </td>
+                                    <td className='assignment-date'>
+                                      {/* <input
+                                type="text"
+                                value={row.assignmentDate}
+                                onChange={(e) => {
+                                  const updatedRows = [...rows];
+                                  updatedRows[index].assignmentDate = e.target.value;
+                                  setRows(updatedRows);
+                                }}
+                              /> */}
+                                      <Form.Item
+                                        validateStatus={
+                                          formik.errors.rows && formik.errors.rows[index]?.assignmentDate && formik.touched.rows && formik.touched.rows[index]?.assignmentDate
+                                            ? "error"
+                                            : ""
+                                        }
+                                        help={
+                                          formik.errors.rows && formik.errors.rows[index]?.assignmentDate && formik.touched.rows && formik.touched.rows[index]?.assignmentDate
+                                            ? formik.errors.rows[index].assignmentDate
+                                            : null
+                                        }
+                                      >
+                                        <DatePicker
+                                          className='input'
+                                          size="large"
+                                          format="DD/MM/YYYY"
+                                          onChange={(date, dateString) => {
+                                            formik.setFieldValue(`rows[${index}].assignmentDate`, date ? date.toDate() : null); // Chuyển đổi thành đối tượng Date
+                                          }}
+                                          onBlur={() => formik.setFieldTouched(`rows[${index}].assignmentDate`, true)} // Đánh dấu trường đã được chạm tới (touched)
+                                          // defaultValue={formik.values.rows[index].assignmentDate ? dayjs(formik.values.rows[index].assignmentDate, 'DD/MM/YYYY') : null} // Gán giá trị từ Formik
+                                          // disabledDate={(currentDate) => {
+                                          //   return currentDate.isBefore(getMinDateForNextRow(index)) || currentDate.isAfter(endDate);
+                                          // }}
+                                          disabled={!isEditing} // disabled chỉ kt đc boolean
+                                          disabledDate={(currentDate) => {
+                                            // Kiểm tra xem ngày hiện tại đã qua startDate chưa
+                                            const today = dayjs(); // Lấy ngày hôm nay
+                                            // Nếu hôm nay đã qua startDate, bắt đầu từ hôm nay, nếu không thì vẫn từ startDate
+                                            const adjustedStartDate = today.isAfter(startDate) ? today : startDate;
+                                            // Không cho phép chọn ngày ngoài phạm vi startDate đến endDate
+                                            if (currentDate.isBefore(adjustedStartDate) || currentDate.isAfter(endDate)) {
+                                              return true; // Disable all dates outside the range
+                                            }
+                                            // Nếu là dòng đầu tiên, chỉ cho phép chọn từ adjustedStartDate
+                                            if (index === 0) {
+                                              return currentDate.isBefore(adjustedStartDate) || currentDate.isAfter(getMaxDateForRow(index));
+                                            }
+                                            // Nếu là dòng tiếp theo, chỉ cho phép chọn khi dòng trước đã có giá trị ngày
+                                            else if (!formik.values.rows[index - 1].assignmentDate) {
+                                              return true; // Nếu dòng trước chưa có ngày, vô hiệu hóa
+                                            }
+                                            // Nếu là dòng cuối cùng, chỉ cho phép chọn đến endDate
+                                            else if (index === formik.values.rows.length - 1) {
+                                              return currentDate.isBefore(getMinDateForNextRow(index)) || currentDate.isAfter(endDate);
+                                            }
+                                            // Các dòng ở giữa, chỉ cho phép chọn giữa ngày của dòng trước và dòng sau
+                                            return currentDate.isBefore(getMinDateForNextRow(index)) || currentDate.isAfter(getMaxDateForRow(index));
+                                          }}
+                                          value={formik.values.rows[index].assignmentDate ? dayjs(formik.values.rows[index].assignmentDate) : null} // Chuyển đổi ngày từ Formik thành dayjs
+                                        />
+                                      </Form.Item>
+                                    </td>
+                                    <td className='job-requirement'>
+                                      <Form.Item
+                                        validateStatus={
+                                          formik.errors.rows && formik.errors.rows[index]?.jobRequirement && formik.touched.rows && formik.touched.rows[index]?.jobRequirement
+                                            ? "error"
+                                            : ""
+                                        }
+                                        help={
+                                          formik.errors.rows && formik.errors.rows[index]?.jobRequirement && formik.touched.rows && formik.touched.rows[index]?.jobRequirement
+                                            ? formik.errors.rows[index].jobRequirement
+                                            : null
+                                        }
+                                      >
+                                        <Input
+                                          className='input'
+                                          placeholder='Input Job Requirement here...'
+                                          value={formik.values.rows[index].jobRequirement}
+                                          onChange={(e) => formik.setFieldValue(`rows[${index}].jobRequirement`, e.target.value)}
+                                          onBlur={() => formik.setFieldTouched(`rows[${index}].jobRequirement`, true)}
+                                          disabled={!isEditing}
+                                        />
+                                      </Form.Item>
+                                    </td>
+                                    <td className='required-progress'>
+                                      <Form.Item
+                                        validateStatus={
+                                          formik.errors.rows && formik.errors.rows[index]?.requiredProgress && formik.touched.rows && formik.touched.rows[index]?.requiredProgress
+                                            ? "error"
+                                            : ""
+                                        }
+                                        help={
+                                          formik.errors.rows && formik.errors.rows[index]?.requiredProgress && formik.touched.rows && formik.touched.rows[index]?.requiredProgress
+                                            ? formik.errors.rows[index].requiredProgress
+                                            : null
+                                        }
+                                      >
+                                        <InputNumber
+                                          className='input'
+                                          min={1}
+                                          max={100}
+                                          value={formik.values.rows[index].requiredProgress}
+                                          // onChange={(value) => formik.setFieldValue(`rows[${index}].requiredProgress`, value)}
+                                          onChange={(value) => handleProgressChange(index, value)}
+                                          onBlur={() => formik.setFieldTouched(`rows[${index}].requiredProgress`, true)}
+                                          disabled={!isEditing}
+                                        />
+                                      </Form.Item>
+                                    </td>
+                                    <td className='delete-btn'>
+                                      {index !== 0 && (
+                                        <button
+                                          onClick={(e) => handleDeleteRow(index, e, formik.values.rows[index].id)} // Xử lý sự kiện xóa dòng
+                                          disabled={!isEditing}
+                                        >
+                                          <DeleteOutlined />
+                                        </button>
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                          <div className="add-and-total">
+                            <div className="add-btn">
+                              <button
+                                onClick={(e) => handleAddRow(e)}
+                                disabled={!isEditing}
+                              >
+                                Add
+                              </button>
+                            </div>
+                            <p className='total-progress'>
+                              Total Required Progress: <br /> <span className={`total-progress-number ${!isTotalProgressValid(formik.values.rows) ? 'error' : 'correct'}`}>{calculateTotalProgress(formik.values.rows)}%</span> / 100%
+                            </p>
+                          </div>
+                          <div className="submit-btn">
+                            {isEditing && (
+                              <button type="submit" disabled={!isTotalProgressValid(formik.values.rows)}>Submit</button>
+                            )}
+                          </div>
+                        </form>
+
+                        <div className="edit-btn">
+                          {!isEditing && (
+                            <button type="button" onClick={handleEdit}>Edit</button> // Nút Edit chỉ thay đổi trạng thái
+                          )}
+                        </div>
+                      </div>
+                    ,
+                  },
+                  {
+                    label: 'List Workers',
+                    key: '2',
+                    children: (
+                      <div className="workers-list">
+                        <h1>List Workers</h1>
+
+                        {listWorkers.length === 0 ? (
+                          <div className="no-workers">
+                            <Empty description="You currently have no workers" />
+                          </div>
+                        ) : (
+                          <>
+                            <div className="workers-list-search">
+                              <Search
+                                placeholder="Search Worker Name or Email..."
+                                value={searchTerm} // Giữ từ tìm kiếm
+                                allowClear
+                                enterButton
+                                size="large"
+                                onSearch={onSearch}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                              />
+                            </div>
+
+                            {filteredWorkers.length === 0 ? (
+                              <div className="no-workers">
+                                <Empty description="No workers found!" />
+                              </div>
+                            ) : (
+                              <>
+                                {/*listWorkers*/ paginatedData.map((worker) => (
+                                  <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}/worker-detail/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } }, window.scrollTo(0, 0))}>
+                                    <img src={worker.avatar} />
+                                    <div className="worker-info">
+                                      <p className='worker-name'>{worker.workerName}</p>
+                                      <p className='worker-email'>{worker.email}</p>
+                                    </div>
+                                    <button><ArrowRightOutlined /></button>
+                                  </div>
+                                ))}
+
+                                <Pagination
+                                  current={currentPage}
+                                  pageSize={pageSize}
+                                  total={filteredWorkers.length}
+                                  onChange={handlePageChange}
+                                  showSizeChanger={false}
+                                  align="center"
+                                />
+                              </>
+                            )}
+                          </>
+                        )}
+                      </div>
+                    ),
+                  },
+                ]}
+              />
             </div>
-          </div>
-        )}
+          )}
+
+          {/* statusStart*/ item.jobGroupInfo.status !== 'inactive' && (
+            <div className="employer-job-posting-executed">
+              <div className="workers-list">
+                <h1>List Workers</h1>
+
+                {listWorkers.length === 0 ? (
+                  <div className="no-workers">
+                    <Empty description="You currently have no workers" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="workers-list-search">
+                      <Search
+                        placeholder="Search Worker Name or Email..."
+                        value={searchTerm} // Giữ từ tìm kiếm
+                        allowClear
+                        enterButton
+                        size="large"
+                        onSearch={onSearch}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </div>
+
+                    {filteredWorkers.length === 0 ? (
+                      <div className="no-workers">
+                        <Empty description="No workers found!" />
+                      </div>
+                    ) : (
+                      <>
+                        {/*listWorkers*/ paginatedData.map((worker) => (
+                          <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}/worker-detail/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } }, window.scrollTo(0, 0))}>
+                            <img src={worker.avatar} />
+                            <div className="worker-info">
+                              <p className='worker-name'>{worker.workerName}</p>
+                              <p className='worker-email'>{worker.email}</p>
+                            </div>
+                            <button><ArrowRightOutlined /></button>
+                          </div>
+                        ))}
+
+                        <Pagination
+                          current={currentPage}
+                          pageSize={pageSize}
+                          total={filteredWorkers.length}
+                          onChange={handlePageChange}
+                          showSizeChanger={false}
+                          align="center"
+                        />
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+        </>)}
       </div>
     </div>
   )
