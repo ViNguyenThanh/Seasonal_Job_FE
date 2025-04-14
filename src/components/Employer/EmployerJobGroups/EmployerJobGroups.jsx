@@ -60,7 +60,7 @@ const EmployerJobGroups = () => {
     setCurrentPage(1);     // Reset to the first page
   };
 
-  const filteredJobGroups = !isLoading && payload?.length > 0 ? payload./*jobGroups.*/filter (item => {
+  const filteredJobGroups = !isLoading && payload?.length > 0 ? payload./*jobGroups.*/filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!statusJobGroupValue || item.status === statusJobGroupValue) &&
@@ -152,6 +152,8 @@ const EmployerJobGroups = () => {
                 onChange={handlePageChange}
                 showSizeChanger={false}
                 align="center"
+                showLessItems
+                showQuickJumper
               />
             </>
           )}

@@ -263,6 +263,14 @@
     cursor: pointer;
 }
 
+.worker-job-detail-container .ant-pagination {
+    margin: 10px 0;
+}
+.worker-job-detail-container .ant-pagination .ant-pagination-options-quick-jumper {
+    font-size: 16px;
+}
+
+
 @media (max-width: 1300px) {
     .worker-job-execute-whole-table .worker-job-execute-table tbody tr td{
         padding: 4% 0;
@@ -327,6 +335,10 @@
     }
     .worker-job-detail-container .worker-job-detail-info .show-more-less-btn{
         margin: 3% 0;
+    }
+
+    .worker-job-detail-container .ant-pagination {
+        margin: 20px 0;
     }
 }
 @media (max-width: 500px) {
