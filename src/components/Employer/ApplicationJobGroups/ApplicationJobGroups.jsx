@@ -152,6 +152,8 @@ const ApplicationJobGroups = () => {
                 onChange={handlePageChange}
                 showSizeChanger={false}
                 align="center"
+                showLessItems
+                showQuickJumper
               />
             </>
           )}

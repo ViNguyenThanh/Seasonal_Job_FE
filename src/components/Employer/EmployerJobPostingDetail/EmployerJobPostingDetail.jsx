@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import avatar from '/assets/Work-On-Computer.png'
 import { jobExecuteApi } from '../../../apis/job-execute.request';
 const { Search } = Input;
+const { TextArea } = Input;
 
 
 const EmployerJobPostingDetail = () => {
@@ -106,10 +107,10 @@ const EmployerJobPostingDetail = () => {
             .required("* Required"),
           jobRequirement: Yup.string()
             .test('no-leading-space', '* No spaces at the beginning', value => !/^\s/.test(value))
-            .test('no-extra-space', '* No extra spaces allowed', value => !/ {2,}/.test(value))
+            // .test('no-extra-space', '* No extra spaces allowed', value => !/ {2,}/.test(value))
             .test('no-question-mark', '* Cannot contain "?" character', value => !/\?/.test(value))
-            .test('capitalize-first-letter', '* The first letter must be uppercase', value => /^[A-ZÀ-Ỹ]/.test(value?.trim().charAt(0)))
-            .max(80, "* Job Requirement cannot be longer than 80 characters")
+            // .test('capitalize-first-letter', '* The first letter must be uppercase', value => /^[A-ZÀ-Ỹ]/.test(value?.trim().charAt(0)))
+            // .max(80, "* Job Requirement cannot be longer than 80 characters")
             .required("* Required"),
           requiredProgress: Yup.number()
             .required("* Required")
@@ -587,13 +588,15 @@ const EmployerJobPostingDetail = () => {
                                           : null
                                       }
                                     >
-                                      <Input
+                                      <Input.TextArea
                                         className='input'
                                         placeholder='Input Job Requirement here...'
                                         value={formik.values.rows[index].jobRequirement}
                                         onChange={(e) => formik.setFieldValue(`rows[${index}].jobRequirement`, e.target.value)}
                                         onBlur={() => formik.setFieldTouched(`rows[${index}].jobRequirement`, true)}
                                         disabled={!isEditing}
+                                        // autoSize={{ minRows: 2, maxRows: 6 }} 
+                                        style={{ height: 75, resize: 'none' }}
                                       />
                                     </Form.Item>
                                   </td>
@@ -714,6 +717,8 @@ const EmployerJobPostingDetail = () => {
                                 onChange={handlePageChange}
                                 showSizeChanger={false}
                                 align="center"
+                                showLessItems
+                                showQuickJumper
                               />
                             </>
                           )}
@@ -774,6 +779,8 @@ const EmployerJobPostingDetail = () => {
                         onChange={handlePageChange}
                         showSizeChanger={false}
                         align="center"
+                        showLessItems
+                        showQuickJumper
                       />
                     </>
                   )}
