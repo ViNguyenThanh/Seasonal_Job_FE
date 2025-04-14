@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Select, Space, Button, Flex, Card, Tag } from "antd";
+import { Select, Space, Button, Flex, Card, Tag, Empty } from "antd";
 import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined, HomeOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb, ConfigProvider } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -60,6 +60,31 @@ const FindingJob = () => {
         fetchPaidJobPostings(); // Fetch paid job postings when the component loads
     }, []);
 
+    const applyFilters = (title, location, minStar) => {
+        let filtered = allJobs;
+
+        if (title) {
+            filtered = filtered.filter((job) =>
+                job.title.toLowerCase().includes(title.toLowerCase())
+            );
+        }
+
+        if (location) {
+            filtered = filtered.filter((job) =>
+                job.location.toLowerCase().includes(location.toLowerCase())
+            );
+        }
+
+        if (minStar) {
+            filtered = filtered.filter(
+                (job) => job.min_star_requirement.toString() === minStar
+            );
+        }
+
+        setFilteredJobs(filtered); // Update the filtered jobs
+        setJobData(filtered); // Update the displayed jobs
+    };
+
     // const showModal = () => {
     //     setIsModalOpen(true);
     // };
@@ -103,7 +128,7 @@ const FindingJob = () => {
                             }}
                         >
                             <Breadcrumb
-                                className="breadcrumb"
+                                className="custom-breadcrumb"
                                 items={[
                                     {
                                         href: '/',
@@ -138,28 +163,17 @@ const FindingJob = () => {
                                     height: '50px',
                                 }}
                                 onSearch={(value) => {
-                                    if (!value.trim()) {
-                                        setFilteredJobs(allJobs); // Reset to all jobs if input is empty
-                                    } else {
-                                        const filtered = allJobs.filter((job) =>
-                                            job.title.toLowerCase().includes(value.toLowerCase())
-                                        );
-                                        setFilteredJobs(filtered); // Update the filtered jobs
-                                    }
+                                    setSelectedTitle(value); // Update state
+                                    applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
                                 }}
                                 value={selectedTitle} // Bind state
                                 onChange={(value) => {
                                     setSelectedTitle(value); // Update state
-                                    if (!value) {
-                                        setFilteredJobs(allJobs); // Reset to all jobs if no value is selected
-                                    } else {
-                                        const selectedJobs = allJobs.filter((job) => job.title === value);
-                                        setJobData(selectedJobs); // Display all jobs with the selected title
-                                    }
+                                    applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
                                 }}
                                 filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                {[...new Set(filteredJobs.map((job) => job.title))].map((title, index) => (
+                                {[...new Set(allJobs.map((job) => job.title))].map((title, index) => (
                                     <Option key={index} value={title}>
                                         {title}
                                     </Option>
@@ -175,28 +189,17 @@ const FindingJob = () => {
                                     height: '50px',
                                 }}
                                 onSearch={(value) => {
-                                    if (!value.trim()) {
-                                        setFilteredJobs(allJobs); // Reset to all jobs if input is empty
-                                    } else {
-                                        const filtered = allJobs.filter((job) =>
-                                            job.location.toLowerCase().includes(value.toLowerCase())
-                                        );
-                                        setFilteredJobs(filtered); // Update the filtered jobs
-                                    }
+                                    setSelectedLocation(value); // Update state
+                                    applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
                                 }}
                                 value={selectedLocation} // Bind state
                                 onChange={(value) => {
                                     setSelectedLocation(value); // Update state
-                                    if (!value) {
-                                        setFilteredJobs(allJobs); // Reset to all jobs if no value is selected
-                                    } else {
-                                        const selectedJobs = allJobs.filter((job) => job.location === value);
-                                        setJobData(selectedJobs); // Display all jobs with the selected location
-                                    }
+                                    applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
                                 }}
                                 filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                {[...new Set(filteredJobs.map((job) => job.location))].map((location, index) => (
+                                {[...new Set(allJobs.map((job) => job.location))].map((location, index) => (
                                     <Option key={index} value={location}>
                                         {location}
                                     </Option>
@@ -212,30 +215,17 @@ const FindingJob = () => {
                                     height: '50px',
                                 }}
                                 onSearch={(value) => {
-                                    if (!value.trim()) {
-                                        setFilteredJobs(allJobs); // Reset to all jobs if input is empty
-                                    } else {
-                                        const filtered = allJobs.filter((job) =>
-                                            job.min_star_requirement.toString().includes(value)
-                                        );
-                                        setFilteredJobs(filtered); // Update the filtered jobs
-                                    }
+                                    setSelectedMinStarRequirement(value); // Update state
+                                    applyFilters(selectedTitle, selectedLocation, value); // Apply cumulative filters
                                 }}
                                 value={selectedMinStarRequirement} // Bind state
                                 onChange={(value) => {
                                     setSelectedMinStarRequirement(value); // Update state
-                                    if (!value) {
-                                        setFilteredJobs(allJobs); // Reset to all jobs if no value is selected
-                                    } else {
-                                        const selectedJobs = allJobs.filter(
-                                            (job) => job.min_star_requirement.toString() === value
-                                        );
-                                        setJobData(selectedJobs); // Display all jobs with the selected min_star_requirement
-                                    }
+                                    applyFilters(selectedTitle, selectedLocation, value); // Apply cumulative filters
                                 }}
                                 filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                {[...new Set(filteredJobs.map((job) => job.min_star_requirement))].map((minStar, index) => (
+                                {[...new Set(allJobs.map((job) => job.min_star_requirement))].map((minStar, index) => (
                                     <Option key={index} value={minStar.toString()}>
                                         {minStar}
                                     </Option>
@@ -329,7 +319,7 @@ const FindingJob = () => {
                                     style={{
                                         height: '50px',
                                         borderRadius: '5px',
-                                        width: '100%'
+                                        width: '100%',
                                     }}
                                     onClick={() => {
                                         setJobData(allJobs); // Reset the job data to show all jobs
@@ -402,73 +392,79 @@ const FindingJob = () => {
                     </Col>
                 </Row>
 
-                {Array.isArray(currentJobs) && currentJobs.map((job) => (
-                    <div key={job.id} style={{ display: 'flex', justifyContent: 'center' }}>
-                        <Card
-                            style={{
-                                width: '100%',
-                                marginTop: 30,
-                                marginLeft: 50,
-                                marginRight: 50,
-                            }}
-                        >
-                            <Card.Meta
-                                title={
-                                    <div className="job-card-meta" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        <span>{job.title}</span>
-                                        <Tag color="blue">
-                                            {(() => {
-                                                const startDate = new Date(job.started_date);
-                                                const endDate = new Date(job.end_date);
-                                                const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
-                                                return `${durationInDays} days`; // Display duration
-                                            })()}
-                                        </Tag>
-                                        <Tag color="yellow" style={{ marginLeft: '-10px' }}>
-                                            {job.min_star_requirement} <StarOutlined />
-                                        </Tag>
-                                    </div>
-                                }
-                                description={
-                                    <>
-                                        <div className="job-card-description" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div style={{ display: 'flex', gap: '10px', flexDirection: 'row-reverse' }}>
-                                                <span>
-                                                    <DollarOutlined /> {new Intl.NumberFormat('vi-VN').format(job.salary)} VND
-                                                </span>
-                                                <span><EnvironmentOutlined /> {job.location}</span>
-                                                <span>
-                                                    <ContainerOutlined /> {new Date(job.updatedAt).toLocaleString('en-US', {
-                                                        year: 'numeric',
-                                                        month: 'long',
-                                                        day: 'numeric',
-                                                        hour: '2-digit',
-                                                        minute: '2-digit',
-                                                        second: '2-digit',
-                                                    })}
-                                                </span>
-                                            </div>
-                                            <div className="job-card-buttons" style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
-                                                <Button
-                                                    type="primary"
-                                                    className="apply-now-button"
-                                                    style={{ height: '40px' }}
-                                                    onClick={() => {
-                                                        navigate(`/job-detail-view/${job.id}`);
-                                                        window.scrollTo(0, 0);
-                                                    }}
-                                                >
-                                                    Apply now <ArrowRightOutlined />
-                                                </Button>
-                                            </div>
+                {Array.isArray(currentJobs) && currentJobs.length > 0 ? (
+                    currentJobs.map((job) => (
+                        <div key={job.id} style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Card
+                                style={{
+                                    width: '100%',
+                                    marginTop: 30,
+                                    marginLeft: 50,
+                                    marginRight: 50,
+                                }}
+                            >
+                                <Card.Meta
+                                    title={
+                                        <div className="job-card-meta" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <span>{job.title}</span>
+                                            <Tag color="blue">
+                                                {(() => {
+                                                    const startDate = new Date(job.started_date);
+                                                    const endDate = new Date(job.end_date);
+                                                    const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
+                                                    return `${durationInDays} days`; // Display duration
+                                                })()}
+                                            </Tag>
+                                            <Tag color="yellow" style={{ marginLeft: '-10px' }}>
+                                                {job.min_star_requirement} <StarOutlined />
+                                            </Tag>
                                         </div>
-                                    </>
-                                }
-                                avatar={<img alt="example" src={"https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} style={{ width: '100px', height: '100px', borderRadius: '5px' }} />}
-                            />
-                        </Card>
+                                    }
+                                    description={
+                                        <>
+                                            <div className="job-card-description" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <div style={{ display: 'flex', gap: '10px', flexDirection: 'row-reverse' }}>
+                                                    <span>
+                                                        <DollarOutlined /> {new Intl.NumberFormat('vi-VN').format(job.salary)} VND
+                                                    </span>
+                                                    <span><EnvironmentOutlined /> {job.location}</span>
+                                                    <span>
+                                                        <ContainerOutlined /> {new Date(job.updatedAt).toLocaleString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit',
+                                                            second: '2-digit',
+                                                        })}
+                                                    </span>
+                                                </div>
+                                                <div className="job-card-buttons" style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
+                                                    <Button
+                                                        type="primary"
+                                                        className="apply-now-button"
+                                                        style={{ height: '40px' }}
+                                                        onClick={() => {
+                                                            navigate(`/job-detail-view/${job.id}`);
+                                                            window.scrollTo(0, 0);
+                                                        }}
+                                                    >
+                                                        Apply now <ArrowRightOutlined />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </>
+                                    }
+                                    avatar={<img alt="example" src={"https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} style={{ width: '100px', height: '100px', borderRadius: '5px' }} />}
+                                />
+                            </Card>
+                        </div>
+                    ))
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+                        <Empty description="No Data" />
                     </div>
-                ))}
+                )}
 
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>

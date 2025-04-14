@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import "./JobDetailView.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message } from 'antd';
-import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message, ConfigProvider } from 'antd';
+import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined, HomeOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
 import { CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, PushpinOutlined } from '@ant-design/icons';
@@ -173,21 +173,46 @@ const JobDetailView = () => {
 
                 <div style={{ height: '50px' }}></div>
 
-                <div className="breadcrumb">
+                <ConfigProvider
+                    theme={{
+                        components: {
+                            Breadcrumb: {
+                                fontSize: 18, // Increase font size for breadcrumb text
+                                iconFontSize: 20, // Increase icon size
+                            },
+                        },
+                    }}
+                >
                     <Breadcrumb
+                        className="custom-breadcrumb"
                         items={[
                             {
-                                title: <a href="/">Home</a>,
+                                title: (
+                                    <a href="/">
+                                        <HomeOutlined style={{ marginRight: '5px' }} />
+                                        Home
+                                    </a>
+                                ),
                             },
                             {
-                                title: <a href="/finding-job">Find Jobs</a>,
+                                title: (
+                                    <a href="/finding-job">
+                                        <SearchOutlined style={{ marginRight: '5px' }} />
+                                        Find Jobs
+                                    </a>
+                                ),
                             },
                             {
-                                title: 'Job Detail',
-                            }
+                                title: (
+                                    <span>
+                                        <FileTextOutlined style={{ marginRight: '5px' }} />
+                                        Job Detail
+                                    </span>
+                                ),
+                            },
                         ]}
                     />
-                </div>
+                </ConfigProvider>
 
                 <div style={{ height: '30px' }}></div>
 
