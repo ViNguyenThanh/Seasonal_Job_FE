@@ -61,7 +61,7 @@ const WorkerJobDetail = () => {
         {
             no: 3,
             jobRequirement: "Vận chuyển quà tặng đến khu vực tổ chức",
-            assignmentDate: '12/04/2025',
+            assignmentDate: '13/04/2025',
             checkInFileList: [],
             checkOutFileList: [],
             progress: 17,
@@ -104,6 +104,14 @@ const WorkerJobDetail = () => {
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
 
+
+    /*const getBase64 = (file) =>
+        new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });*/
     // chỉ dùng được cho 1 row
     // const handleCheckInChange = ({ fileList: newFileList }) => setCheckInFileList(newFileList);
     // const handleCheckOutChange = ({ fileList: newFileList }) => setCheckOutFileList(newFileList);
@@ -150,6 +158,7 @@ const WorkerJobDetail = () => {
             const reader = new FileReader();
 
             reader.onload = () => {
+                // file.preview = reader.result;  // Lưu base64 vào file.preview
                 setPreviewImage(reader.result);
                 setPreviewOpen(true);
             };
@@ -162,6 +171,16 @@ const WorkerJobDetail = () => {
             setPreviewOpen(true);
         }
     };
+    /*const handlePreview = async (file) => {
+        // Nếu file không có url hoặc preview từ base64, ta dùng FileReader
+        if (!file.url && !file.preview) {
+            const base64 = await getBase64(file.originFileObj); // Lấy base64 từ file
+            file.preview = base64; // Lưu vào file.preview
+        }
+
+        setPreviewImage(file.url || file.preview); // Sử dụng preview hoặc url
+        setPreviewOpen(true); // Mở modal preview
+    };*/
 
     // Quản lý phân trang
     const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
@@ -300,6 +319,12 @@ const WorkerJobDetail = () => {
                                             <Upload
                                                 action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                                                 listType="picture-card"
+                                                // beforeUpload={(file) => {
+                                                //     getBase64(file).then(base64 => {
+                                                //         file.preview = base64; // Lưu vào preview
+                                                //     });
+                                                //     return false; // Ngăn upload thật
+                                                // }}
                                                 fileList={data.checkInFileList}
                                                 onChange={(e) => handleCheckInChange(index, e)}
                                                 onPreview={handlePreview}
@@ -321,6 +346,24 @@ const WorkerJobDetail = () => {
                                                 onClick={() => handlePreview(data.checkInFileList[0])}
                                                 style={{ cursor: 'pointer' }}
                                             />
+                                            {/* {!previewOpen && data.checkInFileList.length > 0 && (
+                                                <Image
+                                                    width={80}
+                                                    src={data.checkInFileList[0].url}
+                                                    onClick={() => handlePreview(data.checkInFileList[0])} // Mở modal preview khi nhấn vào ảnh
+                                                    style={{ cursor: 'pointer' }}
+                                                />
+                                            )}
+                                            {previewImage && previewOpen && (
+                                                <Image
+                                                    preview={{
+                                                        visible: previewOpen,
+                                                        onVisibleChange: visible => setPreviewOpen(visible),
+                                                        afterOpenChange: visible => !visible && setPreviewImage(''), // Reset previewImage sau khi đóng modal
+                                                    }}
+                                                    src={previewImage} // Sử dụng ảnh preview (base64 hoặc URL)
+                                                />
+                                            )} */}
                                         </td>
                                     ) : (
                                         <td className="check-in not-allowed">
@@ -382,6 +425,8 @@ const WorkerJobDetail = () => {
                 onChange={handlePageChange}
                 showSizeChanger={false}
                 align="center"
+                showLessItems
+                showQuickJumper
             />
 
         </div>

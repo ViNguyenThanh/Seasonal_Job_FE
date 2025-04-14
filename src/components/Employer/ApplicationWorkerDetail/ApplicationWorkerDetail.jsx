@@ -66,10 +66,10 @@ const ApplicationWorkerDetail = () => {
       setConfirmVisible(false); // Đóng modal sau 2 giây
       setConfirmLoading(false); // Dừng loading
     }
-    // setTimeout(() => {
-    //   setConfirmVisible(false); // Đóng modal sau 2 giây
-    //   setConfirmLoading(false); // Dừng loading
-    // }, 2000);
+    setTimeout(() => {
+      setConfirmVisible(false); // Đóng modal sau 2 giây
+      setConfirmLoading(false); // Dừng loading
+    }, 2000);
   };
 
   // Đóng modal xác nhận
@@ -211,7 +211,7 @@ const ApplicationWorkerDetail = () => {
               <Button key="no" onClick={closeConfirm} size='large'>No</Button>,
               <Button key="yes" type="primary" size='large' onClick={handleConfirm} loading={confirmLoading}>
                 Yes
-              </Button>,
+              </Button>
             ]}
           >
             <p className='confirm-content'>
@@ -219,7 +219,7 @@ const ApplicationWorkerDetail = () => {
               <span className={`confirm-type ${actionType === 'approved' ? 'approved' : 'rejected'}`}>
                 {actionType === "approved" ? "APPROVE" : "REJECT"}
               </span>
-              {' '}{item.workerInfo?.workerName}'s application for the {item.jobGroupInfo?.title}? - {item.workerInfo?.jobPostingName}
+              {' '}{item.workerInfo?.workerName}'s Application for the {item.jobGroupInfo?.title}? - {item.workerInfo?.jobPostingName}
             </p>
           </Modal>
         </div>
