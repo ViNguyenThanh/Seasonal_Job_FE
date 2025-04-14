@@ -68,7 +68,6 @@
     font-size: 21px;
     display: flex;
     flex-wrap: wrap;
-    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
 }
 .employer-job-posting-detail-container .employer-job-posting-detail-info p{
     width: 100%;
@@ -138,9 +137,8 @@
 /* Employer Job Posting Not Executed */
 /* Creating Job Execute */
 .employer-job-posting-detail-container .employer-job-posting-not-executed{
-    margin-top: 30px;
-    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
-    padding-bottom: 20px;
+    border-top: 1px solid rgba(118, 118, 118, 0.16);
+    padding: 30px 0 20px;
 }
 /* chỉnh tabs của antd */
 .employer-job-posting-detail-container .employer-job-posting-not-executed .tab-title{
@@ -552,7 +550,9 @@
 }
 .employer-job-posting-executed .workers-list h1{
     text-align: center;
-    margin: 30px 0;
+    margin: 0 0 30px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(118, 118, 118, 0.16);
 }
 
 .employer-job-posting-executed .workers-list .no-workers{
