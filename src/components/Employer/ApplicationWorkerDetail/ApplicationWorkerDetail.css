@@ -329,6 +329,13 @@
   }
 }
 @media (max-width: 470px) {
+  .application-worker-detail-left .worker-identity{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .application-worker-detail-left .worker-identity img{
+    margin: 15px 0;
+  }
   .application-worker-detail-left .worker-identity .worker-name-star p{
     width: 100%;
     font-size: 28px;

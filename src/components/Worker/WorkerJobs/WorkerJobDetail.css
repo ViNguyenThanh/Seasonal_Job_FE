@@ -285,11 +285,10 @@
         height: 70px;
     }
 }
-@media (max-width: 1100px) {
+@media (max-width: 1150px) {
     .worker-job-detail-container{
         width: 92%;
         margin-left: 0%;
-        padding: 2% 4% 5%;
     }
 }
 @media (max-width: 950px) {

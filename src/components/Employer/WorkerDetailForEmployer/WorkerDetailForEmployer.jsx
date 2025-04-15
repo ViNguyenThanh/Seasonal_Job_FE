@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import './WorkerDetailForEmployer.css'
 import { Breadcrumb, Button, Form, Image, Input, InputNumber, message, Modal, Pagination, Rate } from 'antd'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { ContainerOutlined, DownOutlined, EnvironmentOutlined, EyeOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, PlusOutlined, SnippetsOutlined, SolutionOutlined, StarOutlined, UpOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { ContainerOutlined, DownOutlined, EnvironmentOutlined, EyeOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SnippetsOutlined, SolutionOutlined, StarOutlined, UpOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -400,8 +400,11 @@ const WorkerDetailForEmployer = () => {
 
             <div className="worker-rating">
               <p> * You have 3 days to review this worker starting from the day after the Job Group's End Date. <br />
-                * If no review is submitted within this period, the system will automatically assign a 5-star
-                rating by default for this worker. </p>
+              After 3 days, reviewing is no longer allowed.
+                <br />
+                {/* * If no review is submitted within this period, the system will automatically assign a 5-star
+                rating by default for this worker.  */}
+              </p>
               {!reviewSubmitted ? (
                 <button disabled={!isWithinReviewPeriod} onClick={showConfirmModal}>
                   <StarOutlined /> &#160;Review
