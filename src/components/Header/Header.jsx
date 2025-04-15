@@ -95,7 +95,7 @@ const Header = () => {
     // );
     const menuItems = [
         { key: '1', label: <div onClick={() => { navigate("/finding-job"); window.scrollTo(0, 0); }}>All Jobs</div> },
-        { key: '2', label: 'Resume & CV' },
+        // { key: '2', label: 'Resume & CV' },
         { key: '3', label: <div onClick={() => { navigate("/finding-company"); window.scrollTo(0, 0); }}>Companies</div> },
         { key: 'divider', type: 'divider' },
         { key: '4', label: <div onClick={() => { navigate("/employer-home"); window.scrollTo(0, 0); }}>For Employer</div> },
@@ -128,7 +128,7 @@ const Header = () => {
             label: "CV attachment",
             key: '2',
             icon: <FileOutlined />,
-            // onClick: handleLogout,
+            onClick: () => navigate('/worker/worker-cv'),
         },
         {
             label: "Applications",

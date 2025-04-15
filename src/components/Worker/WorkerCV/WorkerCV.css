@@ -1,0 +1,60 @@
+.worker-cv-container {
+  width: 90%;
+  margin-left: 2%;
+  padding: 2% 4% 5%;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+}
+
+.worker-cv-container h1 {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.worker-cv-container .instruction-cv-text {
+  width: 100%;
+  color: #767676;
+  font-size: 20px;
+  margin: 0;
+}
+
+.worker-cv-container .worker-cv-preview{
+  margin-top: 20px;
+}
+
+.worker-cv-container .worker-cv-dragger{
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(118, 118, 118, 0.16);
+}
+
+@media (max-width: 1150px){
+  .worker-cv-container {
+    width: 92%;
+    margin-left: 0%;
+    padding: 2% 4% 5%;
+  }
+  .worker-cv-container .instruction-cv-text,
+  .worker-cv-container .worker-cv-preview{
+    width: 95%;
+    padding: 0 2.5%;
+  }
+  .worker-cv-container .worker-cv-dragger{
+    width: 95%;
+    padding: 30px 2.5% 0;
+  }
+}
+@media (max-width: 900px){
+  .worker-cv-container {
+    width: 90%;
+    padding: 2% 5% 5%;
+  }
+}
+@media (max-width: 700px){
+  .worker-cv-container {
+    width: 80%;
+    margin: 0 2.5%;
+    padding: 2% 7.5% 5%;
+  }
+}

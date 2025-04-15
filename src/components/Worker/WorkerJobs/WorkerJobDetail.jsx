@@ -102,16 +102,11 @@ const WorkerJobDetail = () => {
 
 
     const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
+    // BỎ: preview ảnh nên chia làm 2 biến riêng, nếu không khi preview sẽ bị hiện ảnh 2 lần 
+    // const [previewImage, setPreviewImage] = useState('');
+    const [checkInPreviewImage, setCheckInPreviewImage] = useState('');
+    const [checkOutPreviewImage, setCheckOutPreviewImage] = useState('');
 
-
-    /*const getBase64 = (file) =>
-        new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });*/
     // chỉ dùng được cho 1 row
     // const handleCheckInChange = ({ fileList: newFileList }) => setCheckInFileList(newFileList);
     // const handleCheckOutChange = ({ fileList: newFileList }) => setCheckOutFileList(newFileList);
@@ -153,34 +148,32 @@ const WorkerJobDetail = () => {
         setDummyData(updatedData);
     };
 
-    const handlePreview = async (file) => {
+    // Hàm xem trước ảnh (check-in hoặc check-out)
+    const handlePreview = async (file, type) => {
+        // Nếu ảnh không có URL hoặc preview, tạo preview bằng FileReader
         if (!file.url && !file.preview) {
             const reader = new FileReader();
-
             reader.onload = () => {
-                // file.preview = reader.result;  // Lưu base64 vào file.preview
-                setPreviewImage(reader.result);
+                //  setPreviewImage(reader.result);
+                if (type === 'check-in') {
+                    setCheckInPreviewImage(reader.result);
+                } else {
+                    setCheckOutPreviewImage(reader.result);
+                }
                 setPreviewOpen(true);
             };
-
-            reader.onerror = () => console.error("Can't read file.");
-
+            // reader.onerror = () => console.error("Can't read file.");
             reader.readAsDataURL(file.originFileObj); // Chỉ gọi một lần duy nhất
         } else {
-            setPreviewImage(file.url || file.preview);
+            // setPreviewImage(file.url || file.preview);
+            if (type === 'check-in') {
+                setCheckInPreviewImage(file.url || file.preview);
+            } else {
+                setCheckOutPreviewImage(file.url || file.preview);
+            }
             setPreviewOpen(true);
         }
     };
-    /*const handlePreview = async (file) => {
-        // Nếu file không có url hoặc preview từ base64, ta dùng FileReader
-        if (!file.url && !file.preview) {
-            const base64 = await getBase64(file.originFileObj); // Lấy base64 từ file
-            file.preview = base64; // Lưu vào file.preview
-        }
-
-        setPreviewImage(file.url || file.preview); // Sử dụng preview hoặc url
-        setPreviewOpen(true); // Mở modal preview
-    };*/
 
     // Quản lý phân trang
     const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
@@ -343,35 +336,32 @@ const WorkerJobDetail = () => {
                                             <Image
                                                 width={80}
                                                 src={data.checkInFileList[0].url}
-                                                onClick={() => handlePreview(data.checkInFileList[0])}
+                                                // BỎ vì chế độ preview bị hiện 2 lần 
+                                                // onClick={() => handlePreview(data.checkInFileList[0])}
+                                                onClick={() => setPreviewImage(data.checkInFileList[0].url)}
                                                 style={{ cursor: 'pointer' }}
                                             />
-                                            {/* {!previewOpen && data.checkInFileList.length > 0 && (
+                                            {/* {previewImage && ( */}
+                                            {checkInPreviewImage && (
                                                 <Image
-                                                    width={80}
-                                                    src={data.checkInFileList[0].url}
-                                                    onClick={() => handlePreview(data.checkInFileList[0])} // Mở modal preview khi nhấn vào ảnh
-                                                    style={{ cursor: 'pointer' }}
-                                                />
-                                            )}
-                                            {previewImage && previewOpen && (
-                                                <Image
+                                                    wrapperStyle={{ display: 'none' }}
                                                     preview={{
                                                         visible: previewOpen,
-                                                        onVisibleChange: visible => setPreviewOpen(visible),
-                                                        afterOpenChange: visible => !visible && setPreviewImage(''), // Reset previewImage sau khi đóng modal
+                                                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                                                        // afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                                                        afterOpenChange: (visible) => !visible && setCheckInPreviewImage(''),
                                                     }}
-                                                    src={previewImage} // Sử dụng ảnh preview (base64 hoặc URL)
+                                                    // src={previewImage}
+                                                    src={checkInPreviewImage}
                                                 />
-                                            )} */}
+                                            )}
                                         </td>
                                     ) : (
                                         <td className="check-in not-allowed">
                                             Not allowed
                                         </td>
                                     )}
-                                    {/* </td> */}
-
+                                    
                                     {data.assignmentDate === today ? (
                                         <td className="check-out">
                                             <Upload
@@ -395,9 +385,25 @@ const WorkerJobDetail = () => {
                                             <Image
                                                 width={80}
                                                 src={data.checkOutFileList[0].url}
-                                                onClick={() => handlePreview(data.checkOutFileList[0])}
+                                                // BỎ vì chế độ preview bị hiện 2 lần 
+                                                // onClick={() => handlePreview(data.checkOutFileList[0])}
+                                                onClick={() => setPreviewImage(data.checkOutFileList[0].url)}
                                                 style={{ cursor: 'pointer' }}
                                             />
+                                            {/* {previewImage && ( */}
+                                            {checkOutPreviewImage && (
+                                                <Image
+                                                    wrapperStyle={{ display: 'none' }}
+                                                    preview={{
+                                                        visible: previewOpen,
+                                                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                                                        // afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                                                        afterOpenChange: (visible) => !visible && setCheckOutPreviewImage(''),
+                                                    }}
+                                                    // src={previewImage}
+                                                    src={checkOutPreviewImage}
+                                                />
+                                            )}
                                         </td>
                                     ) : (
                                         <td className="check-out not-allowed">
