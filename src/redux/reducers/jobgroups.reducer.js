@@ -12,8 +12,7 @@ export const jobGroupsReducer = (
         case actionType.JOBGROUPS_GET_ALL_BY_USERID_SUCCESS:
             return { isLoading: false, error: "", payload: payload.data };
         case actionType.JOBGROUPS_GET_BY_ID_SUCCESS:
-            console.log(payload.data);
-            
+            // console.log(payload.data);
             return { isLoading: false, error: "", payload: payload.data };
         case actionType.JOBGROUPS_FAIL:
             return { isLoading: false, error: payload, payload: null };

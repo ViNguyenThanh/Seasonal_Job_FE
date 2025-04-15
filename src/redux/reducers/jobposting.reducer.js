@@ -8,8 +8,7 @@ export const jobPostingReducer = (
         case actionType.JOB_POSTING_START:
             return { isLoading: true, error: "", payload: null };
         case actionType.JOB_POSTING_GET_BY_JOBGROUP_ID_SUCCESS:
-            console.log(payload.data);
-            
+            // console.log(payload.data);
             return { isLoading: false, error: "", payload: payload.data };
         case actionType.JOB_POSTING_FAIL:
             return { isLoading: false, error: payload, payload: null };

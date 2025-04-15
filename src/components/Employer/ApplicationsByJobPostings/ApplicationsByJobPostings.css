@@ -65,6 +65,22 @@
   transition: 0.3s ease;
 } */
 
+/* chỉnh màu tabs */
+.applications-by-job-postings-container .ant-tabs .ant-tabs-tab[data-node-key="2"].ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: rgb(0, 180, 0);
+  text-shadow: 0 0 0.25px currentcolor;
+}
+.applications-by-job-postings-container .ant-tabs .ant-tabs-tab[data-node-key="2"]:hover {
+  color: rgb(0, 206, 0);
+}
+.applications-by-job-postings-container .ant-tabs .ant-tabs-tab[data-node-key="3"].ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: red;
+  text-shadow: 0 0 0.25px currentcolor;
+}
+.applications-by-job-postings-container .ant-tabs .ant-tabs-tab[data-node-key="3"]:hover {
+  color: rgb(249, 58, 58);
+}
+
 .applications-by-job-postings-container .workers-list{
   width: 100%;
 }
@@ -74,6 +90,15 @@
 }
 .applications-by-job-postings-container .workers-list h1 br{
   display: none;
+}
+.applications-by-job-postings-container .workers-list h1.pending{
+  color: #013763;
+}
+.applications-by-job-postings-container .workers-list h1.approved{
+  color: rgb(0, 119, 0);
+}
+.applications-by-job-postings-container .workers-list h1.rejected{
+  color: rgb(195, 0, 0);
 }
 
 .applications-by-job-postings-container .workers-list .no-applications{
@@ -120,9 +145,29 @@
   border: 1px solid #d9d9d9;
 }
 
+/* chỉnh tabs của antd */
+.applications-by-job-postings-container .tab-title{
+  text-align: center;
+  margin: 0;
+}
+.applications-by-job-postings-container .tab-title br{
+  display: none;
+}
+.applications-by-job-postings-container .ant-tabs-tab{
+  font-size: 18px;
+}
+.applications-by-job-postings-container .ant-tabs-card >.ant-tabs-nav .ant-tabs-tab {
+  margin: 0;
+  padding: 8px 25px;
+}
 
+.applications-by-job-postings-container .ant-tabs .ant-tabs-tab-btn:nth-of-type(2) {
+  /* outline: none;
+  transition: all 0.3s; */
+  color: red;
+}
 
-
+/* chỉnh worker */
 .applications-by-job-postings-container .workers-list .worker-item{
   width: 94%;
   padding: 1.5% 3%;
@@ -205,6 +250,9 @@
 
 .applications-by-job-postings-container .workers-list .ant-pagination {
   margin: 30px 0;
+}
+.applications-by-job-postings-container .workers-list .ant-pagination .ant-pagination-options-quick-jumper {
+  font-size: 16px;
 }
 
 

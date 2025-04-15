@@ -89,6 +89,81 @@
   font-size: 27px;
 }
 
+.worker-detail-for-employer-info-left  .worker-rating{
+  width: 100%;
+  margin-top: 30px;
+}
+.worker-detail-for-employer-info-left  .worker-rating p{
+  width: 90%;
+  padding-right: 10%;
+  color: #f31010;
+}
+.worker-detail-for-employer-info-left  .worker-rating button{
+  font-size: 18px;
+  color: white;
+  background-color:	#FFB300;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 15px 7px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.worker-detail-for-employer-info-left  .worker-rating button:hover{
+  background-color: #FFA000;
+  transition: 0.3s ease;
+}
+.worker-detail-for-employer-info-left  .worker-rating button:disabled{
+  color: gray;
+  background-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+/* Modal Review */
+.worker-detail-for-employer-info-left .worker-rating .ant-modal .ant-modal-content {
+  margin: 0 5%;
+}
+.employer-evaluate-worker-title{
+  margin: 10px 0;
+}
+.employer-evaluate-worker-rating{
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+}
+.employer-evaluate-worker-rating p{
+  font-size: 17.5px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.employer-evaluate-worker-reason p{
+  font-size: 17px;
+  font-weight: 500;
+}
+.employer-evaluate-worker-reason p span{
+  color: red;
+}
+/* chỉnh font chữ cho reason */
+.employer-evaluate-worker-reason .ant-input {
+  font-family: var(--font-oswald);
+  font-size: 16px;
+  padding-left: 5%;
+}
+/* chỉnh message error */
+.employer-evaluate-worker-reason .ant-form-item .ant-form-item-explain-error {
+  color: red;
+  font-size: 16px;
+  padding: 1% 0 0 1%;
+}
+.employer-evaluate-worker-reason p.content{
+  font-size: 16px;
+  font-weight: 450;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 10px 0 30px;
+}
+
+
 
 .worker-detail-for-employer-info .worker-detail-for-employer-info-right{
   width: 50%;
@@ -146,12 +221,6 @@
   justify-content: center;
   margin: 5px 0 35px;
 }
-/* .worker-detail-for-employer-info-right .show-more-less-btn{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin: 5px 0;
-} */
 .worker-detail-for-employer-info-right .show-more-less-btn.show-less{
   margin: 35px 0;
 }
@@ -173,9 +242,60 @@
 .worker-detail-for-employer-container .worker-detail-job-execute-title{
   width: 100%;
   text-align: center;
-  padding: 4% 0 1.5%;
+  /* padding: 4% 0 1.5%; */
+  padding: 50px 0 10px;
   border-top: 1px solid rgba(118, 118, 118, 0.16);
 }
+
+.worker-detail-for-employer-container .editing-rules{
+  width: 95%;
+  padding: 0 2.5%;
+}
+.worker-detail-for-employer-container .editing-rules .editing-rules-title{
+  font-size: 20px;
+  color: #00c05a;
+  font-weight: 500;
+}
+.worker-detail-for-employer-container .editing-rules .editing-rules-title span{
+  font-size: 28px;
+}
+.worker-detail-for-employer-container .editing-rules .editing-rules-content{
+  width: 95%;
+  padding: 0 2.5%;
+  font-size: 19px;
+  color: #252525;
+  line-height: 2;
+}
+.worker-detail-for-employer-container .editing-rules .editing-rules-content span{
+  font-size: 20px;
+  color: rgb(236, 130, 0);
+  font-weight: 470;
+}
+
+.worker-detail-for-employer-container .editing-rules .show-more-less-btn{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 35px;
+}
+.worker-detail-for-employer-container .editing-rules .show-more-less-btn.show-less{
+  margin: 0 0 40px;
+}
+.worker-detail-for-employer-container .editing-rules .show-more-less-btn button {
+  border: none;
+  font-size: 19px;
+  background-color: white;
+  color: #0a65cc;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.worker-detail-for-employer-container .editing-rules .show-more-less-btn button:hover {
+  color: #0412b2;
+  transition: 0.3s ease;
+}
+
+
+
 .worker-detail-for-employer-container .worker-detail-job-execute-whole-table{
   width: 95%;
   padding: 0 2.5% 2%;
@@ -315,6 +435,9 @@
 .worker-detail-for-employer-container .ant-pagination {
   margin: 10px 0 30px;
 }
+.worker-detail-for-employer-container .ant-pagination .ant-pagination-options-quick-jumper {
+  font-size: 16px;
+}
 
 
 .worker-detail-for-employer-container .save-edit-btn{
@@ -344,7 +467,11 @@
   background-color: rgb(3, 214, 3);
   transition: 0.3s ease;
 }
-
+.worker-detail-for-employer-container .save-edit-btn button.edit-btn:disabled{
+  background-color: #d9d9d9;
+  color: gray;
+  cursor: not-allowed;
+}
 
 
 @media (max-width: 1300px) {
@@ -392,6 +519,18 @@
   }
   .worker-detail-for-employer-info-left .worker-identity .worker-name-star div{
     width: fit-content;
+  }
+  .worker-detail-for-employer-info-left  .worker-rating{
+    width: 100%;
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .worker-detail-for-employer-info-left  .worker-rating p{
+    width: 100%;
+    padding-right: 0%;
+    font-size: 16.5px;
   }
 
   .worker-detail-for-employer-info .worker-detail-for-employer-info-right{

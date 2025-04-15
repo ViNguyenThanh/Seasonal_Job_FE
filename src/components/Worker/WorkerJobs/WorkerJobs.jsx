@@ -95,7 +95,7 @@ const WorkerJobs = () => {
     const fetchJobApplied = async () => {
       const res = await getApplicationsByUserId()
       console.log(res);
-      
+
     }
 
     fetchJobApplied()
@@ -219,6 +219,8 @@ const WorkerJobs = () => {
                 onChange={handlePageChange}
                 showSizeChanger={false}
                 align="center"
+                showLessItems
+                showQuickJumper
               />
             </>
           )}
