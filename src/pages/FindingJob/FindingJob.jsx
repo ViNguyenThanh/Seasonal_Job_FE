@@ -77,9 +77,12 @@ const FindingJob = () => {
 
         if (minStar) {
             filtered = filtered.filter(
-                (job) => job.min_star_requirement.toString() === minStar
+                (job) => job.min_star_requirement >= parseInt(minStar, 10) // Filter jobs with min_star_requirement >= selected value
             );
         }
+
+        // Sort the filtered jobs by min_star_requirement in ascending order
+        filtered = filtered.sort((a, b) => a.min_star_requirement - b.min_star_requirement);
 
         setFilteredJobs(filtered); // Update the filtered jobs
         setJobData(filtered); // Update the displayed jobs
@@ -225,11 +228,13 @@ const FindingJob = () => {
                                 }}
                                 filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                {[...new Set(allJobs.map((job) => job.min_star_requirement))].map((minStar, index) => (
-                                    <Option key={index} value={minStar.toString()}>
-                                        {minStar}
-                                    </Option>
-                                ))}
+                                {[...new Set(allJobs.map((job) => job.min_star_requirement))]
+                                    .sort((a, b) => a - b) // Sort star requirements in ascending order
+                                    .map((minStar, index) => (
+                                        <Option key={index} value={minStar.toString()}>
+                                            {minStar} <StarOutlined />
+                                        </Option>
+                                    ))}
                             </Select>
 
                             {/* <Select

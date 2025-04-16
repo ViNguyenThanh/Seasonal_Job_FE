@@ -1,107 +1,36 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from "react";
 import "./FindingCompany.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Breadcrumb, Button, Flex, Space, Select, Row, Col, Typography, Tag, Pagination } from 'antd';
+import { userApi } from "../../apis/user.request"; // Import the userApi
 const { Title, Paragraph } = Typography;
 import { SearchOutlined, EnvironmentOutlined, ContainerOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
 const FindingCompany = () => {
-    const [companies] = useState([
-        {
-            id: 1,
-            company: "Reddit",
-            title: "Marketing Officer",
-            location: "United Kingdom of Great Britain",
-            salary: "$30K-$35K",
-            duration: "Full Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: true,
-        },
-        {
-            id: 2,
-            company: "Google",
-            title: "Software Engineer",
-            location: "United States",
-            salary: "$100K-$120K",
-            duration: "Full Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: false,
-        },
-        {
-            id: 3,
-            company: "Microsoft",
-            title: "Data Analyst",
-            location: "Canada",
-            salary: "$70K-$80K",
-            duration: "Part Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: true,
-        },
-        {
-            id: 4,
-            company: "Amazon",
-            title: "Product Manager",
-            location: "Germany",
-            salary: "$90K-$110K",
-            duration: "Full Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: false,
-        },
-        {
-            id: 5,
-            company: "Apple",
-            title: "UX Designer",
-            location: "Australia",
-            salary: "$80K-$95K",
-            duration: "Contract",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: true,
-        },
-        {
-            id: 6,
-            company: "Tesla",
-            title: "HR Specialist",
-            location: "France",
-            salary: "$50K-$60K",
-            duration: "Full Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: false,
-        },
-        {
-            id: 7,
-            company: "Netflix",
-            title: "Content Strategist",
-            location: "United States",
-            salary: "$85K-$100K",
-            duration: "Full Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: true,
-        },
-        {
-            id: 8,
-            company: "Spotify",
-            title: "Music Curator",
-            location: "Sweden",
-            salary: "$60K-$75K",
-            duration: "Part Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: false,
-        },
-        {
-            id: 9,
-            company: "Adobe",
-            title: "Graphic Designer",
-            location: "United Kingdom",
-            salary: "$70K-$85K",
-            duration: "Contract",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: true,
-        },
-    ]);
+    const [companies, setCompanies] = useState([]);
+
+    useEffect(() => {
+        // Fetch the companies from the API
+        userApi.getUserCompanies()
+            .then(response => {
+                console.log("API Response:", response.data); // Log the API response
+                if (Array.isArray(response.data.data)) {
+                    setCompanies(response.data.data); // Update the companies state with the API data
+                } else {
+                    console.error("API did not return an array:", response.data);
+                    setCompanies([]); // Fallback to an empty array
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching companies:", error); // Log any errors
+                setCompanies([]); // Fallback to an empty array
+            });
+    }, []);
+
     return (
         <div className='finding-company-whole-container'>
             <Header />
@@ -217,29 +146,28 @@ const FindingCompany = () => {
                         <Row gutter={[16, 16]} justify="center">
                             {companies.map((company) => (
                                 <Col key={company.id} xs={24} sm={12} md={12} lg={8}>
-                                    {/* <a href={`/company/${company.id}`} className="list-company-card-link"> */}
                                     <a href={"/company-detail"} className="list-company-card-link">
                                         <div className="list-company-card">
                                             <div className="list-company-detail1">
                                                 <img
-                                                    alt={company.company}
-                                                    src={company.avatar}
+                                                    alt={company.companyName}
+                                                    src={"https://i.pinimg.com/736x/27/e0/74/27e074008b1d54fb474224de9102651b.jpg"}
                                                     className="company-image"
                                                 />
                                                 <div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                        <Title level={5} style={{ margin: 0 }}>{company.company}</Title>
-                                                        {company.isFeatured && <Tag color="red">Featured</Tag>}
+                                                        <Title level={5} style={{ margin: 0 }}>{company.companyName}</Title>
+                                                        {/* {company.isFeatured && <Tag color="red">Featured</Tag>} */}
                                                     </div>
                                                     <Paragraph style={{ color: 'grey', margin: 0 }}>
-                                                        <EnvironmentOutlined /> {company.location}
+                                                        <EnvironmentOutlined /> {company.address}
                                                     </Paragraph>
                                                 </div>
                                             </div>
-                                            <Title level={3} style={{ marginTop: '15px' }}>{company.title}</Title>
+                                            {/* <Title level={3} style={{ marginTop: '15px' }}>Title</Title>
                                             <Paragraph style={{ color: 'grey' }}>
-                                                {company.duration} <span>⦁</span> {company.salary}
-                                            </Paragraph>
+                                                duration<span>⦁</span>salary
+                                            </Paragraph> */}
                                         </div>
                                     </a>
                                 </Col>

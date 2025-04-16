@@ -15,4 +15,7 @@ export const userApi = {
             headers: { authorization: `Bearer ${token}` },
         })
     },
+    getUserCompanies: () => {
+        return API.get(`/users/companies`);
+    },
 }

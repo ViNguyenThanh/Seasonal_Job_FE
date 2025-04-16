@@ -4,16 +4,17 @@ import React, { useState, useEffect } from "react";
 import "./JobDetailView.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message, ConfigProvider } from 'antd';
+import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message, ConfigProvider, notification } from 'antd';
 import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined, HomeOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
-import { CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, PushpinOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, PushpinOutlined, SolutionOutlined, StarOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 import { useParams } from "react-router-dom";
 import { jobApi } from "../../apis/job.request";
 import { jobGroupApi } from "../../apis/job-group.request";
 import { cvApi, uploadCV } from "../../apis/cv.request";
+import { userApi } from "../../apis/user.request";
 
 const JobDetailView = () => {
 
@@ -28,6 +29,7 @@ const JobDetailView = () => {
     const [previewVisible, setPreviewVisible] = useState(false);
     const [jobGroupDetail, setJobGroupDetail] = useState(null); // State to store job group details
     const [jobTypeDetail, setJobTypeDetail] = useState(null); // State to store job type details
+    const [userCompanies, setUserCompanies] = useState(null); // State to store user company details
 
     // Fetch job details when the component loads
     useEffect(() => {
@@ -35,16 +37,15 @@ const JobDetailView = () => {
             try {
                 const jobResponse = await jobApi.getJobById(id);
                 const jobData = jobResponse.data.data;
-                console.log("Job Detail:", jobData); // Debug log
+                // console.log("Job Detail:", jobData); // Debug log
                 setJobDetail(jobData);
 
                 // Fetch job group details
                 if (jobData.jobGroupId) {
                     try {
-                        console.log("Fetching Job Group ID:", jobData.jobGroupId); // Debug log
                         const jobGroupResponse = await jobGroupApi.getJobGroupById(jobData.jobGroupId);
-                        console.log("Job Group Response:", jobGroupResponse.data); // Debug log
                         setJobGroupDetail(jobGroupResponse.data.data);
+                        // console.log("Job Group Detail:", jobGroupResponse.data.data); // Debug log
                     } catch (error) {
                         console.error("Error fetching job group details:", error);
                     }
@@ -53,13 +54,26 @@ const JobDetailView = () => {
                 // Fetch job type details
                 if (jobData.jobTypeId) {
                     try {
-                        console.log("Fetching Job Type ID:", jobData.jobTypeId); // Debug log
                         const jobTypeResponse = await jobApi.getJobTypeById(jobData.jobTypeId);
-                        console.log("Job Type Response:", jobTypeResponse.data); // Debug log
-                        setJobTypeDetail(jobTypeResponse.data.data); // Correctly set the nested data
+                        setJobTypeDetail(jobTypeResponse.data.data);
                     } catch (error) {
                         console.error("Error fetching job type details:", error);
                     }
+                }
+
+                // Fetch user company details
+                try {
+                    const userCompaniesResponse = await userApi.getUserCompanies();
+                    const companies = userCompaniesResponse.data.data;
+                    // console.log("All Companies:", companies); // Debug log
+
+                    // Filter companies where `id` matches `userId`
+                    const filteredCompany = companies.find(company => company.id === jobData.userId);
+                    // console.log("Filtered Company:", filteredCompany); // Debug log
+
+                    setUserCompanies(filteredCompany || null); // Set the filtered company or null if not found
+                } catch (error) {
+                    console.error("Error fetching user companies:", error);
                 }
 
                 setIsLoading(false);
@@ -166,6 +180,22 @@ const JobDetailView = () => {
         setIsModalOpen(false);
     };
 
+    const openNotificationWithIcon = (type) => {
+        notification[type]({
+            message: 'Warning',
+            description: 'You need to sign in to apply for this job.',
+        });
+    };
+
+    const handleApplyClick = () => {
+        const token = localStorage.getItem('token'); // Check if the user has a token
+        if (!token) {
+            openNotificationWithIcon('warning'); // Show warning notification if no token
+        } else {
+            showModal(); // Show the modal if the user is signed in
+        }
+    };
+
     return (
         <div className='job-detail-view-whole-container'>
             <Header />
@@ -225,7 +255,7 @@ const JobDetailView = () => {
                         <div style={{ marginLeft: '10px' }}>
                             <div className="job-detail-title-section">
                                 <Title level={2} style={{ fontWeight: 'bold', margin: 0 }}>{jobDetail.title}</Title>
-                                <Tag color="blue">
+                                <Tag color="blue" style={{ marginTop: '1%' }}>
                                     {(() => {
                                         const startDate = new Date(jobDetail.started_date);
                                         const endDate = new Date(jobDetail.end_date);
@@ -233,12 +263,15 @@ const JobDetailView = () => {
                                         return `${durationInDays} days`; // Display duration
                                     })()}
                                 </Tag>
+                                <Tag color="yellow" style={{ marginLeft: '-10px', marginTop: '1%' }}>
+                                    {jobDetail.min_star_requirement} <StarOutlined />
+                                </Tag>
                             </div>
 
                             <div className="job-detail-info-section">
                                 {/* <p className="ebc-p-info"><LinkOutlined style={{ color: '#1DA1F2' }} /> https://instagram.com</p> */}
-                                <p className="ebc-p-info"><PhoneOutlined style={{ color: '#1DA1F2', transform: 'scaleX(-1)' }} /> (406) 555-0120</p>
-                                <p className="ebc-p-info"><MailOutlined style={{ color: '#1DA1F2' }} /> career@instagram.com</p>
+                                <p className="ebc-p-info"><PhoneOutlined style={{ color: '#1DA1F2', transform: 'scaleX(-1)' }} /> {userCompanies.phoneNumber}</p>
+                                <p className="ebc-p-info"><MailOutlined style={{ color: '#1DA1F2' }} /> {userCompanies.email}</p>
                             </div>
                         </div>
                     </div>
@@ -257,16 +290,14 @@ const JobDetailView = () => {
                             <Button
                                 type="primary"
                                 className="apply-now-button"
-                                onClick={showModal}
+                                onClick={handleApplyClick}
                                 disabled={isApplied} // Disable the button if the user has applied
                             >
                                 {isApplied ? "Applied" : <>Apply now <ArrowRightOutlined /></>} {/* Conditionally render text and icon */}
                             </Button>
                         </div>
                         <p className="job-expiry-info">
-                            Job type:<span className="job-expiry-date">
-                                {jobTypeDetail?.name || "None"}
-                            </span>
+                            Created on <span className="job-expiry-date">{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(jobDetail.createdAt))}</span>
                         </p>
                     </div>
                 </div>
@@ -274,11 +305,12 @@ const JobDetailView = () => {
                     <Col xs={24} sm={24} md={12}>
                         <div className="job-description-leftSide">
                             <Typography className="job-description-leftSide-typography">
-                                <div style={{ display: "flex", alignItems: "center", marginTop: "30px", color: "#555" }}>
+                                <div style={{ display: "flex", alignItems: "center", marginTop: "15px", color: "#555" }}>
                                     <PushpinOutlined className="job-overview-icon" />
                                     <span style={{ fontSize: "16px", color: "#333", marginLeft: "10px" }}>{jobDetail.address}</span>
                                 </div>
                                 <Title level={3} className="job-description-leftSide-title">
+                                    <span>General Overview of the Job:<br></br></span>
                                     {jobGroupDetail.title}
                                 </Title>
                                 <Paragraph style={{ fontSize: "18px", color: "#333333" }}>
@@ -436,6 +468,13 @@ const JobDetailView = () => {
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">
+                                                <SolutionOutlined className="job-overview-icon" />
+                                                <Paragraph className="job-overview-text">
+                                                    JOB TYPE:<br />
+                                                    <span className="job-overview-highlight">{jobTypeDetail?.name || "None"}</span>
+                                                </Paragraph>
+                                            </Col>
+                                            <Col xs={24} sm={12} md={8} className="job-overview-item">
                                                 <TeamOutlined className="job-overview-icon" />
                                                 <Paragraph className="job-overview-text">
                                                     REQUIRED PEOPLE:<br />
@@ -542,7 +581,7 @@ const JobDetailView = () => {
                                     <Button
                                         type="primary"
                                         className="apply-now-button"
-                                        onClick={showModal}
+                                        onClick={handleApplyClick}
                                         disabled={isApplied} // Disable the button if the user has applied
                                     >
                                         {isApplied ? "Applied" : <>Apply now <ArrowRightOutlined /></>} {/* Conditionally render text and icon */}
