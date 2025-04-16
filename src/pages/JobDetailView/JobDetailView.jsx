@@ -8,7 +8,7 @@ import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input,
 import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined, HomeOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
-import { CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, PushpinOutlined, SolutionOutlined } from '@ant-design/icons';
+import { CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, PushpinOutlined, SolutionOutlined, StarOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 import { useParams } from "react-router-dom";
 import { jobApi } from "../../apis/job.request";
@@ -262,6 +262,9 @@ const JobDetailView = () => {
                                         const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
                                         return `${durationInDays} days`; // Display duration
                                     })()}
+                                </Tag>
+                                <Tag color="yellow" style={{ marginLeft: '-10px', marginTop: '1%' }}>
+                                    {jobDetail.min_star_requirement} <StarOutlined />
                                 </Tag>
                             </div>
 
