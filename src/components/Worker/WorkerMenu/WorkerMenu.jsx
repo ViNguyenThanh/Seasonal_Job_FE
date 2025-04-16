@@ -57,7 +57,7 @@ const WorkerMenu = () => {
       setActiveButton(buttonIndex);
     }
     if (buttonIndex === 2) {
-      navigate('/worker/cv-attachment');
+      navigate('/worker/worker-cv');
     } 
     if (buttonIndex === 3){
       navigate('/worker/worker-applications')
@@ -77,10 +77,10 @@ const WorkerMenu = () => {
   const location = useLocation()
   
   useEffect(() => {
-    if(location.pathname === '/worker/worker-profile'){
+    if(location.pathname === '/worker/worker-profile' || location.pathname.includes('/worker/worker-rating')){
       setActiveButton(1)
     }
-    if(location.pathname === '/worker/cv-attachment'){
+    if(location.pathname === '/worker/worker-cv'){
       setActiveButton(2)
     }
     if(location.pathname === '/worker/worker-applications'){

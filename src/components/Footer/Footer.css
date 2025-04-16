@@ -1,7 +1,7 @@
 .footer-whole-container {
     width: 100%;
     background-color: #0C033A;
-    height: 60vh;
+    /* height: 60vh; */
     display: flex;
     justify-content: center;
     color: white;

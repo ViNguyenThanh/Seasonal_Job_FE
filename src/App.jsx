@@ -38,6 +38,8 @@ import WorkerDetailForEmployer from './components/Employer/WorkerDetailForEmploy
 import ApplicationJobGroups from './components/Employer/ApplicationJobGroups/ApplicationJobGroups'
 import ApplicationsByJobPostings from './components/Employer/ApplicationsByJobPostings/ApplicationsByJobPostings'
 import ApplicationWorkerDetail from './components/Employer/ApplicationWorkerDetail/ApplicationWorkerDetail'
+import WorkerCV from './components/Worker/WorkerCV/WorkerCV'
+import WorkerRating from './components/Worker/WorkerProfile/WorkerRating'
 
 
 
@@ -113,6 +115,8 @@ function App() {
         {/* Worker */}
         <Route path='/worker/*' element={<Worker />}>
           <Route path='worker-profile' element={<WorkerProfile />} />
+          <Route path='worker-rating' element={<WorkerRating />} />
+          <Route path='worker-cv' element={<WorkerCV />} />
           <Route path='worker-applications' element={<WorkerApplications />} />
           <Route path="worker-jobs" element={<WorkerJobs />} />
           <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail />} />
