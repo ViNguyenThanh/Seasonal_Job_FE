@@ -17,17 +17,23 @@ const EmployerJobGroupDetail = () => {
     const [showMore, setShowMore] = useState(false);
     const [openResponsive, setOpenResponsive] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
+    const [actionType, setActionType] = useState('');
 
 
     const location = useLocation();
     const { id } = useParams()
     const { isLoading: isJGLoading, payload: jobGroupInfo } = useSelector(state => state.jobGroupsReducer)
     const { isLoading: isJPLoading, payload: jobPostings } = useSelector(state => state.jobPostingReducer)
+    // console.log(jobGroupInfo);
+
     const jobGroupInfoTmp = location.state || {};
     const today = new Date();
+
     const startDate = new Date(jobGroupInfo?.start_date);
     const endDate = new Date(jobGroupInfo?.end_date);
-    const isStartValid = jobGroupInfo?.isPaid && today < new Date(endDate.setDate(endDate.getDate() - 1));
+    endDate.setHours(23, 59, 59, 999)
+    console.log(endDate);
+
 
     const listData = [
         {
@@ -81,6 +87,12 @@ const EmployerJobGroupDetail = () => {
         dispatch(getJobPostingByJGId(id))
     }, [dispatch])
 
+    const handleOpenModal = (action) => {
+        setActionType(action); // Cập nhật actionType khi nhấn Start hoặc End
+        setOpenResponsive(true);
+    };
+
+
     const handleStartJobGroup = async () => {
         setConfirmLoading(true);
         try {
@@ -116,11 +128,17 @@ const EmployerJobGroupDetail = () => {
             setConfirmLoading(false);
             setOpenResponsive(false)
             message.success("Job Group started successfully!");
+            navigate(`employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}`)
         } catch (error) {
             console.log(error);
             setOpenResponsive(false)
             setConfirmLoading(false);
         }
+    }
+
+    const handleEndJobGroup = async () => {
+        alert("End job group");
+        setOpenResponsive(false)
     }
 
     return (
@@ -203,23 +221,33 @@ const EmployerJobGroupDetail = () => {
                                 <button>Expired</button>
                                 <p>The Job Group has expired because the payment was not made before the Start Date.</p>
                             </div>
-                        ) : isStartValid ? (
+                        ) : jobGroupInfo?.isPaid ? (
                             <div className="start-end-btn">
-                                {jobGroupInfo?.status === 'inactive' && (
+                                {(jobGroupInfo?.status === 'inactive' && today < endDate) && (
                                     <button
                                         className='start-btn'
-                                        onClick={() => setOpenResponsive(true)}
+                                        onClick={() => handleOpenModal('start')}
                                     >Start</button>
+                                )}
+                                {(jobGroupInfo?.status === 'active' && today > endDate) && (
+                                    <button
+                                        className='end-btn'
+                                        onClick={() => handleOpenModal('end')}
+                                    >End</button>
                                 )}
                                 {/* <button
                                     className='end-btn'
                                     disabled={jobGroupInfo?.status !== 'active'}
                                 >End</button> */}
                             </div>
-                        ) : (
+                        ) : (today < startDate && !jobGroupInfo?.isPaid) ? (
                             <div className='payment-btn'>
                                 <p>You haven't paid <br /> to post job</p>
                                 <button>Payment</button>
+                            </div>
+                        ) : (
+                            <div className='expired-message'>
+                                <p>The Job Group has expired</p>
                             </div>
                         )}
                     </div>
@@ -229,7 +257,7 @@ const EmployerJobGroupDetail = () => {
                     title="Before you start your Job Group, please note the following:"
                     centered
                     open={openResponsive}
-                    onOk={() => handleStartJobGroup()}
+                    onOk={actionType === 'start' ? handleStartJobGroup : handleEndJobGroup}
                     onCancel={() => setOpenResponsive(false)}
                     confirmLoading={confirmLoading}
                     width={{
@@ -241,32 +269,36 @@ const EmployerJobGroupDetail = () => {
                         xxl: '40%',
                     }}
                 >
-                    <div className='notice-before-start'>
-                        <ul>
-                            <li>
-                                As soon as the <span>Job Group is launched</span>, the{' '}
-                                <span>Job Execute lists</span> you created in the Job Postings will be{' '}
-                                <span>automatically sent to Workers</span>.
-                            </li>
-                            <li>
-                                Once sent, you will be able to <span>monitor progress</span> and{' '}
-                                <span>evaluate the performance</span> of each Worker.
-                            </li>
-                        </ul>
-                        <h3>⚠️ Important Note:</h3>
-                        <ul>
-                            <li>
-                                <em>
-                                    Ensure you have created a <span>complete and correct Job Execute</span> that matches your wishes and job requirements.
-                                </em>
-                            </li>
-                            <li>
-                                <em>
-                                    <span>Once sent, you will not be able to edit</span> that information anymore.
-                                </em>
-                            </li>
-                        </ul>
-                    </div>
+                    {actionType === 'start' ? (
+                        <div className='notice-before-start'>
+                            <ul>
+                                <li>
+                                    As soon as the <span>Job Group is launched</span>, the{' '}
+                                    <span>Job Execute lists</span> you created in the Job Postings will be{' '}
+                                    <span>automatically sent to Workers</span>.
+                                </li>
+                                <li>
+                                    Once sent, you will be able to <span>monitor progress</span> and{' '}
+                                    <span>evaluate the performance</span> of each Worker.
+                                </li>
+                            </ul>
+                            <h3>⚠️ Important Note:</h3>
+                            <ul>
+                                <li>
+                                    <em>
+                                        Ensure you have created a <span>complete and correct Job Execute</span> that matches your wishes and job requirements.
+                                    </em>
+                                </li>
+                                <li>
+                                    <em>
+                                        <span>Once sent, you will not be able to edit</span> that information anymore.
+                                    </em>
+                                </li>
+                            </ul>
+                        </div>
+                    ) : (
+                        <p>Before you end your Job Group, please note the following:</p>
+                    )}
                 </Modal>
 
                 <div className="job-postings-list">

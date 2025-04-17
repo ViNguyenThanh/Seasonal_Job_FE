@@ -3,7 +3,7 @@ import './WorkerJobs.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { DollarOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { Empty, Input, Pagination, Select } from 'antd';
+import { Empty, Input, Pagination, Select, Skeleton } from 'antd';
 import { getApplicationsByUserId } from '../../../apis/application.request';
 const { Search } = Input;
 
@@ -84,6 +84,12 @@ const WorkerJobs = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [salaryValue, setSalaryValue] = useState(null);
   const [statusJobValue, setStatusJobValue] = useState(null);
+
+
+  //Giá trị cho listData
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const onSearch = (value) => {
     setSearchTerm(value.trim().toLowerCase());
     setSalaryValue(null);
@@ -93,15 +99,41 @@ const WorkerJobs = () => {
 
   useEffect(() => {
     const fetchJobApplied = async () => {
+      setLoading(true);
       const res = await getApplicationsByUserId()
       console.log(res);
+      if (res.data.length > 0) {
+        const transformedApplications = res.data.map(application => {
+          return {
+            id: application.JobPosting.id,
+            image: application.JobPosting.User.avatar,
+            title: application.JobPosting.title,  // Lấy title từ JobPosting
+            location: application.JobPosting.location,  // Lấy location từ JobPosting
+            salary: application.JobPosting.salary,  // Lấy salary từ JobPosting
+            status: application.JobPosting.JobGroup.status,  // Trạng thái của ứng tuyển (ví dụ: completed)
+            today: formatDate(application.JobPosting.JobGroup.updatedAt)  // Lấy ngày hôm nay, định dạng "dd/mm/yyyy"
+          };
+        });
 
+        // Cập nhật lại state với dữ liệu mới
+        setApplications(transformedApplications);
+        setLoading(false);
+      }
     }
 
     fetchJobApplied()
-  })
+  }, [])
 
-  const filteredJobs = listData.filter(item => {
+  //Chuyển về trạng thái DD/MM/YYYY
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm số 0 nếu ngày < 10
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng, nhớ cộng 1 vì tháng trong JavaScript bắt đầu từ 0
+    const year = date.getFullYear(); // Lấy năm
+    return `${day}/${month}/${year}`; // Định dạng lại thành dd/mm/yyyy
+  };
+
+  const filteredJobs = /*listData*/applications.length > 0 ? applications.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!statusJobValue || item.status === statusJobValue) &&
@@ -112,7 +144,7 @@ const WorkerJobs = () => {
         // || item.salary.toString().includes(searchTermLower)
       )
     );
-  });
+  }) : [];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listData*/ filteredJobs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -121,7 +153,7 @@ const WorkerJobs = () => {
     <div className='worker-jobs-container'>
       <h1>My Jobs</h1>
 
-      {listData.length === 0 ? (
+      {/*listData*/(!loading && applications?.length === 0) ? (
         <div className="no-jobs">
           {/* <p>You do not have a job yet! </p> */}
           <Empty description="You do not have a job yet!" />
@@ -188,7 +220,17 @@ const WorkerJobs = () => {
             />
           </div>
 
-          {filteredJobs.length === 0 ? (
+          {loading ? <div className='my-jobs-skeleton-container'>
+            <div className="my-jobs-skeleton">
+              <Skeleton active avatar paragraph={{ rows: 2 }} />
+            </div>
+            <div className="my-jobs-skeleton">
+              <Skeleton active avatar paragraph={{ rows: 2 }} />
+            </div>
+            <div className="my-jobs-skeleton">
+              <Skeleton active avatar paragraph={{ rows: 2 }} />
+            </div>
+          </div> : filteredJobs.length === 0 ? (
             <div className="no-jobs">
               <Empty description="No job found!" />
             </div>
@@ -197,13 +239,13 @@ const WorkerJobs = () => {
               {/*listData*/ paginatedData.map((item) => (
                 <div className="worker-jobs-item" key={item.id} onClick={() => navigate(`/worker/worker-jobs/worker-job-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
                   <div className="worker-jobs-item-left">
-                    <img src={avatar} />
+                    <img src={item.image ? item.image : avatar} />
                     <div className="worker-jobs-content">
                       <p className='worker-jobs-item-title'>{item.title}</p>
                       <p className='worker-jobs-item-info'>
                         <EnvironmentOutlined /> {item.location} &emsp;
                         <br className='break-line-info' />
-                        <DollarOutlined /> {item.salary.toLocaleString('vi-VN')} VND &emsp;
+                        <DollarOutlined /> {parseFloat(item.salary).toLocaleString('vi-VN')} VND &emsp;
                       </p>
                     </div>
                   </div>
