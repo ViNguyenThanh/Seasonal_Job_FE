@@ -9,7 +9,7 @@ const { TextArea } = Input;
 import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Giao diện mặc định
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 const WorkerProfile = () => {
@@ -246,6 +246,9 @@ const WorkerProfile = () => {
       formik.setFieldValue('district', '0'); // Reset District về 0
     }
   }, [formik.values.city]);
+
+  const location = useLocation();
+  const averageRating = location.state?.averageRating || 0;  
 
   return (
     <div className='worker-profile-container'>
@@ -537,12 +540,12 @@ const WorkerProfile = () => {
           )}
           <div className="worker-name-star">
             <p>{profileData.fullname}</p>
-            <div><Rate defaultValue={4} disabled /></div>
+            <div><Rate defaultValue={averageRating} allowHalf disabled /></div>
           </div>
         </div>
 
         <div className="worker-view-rating-btn">
-          <button onClick={() => navigate('/worker/worker-rating')}>
+          <button onClick={() => navigate('/worker/worker-ratings', window.scrollTo(0, 0))}>
             <EyeOutlined /> &#160;View Review
           </button>
         </div>

@@ -232,7 +232,7 @@ const WorkerJobs = () => {
             </div>
           </div> : filteredJobs.length === 0 ? (
             <div className="no-jobs">
-              <Empty description="No job found!" />
+              <Empty description="No jobs found!" />
             </div>
           ) : (
             <>
