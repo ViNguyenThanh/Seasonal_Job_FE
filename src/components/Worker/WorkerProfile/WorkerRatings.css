@@ -1,0 +1,184 @@
+.worker-ratings-container{
+  width: 90%;
+  margin-left: 2%;
+  padding: 2% 4% 5%;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+  position: relative;
+}
+
+.worker-ratings-container .go-back-btn{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 25px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.worker-ratings-container .go-back-btn:hover{
+  color: rgb(109, 109, 109);
+  transition: 0.3s ease;
+}
+
+
+.worker-ratings-container h1{
+  text-align: center;
+  margin: 0;
+  padding-bottom: 2%;
+  border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+
+.worker-ratings-container .no-ratings{
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  justify-content: center;    
+  align-items: center;
+  align-content: center;
+}
+.worker-ratings-container .no-ratings .ant-empty .ant-empty-description {
+  font-size: 20px;
+}
+
+
+.worker-ratings-container .worker-ratings-select{
+  width: 100%;
+  margin: 25px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.worker-ratings-container .worker-ratings-select .filter-rating{
+  margin-right: 25px;
+}
+/* chỉnh màu khung Select */
+.worker-ratings-container .worker-ratings-select .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid #d9d9d9;
+}
+.worker-ratings-container .worker-ratings-select .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: 0;
+}
+/* chỉnh độ dài thanh Select */
+.worker-ratings-container .worker-ratings-select .ant-select-single.ant-select-lg {
+  width: 20%;
+}
+.worker-ratings-container .worker-ratings-select .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  padding-left: 8%;
+}
+
+
+.worker-ratings-container .worker-ratings-list{
+  width: 100%;
+  margin-top: 30px;
+}
+
+.worker-ratings-container .worker-ratings-list .worker-ratings-item{
+  width: 95%;
+  padding: 20px 2.5%;
+  margin-bottom: 15px;
+  border: 1px solid rgba(118, 118, 118, 0.16);
+  border-radius: 10px;
+  transition: 0.3s ease;
+  /* background-color: rgba(255, 165, 0, 0.04); */
+}
+.worker-ratings-container .worker-ratings-list .worker-ratings-item:hover{
+  background-color: rgba(255, 165, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.worker-ratings-list .worker-ratings-item .employer-name-avatar{
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.worker-ratings-list .worker-ratings-item .employer-name-avatar img{
+  width: 45px;
+  height: 45px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+.worker-ratings-list .worker-ratings-item .employer-name-avatar p{
+  width: fit-content;
+  font-size: 17.5px;
+  color: #187bcd;
+  font-weight: 500;
+  margin: 0;
+}
+
+.worker-ratings-list .worker-ratings-item .employer-rating-date{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 15px 0 7px;
+}
+.worker-ratings-list .worker-ratings-item .employer-rating-date div{
+  
+}
+.worker-ratings-list .worker-ratings-item .employer-rating-date p{
+  margin: 0 0 0 15px;
+  font-size: 16px;
+  color: rgb(76, 76, 76);
+}
+
+.worker-ratings-list .worker-ratings-item .employer-reason{
+  margin: 0;
+  color: rgb(45, 45, 45);
+}
+
+.worker-ratings-container .ant-pagination {
+  margin: 30px 0 10px;
+}
+.worker-ratings-container .ant-pagination .ant-pagination-options-quick-jumper {
+  font-size: 16px;
+}
+
+@media (max-width: 1150px) {
+  .worker-ratings-container{
+    width: 92%;
+    margin-left: 0%;
+  }
+  .worker-ratings-container .worker-ratings-select {
+    width: 90%;
+    padding: 0% 5%;
+  }
+  .worker-ratings-container .worker-ratings-list .worker-ratings-item{
+    width: 85%;
+    padding: 20px 5%;
+    margin: 25px 2.5%;
+  }
+}
+@media (max-width: 900px) {
+  .worker-ratings-container .worker-ratings-select .ant-select-single.ant-select-lg {
+    width: 30%;
+  }
+}
+@media (max-width: 700px) {
+  .worker-ratings-container .worker-ratings-select{
+    justify-content: center;
+  }
+  .worker-ratings-container .worker-ratings-select .ant-select-single.ant-select-lg {
+    width: 40%;
+  }
+}
+@media (max-width: 600px) {
+  .worker-ratings-container .worker-ratings-select{
+    flex-wrap: wrap;
+  }
+  .worker-ratings-container .worker-ratings-select .filter-rating{
+    margin-right: 0px;
+    margin-bottom: 15px;
+  }
+  .worker-ratings-container .worker-ratings-select .ant-select-single.ant-select-lg {
+    width: 90%;
+  }
+  .worker-ratings-container .worker-ratings-list .worker-ratings-item{
+    width: 80%;
+    padding: 20px 7.5%;
+    margin: 25px 2.5%;
+  }
+}
