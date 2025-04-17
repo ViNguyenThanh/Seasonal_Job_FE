@@ -77,7 +77,7 @@ const WorkerMenu = () => {
   const location = useLocation()
   
   useEffect(() => {
-    if(location.pathname === '/worker/worker-profile' || location.pathname.includes('/worker/worker-rating')){
+    if(location.pathname === '/worker/worker-profile' || location.pathname.includes('/worker/worker-ratings')){
       setActiveButton(1)
     }
     if(location.pathname === '/worker/worker-cv'){

@@ -95,12 +95,20 @@ const JobDetailView = () => {
 
     const props = {
         name: "file",
+        beforeUpload: (file) => {
+            const isPdf = file.type === "application/pdf";
+            if (!isPdf) {
+                message.error("Only PDF files are allowed!");
+            }
+            return isPdf || Upload.LIST_IGNORE; // Ngăn file không hợp lệ vào danh sách
+        },
         customRequest: ({ file, onSuccess }) => {
             setTimeout(() => {
                 onSuccess("ok"); // Simulate success for Ant Design's Upload component
             }, 0);
         },
         onChange: handleUpload, // Use the custom handler
+        showUploadList: false, // Ẩn danh sách file
     };
 
     const handleApplyNow = async () => {
