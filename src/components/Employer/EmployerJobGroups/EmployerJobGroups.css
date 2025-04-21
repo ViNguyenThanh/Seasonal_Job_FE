@@ -145,7 +145,7 @@
     /* Ẩn phần văn bản bị thừa */
     text-overflow: ellipsis;
     /* Hiển thị dấu ba chấm khi quá dài */
-    height: 48px;
+    height: 52px;
 }
 
 .employer-job-groups-list .employer-job-groups-item .number-of-job-postings {

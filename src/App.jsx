@@ -25,6 +25,7 @@ import WorkerCV from './components/Worker/WorkerCV/WorkerCV'
 import WorkerApplications from './components/Worker/WorkerApplications/WorkerApplications'
 import WorkerJobs from './components/Worker/WorkerJobs/WorkerJobs'
 import WorkerJobDetail from './components/Worker/WorkerJobs/WorkerJobDetail'
+import WorkerTransactions from './components/Worker/WorkerTransactions/WorkerTransactions'
 
 
 import { getUserFromToken } from './utils/Token'
@@ -121,6 +122,7 @@ function App() {
           <Route path='worker-applications' element={<WorkerApplications />} />
           <Route path="worker-jobs" element={<WorkerJobs />} />
           <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail />} />
+          <Route path="worker-transactions" element={<WorkerTransactions />} />
         </Route>
 
         {/* Employer */}

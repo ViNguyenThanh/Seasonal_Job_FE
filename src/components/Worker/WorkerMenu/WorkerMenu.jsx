@@ -44,7 +44,7 @@ const WorkerMenu = () => {
       id: 5,
       img: wallet_icon,
       activeImg: wallet_icon_active,
-      title: "Wallet & Transaction",
+      title: "Wallet & Transactions",
     },
   ]
 
@@ -66,7 +66,7 @@ const WorkerMenu = () => {
       navigate('/worker/worker-jobs')
     }
     if (buttonIndex === 5){
-      navigate('/worker/wallet-and-transaction')
+      navigate('/worker/worker-transactions')
     }
 
     setActiveButton(buttonIndex);
@@ -89,7 +89,7 @@ const WorkerMenu = () => {
     if(location.pathname === '/worker/worker-jobs' || location.pathname.includes('/worker/worker-jobs/worker-job-detail')){
       setActiveButton(4)
     }
-    if(location.pathname === '/worker/wallet-and-transaction'){
+    if(location.pathname === '/worker/worker-transactions'){
       setActiveButton(5)
     }
   }, [location])
