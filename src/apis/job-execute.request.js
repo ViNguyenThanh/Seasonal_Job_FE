@@ -19,7 +19,10 @@ export const jobExecuteApi = {
     updateJobExecute: (id, data) => {
         const token = getToken();
         return API.patch(`/executes/job-execute/${id}`, data, {
-            headers: { authorization: `Bearer ${token}` },
+            headers: {
+                authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data"
+            },
         });
     },
     deleteJobExecute: (id) => {
