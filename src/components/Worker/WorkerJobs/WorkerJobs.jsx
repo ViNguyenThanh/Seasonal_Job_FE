@@ -172,7 +172,7 @@ const WorkerJobs = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Select
-              showSearch
+              // showSearch
               placeholder="Salary"
               value={salaryValue ? JSON.stringify(salaryValue) : null}
               onChange={(value) => {
@@ -200,7 +200,7 @@ const WorkerJobs = () => {
               <Select.Option value="sample">Sample</Select.Option>
             </Select>
             <Select
-              showSearch
+              // showSearch
               placeholder="Status"
               value={statusJobValue}
               onChange={(value) => {

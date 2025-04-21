@@ -128,7 +128,8 @@ const EmployerJobGroupDetail = () => {
             setConfirmLoading(false);
             setOpenResponsive(false)
             message.success("Job Group started successfully!");
-            navigate(`employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}`)
+            // navigate(`employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}`)
+            navigate(0)
         } catch (error) {
             console.log(error);
             setOpenResponsive(false)
@@ -137,7 +138,8 @@ const EmployerJobGroupDetail = () => {
     }
 
     const handleEndJobGroup = async () => {
-        alert("End job group");
+        // alert("End job group");
+        const res = await jobGroupApi.updateJobGroup(jobGroupInfo.id, { status: "completed" })
         setOpenResponsive(false)
     }
 
