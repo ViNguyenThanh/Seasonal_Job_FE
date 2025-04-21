@@ -1,0 +1,335 @@
+.worker-transactions-container {
+  /* width: 90%;
+  margin-left: 2%;
+  padding: 2% 4% 5%;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px; */
+  width: 100%;
+}
+
+.worker-transactions-container .worker-transactions-top {
+  /* width: 100%; */
+  width: 90%;
+  margin-left: 2%;
+  margin-bottom: 30px;
+  padding: 25px 4%;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+}
+
+.worker-transactions-container .worker-transactions-top .worker-identity-wallet {
+  width: 80%;
+  /* margin-top: 20px; */
+  display: flex;
+  align-items: center;
+}
+
+.worker-transactions-top .worker-identity-wallet img {
+  width: 120px;
+  height: 120px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  margin-right: 25px;
+}
+.worker-transactions-top .worker-identity-wallet .no-avatar{
+  margin: 0;
+  margin-right: 25px;
+  min-width: 100px;
+  width: 100px;
+  height: 100px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  font-size: 50px;
+  color: white;
+}
+
+.worker-transactions-top .worker-identity-wallet .worker-name-money {
+  width: 100%;
+}
+
+.worker-transactions-top .worker-identity-wallet .worker-name-money p.worker-name {
+  width: 100%;
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+
+.worker-transactions-top .worker-identity-wallet .worker-name-money p.worker-money {
+  width: 100%;
+  font-size: 22px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.worker-transactions-container .worker-transactions-top .worker-withdraw {
+  width: 20%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.worker-transactions-top .worker-withdraw button {
+  font-size: 22px;
+  color: #2A9DF4;
+  border: 3px solid #2A9DF4;
+  background-color: white;
+  border-radius: 5px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.worker-transactions-top .worker-withdraw button:hover {
+  background-color: #f1f9ff;
+  transition: 0.3s ease;
+}
+
+
+.worker-transactions-container .worker-transactions-bottom {
+  width: 90%;
+  margin-left: 2%;
+  padding: 35px 4%;
+  display: flex;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.worker-transactions-container .worker-transactions-bottom h1 {
+  width: 100%;
+  margin: 0;
+  color: #03254C;
+}
+
+.worker-transactions-container .worker-transactions-bottom .no-transactions {
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.worker-transactions-container .worker-transactions-bottom .no-transactions .ant-empty .ant-empty-description {
+  font-size: 20px;
+}
+
+
+.worker-transactions-container .worker-transactions-bottom .worker-transactions-select {
+  width: 100%;
+  margin-top: 20px;
+}
+.worker-transactions-bottom .worker-transactions-select .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid #d9d9d9;
+}
+/* chỉnh độ dài thanh Select */
+.worker-transactions-bottom .worker-transactions-select .ant-select-single.ant-select-lg {
+  width: 20%;
+  margin-right: 20px;
+}
+.worker-transactions-bottom .worker-transactions-select .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  padding-left: 8%;
+}
+.worker-transactions-bottom .worker-transactions-select .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: 0;
+}
+
+
+.worker-transactions-container .worker-transactions-bottom .worker-transactions-whole-table {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.worker-transactions-bottom .worker-transactions-whole-table .worker-transactions-table {
+  width: 100%;
+  border: 1px solid rgba(118, 118, 118, 0.16);
+  font-size: 19px;
+  border-radius: 10px;
+  /* do có cái này nên ko border-radius được */
+  /* border-collapse: collapse; */
+  border-collapse: separate;
+  /* Rất quan trọng */
+  border-spacing: 0;
+  /* Để các ô sát nhau */
+  overflow: hidden;
+  /* Bắt buộc nếu muốn thấy rõ bo góc */
+}
+
+.worker-transactions-whole-table .worker-transactions-table thead {
+  background-color: rgb(229, 229, 229);
+  /* color: rgb(51, 51, 51); */
+  color: #03254C;
+}
+
+.worker-transactions-whole-table .worker-transactions-table thead tr {
+  width: 100%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table thead tr th {
+  border: 1px solid #d8d8d8;
+  padding: 10px 0;
+}
+
+.worker-transactions-whole-table .worker-transactions-table thead tr th.order-code {
+  width: 15%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table thead tr th.date {
+  width: 25%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table thead tr th.amount {
+  width: 30%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table thead tr th.status {
+  width: 20%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table thead tr th.detail {
+  width: 10%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr {
+  width: 100%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td {
+  border: 1px solid #eaeaea;
+  padding: 10px 0;
+  text-align: center;
+  color: rgb(39, 39, 39)
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.order-code {
+  width: 15%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.date {
+  width: 25%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.amount {
+  width: 30%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.status {
+  width: 20%;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.status span.pending {
+  /* color: rgb(82, 82, 82); */
+  color: #058cf3;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.status span.released {
+  color: green;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.status span.cancelled {
+  color: #FF0000;
+}
+
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.detail {
+  width: 10%;
+}
+
+.worker-transactions-container .worker-transactions-bottom .ant-pagination {
+  margin: 30px 0 10px;
+}
+.worker-transactions-container .worker-transactions-bottom .ant-pagination .ant-pagination-options-quick-jumper {
+  font-size: 16px;
+}
+
+@media (max-width: 1150px) {
+  .worker-transactions-container .worker-transactions-top {
+    width: 92%;
+    margin-left: 0%;
+    padding: 25px 4%;
+  }
+  .worker-transactions-container .worker-transactions-bottom {
+    width: 92%;
+    margin-left: 0%;
+    padding: 35px 4%;
+  }
+  .worker-transactions-container .worker-transactions-bottom .worker-transactions-select {
+    display: flex;
+    justify-content: space-between;
+  }
+  .worker-transactions-bottom .worker-transactions-select .ant-select-single.ant-select-lg {
+    width: 30%;
+    margin-right: 0;
+  }
+}
+@media (max-width: 950px) {
+  .worker-transactions-container .worker-transactions-bottom .worker-transactions-whole-table {
+    overflow-x: auto;
+  }
+  .worker-transactions-bottom .worker-transactions-whole-table .worker-transactions-table {
+    min-width: 950px; /* Đảm bảo bảng không bị co lại quá nhỏ */
+}
+}
+@media (max-width: 850px) {
+  .worker-transactions-container .worker-transactions-top {
+    width: 92%;
+    padding: 25px 4% 35px ;
+  }
+  .worker-transactions-container .worker-transactions-top .worker-identity-wallet {
+    width: 100%;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .worker-transactions-top .worker-identity-wallet img {
+    margin-right: 0;
+  }
+  .worker-transactions-top .worker-identity-wallet .no-avatar{
+    margin-right: 0;
+  }
+  .worker-transactions-top .worker-identity-wallet .worker-name-money {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .worker-transactions-top .worker-identity-wallet .worker-name-money p{
+    text-align: center;
+    width: 80%;
+    padding: 0 10%;
+  }
+  .worker-transactions-container .worker-transactions-top .worker-withdraw {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .worker-transactions-container .worker-transactions-bottom h1 {
+    text-align: center;
+    width: 90%;
+    padding: 0 5%;
+  }
+  .worker-transactions-container .worker-transactions-bottom .worker-transactions-select {
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+  .worker-transactions-bottom .worker-transactions-select .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+    padding-left: 4%;
+  }
+  .worker-transactions-bottom .worker-transactions-select .ant-select-single.ant-select-lg {
+    width: 90%;
+    margin: 0 5% 15px;
+  }
+  .worker-transactions-container .worker-transactions-bottom .worker-transactions-whole-table {
+    margin-top: 0;
+  }
+}

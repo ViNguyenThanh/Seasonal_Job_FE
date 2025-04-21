@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './EmployerJobPostingDetail.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Breadcrumb, DatePicker, Empty, Form, Input, InputNumber, message, Pagination, Rate, Tabs } from 'antd';
@@ -309,24 +309,29 @@ const EmployerJobPostingDetail = () => {
   };
 
   /*List Workers*/
-  const [listWorkers, setListWorkers] = useState([])
-  // const listWorkers = [
-  //   { id: 1, workerName: 'Nguyễn Anh', email: 'nguyen.anh@example.com', avatar: avatar },
-  //   { id: 2, workerName: 'Trần Minh', email: 'tran.minh@example.com', avatar: avatar },
-  //   { id: 3, workerName: 'Lê Thị Mai', email: 'le.thi.mai@example.com', avatar: avatar },
-  //   { id: 4, workerName: 'Phạm Thanh', email: 'pham.thanh@example.com', avatar: avatar },
-  //   { id: 5, workerName: 'Hoàng Tú', email: 'hoang.tu@example.com', avatar: avatar },
-  //   { id: 6, workerName: 'Nguyễn Minh Hoàng', email: 'nguyen.minh.hoang@example.com', avatar: avatar },
-  // ];
+  // const [listWorkers, setListWorkers] = useState([])
+  const listWorkers = [
+    { id: 1, workerName: 'Nguyễn Anh', email: 'nguyen.anh@example.com', avatar: avatar },
+    { id: 2, workerName: 'Trần Minh', email: 'tran.minh@example.com', avatar: avatar },
+    { id: 3, workerName: 'Lê Thị Mai', email: 'le.thi.mai@example.com', avatar: avatar },
+    { id: 4, workerName: 'Phạm Thanh', email: 'pham.thanh@example.com', avatar: avatar },
+    { id: 5, workerName: 'Hoàng Tú', email: 'hoang.tu@example.com', avatar: avatar },
+    { id: 6, workerName: 'Nguyễn Minh Hoàng', email: 'nguyen.minh.hoang@example.com', avatar: avatar },
+  ];
 
   // Quản lý phân trang
   const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
   const pageSize = 5; // Mỗi trang hiển thị 5 dòng
 
+  const workerTitleRef = useRef(null);
   const handlePageChange = (page) => {
     setCurrentPage(page);
     // window.scrollTo(0, 0);
-    window.scroll({ top: 750, left: 0, behavior: 'smooth' })
+    // window.scroll({ top: 750, left: 0, behavior: 'smooth' })
+    if (workerTitleRef.current) {
+      const elementPosition = workerTitleRef.current.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: elementPosition - 120, left: 0, behavior: 'smooth' });
+  }
   };
   // chức năng Search Worker
   const [searchTerm, setSearchTerm] = useState('');
@@ -717,7 +722,7 @@ const EmployerJobPostingDetail = () => {
                     key: '2',
                     children: (
                       <div className="workers-list">
-                        <h1>List Workers</h1>
+                        <h1 ref={workerTitleRef}>List Workers</h1>
 
                         {listWorkers.length === 0 ? (
                           <div className="no-workers">
@@ -779,7 +784,7 @@ const EmployerJobPostingDetail = () => {
           {/* statusStart*/ item.jobGroupInfo.status !== 'inactive' && (
             <div className="employer-job-posting-executed">
               <div className="workers-list">
-                <h1>List Workers</h1>
+                <h1 ref={workerTitleRef}>List Workers</h1>
 
                 {listWorkers.length === 0 ? (
                   <div className="no-workers">
