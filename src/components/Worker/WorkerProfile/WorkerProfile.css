@@ -218,7 +218,8 @@
 .worker-profile-left .worker-identity .no-avatar{
   margin: 0;
   margin-right: 25px;
-  width: 130px;
+  min-width: 100px;
+  width: 100px;
   height: 100px;
   background-color: #d9d9d9;
   border-radius: 50%;
@@ -346,11 +347,6 @@
   .worker-profile-left .worker-identity{
     margin-bottom: 15px;
     justify-content: center;
-  }
-  .worker-profile-left .worker-identity .no-avatar{
-    min-width: 100px;
-    width: 100px;
-    height: 100px;
   }
   .worker-profile-left .worker-identity .worker-name-star{
     width: fit-content;

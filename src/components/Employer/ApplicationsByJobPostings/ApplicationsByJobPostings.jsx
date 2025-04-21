@@ -71,6 +71,8 @@ const ApplicationsByJobPostings = () => {
     { id: 9, workerName: 'Trương Thị Quỳnh Giang', email: 'truongthiquynhgiang@example.com', avatar: avatar, jobPostingName: 'Cần tuyển nhân viên làm việc thời vụ tại cửa hàng, đóng gói sản phẩm và hỗ trợ khách hàng', status: 'rejected' },
     { id: 10, workerName: 'Mai Đức Duy', email: 'mai.ducduy@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng công nhân làm việc tại xưởng sản xuất, gia công và đóng gói sản phẩm', status: 'approved' },
     { id: 11, workerName: 'Phan Thị Bình', email: 'phan.binh@example.com', avatar: avatar, jobPostingName: 'Tuyển nhân viên phụ kho, hỗ trợ kiểm tra tồn kho và đóng gói hàng hóa theo yêu cầu', status: 'viewed' },
+    { id: 12, workerName: 'Nguyễn Thị Ngọc Thơ', email: 'nguyen.tho@example.com', avatar: avatar, jobPostingName: 'Cần tuyển nhân viên làm việc thời vụ tại cửa hàng, đóng gói sản phẩm và hỗ trợ khách hàng', status: 'viewed' },
+    { id: 13, workerName: 'Huỳnh Đức Bo', email: 'huynh.bo@example.com', avatar: avatar, jobPostingName: 'Tuyển dụng nhân viên hỗ trợ bán hàng, chăm sóc khách hàng trực tiếp và qua điện thoại', status: 'viewed' },
   ]);
 
 

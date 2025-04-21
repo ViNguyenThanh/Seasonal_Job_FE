@@ -146,7 +146,7 @@ const Header = () => {
             label: "Wallet & transaction",
             key: '5',
             icon: <CreditCardOutlined />,
-            // onClick: handleLogout,
+            onClick: () => navigate('/worker/worker-transactions'),
         },
         {
             label: "Log out",
