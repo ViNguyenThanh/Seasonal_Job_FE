@@ -123,14 +123,25 @@
   margin: 5px 0; /* Adjust spacing between paragraphs */
 }
 
-.list-company-container{
+.list-company-container {
   margin-top: 30px;
   margin-left: 30px;
   margin-right: 30px;
 }
 
-.list-company-detail1{
+.list-company-detail1 {
   display: flex;
   align-items: center;
   gap: 20px;
+}
+
+.findingcomapany-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  /* Giới hạn văn bản ở 1 dòng */
+  overflow: hidden;
+  /* Ẩn phần văn bản bị thừa */
+  text-overflow: ellipsis;
+  /* Hiển thị dấu ba chấm khi quá dài */
 }
