@@ -243,3 +243,9 @@
         margin: 30px 0 20px;
     }
 }
+@media (max-width: 400px) {
+    .worker-jobs-item .worker-jobs-item-right p{
+        line-height: normal;
+    }
+}
+

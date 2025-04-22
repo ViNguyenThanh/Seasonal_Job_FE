@@ -3,25 +3,28 @@ import './WorkerTransactions.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { EyeOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Empty, Pagination, Select } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const WorkerTransactions = () => {
+  const navigate = useNavigate();
+
   const transactionData = [
-    { id: 1, orderCode: 'XTR582', date: '25/07/2025', amount: 6300000, status: 'PENDING' },
-    { id: 2, orderCode: 'WFD109', date: '20/07/2025', amount: 1200000, status: 'RELEASED' },
-    { id: 3, orderCode: 'QPL765', date: '15/07/2025', amount: 3300000, status: 'CANCELLED' },
-    { id: 4, orderCode: 'NEJ472', date: '10/07/2025', amount: 7000000, status: 'PENDING' },
-    { id: 5, orderCode: 'BXA239', date: '05/07/2025', amount: 400000, status: 'RELEASED' },
-    { id: 6, orderCode: 'MTK913', date: '02/07/2025', amount: 2100000, status: 'RELEASED' },
-    { id: 7, orderCode: 'CRV320', date: '28/06/2025', amount: 1800000, status: 'CANCELLED' },
-    { id: 8, orderCode: 'LQB586', date: '22/06/2025', amount: 5500000, status: 'PENDING' },
-    { id: 9, orderCode: 'ZYN738', date: '17/06/2025', amount: 690000, status: 'RELEASED' },
-    { id: 10, orderCode: 'AFK204', date: '12/06/2025', amount: 2600000, status: 'CANCELLED' },
-    { id: 11, orderCode: 'HVE397', date: '08/06/2025', amount: 4100000, status: 'RELEASED' },
-    { id: 12, orderCode: 'JMX151', date: '03/06/2025', amount: 370000, status: 'PENDING' },
-    { id: 13, orderCode: 'KUT662', date: '29/05/2025', amount: 5000000, status: 'RELEASED' },
-    { id: 14, orderCode: 'SYR099', date: '25/05/2025', amount: 2800000, status: 'CANCELLED' },
-    { id: 15, orderCode: 'DXE478', date: '20/05/2025', amount: 100000, status: 'PENDING' },
-    { id: 16, orderCode: 'VBN321', date: '15/05/2025', amount: 3200000, status: 'RELEASED' },
+    { id: 1, jobPostingName: 'Công việc thời vụ cho sự kiện tổ chức vào tháng 7, cần người hỗ trợ công việc chuẩn bị, trang trí và quản lý sự kiện', date: '25/07/2025', amount: 6300000, status: 'PENDING' },
+    { id: 2, jobPostingName: 'Vị trí freelancer marketing cho chiến dịch quảng bá trong tháng 8, cần người có kinh nghiệm digital marketing', date: '20/07/2025', amount: 1200000, status: 'RELEASED' },
+    { id: 3, jobPostingName: 'Trợ lý tạm thời cho các công việc văn phòng, giúp đỡ trong việc quản lý hồ sơ, sắp xếp tài liệu và các nhiệm vụ hành chính khác', date: '15/07/2025', amount: 3300000, status: 'CANCELLED' },
+    { id: 4, jobPostingName: 'Công việc bán thời gian cho vị trí chăm sóc khách hàng trong tháng 9, yêu cầu kỹ năng giao tiếp và giải quyết khiếu nại', date: '10/07/2025', amount: 7000000, status: 'PENDING' },
+    { id: 5, jobPostingName: 'Công việc nhập liệu tạm thời trong tháng 6, yêu cầu nhanh nhẹn, chính xác và có khả năng làm việc với dữ liệu lớn', date: '05/07/2025', amount: 400000, status: 'RELEASED' },
+    { id: 6, jobPostingName: 'Vị trí hỗ trợ hành chính tạm thời cho dự án tháng 7, cần người có kỹ năng tổ chức công việc và hỗ trợ nhóm hiệu quả', date: '02/07/2025', amount: 2100000, status: 'RELEASED' },
+    { id: 7, jobPostingName: 'Công việc freelancer nhiếp ảnh cho sự kiện đặc biệt, cần người có kinh nghiệm chụp hình sự kiện và khả năng sáng tạo', date: '28/06/2025', amount: 1800000, status: 'CANCELLED' },
+    { id: 8, jobPostingName: 'Công việc bán thời gian viết nội dung mô tả sản phẩm cho các cửa hàng trực tuyến, yêu cầu khả năng viết sáng tạo và nhanh chóng', date: '22/06/2025', amount: 5500000, status: 'PENDING' },
+    { id: 9, jobPostingName: 'Điều phối viên sự kiện cho một dự án tạm thời, yêu cầu kỹ năng tổ chức và làm việc dưới áp lực trong thời gian ngắn', date: '17/06/2025', amount: 690000, status: 'RELEASED' },
+    { id: 10, jobPostingName: 'Công việc bán hàng tạm thời cho cuối tuần, cần người có kỹ năng giao tiếp và thuyết phục khách hàng', date: '12/06/2025', amount: 2600000, status: 'CANCELLED' },
+    { id: 11, jobPostingName: 'Công việc kho tạm thời cho tháng 7, yêu cầu người có khả năng làm việc chăm chỉ và quản lý kho hiệu quả', date: '08/06/2025', amount: 4100000, status: 'RELEASED' },
+    { id: 12, jobPostingName: 'Vị trí freelancer quản lý mạng xã hội cho chiến dịch ngắn hạn, yêu cầu kỹ năng truyền thông và sáng tạo nội dung', date: '03/06/2025', amount: 370000, status: 'PENDING' },
+    { id: 13, jobPostingName: 'Công việc hành chính bán thời gian trong tháng 6, yêu cầu khả năng tổ chức và quản lý các công việc văn phòng', date: '29/05/2025', amount: 5000000, status: 'RELEASED' },
+    { id: 14, jobPostingName: 'Vị trí thiết kế đồ họa tạm thời, yêu cầu người có kỹ năng sử dụng phần mềm thiết kế và sáng tạo', date: '25/05/2025', amount: 2800000, status: 'CANCELLED' },
+    { id: 15, jobPostingName: 'Công việc viết nội dung freelancer cho chiến dịch tạo nội dung, yêu cầu khả năng viết sáng tạo và am hiểu về SEO', date: '20/05/2025', amount: 100000, status: 'PENDING' },
+    { id: 16, jobPostingName: 'Nhân viên sự kiện tạm thời cho công việc tổ chức sự kiện, yêu cầu kỹ năng tổ chức và hỗ trợ đội ngũ trong công việc', date: '15/05/2025', amount: 3200000, status: 'RELEASED' },
   ];
 
   const getStatusClass = (status) => {
@@ -175,7 +178,7 @@ const WorkerTransactions = () => {
                   <table className='worker-transactions-table'>
                     <thead>
                       <tr>
-                        <th className='order-code'>Order Code</th>
+                        <th className='job-posting-name'>Job Posting Name</th>
                         <th className='date'>Date</th>
                         <th className='amount'>Amount (VND)</th>
                         <th className='status'>Status</th>
@@ -185,14 +188,14 @@ const WorkerTransactions = () => {
                     <tbody>
                       {/*transactionData*/paginatedData.map(item => (
                         <tr key={item.id}>
-                          <td className='order-code'>{item.orderCode}</td>
+                          <td className='job-posting-name'>{item.jobPostingName}</td>
                           <td className='date'>{item.date}</td>
                           <td className='amount'>{item.amount.toLocaleString('vi-VN')}</td>
                           <td className='status'>
                             <span className={getStatusClass(item.status)}>{item.status}</span>
                           </td>
                           <td className='detail'>
-                            <Button onClick={() => navigate(`/worker/worker-transactions/worker-transaction/detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
+                            <Button onClick={() => navigate(`/worker/worker-transactions/worker-transaction-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
                               <EyeOutlined />
                             </Button>
                           </td>
