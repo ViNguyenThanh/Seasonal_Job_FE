@@ -3,7 +3,7 @@ import './WorkerApplications.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { DollarOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { Empty, Input, Pagination, Select } from 'antd';
+import { Empty, Input, Pagination, Select, Skeleton } from 'antd';
 import { getApplicationsByUserId } from '../../../apis/application.request';
 const { Search } = Input;
 
@@ -84,6 +84,10 @@ const WorkerApplications = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [salaryValue, setSalaryValue] = useState(null);
   const [statusJobValue, setStatusJobValue] = useState(null);
+
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const onSearch = (value) => {
     setSearchTerm(value.trim().toLowerCase());
     setSalaryValue(null);
@@ -93,15 +97,31 @@ const WorkerApplications = () => {
 
   useEffect(() => {
     const fetchJobApplied = async () => {
+      setLoading(true);
       const res = await getApplicationsByUserId()
       console.log(res);
+      if (res.data.length > 0) {
+        const transformedApplications = res.data.map(application => {
+          return {
+            id: application.JobPosting.id,
+            image: application.JobPosting.User.avatar,
+            title: application.JobPosting.title,  // Lấy title từ JobPosting
+            location: application.JobPosting.location,  // Lấy location từ JobPosting
+            salary: application.JobPosting.salary,  // Lấy salary từ JobPosting
+            status: application.status,  // Trạng thái của ứng tuyển (ví dụ: completed)
+          };
+        });
 
+        // Cập nhật lại state với dữ liệu mới
+        setApplications(transformedApplications);
+        setLoading(false);
+      }
     }
 
     fetchJobApplied()
-  })
+  }, [])
 
-  const filteredJobs = listData.filter(item => {
+  const filteredJobs = /*listData*/ applications.length > 0 ? applications.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();
     return (
       (!statusJobValue || item.status === statusJobValue) &&
@@ -112,7 +132,7 @@ const WorkerApplications = () => {
         // || item.salary.toString().includes(searchTermLower)
       )
     );
-  });
+  }) : [];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listData*/ filteredJobs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -121,7 +141,7 @@ const WorkerApplications = () => {
     <div className='worker-applications-container'>
       <h1>My Applications</h1>
 
-      {listData.length === 0 ? (
+      {/*listData*/(!loading && applications?.length === 0) ? (
         <div className="no-applications">
           {/* <p>You do not have an application yet! </p> */}
           <Empty description="You do not have an application yet!" />
@@ -140,7 +160,7 @@ const WorkerApplications = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <Select
-              showSearch
+              // showSearch
               placeholder="Salary"
               value={salaryValue ? JSON.stringify(salaryValue) : null}
               onChange={(value) => {
@@ -168,7 +188,7 @@ const WorkerApplications = () => {
               <Select.Option value="sample">Sample</Select.Option>
             </Select>
             <Select
-              showSearch
+              // showSearch
               placeholder="Status"
               value={statusJobValue}
               onChange={(value) => {
@@ -189,14 +209,24 @@ const WorkerApplications = () => {
             />
           </div>
 
-          {filteredJobs.length === 0 ? (
+          {loading ? <div className='worker-applications-skeleton-container'>
+            <div className="worker-applications-skeleton">
+              <Skeleton active avatar paragraph={{ rows: 2 }} />
+            </div>
+            <div className="worker-applications-skeleton">
+              <Skeleton active avatar paragraph={{ rows: 2 }} />
+            </div>
+            <div className="worker-applications-skeleton">
+              <Skeleton active avatar paragraph={{ rows: 2 }} />
+            </div>
+          </div> : filteredJobs.length === 0 ? (
             <div className="no-applications">
               <Empty description="No applications found!" />
             </div>
           ) : (
             <>
               {/*listData*/ paginatedData.map((item) => (
-                <div className="worker-applications-item" key={item.id} /*onClick={() => navigate(`/worker/worker-applications/worker-job-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}*/>
+                <div className="worker-applications-item" key={item.id} onClick={() => navigate(`/job-detail-view/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
                   <div className="worker-applications-item-left">
                     <img src={avatar} />
                     <div className="worker-applications-content">
@@ -204,7 +234,7 @@ const WorkerApplications = () => {
                       <p className='worker-applications-item-info'>
                         <EnvironmentOutlined /> {item.location} &emsp;
                         <br className='break-line-info' />
-                        <DollarOutlined /> {item.salary.toLocaleString('vi-VN')} VND &emsp;
+                        <DollarOutlined /> {parseFloat(item.salary).toLocaleString('vi-VN')} VND &emsp;
                       </p>
                     </div>
                   </div>

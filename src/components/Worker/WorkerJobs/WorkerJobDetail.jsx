@@ -1,15 +1,34 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './WorkerJobDetail.css'
 import { ArrowLeftOutlined, ContainerOutlined, CreditCardOutlined, DashboardOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, PlusOutlined, ProductOutlined, ScheduleOutlined, SnippetsOutlined, StarOutlined, TagOutlined, UpOutlined } from '@ant-design/icons';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Image, Pagination, Upload } from 'antd';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Image, message, Pagination, Skeleton, Upload } from 'antd';
+import { jobApi } from '../../../apis/job.request';
+import { jobGroupApi } from '../../../apis/job-group.request';
+import { jobExecuteApi } from '../../../apis/job-execute.request';
+import dayjs from 'dayjs';
 
 const WorkerJobDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { id } = useParams();
     // const jobInfo = location.state;  // Dữ liệu truyền qua state từ WorkerJobs component
     const [showMore, setShowMore] = useState(false);
-
+    const [jobInfo, setJobInfo] = useState({
+        jobGroupName: '',
+        title: '',
+        address: '',
+        description: '',
+        jobType: '',
+        salary: 0,
+        during: 0,
+        startDate: '',
+        endDate: '',
+        jobGroupId: 0,
+        jobPostingId: 0
+    });
+    const [jobExecutes, setJobExecutes] = useState([]);
+    const [jobPostingLoading, setJobPostingLoading] = useState(true);
     // if (!jobInfo) {
     //     return <p>Job not found.</p>;
     // }
@@ -22,6 +41,136 @@ const WorkerJobDetail = () => {
     //     url: string
     // }
 
+    useEffect(() => {
+        try {
+            const fetchJobPostingInfo = async () => {
+                const jobPostingDetail = await jobApi.getJobById(id)
+                // console.log(jobPostingDetail);
+                if (jobPostingDetail.status === 200) {
+                    const jobGroupDetail = await jobGroupApi.getJobGroupById(jobPostingDetail.data.data.jobGroupId)
+                    // console.log(jobGroupDetail);
+                    // Convert startDate and endDate from string to Date using ISO 8601 format
+                    const startDate = new Date(jobGroupDetail.data.data.start_date);
+                    const endDate = new Date(jobGroupDetail.data.data.end_date);
+
+                    // Calculate the duration in days
+                    const timeDifference = endDate - startDate; // Time difference in milliseconds
+                    const daysDuration = (timeDifference / (1000 * 3600 * 24)) + 1; // Convert milliseconds to days
+
+                    setJobInfo({
+                        jobGroupName: jobGroupDetail.data.data.title,
+                        title: jobPostingDetail.data.data.title,
+                        address: jobPostingDetail.data.data.address,
+                        description: jobPostingDetail.data.data.description,
+                        jobType: jobPostingDetail.data.data.JobType?.name ? jobPostingDetail.data.data.JobType.name : '-- None --',
+                        salary: jobPostingDetail.data.data.salary,
+                        during: daysDuration,
+                        startDate: jobGroupDetail.data.data.start_date,
+                        endDate: jobGroupDetail.data.data.end_date,
+                        jobGroupId: jobGroupDetail.data.data.id,
+                        jobPostingId: jobPostingDetail.data.data.id
+                    })
+                }
+            };
+            fetchJobPostingInfo();
+        } catch (error) {
+            console.log(error);
+        }
+    }, []);
+    // console.log(jobInfo);
+
+    useEffect(() => {
+        const fetchJobExecute = async () => {
+            try {
+                const res = await jobExecuteApi.getJobExecuteByJobPostingId(id)
+                console.log(res.data);
+                if (res.data.message === 'No job execute for this job posting') {
+                    setJobExecutes([]);
+                } else {
+                    const sortedJobExecutes = res.data.data.sort((a, b) => {
+                        const dateA = dayjs(a.assigned_at, 'DD/MM/YYYY');
+                        const dateB = dayjs(b.assigned_at, 'DD/MM/YYYY');
+                        return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0; // Sắp xếp theo ngày tăng dần
+                    });
+
+                    const transformedExecutes = sortedJobExecutes.map((item, index) => ({
+                        id: item.id,
+                        no: index + 1,
+                        jobRequirement: item.note || "No description", // nếu bạn có trường mô tả
+                        // assignmentDate: '22/04/2025',
+                        assignmentDate: item.assigned_at || '',
+                        checkInFileList: item.checkin_img ? [{
+                            uid: '-1',
+                            name: 'Checkin.jpg',
+                            status: 'done',
+                            url: item.checkin_img
+                        }] : [],
+                        checkOutFileList: item.checkout_img ? [{
+                            uid: '-2',
+                            name: 'Checkout.jpg',
+                            status: 'done',
+                            url: item.checkout_img
+                        }] : [],
+                        progress: item.work_process || 0,
+                        progressCompleted: (item.checkin_img && item.checkout_img) ? item.work_process : 0,
+                        reason: item.reason || ''
+                    }));
+
+                    setJobExecutes(transformedExecutes);
+                }
+                setJobPostingLoading(false);
+            } catch (error) {
+                console.log(error);
+                message.error(`An error occurred while fetching: ${error.data.message}`);
+                setJobPostingLoading(false);
+            }
+        }
+
+        fetchJobExecute()
+    }, [])
+
+    const updateJobExecute = async (jobId, data) => {
+        try {
+            const formData = new FormData();
+
+            if (
+                data.checkInFileList.length > 0 &&
+                data.checkInFileList[0].originFileObj
+            ) {
+                formData.append('checkin_img', data.checkInFileList[0].originFileObj);
+            }
+
+            if (
+                data.checkOutFileList.length > 0 &&
+                data.checkOutFileList[0].originFileObj
+            ) {
+                formData.append('checkout_img', data.checkOutFileList[0].originFileObj);
+            }
+
+            formData.append('processComplete', data.progressCompleted || 0);
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]); // In ra key và value của FormData
+            }
+
+            const result = await jobExecuteApi.updateJobExecute(jobId, formData);
+
+            if (result.status === 200) {
+                message.success('Update successfully');
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            message.error('An error occurred while updating');
+        }
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm số 0 nếu ngày < 10
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng, nhớ cộng 1 vì tháng trong JavaScript bắt đầu từ 0
+        const year = date.getFullYear(); // Lấy năm
+        return `${day}/${month}/${year}`; // Định dạng lại thành dd/mm/yyyy
+    };
 
     const [dummyData, setDummyData] = useState([
         {
@@ -111,7 +260,7 @@ const WorkerJobDetail = () => {
     // const handleCheckInChange = ({ fileList: newFileList }) => setCheckInFileList(newFileList);
     // const handleCheckOutChange = ({ fileList: newFileList }) => setCheckOutFileList(newFileList);
     const handleCheckInChange = (index, { fileList: newFileList }) => {
-        const updatedData = [...dummyData];
+        const updatedData = [...jobExecutes/*dummyData*/];
         // bỏ vì up hình hàng 1 trang 2 bị ghi đè lên hàng 1 trang 1
         // updatedData[index].checkInFileList = newFileList;
         updatedData[(currentPage - 1) * pageSize + index].checkInFileList = newFileList;
@@ -127,10 +276,13 @@ const WorkerJobDetail = () => {
         }
 
         // Cập nhật lại dummyData với check-in mới
-        setDummyData(updatedData);
+        /*setDummyData*/setJobExecutes(updatedData);
+
+        const jobId = updatedData[(currentPage - 1) * pageSize + index].id;
+        updateJobExecute(jobId, updatedData[(currentPage - 1) * pageSize + index]);
     };
     const handleCheckOutChange = (index, { fileList: newFileList }) => {
-        const updatedData = [...dummyData];
+        const updatedData = [...jobExecutes/*dummyData*/];
         // updatedData[index].checkOutFileList = newFileList;
         updatedData[(currentPage - 1) * pageSize + index].checkOutFileList = newFileList;
 
@@ -145,11 +297,15 @@ const WorkerJobDetail = () => {
         }
 
         // Cập nhật lại dummyData với check-out mới
-        setDummyData(updatedData);
+        /*setDummyData*/setJobExecutes(updatedData);
+        const jobId = updatedData[(currentPage - 1) * pageSize + index].id;
+        updateJobExecute(jobId, updatedData[(currentPage - 1) * pageSize + index]);
     };
 
     // Hàm xem trước ảnh (check-in hoặc check-out)
     const handlePreview = async (file, type) => {
+        console.log(file);
+
         // Nếu ảnh không có URL hoặc preview, tạo preview bằng FileReader
         if (!file.url && !file.preview) {
             const reader = new FileReader();
@@ -190,7 +346,7 @@ const WorkerJobDetail = () => {
     };
 
     // Phân trang dữ liệu (cắt dữ liệu theo trang)
-    const paginatedData = dummyData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const paginatedData = jobExecutes.length > 0 ? jobExecutes/*dummyData*/.slice((currentPage - 1) * pageSize, currentPage * pageSize) : [];
 
     const today = new Date().toLocaleDateString('en-GB');
 
@@ -201,7 +357,7 @@ const WorkerJobDetail = () => {
         if (hasScrolledToToday) return;
 
         // const today = new Date().toLocaleDateString('en-GB'); 
-        const targetIndex = dummyData.findIndex(item => item.assignmentDate === today);
+        const targetIndex = jobExecutes/*dummyData*/.findIndex(item => item.assignmentDate === today);
 
         if (targetIndex !== -1) {
             const targetPage = Math.floor(targetIndex / pageSize) + 1;
@@ -235,51 +391,46 @@ const WorkerJobDetail = () => {
             <h1 className='worker-job-detail-title'>Job Detail</h1>
             {/* <h1>Job Detail: {jobInfo.title}</h1> */}
 
-            <div className="worker-job-detail-info">
-                <p><ContainerOutlined /> Job Group Name: Sự kiện Global City, chuyên trách các công việc từ chuẩn bị địa điểm đến hỗ trợ đóng gói và tổ chức.</p>
-                <div className="worker-job-detail-short-info">
-                    <p><ScheduleOutlined /> Start Date: 22/05/2025</p>
-                    <p><ScheduleOutlined /> End Date: 27/05/2025</p>
+            {jobPostingLoading ? (
+                <div>
+                    <Skeleton active />
+                    <Skeleton active />
                 </div>
-                <p><SnippetsOutlined /> Job Name:  Nhân viên đóng gói quà sự kiện, thực hiện các công việc đóng gói, sắp xếp quà tặng theo hướng dẫn và đảm bảo tiêu chuẩn chất lượng.</p>
-                <p><EnvironmentOutlined /> Address: 15 đường Cách Mạng Tháng 8, phường 4, quận 1, TP.HCM</p>
-                <p><ProductOutlined /> Company: Công ty tổ chức sự kiện và quản lý chương trình ABC chuyên nghiệp tại TP.HCM.</p>
-                <div className="worker-job-detail-short-info">
-                    <p><CreditCardOutlined /> Salary: 300.000 VND</p>
-                    <p><DashboardOutlined /> During: 5 ngày</p>
-                </div>
-                {/* Hiển thị nội dung mở rộng nếu showMore = true */}
-                {showMore && (
-                    <>
-                        <p><TagOutlined /> Job Type: Nhân viên hỗ trợ sự kiện, chịu trách nhiệm đóng gói quà tặng, kiểm tra chất lượng và chuẩn bị sản phẩm trước khi giao cho khách hàng.</p>
-                        <p><StarOutlined /> Special Skills: Nhanh nhẹn, năng suất, thành thạo đóng gói, cẩn thận trong công việc, có khả năng làm việc dưới áp lực cao.</p>
-                        <p><FileTextOutlined /> Description: <br /> Công việc này sẽ bao gồm nhiều nhiệm vụ liên quan đến việc đóng gói quà tặng cho sự kiện Global City. Nhân viên đóng gói sẽ chịu trách nhiệm chuẩn bị, sắp xếp và đóng gói các sản phẩm quà tặng theo yêu cầu của ban tổ chức. Các công việc sẽ được thực hiện dưới sự giám sát trực tiếp của quản lý, đảm bảo rằng chất lượng và tiến độ công việc luôn đạt tiêu chuẩn cao nhất. Mỗi món quà tặng phải được đóng gói cẩn thận, đúng cách, và không có bất kỳ lỗi nào trong quá trình sắp xếp. Để đạt được hiệu quả công việc tối ưu, nhân viên cần phải có khả năng làm việc nhóm và giao tiếp tốt với các thành viên trong nhóm.
-
-                            Trong quá trình thực hiện công việc, nhân viên sẽ phải lựa chọn vật liệu đóng gói phù hợp với từng sản phẩm, từ giấy bọc, dây ruy băng, đến hộp đựng, sao cho các quà tặng không bị hư hỏng trong quá trình vận chuyển. Mỗi công đoạn đóng gói phải được thực hiện chính xác và tỉ mỉ, đảm bảo rằng các sản phẩm đều có diện mạo đẹp mắt và thu hút người nhận. Việc đảm bảo an toàn trong quá trình đóng gói là yếu tố quan trọng, vì các sản phẩm quà tặng phải chịu được va đập trong suốt quá trình vận chuyển đến tay người nhận mà không bị hư hỏng.
-
-                            Ngoài các công việc đóng gói, nhân viên còn cần phải hỗ trợ trong việc vận chuyển các quà tặng đến các khu vực tổ chức sự kiện, đảm bảo các món quà được giao đúng nơi và đúng thời gian yêu cầu. Việc này đòi hỏi nhân viên có khả năng làm việc dưới áp lực, đặc biệt là trong các tình huống khẩn cấp, khi thời gian có thể bị giới hạn và công việc cần phải hoàn thành nhanh chóng.
-
-                            Kỹ năng cần thiết cho công việc này bao gồm khả năng làm việc nhanh chóng và hiệu quả dưới sự giám sát, khả năng sử dụng các công cụ đóng gói như kéo, băng dính, giấy bọc, và các vật liệu khác một cách thành thạo. Ngoài ra, nhân viên cần có sự cẩn thận và tinh tế trong công việc, vì mỗi món quà tặng đều cần phải có sự hoàn thiện về mặt thẩm mỹ và chức năng. Nhân viên cũng cần có khả năng xử lý các tình huống bất ngờ như thiếu hụt vật liệu đóng gói hay quà tặng bị hư hỏng trong quá trình vận chuyển.
-
-                            Các nhân viên đóng gói sẽ làm việc trong môi trường nhóm, nơi mà sự phối hợp giữa các thành viên là rất quan trọng. Nhân viên cần có khả năng làm việc độc lập và chủ động khi gặp phải các tình huống phát sinh. Để có thể hoàn thành công việc đúng tiến độ, nhân viên cần phải tổ chức công việc khoa học, phân chia thời gian hợp lý và đảm bảo rằng các công đoạn không bị gián đoạn. Công việc này sẽ đòi hỏi nhân viên có khả năng giữ bình tĩnh và làm việc hiệu quả dưới áp lực công việc cao.
-
-                            Bên cạnh đó, nhân viên đóng gói cần phải tuân thủ các quy định và tiêu chuẩn về an toàn lao động, đặc biệt là khi làm việc với các vật liệu đóng gói có thể gây hại nếu không sử dụng đúng cách. Công ty tổ chức sự kiện sẽ cung cấp đầy đủ trang thiết bị bảo hộ lao động và đào tạo về các biện pháp an toàn khi làm việc với các vật liệu đóng gói.
-
-                            Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p>
-
-                        {/* Nút Show less */}
-                        <div className="show-more-less-btn">
-                            <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
-                        </div>
-                    </>
-                )}
-                {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
-                {!showMore && (
-                    <div className="show-more-less-btn">
-                        <button onClick={() => setShowMore(true)}><DownOutlined /> Show more</button>
+            ) : (
+                <div className="worker-job-detail-info">
+                    <p><ContainerOutlined /> Job Group Name: {jobInfo.jobGroupName}</p>
+                    <div className="worker-job-detail-short-info">
+                        <p><ScheduleOutlined /> Start Date: {formatDate(jobInfo.startDate)}</p>
+                        <p><ScheduleOutlined /> End Date: {formatDate(jobInfo.endDate)}</p>
                     </div>
-                )}
-            </div>
+                    <p><SnippetsOutlined /> Job Name:  {jobInfo.title}</p>
+                    <p><EnvironmentOutlined /> Address: {jobInfo.address}</p>
+                    {/* <p><ProductOutlined /> Company: Công ty tổ chức sự kiện và quản lý chương trình ABC chuyên nghiệp tại TP.HCM.</p> */}
+                    <div className="worker-job-detail-short-info">
+                        <p><CreditCardOutlined /> Salary: {parseFloat(jobInfo.salary).toLocaleString('vi-VN')} VND</p>
+                        <p><DashboardOutlined /> During: {jobInfo.during} Day{jobInfo.during === 1 ? '' : 's'}</p>
+                    </div>
+                    {/* Hiển thị nội dung mở rộng nếu showMore = true */}
+                    {showMore && (
+                        <>
+                            <p><TagOutlined /> Job Type: {jobInfo.jobType ? jobInfo.jobType : '-- None --'}</p>
+                            {/* <p><StarOutlined /> Special Skills: Nhanh nhẹn, năng suất, thành thạo đóng gói, cẩn thận trong công việc, có khả năng làm việc dưới áp lực cao.</p> */}
+                            <p><FileTextOutlined /> Description: <br /> {jobInfo.description}</p>
+
+                            {/* Nút Show less */}
+                            <div className="show-more-less-btn">
+                                <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
+                            </div>
+                        </>
+                    )}
+                    {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
+                    {!showMore && (
+                        <div className="show-more-less-btn">
+                            <button onClick={() => setShowMore(true)}><DownOutlined /> Show more</button>
+                        </div>
+                    )}
+                </div>
+            )}
 
             <h1 className='worker-job-execute-title' ref={jobTitleRef} >Work Progress Table</h1>
             <p className='warning-notice'> * You are required to submit both Check-in and Check-out photos every day. If not submitted, your Progress Completed for that day will be automatically set to 0%.</p>
@@ -310,7 +461,7 @@ const WorkerJobDetail = () => {
                                     {data.assignmentDate === today ? (
                                         <td className="check-in">
                                             <Upload
-                                                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                                                // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                                                 listType="picture-card"
                                                 // beforeUpload={(file) => {
                                                 //     getBase64(file).then(base64 => {
@@ -318,9 +469,10 @@ const WorkerJobDetail = () => {
                                                 //     });
                                                 //     return false; // Ngăn upload thật
                                                 // }}
+                                                beforeUpload={() => false} // 🚫 Không upload tự động
                                                 fileList={data.checkInFileList}
                                                 onChange={(e) => handleCheckInChange(index, e)}
-                                                onPreview={handlePreview}
+                                                onPreview={(file) => handlePreview(file, 'check-in')}
                                                 maxCount={1}
                                             >
                                                 {data.checkInFileList.length === 0 && (
@@ -330,6 +482,19 @@ const WorkerJobDetail = () => {
                                                     </div>
                                                 )}
                                             </Upload>
+                                            {checkInPreviewImage && (
+                                                <Image
+                                                    wrapperStyle={{ display: 'none' }}
+                                                    preview={{
+                                                        visible: previewOpen,
+                                                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                                                        // afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                                                        afterOpenChange: (visible) => !visible && setCheckInPreviewImage(''),
+                                                    }}
+                                                    // src={previewImage}
+                                                    src={checkInPreviewImage}
+                                                />
+                                            )}
                                         </td>
                                     ) : data.checkInFileList.length > 0 ? (
                                         <td className="check-in">
@@ -338,7 +503,7 @@ const WorkerJobDetail = () => {
                                                 src={data.checkInFileList[0].url}
                                                 // BỎ vì chế độ preview bị hiện 2 lần 
                                                 // onClick={() => handlePreview(data.checkInFileList[0])}
-                                                onClick={() => setPreviewImage(data.checkInFileList[0].url)}
+                                                // onClick={() => setPreviewImage(data.checkInFileList[0].url)}
                                                 style={{ cursor: 'pointer' }}
                                             />
                                             {/* {previewImage && ( */}
@@ -361,15 +526,16 @@ const WorkerJobDetail = () => {
                                             Not allowed
                                         </td>
                                     )}
-                                    
+
                                     {data.assignmentDate === today ? (
                                         <td className="check-out">
                                             <Upload
-                                                action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+                                                beforeUpload={() => false} // 🚫 Không upload tự động
+                                                // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                                                 listType="picture-card"
                                                 fileList={data.checkOutFileList}
                                                 onChange={(e) => handleCheckOutChange(index, e)}
-                                                onPreview={handlePreview}
+                                                onPreview={(file) => handlePreview(file, 'check-out')}
                                                 maxCount={1}
                                             >
                                                 {data.checkOutFileList.length === 0 && (
@@ -379,6 +545,19 @@ const WorkerJobDetail = () => {
                                                     </div>
                                                 )}
                                             </Upload>
+                                            {checkOutPreviewImage && (
+                                                <Image
+                                                    wrapperStyle={{ display: 'none' }}
+                                                    preview={{
+                                                        visible: previewOpen,
+                                                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                                                        // afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                                                        afterOpenChange: (visible) => !visible && setCheckOutPreviewImage(''),
+                                                    }}
+                                                    // src={previewImage}
+                                                    src={checkOutPreviewImage}
+                                                />
+                                            )}
                                         </td>
                                     ) : data.checkOutFileList.length > 0 ? (
                                         <td className="check-out">
@@ -387,7 +566,7 @@ const WorkerJobDetail = () => {
                                                 src={data.checkOutFileList[0].url}
                                                 // BỎ vì chế độ preview bị hiện 2 lần 
                                                 // onClick={() => handlePreview(data.checkOutFileList[0])}
-                                                onClick={() => setPreviewImage(data.checkOutFileList[0].url)}
+                                                // onClick={() => setPreviewImage(data.checkOutFileList[0].url)}
                                                 style={{ cursor: 'pointer' }}
                                             />
                                             {/* {previewImage && ( */}
@@ -427,7 +606,7 @@ const WorkerJobDetail = () => {
             <Pagination
                 current={currentPage}
                 pageSize={pageSize}
-                total={dummyData.length}
+                total={/*dummyData*/jobExecutes.length}
                 onChange={handlePageChange}
                 showSizeChanger={false}
                 align="center"
