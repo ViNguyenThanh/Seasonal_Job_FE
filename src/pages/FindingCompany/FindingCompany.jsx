@@ -143,7 +143,7 @@ const FindingCompany = () => {
 
                 <div className="list-company">
                     <div className="list-company-container">
-                        <Row gutter={[16, 16]} justify="center">
+                        <Row gutter={[16, 16]}>
                             {companies.map((company) => (
                                 <Col key={company.id} xs={24} sm={12} md={12} lg={8}>
                                     <a href={"/company-detail"} className="list-company-card-link">
@@ -156,7 +156,7 @@ const FindingCompany = () => {
                                                 />
                                                 <div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                        <Title level={5} style={{ margin: 0 }}>{company.companyName}</Title>
+                                                        <Title level={5} style={{ margin: 0 }} className="findingcomapany-title">{company.companyName}</Title>
                                                         {/* {company.isFeatured && <Tag color="red">Featured</Tag>} */}
                                                     </div>
                                                     <Paragraph style={{ color: 'grey', margin: 0 }}>

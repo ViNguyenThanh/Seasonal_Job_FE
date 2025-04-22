@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import "./JobDetailView.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message, ConfigProvider, notification } from 'antd';
+import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message, ConfigProvider, notification, Spin } from 'antd';
 import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined, HomeOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
@@ -87,7 +87,11 @@ const JobDetailView = () => {
     }, [id]);
 
     if (isLoading) {
-        return <div>Loading...</div>; // Show a loading message while fetching data
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <Spin size="large" tip="Loading..." /> {/* Ant Design loading spinner */}
+            </div>
+        );
     }
 
     if (!jobDetail) {

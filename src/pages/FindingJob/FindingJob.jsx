@@ -9,6 +9,7 @@ import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined,
 import { Row, Col, Pagination, Breadcrumb, ConfigProvider } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { jobApi } from '../../apis/job.request'; // Import the jobApi
+import { jobGroupApi } from '../../apis/job-group.request'; // Import jobGroupApi
 import { useEffect } from 'react';
 
 const { Option } = Select;
@@ -36,25 +37,38 @@ const FindingJob = () => {
     // Fetch job postings by paid job groups when the component loads
     const fetchPaidJobPostings = async () => {
         try {
-            const response = await jobApi.getJobPostingsByJobGroupsIsPaid(); // Call the API
-            console.log('API Response:', response); // Log the response to inspect its structure
-
-            // Adjust based on the actual response structure
-            if (response.data && Array.isArray(response.data.data)) {
-                const sortedJobs = response.data.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); // Sort by latest
-                setAllJobs(sortedJobs); // Store the sorted list of jobs
-                setJobData(sortedJobs); // Initialize the filtered list
-            } else {
-                console.error('Unexpected API response format:', response);
-                setAllJobs([]); // Fallback to an empty array
-                setJobData([]); // Fallback to an empty array
-            }
+            // Fetch inactive job groups
+            const inactiveJobGroupsResponse = await jobGroupApi.getAllJobGroupsInactive();
+            const inactiveJobGroups = inactiveJobGroupsResponse.data?.data || [];
+    
+            // Extract inactive job group IDs
+            const inactiveJobGroupIds = inactiveJobGroups.map((group) => group.id);
+    
+            // Fetch job postings
+            const jobPostingsResponse = await jobApi.getJobPostingsByJobGroupsIsPaid();
+            const jobPostings = jobPostingsResponse.data?.data || [];
+    
+            // Filter job postings by inactive job group IDs
+            const filteredJobs = jobPostings.filter((job) =>
+                inactiveJobGroupIds.includes(job.jobGroupId)
+            );
+    
+            // Sort the filtered jobs by the latest updated date
+            const sortedJobs = filteredJobs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    
+            // Update state with the filtered and sorted jobs
+            setAllJobs(sortedJobs);
+            setJobData(sortedJobs);
         } catch (error) {
-            console.error('Error fetching paid job postings:', error);
+            console.error('Error fetching paid job postings or inactive job groups:', error);
             setAllJobs([]); // Fallback to an empty array
             setJobData([]); // Fallback to an empty array
         }
     };
+    
+    useEffect(() => {
+        fetchPaidJobPostings(); // Fetch paid job postings when the component loads
+    }, []);
 
     useEffect(() => {
         fetchPaidJobPostings(); // Fetch paid job postings when the component loads

@@ -36,4 +36,7 @@ export const jobGroupApi = {
             }
         })
     },
+    getAllJobGroupsInactive: (start_date = '', end_date = '') => {
+        return API.get(`jobGroups/jobGroupsInactive?start_date=${start_date}&end_date=${end_date}`);
+    },
 };
