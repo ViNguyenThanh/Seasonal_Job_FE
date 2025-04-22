@@ -1,0 +1,197 @@
+.employer-ratings-container{
+  width: 75%;
+  margin: 50px 7.5% 70px;
+  padding: 20px 5% 50px;
+  min-height: 350px;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+  position: relative;
+}
+
+.employer-ratings-container .go-back-btn{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 25px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.employer-ratings-container .go-back-btn:hover{
+  color: rgb(109, 109, 109);
+  transition: 0.3s ease;
+}
+
+
+.employer-ratings-container h1{
+  text-align: center;
+  margin: 0;
+  padding-bottom: 2%;
+  border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+
+.employer-ratings-container .no-ratings{
+  width: 100%;
+  height: 50vh;
+  display: flex;
+  justify-content: center;    
+  align-items: center;
+  align-content: center;
+}
+.employer-ratings-container .no-ratings .ant-empty .ant-empty-description {
+  font-size: 20px;
+}
+
+
+.employer-ratings-container .employer-ratings-select{
+  width: 100%;
+  margin: 25px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.employer-ratings-container .employer-ratings-select .filter-rating{
+  margin-right: 25px;
+}
+/* chỉnh màu khung Select */
+.employer-ratings-container .employer-ratings-select .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid #d9d9d9;
+}
+.employer-ratings-container .employer-ratings-select .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: 0;
+}
+/* chỉnh độ dài thanh Select */
+.employer-ratings-container .employer-ratings-select .ant-select-single.ant-select-lg {
+  width: 20%;
+}
+.employer-ratings-container .employer-ratings-select .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  padding-left: 8%;
+}
+
+
+.employer-ratings-container .employer-ratings-list{
+  width: 100%;
+  margin-top: 30px;
+}
+
+.employer-ratings-container .employer-ratings-list .employer-ratings-item{
+  width: 95%;
+  padding: 20px 2.5%;
+  margin-bottom: 15px;
+  border: 1px solid rgba(118, 118, 118, 0.16);
+  border-radius: 10px;
+  transition: 0.3s ease;
+  /* background-color: rgba(255, 165, 0, 0.04); */
+}
+.employer-ratings-container .employer-ratings-list .employer-ratings-item:hover{
+  background-color: rgba(255, 165, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.employer-ratings-list .employer-ratings-item .employer-name-avatar{
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+.employer-ratings-list .employer-ratings-item .employer-name-avatar img{
+  width: 45px;
+  height: 45px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+.employer-ratings-list .employer-ratings-item .employer-name-avatar p{
+  width: fit-content;
+  font-size: 17.5px;
+  color: #187bcd;
+  font-weight: 500;
+  margin: 0;
+}
+.employer-ratings-list .employer-ratings-item .employer-name-avatar p.no-avatar{
+  margin: 0;
+  margin-right: 15px;
+  min-width: 45px;
+  width: 45px;
+  height: 45px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  font-size: 25px;
+  color: white;
+}
+
+.employer-ratings-list .employer-ratings-item .employer-rating-date{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 15px 0 7px;
+}
+.employer-ratings-list .employer-ratings-item .employer-rating-date div{
+  
+}
+.employer-ratings-list .employer-ratings-item .employer-rating-date p{
+  margin: 0 0 0 15px;
+  font-size: 16px;
+  color: rgb(76, 76, 76);
+}
+
+.employer-ratings-list .employer-ratings-item .employer-reason{
+  margin: 0;
+  color: rgb(45, 45, 45);
+}
+
+.employer-ratings-container .ant-pagination {
+  margin: 30px 0 10px;
+}
+.employer-ratings-container .ant-pagination .ant-pagination-options-quick-jumper {
+  font-size: 16px;
+}
+
+@media (max-width: 1150px) {
+  .employer-ratings-container .employer-ratings-select {
+    width: 95%;
+    padding: 0% 2.5%;
+  }
+  .employer-ratings-container .employer-ratings-select .ant-select-single.ant-select-lg {
+    width: 30%;
+  }
+  .employer-ratings-container .employer-ratings-list .employer-ratings-item{
+    width: 85%;
+    padding: 20px 5%;
+    margin: 25px 2.5%;
+  }
+}
+@media (max-width: 900px) {
+  .employer-ratings-container .employer-ratings-select .ant-select-single.ant-select-lg {
+    width: 30%;
+  }
+}
+@media (max-width: 700px) {
+  .employer-ratings-container .employer-ratings-select{
+    justify-content: center;
+  }
+  .employer-ratings-container .employer-ratings-select .ant-select-single.ant-select-lg {
+    width: 40%;
+  }
+}
+@media (max-width: 600px) {
+  .employer-ratings-container .employer-ratings-select{
+    flex-wrap: wrap;
+  }
+  .employer-ratings-container .employer-ratings-select .filter-rating{
+    margin-right: 0px;
+    margin-bottom: 15px;
+  }
+  .employer-ratings-container .employer-ratings-select .ant-select-single.ant-select-lg {
+    width: 90%;
+  }
+  .employer-ratings-container .employer-ratings-list .employer-ratings-item{
+    width: 80%;
+    padding: 20px 7.5%;
+    margin: 25px 2.5%;
+  }
+}
