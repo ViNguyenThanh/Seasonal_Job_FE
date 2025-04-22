@@ -11,7 +11,7 @@ const { TextArea } = Input;
 const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*, onSubmit, setIsValid*/ }) => {
 
     const formik = useFormik({
-        enableReinitialize: true, 
+        enableReinitialize: true,
         initialValues: {
             jobGroupName: jobGroup.jobGroupName || '',
             startDate: jobGroup.startDate || '',
@@ -85,7 +85,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
 
 
             // alert(`startDate: ${values.startDate}`);
-            
+
             console.log(values.startDate)
         },
     });
@@ -98,7 +98,16 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
 
     const disabled30DaysDate = (current, { from, type }) => {
         // vô hiệu hóa các ngày trước hôm nay
-        if (current && current < today) return true;
+        // if (current && current < today) return true;
+
+        const today = dayjs().startOf('day'); // Đảm bảo ngày hôm nay được đặt về đầu ngày
+        const minStartDate = today.add(7, 'days'); // Thêm 7 ngày vào ngày hôm nay để tạo ra ngày bắt đầu tối thiểu
+
+        // Vô hiệu hóa các ngày trước ngày bắt đầu tối thiểu
+        if (current && current < minStartDate) {
+            return true;
+        }
+
         // giới hạn khoảng thời gian trong vòng 30 ngày
         if (from) {
             const minDate = from.add(-30, 'days');
@@ -129,7 +138,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
 
     useEffect(() => {
         // console.log(formik.values);
-        if (formik.errors.jobGroupName){
+        if (formik.errors.jobGroupName) {
             setCheckErrorJobGroup(true);
         } else {
             setCheckErrorJobGroup(false);
@@ -189,6 +198,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
                                 placeholder="Ex: 1"
                                 id="numberOfJobPostings"
                                 name="numberOfJobPostings"
+                                defaultValue={1}
                                 min={1} // Không cho nhập số âm hoặc 0
                                 // InputNumber nhận giá trị kiểu number, trong khi formik.handleChange mặc định xử lý event.target.value. 
                                 // //Vì vậy, cần dùng formik.setFieldValue thay vì formik.handleChange.

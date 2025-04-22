@@ -134,8 +134,9 @@
 }
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .input.dob{
   margin-top: -1px;
-  padding-top: 3.5%;
-  padding-bottom: 3.2%;
+  /* padding-top: 3.5%;
+  padding-bottom: 3.2%; */
+  height: 42px;
 }
 /* chỉnh chiều cao của field Select */
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
@@ -176,7 +177,7 @@
   font-size: 17px;
   font-family: var(--font-oswald);
 } */
-.worker-edit-profile-content .modal-worker-description  .ql-snow * {
+.worker-edit-profile-content .modal-worker-description .ql-snow * {
   color: #3d3d3d !important;
   font-family: var(--font-oswald) !important;
   margin: 0;
@@ -367,6 +368,40 @@
   }
 }
 
+@media (max-width: 850px) {
+  .worker-edit-profile-content .modal-worker-double-field{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field {
+    width: 100%;
+  }
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .input {
+    padding-left: 30px;
+  }
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .ant-select-single .ant-select-selector {
+    padding-left: 30px;
+  }
+
+  .worker-edit-profile-content .modal-worker-trible-field{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field {
+    width: 100%;
+  }
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .input {
+    padding-left: 30px;
+  }
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    padding-left: 30px;
+  }
+
+  .worker-edit-profile-content .modal-worker-description .ql-container.ql-snow .ql-editor {
+    padding: 15px 30px;
+  }
+}
+
 @media (max-width: 750px) {
   .worker-profile-container .worker-edit-profile-btn{
     top: 10px;
@@ -375,11 +410,33 @@
   .worker-profile-container .worker-profile-left{
     margin-top: 30px;
   }
+  .worker-profile-left .worker-view-rating-btn{
+    display: flex;
+    justify-content: center;
+  }
   .worker-profile-right .worker-info p{
     width: 100%;
   }
 }
 @media (max-width: 500px) {
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .input {
+    padding-left: 20px;
+  }
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .ant-select-single .ant-select-selector {
+    padding-left: 20px;
+  }
+
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .input {
+    padding-left: 20px;
+  }
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    padding-left: 20px;
+  }
+
+  .worker-edit-profile-content .modal-worker-description .ql-container.ql-snow .ql-editor {
+    padding: 15px 20px;
+  }
+
   .worker-profile-left .worker-identity{
     flex-wrap: wrap;
   }

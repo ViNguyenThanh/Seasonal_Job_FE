@@ -41,6 +41,7 @@ import WorkerDetailForEmployer from './components/Employer/WorkerDetailForEmploy
 import ApplicationJobGroups from './components/Employer/ApplicationJobGroups/ApplicationJobGroups'
 import ApplicationsByJobPostings from './components/Employer/ApplicationsByJobPostings/ApplicationsByJobPostings'
 import ApplicationWorkerDetail from './components/Employer/ApplicationWorkerDetail/ApplicationWorkerDetail'
+import WorkerTransactionDetail from './components/Worker/WorkerTransactions/WorkerTransactionDetail'
 
 
 
@@ -123,6 +124,7 @@ function App() {
           <Route path="worker-jobs" element={<WorkerJobs />} />
           <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail />} />
           <Route path="worker-transactions" element={<WorkerTransactions />} />
+          <Route path="worker-transactions/worker-transaction-detail/:id" element={<WorkerTransactionDetail />} />
         </Route>
 
         {/* Employer */}
