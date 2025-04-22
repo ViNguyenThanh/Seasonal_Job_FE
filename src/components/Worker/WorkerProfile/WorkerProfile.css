@@ -80,7 +80,7 @@
   border-radius: 10px;
 }
 .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .ant-select-single .ant-select-selector {
-  font-size: 16px;
+  font-size: 18px;
   padding-left: 7%;
 }
 /* chỉnh màu khi field Select bị disabled */
@@ -137,6 +137,7 @@
   /* padding-top: 3.5%;
   padding-bottom: 3.2%; */
   height: 42px;
+  border-radius: 10px;
 }
 /* chỉnh chiều cao của field Select */
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
@@ -146,7 +147,7 @@
   padding-left: 8%;
 }
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-single .ant-select-selector {
-  font-size: 16px;
+  font-size: 18px;
 }
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
   border-color: #1677ff;
@@ -219,14 +220,14 @@
 .worker-profile-left .worker-identity .no-avatar{
   margin: 0;
   margin-right: 25px;
-  min-width: 100px;
-  width: 100px;
-  height: 100px;
+  min-width: 120px;
+  width: 120px;
+  height: 120px;
   background-color: #d9d9d9;
   border-radius: 50%;
   display: flex;
   justify-content: center;
-  font-size: 50px;
+  font-size: 60px;
   color: white;
 }
 .worker-profile-left .worker-identity .worker-name-star{
@@ -247,7 +248,7 @@
 
 .worker-profile-left .worker-view-rating-btn{
   width: 100%;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 .worker-profile-left .worker-view-rating-btn button{
   font-size: 18px;
@@ -341,6 +342,10 @@
     width: 100%;
     justify-content: center;
   }
+  .worker-profile-left .worker-view-rating-btn{
+    display: flex;
+    justify-content: center;
+  }
   .worker-profile-container .worker-profile-right{
     width: 100%;
     margin-top: 10px;
@@ -409,10 +414,6 @@
   }
   .worker-profile-container .worker-profile-left{
     margin-top: 30px;
-  }
-  .worker-profile-left .worker-view-rating-btn{
-    display: flex;
-    justify-content: center;
   }
   .worker-profile-right .worker-info p{
     width: 100%;

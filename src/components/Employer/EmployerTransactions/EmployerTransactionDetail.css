@@ -1,0 +1,120 @@
+.employer-transaction-detail-container {
+  width: 75%;
+  margin: 50px 7.5% 70px;
+  padding: 20px 5%;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+  position: relative;
+}
+
+.employer-transaction-detail-container .go-back-btn{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 25px;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.employer-transaction-detail-container .go-back-btn:hover{
+  color: rgb(109, 109, 109);
+  transition: 0.3s ease;
+}
+
+
+.employer-transaction-detail-container .employer-transaction-detail-title{
+  width: 75%;
+  padding: 0 12.5% 2%;
+  text-align: center;
+  margin: 0;
+  border-bottom: 1px solid rgba(118, 118, 118, 0.16);
+}
+
+.employer-transaction-detail-container .employer-transaction-detail-info{
+  width: 90%;
+  padding: 20px 5%;
+  color: #444444;
+  font-size: 22px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p{
+  width: 100%;
+  margin: 20px 0;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p .anticon{
+  font-size: 28px;
+  margin-right: 5px;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.double-content{
+  width: 47%;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.double-content span.pending {
+  color: #058cf3;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.double-content span.held {
+  color: #f1c40f;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.double-content span.released {
+  color: green;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.double-content span.cancelled {
+  color: #FF0000;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.amount{
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(118, 118, 118, 0.16);
+  text-align: right;
+  font-size: 23px;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.amount .anticon{
+  color: #444444;
+  font-size: 30px;
+  margin-right: 7px;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.amount br{
+  display: none;
+}
+.employer-transaction-detail-container .employer-transaction-detail-info p.amount span{
+  font-size: 30px;
+  color: #E2725B;
+}
+
+@media (max-width: 1150px) {
+  .employer-transaction-detail-container {
+    width: 80%;
+    margin: 50px 7.5% 70px;
+    padding: 20px 2.5%;
+  }
+  .employer-transaction-detail-container .go-back-btn{
+    top: 15px;
+    left: 15px;
+  }
+}
+@media (max-width: 950px) {
+  .employer-transaction-detail-container .employer-transaction-detail-info p.double-content{
+    width: 100%;
+  }
+  .employer-transaction-detail-container .employer-transaction-detail-info p.amount{
+    text-align: center;
+    padding-top: 15px;
+  }
+}
+@media (max-width: 750px) {
+  .employer-transaction-detail-container .employer-transaction-detail-info{
+    width: 80%;
+    padding: 20px 10%;
+  }
+}
+@media (max-width: 500px) {
+  .employer-transaction-detail-container .employer-transaction-detail-info p.amount{
+    line-height: 1.5;
+  }
+  .employer-transaction-detail-container .employer-transaction-detail-info p.amount br{
+    display: block;
+  }
+}

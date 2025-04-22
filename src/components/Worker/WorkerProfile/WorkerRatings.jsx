@@ -3,7 +3,7 @@ import './WorkerRatings.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { Empty, Pagination, Rate, Select } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, UserOutlined } from '@ant-design/icons';
 
 const WorkerRatings = () => {
   const navigate = useNavigate()
@@ -19,7 +19,8 @@ const WorkerRatings = () => {
     },
     {
       id: 2,
-      avatar: avatar,
+      // avatar: avatar,
+      avatar: '',
       employerName: "Tech Builders Ltd.",
       rating: 2,
       date: "01/09/2025",
@@ -251,7 +252,11 @@ const WorkerRatings = () => {
               {/*workerRatingsData*/ paginatedData.map((item) => (
                 <div className="worker-ratings-item" key={item.id}>
                   <div className="employer-name-avatar">
-                    <img src={item.avatar} />
+                    {item.avatar ? (
+                      <img src={item.avatar} />
+                    ) : (
+                      <p className='no-avatar'><UserOutlined /></p>
+                    )}
                     <p>{item.employerName}</p>
                   </div>
                   <div className="employer-rating-date">

@@ -63,7 +63,7 @@
 .worker-transaction-detail-container .worker-transaction-detail-info p.amount{
   width: 100%;
   margin-top: 20px;
-  padding-top: 10px;
+  padding-top: 15px;
   border-top: 1px solid rgba(118, 118, 118, 0.16);
   text-align: right;
   font-size: 23px;
