@@ -21,11 +21,11 @@
 }
 
 .worker-container .worker-left-container {
-    width: 17%;
+    width: 18%;
 }
 
 .worker-container .worker-right-container {
-    width: 83%;
+    width: 82%;
 }
 
 @media (max-width: 950px) {

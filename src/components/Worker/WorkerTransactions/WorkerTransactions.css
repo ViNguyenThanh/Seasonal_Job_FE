@@ -38,14 +38,14 @@
 .worker-transactions-top .worker-identity-wallet .no-avatar{
   margin: 0;
   margin-right: 25px;
-  min-width: 100px;
-  width: 100px;
-  height: 100px;
+  min-width: 120px;
+  width: 120px;
+  height: 120px;
   background-color: #d9d9d9;
   border-radius: 50%;
   display: flex;
   justify-content: center;
-  font-size: 50px;
+  font-size: 60px;
   color: white;
 }
 
@@ -179,23 +179,18 @@
   border: 1px solid #d8d8d8;
   padding: 10px 0;
 }
-
-.worker-transactions-whole-table .worker-transactions-table thead tr th.order-code {
+.worker-transactions-whole-table .worker-transactions-table thead tr th.job-posting-name {
+  width: 40%;
+}
+.worker-transactions-whole-table .worker-transactions-table thead tr th.date {
   width: 15%;
 }
-
-.worker-transactions-whole-table .worker-transactions-table thead tr th.date {
-  width: 25%;
-}
-
 .worker-transactions-whole-table .worker-transactions-table thead tr th.amount {
-  width: 30%;
+  width: 15%;
 }
-
 .worker-transactions-whole-table .worker-transactions-table thead tr th.status {
   width: 20%;
 }
-
 .worker-transactions-whole-table .worker-transactions-table thead tr th.detail {
   width: 10%;
 }
@@ -203,43 +198,35 @@
 .worker-transactions-whole-table .worker-transactions-table tbody tr {
   width: 100%;
 }
-
 .worker-transactions-whole-table .worker-transactions-table tbody tr td {
   border: 1px solid #eaeaea;
   padding: 10px 0;
   text-align: center;
   color: rgb(39, 39, 39)
 }
-
-.worker-transactions-whole-table .worker-transactions-table tbody tr td.order-code {
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.job-posting-name {
+  width: 35%;
+  padding: 15px 2.5%;
+  text-align: left;
+}
+.worker-transactions-whole-table .worker-transactions-table tbody tr td.date {
   width: 15%;
 }
-
-.worker-transactions-whole-table .worker-transactions-table tbody tr td.date {
-  width: 25%;
-}
-
 .worker-transactions-whole-table .worker-transactions-table tbody tr td.amount {
-  width: 30%;
+  width: 15%;
 }
-
 .worker-transactions-whole-table .worker-transactions-table tbody tr td.status {
   width: 20%;
 }
-
 .worker-transactions-whole-table .worker-transactions-table tbody tr td.status span.pending {
-  /* color: rgb(82, 82, 82); */
   color: #058cf3;
 }
-
 .worker-transactions-whole-table .worker-transactions-table tbody tr td.status span.released {
   color: green;
 }
-
 .worker-transactions-whole-table .worker-transactions-table tbody tr td.status span.cancelled {
   color: #FF0000;
 }
-
 .worker-transactions-whole-table .worker-transactions-table tbody tr td.detail {
   width: 10%;
 }

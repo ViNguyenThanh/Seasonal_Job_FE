@@ -26,6 +26,7 @@ import WorkerApplications from './components/Worker/WorkerApplications/WorkerApp
 import WorkerJobs from './components/Worker/WorkerJobs/WorkerJobs'
 import WorkerJobDetail from './components/Worker/WorkerJobs/WorkerJobDetail'
 import WorkerTransactions from './components/Worker/WorkerTransactions/WorkerTransactions'
+import WorkerTransactionDetail from './components/Worker/WorkerTransactions/WorkerTransactionDetail'
 
 
 import { getUserFromToken } from './utils/Token'
@@ -34,6 +35,8 @@ import { useEffect, useState } from 'react'
 import Admin from './pages/Admin/Admin'
 
 import Employer from './pages/Employer/Employer'
+import EmployerProfile from './components/Employer/EmployerProfile/EmployerProfile'
+import EmployerRatings from './components/Employer/EmployerProfile/EmployerRatings'
 import EmployerJobGroups from './components/Employer/EmployerJobGroups/EmployerJobGroups'
 import EmployerJobGroupDetail from './components/Employer/EmployerJobGroupDetail/EmployerJobGroupDetail'
 import EmployerJobPostingDetail from './components/Employer/EmployerJobPostingDetail/EmployerJobPostingDetail'
@@ -41,6 +44,8 @@ import WorkerDetailForEmployer from './components/Employer/WorkerDetailForEmploy
 import ApplicationJobGroups from './components/Employer/ApplicationJobGroups/ApplicationJobGroups'
 import ApplicationsByJobPostings from './components/Employer/ApplicationsByJobPostings/ApplicationsByJobPostings'
 import ApplicationWorkerDetail from './components/Employer/ApplicationWorkerDetail/ApplicationWorkerDetail'
+import EmployerTransactions from './components/Employer/EmployerTransactions/EmployerTransactions'
+import EmployerTransactionDetail from './components/Employer/EmployerTransactions/EmployerTransactionDetail'
 
 
 
@@ -123,10 +128,14 @@ function App() {
           <Route path="worker-jobs" element={<WorkerJobs />} />
           <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail />} />
           <Route path="worker-transactions" element={<WorkerTransactions />} />
+          <Route path="worker-transactions/worker-transaction-detail/:id" element={<WorkerTransactionDetail />} />
         </Route>
 
         {/* Employer */}
         <Route path='/employer/*' element={<Employer />}>
+          {/* Profile */}
+          <Route path='employer-profile' element={<EmployerProfile />} />
+          <Route path='employer-ratings' element={<EmployerRatings />} />
           {/* Application */}
           <Route path='application/job-groups' element={<ApplicationJobGroups />} />
           <Route path='application/job-groups/:jobGroupId' element={<ApplicationsByJobPostings />} />
@@ -136,6 +145,9 @@ function App() {
           <Route path='employer-job-groups/employer-job-group-detail/:id' element={<EmployerJobGroupDetail />} />
           <Route path='employer-job-groups/employer-job-group-detail/:id/employer-job-posting-detail/:id' element={<EmployerJobPostingDetail />} />
           <Route path='employer-job-groups/employer-job-group-detail/:groupId/employer-job-posting-detail/:postingId/worker-detail/:workerId' element={<WorkerDetailForEmployer />} />
+          {/* Transactions */}
+          <Route path='employer-transactions' element={<EmployerTransactions />} />
+          <Route path="employer-transactions/employer-transaction-detail/:id" element={<EmployerTransactionDetail />} />
         </Route>
 
         {/* Admin */}

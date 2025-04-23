@@ -113,7 +113,7 @@ const EmployerHeader = () => {
             label: "Profile",
             key: '1',
             icon: <UserOutlined />,
-            // onClick: () => { navigate('/admin/admin-home') },
+            onClick: () => navigate('/employer/employer-profile'),
         },
         {
             label: "Applications",
@@ -132,7 +132,7 @@ const EmployerHeader = () => {
             key: '4',
             icon: <CreditCardOutlined/>,
             style: { width: '160px' },
-            // onClick: handleLogout,
+            onClick: () => navigate('/employer/employer-transactions'),
         },
         {
             label: "Log Out",
