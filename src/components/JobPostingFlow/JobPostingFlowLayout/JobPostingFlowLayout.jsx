@@ -158,9 +158,9 @@ const JobPostingFlowLayout = () => {
 
 
   const handleDone = async () => {
-    console.log(jobGroup);
-    console.log(jobPostings);
-
+    // console.log(jobGroup);
+    // console.log(jobPostings);
+    message.loading('Processing...');
     try {
       const resJG = await jobGroupApi.createJobGroup({
         title: jobGroup.jobGroupName,
@@ -203,11 +203,13 @@ const JobPostingFlowLayout = () => {
         // console.log(resPayment);
 
         if (resPayment.status === 200) {
+          message.destroy()
           window.location.href = resPayment.data.checkoutUrl
         }
       }
     } catch (error) {
-      console.log(error);
+      message.destroy()
+      message.error('There is something wrong. Please try again.');
     }
 
     window.scrollTo(0, 350);

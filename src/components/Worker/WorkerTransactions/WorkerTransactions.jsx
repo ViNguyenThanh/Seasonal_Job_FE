@@ -1,13 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './WorkerTransactions.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { EyeOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Empty, Pagination, Select } from 'antd';
+import { paymentApi } from '../../../apis/payment.request';
 import { useNavigate } from 'react-router-dom';
 
 const WorkerTransactions = () => {
   const navigate = useNavigate();
 
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await paymentApi.getTransactions();
+        console.log(res.data);
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchTransactions();
+  }, []);
+  
   const transactionData = [
     { id: 1, jobPostingName: 'Công việc thời vụ cho sự kiện tổ chức vào tháng 7, cần người hỗ trợ công việc chuẩn bị, trang trí và quản lý sự kiện', date: '25/07/2025', amount: 6300000, status: 'PENDING' },
     { id: 2, jobPostingName: 'Vị trí freelancer marketing cho chiến dịch quảng bá trong tháng 8, cần người có kinh nghiệm digital marketing', date: '20/07/2025', amount: 1200000, status: 'RELEASED' },
