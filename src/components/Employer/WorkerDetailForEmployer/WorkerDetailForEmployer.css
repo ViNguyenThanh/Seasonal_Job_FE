@@ -207,6 +207,23 @@
   margin-right: 15px;
   margin-bottom: 0px;
 }
+.worker-detail-for-employer-info-right .worker-description .worker-description-content{
+  font-size: 20px !important;
+  color: #3d3d3d;
+}
+.worker-detail-for-employer-info-right .worker-description .worker-description-content p{
+  margin: 0;
+}
+.worker-detail-for-employer-info-right .worker-description .worker-description-content p span,
+.worker-detail-for-employer-info-right .worker-description .worker-description-content ul li,
+.worker-detail-for-employer-info-right .worker-description .worker-description-content ol li{
+  color: #3d3d3d !important;
+}
+.worker-detail-for-employer-info-right .worker-description .worker-description-content p a,
+.worker-detail-for-employer-info-right .worker-description .worker-description-content ul li a,
+.worker-detail-for-employer-info-right .worker-description .worker-description-content ol li a{
+  color: #187bcd !important;
+}
 .worker-detail-for-employer-info-right .worker-description p:last-child{
   max-width: fit-content;
   margin-top: 15px;

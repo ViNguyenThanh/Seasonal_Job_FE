@@ -169,6 +169,23 @@
   margin-right: 15px;
   margin-bottom: 0px;
 }
+.application-worker-detail-right .worker-description .worker-description-content{
+  font-size: 20px !important;
+  color: #3d3d3d;
+}
+.application-worker-detail-right .worker-description .worker-description-content p{
+  margin: 0;
+}
+.application-worker-detail-right .worker-description .worker-description-content p span,
+.application-worker-detail-right .worker-description .worker-description-content ul li,
+.application-worker-detail-right .worker-description .worker-description-content ol li{
+  color: #3d3d3d !important;
+}
+.application-worker-detail-right .worker-description .worker-description-content p a,
+.application-worker-detail-right .worker-description .worker-description-content ul li a,
+.application-worker-detail-right .worker-description .worker-description-content ol li a{
+  color: #187bcd !important;
+}
 .application-worker-detail-right .worker-description p:last-child{
   max-width: fit-content;
   margin-top: 15px;

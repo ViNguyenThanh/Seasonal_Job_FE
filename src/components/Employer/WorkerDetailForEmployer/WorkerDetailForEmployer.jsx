@@ -44,7 +44,7 @@ const WorkerDetailForEmployer = () => {
         const res = await jobExecuteApi.getDailyJobExecutes(workerId);
         console.log(res.data);
         // if (res.data.message === 'No job execute for this job posting') {
-          if (res.data.jobs.length === 0) {
+        if (res.data.jobs.length === 0) {
           setJobExecutes([]);
         } else {
           const sortedJobExecutes = res.data.jobs.sort((a, b) => {
@@ -67,7 +67,7 @@ const WorkerDetailForEmployer = () => {
           }));
           setJobExecutes(transformedExecutes);
           console.log(transformedExecutes);
-          
+
         }
       } catch (error) {
         console.log(error);
@@ -579,8 +579,12 @@ const WorkerDetailForEmployer = () => {
                 <>
                   <div className='worker-description'>
                     <p> <IdcardOutlined /> About me: </p>
-                    <p>{workerInfo?.description ? workerInfo?.description : "-- None --"}</p>
-                    {/* <p>-- None --</p> */}
+                    {/* <p>{workerInfo?.description ? workerInfo?.description : "-- None --"}</p> */}
+                    <div
+                      className='worker-description-content'
+                      dangerouslySetInnerHTML={{ __html: workerInfo?.description || "-- None --" }}
+                      style={{ whiteSpace: 'pre-wrap' }}
+                    />
                   </div>
                   {/* Nút Show less */}
                   <div className="show-more-less-btn show-less">

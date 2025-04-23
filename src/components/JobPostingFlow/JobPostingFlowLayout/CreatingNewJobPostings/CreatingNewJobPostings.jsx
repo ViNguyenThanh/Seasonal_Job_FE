@@ -5,6 +5,8 @@ import { useFormik } from 'formik';
 import { Collapse, Form, Input, InputNumber, Rate, Select } from 'antd';
 const { TextArea } = Input;
 const { Panel } = Collapse;
+import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill';
 
 const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostings, setCheckErrorJobPostings }) => {
   const [cityList, setCityList] = useState([]);
@@ -28,12 +30,12 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         city: jobPostings[index]?.city || '',
         district: jobPostings[index]?.district || '',
         ward: jobPostings[index]?.ward || '',
-        numberOfPeople: jobPostings[index]?.numberOfPeople || '',
-        salary: jobPostings[index]?.salary || '',
+        numberOfPeople: jobPostings[index]?.numberOfPeople || 1,
+        salary: jobPostings[index]?.salary || 1000,
         jobType: jobPostings[index]?.jobType || '',
         // specialSkills: jobPostings[index]?.specialSkills || '',
-        rating: jobPostings[index]?.rating || '',
-        gender: jobPostings[index]?.gender || '',
+        rating: jobPostings[index]?.rating || 3,
+        gender: jobPostings[index]?.gender || 'Any',
         descriptionJobPosting: jobPostings[index]?.descriptionJobPosting || '',
       },
       validationSchema: Yup.object({
@@ -110,7 +112,14 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
           // .min(0.5, "* You must rate at least 0.5 star")
           .required("* Required"),
         gender: Yup.string(),
-        descriptionJobPosting: Yup.string().required("* Required"),
+        // descriptionJobPosting: Yup.string().required("* Required"),
+        descriptionJobPosting: Yup.string()
+          .test("not-empty", "* Required", value => {
+            const div = document.createElement("div");
+            div.innerHTML = value || "";
+            const plainText = div.textContent || div.innerText || ""; // Chuyển HTML thành văn bản thuần túy
+            return plainText.trim() !== ""; // Kiểm tra nếu chuỗi không rỗng
+          }),
       }),
 
       onSubmit: (values) => {
@@ -366,6 +375,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 className='input'
                 size="large"
                 placeholder="Ex: 1"
+                defaultValue={1}
                 id="numberOfPeople"
                 name="numberOfPeople"
                 min={1} // Không cho nhập số âm hoặc 0
@@ -387,11 +397,14 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
               <InputNumber
                 className='input'
                 size="large"
-                placeholder="Ex: 3.000.000"
+                placeholder="Ex: 100.000"
                 addonAfter="VND"
                 id="salary"
                 name="salary"
-                min={1} // Không cho nhập số âm hoặc 0
+                // defaultValue={100000}
+                // min={100000} // Không cho nhập số âm hoặc 0
+                defaultValue={1000}
+                min={1000}
                 formatter={(value) => value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                 parser={(value) => value?.replace(/\./g, "")}
                 // InputNumber nhận giá trị kiểu number, trong khi formik.handleChange mặc định xử lý event.target.value. 
@@ -457,6 +470,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 value={formik.values.rating}
                 onChange={(value) => formik.setFieldValue("rating", value)}
                 onBlur={() => formik.setFieldTouched("rating", true)}
+                defaultValue={3}
               />
             </Form.Item>
           </div>
@@ -474,15 +488,17 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                   alignItems: 'center'
                 }}
                 placeholder="Select Gender"
-                showSearch
+                // showSearch
                 value={formik.values.gender || undefined}  // Sử dụng Formik để lấy giá trị
                 onChange={(value) => formik.setFieldValue("gender", value || "")}  //Đảm bảo giá trị khi sử dụng allowClear là một chuỗi rỗng khi null hoặc undefined
                 onBlur={() => formik.setTouched({ gender: true })}
                 allowClear
+                defaultActiveFirstOption
               >
                 <Select.Option value="0" disabled>
                   Select Gender
                 </Select.Option>
+                <Select.Option value="Any">Any</Select.Option>
                 <Select.Option value="Male">Male</Select.Option>
                 <Select.Option value="Female">Female</Select.Option>
               </Select>
@@ -497,7 +513,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
             validateStatus={formik.errors.descriptionJobPosting && formik.touched.descriptionJobPosting ? "error" : ""}
             help={formik.errors.descriptionJobPosting && formik.touched.descriptionJobPosting ? formik.errors.descriptionJobPosting : ""}
           >
-            <TextArea
+            {/* <TextArea
               showCount
               maxLength={2500}
               rows={10}
@@ -508,6 +524,14 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.descriptionJobPosting}
+            /> */}
+            <ReactQuill
+              theme="snow"
+              value={formik.values.descriptionJobPosting}
+              placeholder="Enter Job Group Description here..."
+              onChange={(value) => formik.setFieldValue("descriptionJobPosting", value)}
+              onBlur={() => formik.setFieldTouched("descriptionJobPosting", true)}
+              style={{ height: '200px', marginBottom: '50px' }}
             />
           </Form.Item>
         </div>
