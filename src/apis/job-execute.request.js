@@ -10,6 +10,12 @@ export const jobExecuteApi = {
             headers: { authorization: `Bearer ${token}` },
         });
     },
+    getDailyJobExecutes: (id) => {
+        const token = getToken();
+        return API.get(`/executes/job-execute/daily/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        })
+    },
     getJobExecuteByJobPostingId: (id) => {
         const token = getToken();
         return API.get(`/executes/job-execute/job-posting/${id}`, {

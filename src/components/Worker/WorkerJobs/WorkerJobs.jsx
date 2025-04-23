@@ -101,7 +101,7 @@ const WorkerJobs = () => {
     const fetchJobApplied = async () => {
       setLoading(true);
       const res = await getApplicationsByUserId()
-      console.log(res);
+      // console.log(res);
       if (res.data.length > 0) {
         const transformedApplications = res.data.map(application => {
           return {
@@ -111,12 +111,14 @@ const WorkerJobs = () => {
             location: application.JobPosting.location,  // Lấy location từ JobPosting
             salary: application.JobPosting.salary,  // Lấy salary từ JobPosting
             status: application.JobPosting.JobGroup.status,  // Trạng thái của ứng tuyển (ví dụ: completed)
-            today: formatDate(application.JobPosting.JobGroup.updatedAt)  // Lấy ngày hôm nay, định dạng "dd/mm/yyyy"
+            today: application.JobPosting.JobGroup.updatedAt  // Lấy ngày hôm nay, định dạng "dd/mm/yyyy"
           };
         });
-
+        console.log(transformedApplications);
+        
+        const sortedApplications = transformedApplications.sort((a, b) => new Date(b.today) - new Date(a.today));
         // Cập nhật lại state với dữ liệu mới
-        setApplications(transformedApplications);
+        setApplications(sortedApplications);
         setLoading(false);
       }
     }
@@ -250,7 +252,7 @@ const WorkerJobs = () => {
                     </div>
                   </div>
                   <div className="worker-jobs-item-right">
-                    <p><span className={`${getStatusClass(item.status)}`}>{item.status}</span> <br className='break-line-status' /> (Updated {item.today})</p>
+                    <p><span className={`${getStatusClass(item.status)}`}>{item.status}</span> <br className='break-line-status' /> (Updated {formatDate(item.today)})</p>
                   </div>
                 </div>
               ))}

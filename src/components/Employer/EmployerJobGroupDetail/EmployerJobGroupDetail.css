@@ -238,6 +238,11 @@
     background-color: #d9d9d9;
     cursor: not-allowed;
 } */
+.employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn .completed-btn{
+    background-color: rgba(0, 221, 0, 0.39);
+    color: rgb(0, 180, 0);
+    cursor: default;
+}
 
 .notice-before-start{
     font-size: 18px;

@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './WorkerDetailForEmployer.css'
-import { Breadcrumb, Button, Form, Image, Input, InputNumber, message, Modal, Pagination, Rate } from 'antd'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Breadcrumb, Button, Form, Image, Input, InputNumber, message, Modal, Pagination, Rate, Skeleton } from 'antd'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ContainerOutlined, DownOutlined, EnvironmentOutlined, EyeOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SnippetsOutlined, SolutionOutlined, StarOutlined, UpOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { userApi } from '../../../apis/user.request';
+import { jobExecuteApi } from '../../../apis/job-execute.request';
+import dayjs from 'dayjs';
 const { TextArea } = Input;
 
 const WorkerDetailForEmployer = () => {
@@ -13,9 +16,66 @@ const WorkerDetailForEmployer = () => {
   const location = useLocation();
   const item = location.state; //item này bao gồm cả jobGroupInfo ( thông tin của 1 group) và jobPostingInfo (thông tin của 1 posting) và workerInfo (thông tin của 1 worker)
   // console.log(item);
-
+  const { workerId, postingId } = useParams();
+  const [workerLoading, setWorkerLoading] = useState(true);
+  const [workerInfo, setWorkerInfo] = useState({});
   const [showMore, setShowMore] = useState(false);
   const [showMore2, setShowMore2] = useState(false);
+
+  const [jobExecutes, setJobExecutes] = useState([]);
+
+  useEffect(() => {
+    try {
+      const fetchWorkerInfo = async () => {
+        const res = await userApi.getUserById(workerId);
+        setWorkerLoading(false);
+        setWorkerInfo(res.data.data);
+      }
+      fetchWorkerInfo();
+    } catch (error) {
+      console.log(error);
+      setWorkerLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchJobExecute = async () => {
+      try {
+        const res = await jobExecuteApi.getDailyJobExecutes(workerId);
+        console.log(res.data);
+        // if (res.data.message === 'No job execute for this job posting') {
+          if (res.data.jobs.length === 0) {
+          setJobExecutes([]);
+        } else {
+          const sortedJobExecutes = res.data.jobs.sort((a, b) => {
+            const dateA = dayjs(a.assigned_at, 'DD/MM/YYYY');
+            const dateB = dayjs(b.assigned_at, 'DD/MM/YYYY');
+            return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0; // Sắp xếp theo ngày tăng dần
+          });
+
+          const transformedExecutes = sortedJobExecutes.map((item, index) => ({
+            id: item.id,
+            no: index + 1,
+            jobRequirement: item.note || "No description", // nếu bạn có trường mô tả
+            // assignmentDate: '22/04/2025',
+            assignmentDate: item.assigned_at || '',
+            checkInUrl: item.checkin_img || '',
+            checkOutUrl: item.checkout_img || '',
+            progress: item.work_process || 0,
+            progressCompleted: item.processComplete || 0,
+            reason: item.reason || ''
+          }));
+          setJobExecutes(transformedExecutes);
+          console.log(transformedExecutes);
+          
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchJobExecute()
+  }, [])
 
   // disabled nút Review trước ngày endDate, sau ngày endDate mở nút Review 3 ngày rồi sau sau đó lại disabled nút Review
   // const endDate = new Date('2025-04-14'); // YYYY-MM-DD
@@ -211,14 +271,14 @@ const WorkerDetailForEmployer = () => {
   };
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
-  const paginatedData = dummyData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const paginatedData = /*dummyData*/jobExecutes.length > 0 ? jobExecutes.slice((currentPage - 1) * pageSize, currentPage * pageSize) : [];
 
   const rowRefs = useRef([]);
 
   // bắt lỗi khi thay đổi Progress Completed và Reason 
   const formik = useFormik({
     initialValues: {
-      rows: dummyData.map((row) => ({
+      rows: /*dummyData*/jobExecutes.length > 0 && jobExecutes.map((row) => ({
         progressCompleted: row.progressCompleted,
         reason: row.reason || "", // dùng dữ liệu có sẵn nếu có
       })),
@@ -229,7 +289,7 @@ const WorkerDetailForEmployer = () => {
           progressCompleted: Yup.number()
             .test("editable-row-required", "* Required", function (value) {
               const index = parseInt(this.path.match(/\d+/)?.[0] || "-1");
-              const row = dummyData[index];
+              const row = /*dummyData*/jobExecutes[index];
               if (!row) return true; // fallback
               if ((isToday(row.assignmentDate) && row.checkInUrl && row.checkOutUrl) || isYesterday(row.assignmentDate)) {
                 return value !== undefined && value !== null;
@@ -240,7 +300,7 @@ const WorkerDetailForEmployer = () => {
           reason: Yup.string()
             .test("editable-row-reason-required", "* Required if Progress Completed changed", function (value) {
               const index = parseInt(this.path.match(/\d+/)?.[0] || "-1");
-              const row = dummyData[index];
+              const row = /*dummyData*/jobExecutes[index];
               const progressCompleted = this.parent.progressCompleted;
               if (!row) return true;
 
@@ -258,12 +318,13 @@ const WorkerDetailForEmployer = () => {
 
 
     onSubmit: async (values) => {
-      const updated = [...dummyData];
+      const updated = [.../*dummyData*/jobExecutes];
       values.rows.forEach((row, i) => {
         updated[i].progressCompleted = row.progressCompleted;
         updated[i].reason = row.reason;
       });
-      setDummyData(updated); // cập nhật lại dữ liệu
+      // setDummyData(updated); // cập nhật lại dữ liệu
+      setJobExecutes(updated);
       message.success("Update successfully!");
       setIsEditing(false);
 
@@ -331,8 +392,9 @@ const WorkerDetailForEmployer = () => {
   };
 
   useEffect(() => {
-    scrollToValidRow(dummyData);
-  }, [dummyData]);
+    // scrollToValidRow(dummyData);
+    scrollToValidRow(jobExecutes)
+  }, [/*dummyData*/jobExecutes]);
 
 
 
@@ -341,7 +403,7 @@ const WorkerDetailForEmployer = () => {
   const [isEditing, setIsEditing] = useState(false);
   // nút edit chỉ được phép bấm khi có ngày assignmentDate trùng với today, 
   // và có assignmentDate trùng với ngày hôm qua 
-  const hasTodayOrYesterday = dummyData.some((row) => {
+  const hasTodayOrYesterday = /*dummyData*/jobExecutes.length > 0 && jobExecutes.some((row) => {
     const isTodayRow = isToday(row.assignmentDate) && row.checkInUrl && row.checkOutUrl;
     const isYesterdayRow = isYesterday(row.assignmentDate);
     return isTodayRow || isYesterdayRow;
@@ -390,17 +452,23 @@ const WorkerDetailForEmployer = () => {
       <div className='worker-detail-for-employer-container'>
         <div className="worker-detail-for-employer-info">
           <div className="worker-detail-for-employer-info-left">
-            <div className="worker-identity">
-              <img src={avatar} />
-              <div className="worker-name-star">
-                <p>{item.workerInfo?.workerName}</p>
-                <div><Rate defaultValue={4} disabled /></div>
+            {workerLoading ? (
+              <div className='worker-identity'>
+                <Skeleton.Avatar active size={120} />
               </div>
-            </div>
+            ) : (
+              <div className="worker-identity">
+                <img src={workerInfo?.avatar ? workerInfo?.avatar : avatar} />
+                <div className="worker-name-star">
+                  <p>{workerInfo?.fullName}</p>
+                  <div><Rate defaultValue={4} disabled /></div>
+                </div>
+              </div>
+            )}
 
             <div className="worker-rating">
               <p> * You have 3 days to review this worker starting from the day after the Job Group's End Date. <br />
-              After 3 days, reviewing is no longer allowed.
+                After 3 days, reviewing is no longer allowed.
                 <br />
                 {/* * If no review is submitted within this period, the system will automatically assign a 5-star
                 rating by default for this worker.  */}
@@ -488,43 +556,46 @@ const WorkerDetailForEmployer = () => {
             </div>
           </div>
 
-          <div className="worker-detail-for-employer-info-right">
-            <h2>Worker Information</h2>
-            <div className="worker-info">
-              <p className='worker-email'><MailOutlined /> {item.workerInfo?.email}</p>
-              <p><UserSwitchOutlined /> Female  </p> {/* -- None -- */}
+          {workerLoading ? (
+            <div className='worker-detail-for-employer-info-right'>
+              <Skeleton active />
+              <Skeleton active />
             </div>
-            <div className="worker-info">
-              <p><EnvironmentOutlined /> Tỉnh Tây Ninh, Huyện Dương Minh Châu</p>
-              <p><PhoneOutlined rotate={90} /> 0123456789 </p>
-            </div>
-            <div className="worker-info">
-              <p><GiftOutlined /> 01/01/2000</p>
-            </div>
-            {showMore && (
-              <>
-                <div className='worker-description'>
-                  <p> <IdcardOutlined /> About me: </p>
-                  <p>I am an energetic individual with experience in seasonal jobs such as sales,
-                    customer service support, and gift wrapping during holidays. I have also worked
-                    in production environments with high workloads and participated in event organization,
-                    assisting with exhibitions and fairs. I am adaptable, work efficiently under pressure,
-                    and quickly adjust to job demands.</p>
-                  {/* <p>-- None --</p> */}
-                </div>
-                {/* Nút Show less */}
-                <div className="show-more-less-btn show-less">
-                  <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
-                </div>
-              </>
-            )}
-            {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
-            {!showMore && (
-              <div className="show-more-less-btn">
-                <button onClick={() => setShowMore(true)}><DownOutlined /> Show more</button>
+          ) : (
+            <div className="worker-detail-for-employer-info-right">
+              <h2>Worker Information</h2>
+              <div className="worker-info">
+                <p className='worker-email'><MailOutlined /> {workerInfo?.email}</p>
+                <p><UserSwitchOutlined /> Female  </p> {/* -- None -- */}
               </div>
-            )}
-          </div>
+              <div className="worker-info">
+                <p><EnvironmentOutlined /> {workerInfo?.address ? workerInfo?.address : "-- None --"}</p>
+                <p><PhoneOutlined rotate={90} /> {workerInfo?.phoneNumber ? workerInfo?.phoneNumber : "-- None --"} </p>
+              </div>
+              <div className="worker-info">
+                <p><GiftOutlined /> 01/01/2000</p>
+              </div>
+              {showMore && (
+                <>
+                  <div className='worker-description'>
+                    <p> <IdcardOutlined /> About me: </p>
+                    <p>{workerInfo?.description ? workerInfo?.description : "-- None --"}</p>
+                    {/* <p>-- None --</p> */}
+                  </div>
+                  {/* Nút Show less */}
+                  <div className="show-more-less-btn show-less">
+                    <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
+                  </div>
+                </>
+              )}
+              {/* Nút Show more (chỉ hiển thị khi showMore = false) */}
+              {!showMore && (
+                <div className="show-more-less-btn">
+                  <button onClick={() => setShowMore(true)}><DownOutlined /> Show more</button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {statusStart && (
@@ -693,9 +764,9 @@ const WorkerDetailForEmployer = () => {
                           </td>
                         ) : (
                           <td className="reason">
-                            {formik.values.rows[globalIndex].progressCompleted === data.progress
+                            {formik.values.rows[globalIndex]?.progressCompleted === data.progress
                               ? ""
-                              : formik.values.rows[globalIndex].reason || ""}
+                              : formik.values.rows[globalIndex]?.reason || ""}
                           </td>
                         )}
 
@@ -708,7 +779,7 @@ const WorkerDetailForEmployer = () => {
             <Pagination
               current={currentPage}
               pageSize={pageSize}
-              total={dummyData.length}
+              total={/*dummyData*/jobExecutes.length}
               onChange={handlePageChange}
               showSizeChanger={false}
               align="center"
@@ -724,7 +795,7 @@ const WorkerDetailForEmployer = () => {
                   className='edit-btn'
                   disabled={!hasTodayOrYesterday}
                   onClick={() => {
-                    scrollToValidRow(dummyData);
+                    scrollToValidRow(/*dummyData*/jobExecutes);
                     setIsEditing(true);
                   }}
                 >

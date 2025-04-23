@@ -1,10 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './WorkerTransactions.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { EyeOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Empty, Pagination, Select } from 'antd';
+import { paymentApi } from '../../../apis/payment.request';
 
 const WorkerTransactions = () => {
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await paymentApi.getTransactions();
+        console.log(res.data);
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchTransactions();
+  }, []);
   const transactionData = [
     { id: 1, orderCode: 'XTR582', date: '25/07/2025', amount: 6300000, status: 'PENDING' },
     { id: 2, orderCode: 'WFD109', date: '20/07/2025', amount: 1200000, status: 'RELEASED' },

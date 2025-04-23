@@ -11,7 +11,7 @@ const ApplicationWorkerDetail = () => {
   const navigate = useNavigate()
   const location = useLocation();
   const item = location.state // gồm thông tin của 1 jobGroup (jobGroupInfo) và thông tin của 1 worker (workerInfo)
-  // console.log(item)
+  console.log(item)
 
   /* Hiển thị file pdf */
   const [previewVisible, setPreviewVisible] = useState(false); // hiển thị modal preview
@@ -192,14 +192,14 @@ const ApplicationWorkerDetail = () => {
         </div>
 
         <div className="approve-reject-btn" >
-          {!isApproved && !isRejected ? (
+          {(item.workerInfo.status === 'submitted' || item.workerInfo.status === 'viewed') && !isApproved && !isRejected ? (
             <>
               <button className='approve-btn' onClick={() => showConfirm("approved")}>Approve</button>
               <button className='reject-btn' onClick={() => showConfirm("rejected")}>Reject</button>
             </>
           ) : (
-            <button className={`disabled-btn ${isApproved ? 'approved' : 'rejected'}`} disabled>
-              {isApproved ? 'Approved' : 'Rejected'}
+            <button className={`disabled-btn ${item.workerInfo.status === 'approved' ? 'approved' : 'rejected'}`} disabled>
+              {item.workerInfo.status === 'approved' ? 'Approved' : 'Rejected'}
             </button>
           )}
 

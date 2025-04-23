@@ -12,4 +12,13 @@ export const paymentApi = {
             },
         });
     },
+
+    getTransactions: () => {
+        const token = getToken();
+        return API.post("/payment/paymentHistory", {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        });
+    },
 }
