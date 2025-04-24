@@ -27,7 +27,7 @@
     outline: none !important;  Tắt hoàn toàn viền focus 
 } */
 
-.ant-menu-item {
+.admin-container .ant-menu-item {
     user-select: none; /* Tắt chọn text khi click vào */
     /*-webkit-tap-highlight-color: transparent;  Tắt hiệu ứng khi click trên mobile */
 }
@@ -35,3 +35,14 @@
 /* .ant-menu-item a {
     pointer-events: none;  Chặn sự kiện focus trên các thẻ link bên trong 
 } */
+
+/* chỉnh màu nút khi hover */
+.admin-container .ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover, 
+.admin-container .ant-menu-light>.ant-menu:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover {
+    background-color: #22D8DB;
+}
+/* chỉnh màu nút khi active */
+.admin-container .ant-menu-light .ant-menu-item-selected, 
+.admin-container .ant-menu-light>.ant-menu .ant-menu-item-selected {
+    background-color: #22D8DB;
+}

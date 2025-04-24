@@ -1,12 +1,31 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './EmployerTransactions.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { EyeOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Empty, Pagination, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { paymentApi } from '../../../apis/payment.request';
 
 const EmployerTransactions = () => {
   const navigate = useNavigate();
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await paymentApi.getTransactions();
+        console.log(res.data);
+        setTransactions(res.data.data);
+
+      } catch (error) {
+        console.log(error);
+        if (error.status === 404) {
+          setTransactions([]);
+        }
+      }
+    }
+    fetchTransactions();
+  }, []);
 
   const transactionData = [
     { id: 1, jobGroupName: 'Công việc chuẩn bị cho sự kiện lớn vào tháng 7, cần người hỗ trợ dọn dẹp, trang trí và quản lý sự kiện', date: '25/07/2025', amount: 1050000, status: 'PENDING' },
@@ -49,12 +68,12 @@ const EmployerTransactions = () => {
   const [amountValue, setAmountValue] = useState(null);
   const [statusValue, setStatusValue] = useState(null);
 
-  const filteredTransactions = transactionData.filter(item => {
+  const filteredTransactions = /*transactionData*/transactions.length > 0 ? transactions.filter(item => {
     return (
       (!statusValue || item.status === statusValue) &&
       (!amountValue || (item.amount >= amountValue[0] && item.amount <= amountValue[1]))
     );
-  })
+  }) : []
 
   const [dateFilter, setDateFilter] = useState(null);
   const convertToDate = (dateString) => {
@@ -101,7 +120,7 @@ const EmployerTransactions = () => {
       <div className="employer-transactions-bottom">
         <h1>My transaction history</h1>
 
-        {transactionData.length === 0 ? (
+        {/*transactionData*/transactions.length === 0 ? (
           <div className="no-transactions">
             <Empty description="You do not have a transaction yet!" />
           </div>

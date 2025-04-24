@@ -16,9 +16,13 @@ const WorkerTransactions = () => {
       try {
         const res = await paymentApi.getTransactions();
         console.log(res.data);
+        setTransactions(res.data.data);
         
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        if(error.status === 404) {
+          setTransactions([]);
+        }
       }
     }
     fetchTransactions();
@@ -64,12 +68,12 @@ const WorkerTransactions = () => {
   const [amountValue, setAmountValue] = useState(null);
   const [statusValue, setStatusValue] = useState(null);
 
-  const filteredTransactions = transactionData.filter(item => {
+  const filteredTransactions = /*transactionData*/transactions.length > 0 ? transactions.filter(item => {
     return (
       (!statusValue || item.status === statusValue) &&
       (!amountValue || (item.amount >= amountValue[0] && item.amount <= amountValue[1]))
     );
-  })
+  }) : []
 
   const [dateFilter, setDateFilter] = useState(null);
   const convertToDate = (dateString) => {
@@ -116,7 +120,7 @@ const WorkerTransactions = () => {
       <div className="worker-transactions-bottom">
         <h1>My transaction history</h1>
 
-        {transactionData.length === 0 ? (
+        {/*transactionData*/transactions.length === 0 ? (
           <div className="no-transactions">
             <Empty description="You do not have a transaction yet!" />
           </div>

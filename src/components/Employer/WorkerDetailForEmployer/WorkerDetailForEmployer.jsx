@@ -41,10 +41,11 @@ const WorkerDetailForEmployer = () => {
   useEffect(() => {
     const fetchJobExecute = async () => {
       try {
-        const res = await jobExecuteApi.getDailyJobExecutes(workerId);
-        console.log(res.data);
-        // if (res.data.message === 'No job execute for this job posting') {
-          if (res.data.jobs.length === 0) {
+        // const res = await jobExecuteApi.getDailyJobExecutes(workerId);
+        const res = await jobExecuteApi.getJobExecuteByJobPostingId(postingId);
+        // console.log(res.data);
+        if (res.data.message === 'No job execute for this job posting') {
+          // if (res.data.jobs.length === 0) {
           setJobExecutes([]);
         } else {
           const sortedJobExecutes = res.data.jobs.sort((a, b) => {
@@ -67,7 +68,7 @@ const WorkerDetailForEmployer = () => {
           }));
           setJobExecutes(transformedExecutes);
           console.log(transformedExecutes);
-          
+
         }
       } catch (error) {
         console.log(error);
