@@ -140,7 +140,7 @@ const JobDetailView = () => {
 
         try {
             const response = await uploadCV(selectedFile); // Call the uploadCV API with the selected file
-            // console.log("Application submitted successfully:", response);
+            console.log("Application submitted successfully:", response);
             if (response.status === 201) {
                 const resApply = await cvApi.applyjob(jobDetail.id, {
                     jobPostingId: jobDetail.id,

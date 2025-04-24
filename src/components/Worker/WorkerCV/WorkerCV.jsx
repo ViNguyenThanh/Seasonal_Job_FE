@@ -93,7 +93,7 @@ const WorkerCV = () => {
       console.log("Upload response:", uploadResponse);
 
       // Extract the CV ID from the response
-      const cvId = uploadResponse.data; // Assuming the backend returns the ID in `data`
+      const cvId = uploadResponse.data.data; // Access the nested `data` property for the CV ID
 
       if (!cvId) {
         console.error("Upload response missing required fields:", uploadResponse);
@@ -101,8 +101,14 @@ const WorkerCV = () => {
       }
 
       // Fetch the uploaded CV details
-      const userCVs = await cvApi.getUserCVs(userId);
-      const uploadedCV = userCVs.data.find((cv) => cv.id === cvId);
+      const userCVsResponse = await cvApi.getUserCVs(userId);
+      const userCVs = userCVsResponse.data; // Ensure you access the correct array of CVs
+
+      if (!Array.isArray(userCVs)) {
+        throw new Error("Invalid response format: CVs data is not an array.");
+      }
+
+      const uploadedCV = userCVs.find((cv) => cv.id === cvId);
 
       if (!uploadedCV) {
         throw new Error("Uploaded CV details could not be retrieved.");
