@@ -46,7 +46,8 @@ import ApplicationsByJobPostings from './components/Employer/ApplicationsByJobPo
 import ApplicationWorkerDetail from './components/Employer/ApplicationWorkerDetail/ApplicationWorkerDetail'
 import EmployerTransactions from './components/Employer/EmployerTransactions/EmployerTransactions'
 import EmployerTransactionDetail from './components/Employer/EmployerTransactions/EmployerTransactionDetail'
-
+import Dashboard from './components/Admin/Dashboard/Dashboard'
+import AccountManagement from './components/Admin/ManageAccounts/AccountManagement'
 
 
 
@@ -152,7 +153,8 @@ function App() {
 
         {/* Admin */}
         <Route path='/admin/*' element={<Admin />}>
-
+          <Route path='manage-accounts' element={<AccountManagement />} />
+          <Route path='dashboard' element={<Dashboard />} />
         </Route>
       </Routes>
     </>
