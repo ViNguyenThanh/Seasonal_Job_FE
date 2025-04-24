@@ -113,7 +113,7 @@ const EmployerHeader = () => {
             label: "Profile",
             key: '1',
             icon: <UserOutlined />,
-            // onClick: () => { navigate('/admin/admin-home') },
+            onClick: () => navigate('/employer/employer-profile'),
         },
         {
             label: "Applications",
@@ -132,7 +132,7 @@ const EmployerHeader = () => {
             key: '4',
             icon: <CreditCardOutlined/>,
             style: { width: '160px' },
-            // onClick: handleLogout,
+            onClick: () => navigate('/employer/employer-transactions'),
         },
         {
             label: "Log Out",
@@ -208,7 +208,8 @@ const EmployerHeader = () => {
                                     navigate("/job-posting-flow/posting-notifications")
                                     window.scrollTo(0, 0);
                                 }}
-                                className={location.pathname === '/job-posting-flow/posting-notifications' ? 'active' : ''}
+                                // className={location.pathname === '/job-posting-flow/posting-notifications' ? 'active' : ''}
+                                className={location.pathname === '/job-posting-flow/posting-notifications' || location.pathname === '/job-posting-flow/creating-new-job-group' ? 'active' : ''}
                             >
                                 Job Posting
                             </li>

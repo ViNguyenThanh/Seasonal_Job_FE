@@ -7,16 +7,18 @@ import { DatePicker, Form, Input, InputNumber } from 'antd';
 const { RangePicker } = DatePicker;
 import dayjs from 'dayjs';
 const { TextArea } = Input;
+import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill';
 
 const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*, onSubmit, setIsValid*/ }) => {
 
     const formik = useFormik({
-        enableReinitialize: true, 
+        enableReinitialize: true,
         initialValues: {
             jobGroupName: jobGroup.jobGroupName || '',
             startDate: jobGroup.startDate || '',
             endDate: jobGroup.endDate || '',
-            numberOfJobPostings: jobGroup.numberOfJobPostings || '',
+            numberOfJobPostings: jobGroup.numberOfJobPostings || 1,
             descriptionJobGroup: jobGroup.descriptionJobGroup || '',
         },
         validationSchema: Yup.object({
@@ -67,7 +69,14 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
                 // .typeError("* Must be a number") // Chỉ báo lỗi nếu nhập sai kiểu (vd: nhập chữ)
                 // .min(1, "* Must be at least 1")
                 .required("* Required"),
-            descriptionJobGroup: Yup.string().required("* Required"),
+            // descriptionJobGroup: Yup.string().required("* Required"),
+            descriptionJobGroup: Yup.string()
+                .test("not-empty", "* Required", value => {
+                  const div = document.createElement("div");
+                  div.innerHTML = value || "";
+                  const plainText = div.textContent || div.innerText || ""; // Chuyển HTML thành văn bản thuần túy
+                  return plainText.trim() !== ""; // Kiểm tra nếu chuỗi không rỗng
+                }),
         }),
 
         // ** Hiện tại bên đây bỏ handleSubmit rồi nên ko cần hàm onSubmit này nữa
@@ -85,7 +94,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
 
 
             // alert(`startDate: ${values.startDate}`);
-            
+
             console.log(values.startDate)
         },
     });
@@ -98,7 +107,16 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
 
     const disabled30DaysDate = (current, { from, type }) => {
         // vô hiệu hóa các ngày trước hôm nay
-        if (current && current < today) return true;
+        // if (current && current < today) return true;
+
+        const today = dayjs().startOf('day'); // Đảm bảo ngày hôm nay được đặt về đầu ngày
+        const minStartDate = today.add(7, 'days'); // Thêm 7 ngày vào ngày hôm nay để tạo ra ngày bắt đầu tối thiểu
+
+        // Vô hiệu hóa các ngày trước ngày bắt đầu tối thiểu
+        if (current && current < minStartDate) {
+            return true;
+        }
+
         // giới hạn khoảng thời gian trong vòng 30 ngày
         if (from) {
             const minDate = from.add(-30, 'days');
@@ -129,7 +147,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
 
     useEffect(() => {
         // console.log(formik.values);
-        if (formik.errors.jobGroupName){
+        if (formik.errors.jobGroupName) {
             setCheckErrorJobGroup(true);
         } else {
             setCheckErrorJobGroup(false);
@@ -189,6 +207,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
                                 placeholder="Ex: 1"
                                 id="numberOfJobPostings"
                                 name="numberOfJobPostings"
+                                defaultValue={1}
                                 min={1} // Không cho nhập số âm hoặc 0
                                 // InputNumber nhận giá trị kiểu number, trong khi formik.handleChange mặc định xử lý event.target.value. 
                                 // //Vì vậy, cần dùng formik.setFieldValue thay vì formik.handleChange.
@@ -254,7 +273,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
                         validateStatus={formik.errors.descriptionJobGroup && formik.touched.descriptionJobGroup ? "error" : ""}
                         help={formik.errors.descriptionJobGroup && formik.touched.descriptionJobGroup ? formik.errors.descriptionJobGroup : ""}
                     >
-                        <TextArea
+                        {/* <TextArea
                             showCount
                             maxLength={2500}
                             rows={10}
@@ -265,6 +284,14 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             value={formik.values.descriptionJobGroup}
+                        /> */}
+                        <ReactQuill
+                            theme="snow"
+                            value={formik.values.descriptionJobGroup}
+                            placeholder="Enter Job Group Description here..."
+                            onChange={(value) => formik.setFieldValue("descriptionJobGroup", value)}
+                            onBlur={() => formik.setFieldTouched("descriptionJobGroup", true)}
+                            style={{ height: '200px', marginBottom: '50px' }}
                         />
                     </Form.Item>
                 </div>

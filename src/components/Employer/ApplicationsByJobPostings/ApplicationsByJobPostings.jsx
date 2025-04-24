@@ -32,11 +32,11 @@ const ApplicationsByJobPostings = () => {
           const res = await getApplicationsForJob(jobPosting.id);
           console.log(res);
 
-          const filteredApplications = res.filter(item =>
-            item.status === 'submitted' || item.status === 'viewed'
-          );
+          // const filteredApplications = res.filter(item =>
+          //   item.status === 'submitted' || item.status === 'viewed'
+          // );
 
-          return filteredApplications.map(item => ({
+          return /*filteredApplications*/res.map(item => ({
             id: item.CV.User.id,
             applicationId: item.id,
             workerName: item.CV.User.fullName,
@@ -111,7 +111,7 @@ const ApplicationsByJobPostings = () => {
   };
   
 
-  const filteredWorkers = listWorkers/*!isLoading && listApplications.length > 0 ? listApplications*/.filter(item => {
+  const filteredWorkers = /*listWorkers*/!isLoading && listApplications.length > 0 ? listApplications.filter(item => {
     // const searchTermLower = searchTerm.toLowerCase();
     const searchTermLower = (searchTerms[currentTabKey] || '').toLowerCase();
     const jobPostingNameValue = jobPostingNameValues[currentTabKey];
@@ -135,7 +135,7 @@ const ApplicationsByJobPostings = () => {
         || item.email.toLowerCase().includes(searchTermLower)
       )
     );
-  }) /*: []*/;
+  }) : [];
 
   // dùng useEffect để khi giá trị của jobPostingNameValue thay đổi, reset searchTerm
   /*useEffect(() => {
@@ -148,7 +148,7 @@ const ApplicationsByJobPostings = () => {
 
 
   // Lọc các jobPostingName duy nhất
-  const uniqueJobPostingNames = [...new Set(listWorkers/*listApplications*/.map(worker => worker.jobPostingName))];
+  const uniqueJobPostingNames = [...new Set(/*listWorkers*/listApplications.map(worker => worker.jobPostingName))];
 
   // Phân trang dữ liệu (cắt dữ liệu theo trang)
   const paginatedData = /*listWorkers*/ filteredWorkers.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -208,7 +208,7 @@ const ApplicationsByJobPostings = () => {
                   </button> */}
                   <h1 className='pending'>Pending <br /> Applications</h1>
 
-                  {listWorkers./*listApplications?.*/length === 0 ? (
+                  {/*listWorkers.*/listApplications?.length === 0 ? (
                     <div className="no-applications">
                       <Empty description="You currently have no pending applications" />
                     </div>
@@ -306,7 +306,7 @@ const ApplicationsByJobPostings = () => {
                 <div className="workers-list">
                   <h1 className='approved'>Approved <br /> Applications</h1>
 
-                  {listWorkers./*listApplications?.*/length === 0 ? (
+                  {/*listWorkers.*/listApplications?.length === 0 ? (
                     <div className="no-applications">
                       <Empty description="You currently have no approved applications" />
                     </div>
@@ -396,7 +396,7 @@ const ApplicationsByJobPostings = () => {
                 <div className="workers-list">
                   <h1 className='rejected'>Rejected <br /> Applications</h1>
 
-                  {listWorkers./*listApplications?.*/length === 0 ? (
+                  {/*listWorkers.*/listApplications?.length === 0 ? (
                     <div className="no-applications">
                       <Empty description="You currently have no rejected applications" />
                     </div>

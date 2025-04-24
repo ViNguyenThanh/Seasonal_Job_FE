@@ -44,7 +44,7 @@
     color: red
 }
 .creating-new-job-postings-form .job-postings-field .input {
-    padding-left: 3%;
+    padding-left: 25px;
     font-family: var(--font-oswald);
     font-size: 16px;
 }
@@ -86,7 +86,7 @@
     height: 130%;
     border: 1px solid #d9d9d9;
     border-radius: 10px;
-    padding-left: 8%;
+    padding-left: 20px;
 }
 .creating-new-job-postings-form .job-postings-info .job-postings-address .ant-select-single .ant-select-selector {
     font-size: 16px;
@@ -210,7 +210,7 @@
     height: 130%;
     border: 1px solid #d9d9d9;
     border-radius: 10px;
-    padding-left: 8%;
+    padding-left: 20px;
 }
 .creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-select-single .ant-select-selector {
     font-size: 16px;
@@ -237,10 +237,36 @@
 .creating-new-job-postings-form .job-postings-field .ant-input-textarea-affix-wrapper.ant-input-affix-wrapper >textarea.ant-input {
     font-family: var(--font-oswald);
     font-size: 16px;
-    padding-left: 3%;
+    padding-left: 25px;
+}
+.creating-new-job-postings-form .job-postings-field .ql-snow * {
+    color: #3d3d3d !important;
+    font-family: var(--font-oswald) !important;
+    font-size: 16px;
+    margin: 0;
+}
+/* chỉnh placeholder của description */ 
+.creating-new-job-postings-form .job-postings-field .ql-editor.ql-blank::before {
+    font-style: normal !important;
+    color: #BFBFBF;
+    font-weight: 350;
+    padding-left: 12px;
+}
+.creating-new-job-postings-form .job-postings-field .ql-toolbar.ql-snow {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.creating-new-job-postings-form .job-postings-field .ql-toolbar.ql-snow + .ql-container.ql-snow {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 0 12px;
 }
 
-
+@media (max-width: 1300px) {
+    .creating-new-job-postings-form .job-postings-info .job-postings-gender .ant-form-item-with-help {
+        width: 40%;
+    }
+}
 @media (max-width: 1200px) {
     .creating-new-job-postings-form .job-postings-info {
         flex-wrap: wrap;

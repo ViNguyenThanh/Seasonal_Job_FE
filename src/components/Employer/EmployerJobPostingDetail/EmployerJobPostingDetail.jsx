@@ -27,6 +27,7 @@ const EmployerJobPostingDetail = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [jobExecutes, setJobExecutes] = useState([]);
   const [isHasJobExecute, setIsHasJobExecute] = useState(false);
+  const isDayValidate = new Date() < new Date(item.jobPostingInfo.end_date);
   const today = dayjs().format('DD/MM/YYYY');
 
   useEffect(() => {
@@ -309,15 +310,15 @@ const EmployerJobPostingDetail = () => {
   };
 
   /*List Workers*/
-  // const [listWorkers, setListWorkers] = useState([])
-  const listWorkers = [
-    { id: 1, workerName: 'Nguyễn Anh', email: 'nguyen.anh@example.com', avatar: avatar },
-    { id: 2, workerName: 'Trần Minh', email: 'tran.minh@example.com', avatar: avatar },
-    { id: 3, workerName: 'Lê Thị Mai', email: 'le.thi.mai@example.com', avatar: avatar },
-    { id: 4, workerName: 'Phạm Thanh', email: 'pham.thanh@example.com', avatar: avatar },
-    { id: 5, workerName: 'Hoàng Tú', email: 'hoang.tu@example.com', avatar: avatar },
-    { id: 6, workerName: 'Nguyễn Minh Hoàng', email: 'nguyen.minh.hoang@example.com', avatar: avatar },
-  ];
+  const [listWorkers, setListWorkers] = useState([])
+  // const listWorkers = [
+  //   { id: 1, workerName: 'Nguyễn Anh', email: 'nguyen.anh@example.com', avatar: avatar },
+  //   { id: 2, workerName: 'Trần Minh', email: 'tran.minh@example.com', avatar: avatar },
+  //   { id: 3, workerName: 'Lê Thị Mai', email: 'le.thi.mai@example.com', avatar: avatar },
+  //   { id: 4, workerName: 'Phạm Thanh', email: 'pham.thanh@example.com', avatar: avatar },
+  //   { id: 5, workerName: 'Hoàng Tú', email: 'hoang.tu@example.com', avatar: avatar },
+  //   { id: 6, workerName: 'Nguyễn Minh Hoàng', email: 'nguyen.minh.hoang@example.com', avatar: avatar },
+  // ];
 
   // Quản lý phân trang
   const [currentPage, setCurrentPage] = useState(1); // Trạng thái trang hiện tại
@@ -331,7 +332,7 @@ const EmployerJobPostingDetail = () => {
     if (workerTitleRef.current) {
       const elementPosition = workerTitleRef.current.getBoundingClientRect().top + window.pageYOffset;
       window.scrollTo({ top: elementPosition - 120, left: 0, behavior: 'smooth' });
-  }
+    }
   };
   // chức năng Search Worker
   const [searchTerm, setSearchTerm] = useState('');
@@ -350,23 +351,23 @@ const EmployerJobPostingDetail = () => {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const newList = await Promise.all(payload.map(async (jobPosting) => {
-          const res = await getApplicationsForJob(jobPosting.id);
-          // console.log(res);
+        // const newList = await Promise.all(payload.map(async (jobPosting) => {
+        const res = await getApplicationsForJob(item.jobPostingInfo.id);
+        console.log(res);
 
-          const filteredApplications = res.filter(item =>
-            item.status === 'approved'
-          );
+        const filteredApplications = res.filter(item =>
+          item.status === 'approved'
+        );
 
-          return filteredApplications.map(item => ({
-            id: item.CV.User.id,
-            workerName: item.CV.User.fullName,
-            email: item.CV.User.email,
-            avatar: avatar,
-          }));
+        const newList = filteredApplications.map(item => ({
+          id: item.CV.User.id,
+          workerName: item.CV.User.fullName,
+          email: item.CV.User.email,
+          avatar: item.CV.User.avatar
         }));
+        // }));
         setListWorkers(newList.flat());
-        console.log(newList.flat());
+        // console.log(newList.flat());
       } catch (error) {
         console.log(error);
         // message.error(error.data.message);
@@ -455,7 +456,12 @@ const EmployerJobPostingDetail = () => {
                 Bên cạnh đó, nhân viên đóng gói cần phải tuân thủ các quy định và tiêu chuẩn về an toàn lao động, đặc biệt là khi làm việc với các vật liệu đóng gói có thể gây hại nếu không sử dụng đúng cách. Công ty tổ chức sự kiện sẽ cung cấp đầy đủ trang thiết bị bảo hộ lao động và đào tạo về các biện pháp an toàn khi làm việc với các vật liệu đóng gói.
 
                 Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p> */}
-              <p><FileTextOutlined /> Description: <br /> {item.jobPostingInfo.description} </p>
+              
+              {/* <p><FileTextOutlined /> Description: <br /> {item.jobPostingInfo.description} </p> */}
+              
+              <p><FileTextOutlined /> Description:</p>
+              <div className='description' dangerouslySetInnerHTML={{ __html: item.jobPostingInfo.description }} style={{ whiteSpace: 'pre-wrap' }} />
+              
               {/* Nút Show less */}
               <div className="show-more-less-btn">
                 <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
@@ -471,7 +477,7 @@ const EmployerJobPostingDetail = () => {
         </div>
 
         {item.jobGroupInfo.isPaid && (<>
-          {/*!statusStart*/ item.jobGroupInfo.status === 'inactive' && (
+          {/*!statusStart*/ (item.jobGroupInfo.status === 'inactive' && isDayValidate) && (
             <div className="employer-job-posting-not-executed">
               <Tabs
                 defaultActiveKey="1"
@@ -750,7 +756,7 @@ const EmployerJobPostingDetail = () => {
                               <>
                                 {/*listWorkers*/ paginatedData.map((worker) => (
                                   <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}/worker-detail/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } }, window.scrollTo(0, 0))}>
-                                    <img src={worker.avatar} />
+                                    <img src={worker.avatar ? worker.avatar : avatar} />
                                     <div className="worker-info">
                                       <p className='worker-name'>{worker.workerName}</p>
                                       <p className='worker-email'>{worker.email}</p>
@@ -812,7 +818,7 @@ const EmployerJobPostingDetail = () => {
                       <>
                         {/*listWorkers*/ paginatedData.map((worker) => (
                           <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}/worker-detail/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } }, window.scrollTo(0, 0))}>
-                            <img src={worker.avatar} />
+                            <img src={worker.avatar ? worker.avatar : avatar} />
                             <div className="worker-info">
                               <p className='worker-name'>{worker.workerName}</p>
                               <p className='worker-email'>{worker.email}</p>

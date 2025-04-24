@@ -80,7 +80,7 @@
   border-radius: 10px;
 }
 .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .ant-select-single .ant-select-selector {
-  font-size: 16px;
+  font-size: 18px;
   padding-left: 7%;
 }
 /* chỉnh màu khi field Select bị disabled */
@@ -134,8 +134,10 @@
 }
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .input.dob{
   margin-top: -1px;
-  padding-top: 3.5%;
-  padding-bottom: 3.2%;
+  /* padding-top: 3.5%;
+  padding-bottom: 3.2%; */
+  height: 42px;
+  border-radius: 10px;
 }
 /* chỉnh chiều cao của field Select */
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
@@ -145,7 +147,7 @@
   padding-left: 8%;
 }
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-single .ant-select-selector {
-  font-size: 16px;
+  font-size: 18px;
 }
 .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
   border-color: #1677ff;
@@ -176,7 +178,7 @@
   font-size: 17px;
   font-family: var(--font-oswald);
 } */
-.worker-edit-profile-content .modal-worker-description  .ql-snow * {
+.worker-edit-profile-content .modal-worker-description .ql-snow * {
   color: #3d3d3d !important;
   font-family: var(--font-oswald) !important;
   margin: 0;
@@ -188,6 +190,7 @@
 .worker-edit-profile-content .modal-worker-description .ql-toolbar.ql-snow + .ql-container.ql-snow {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  padding: 0 15px;
 }
 .worker-edit-profile-content .modal-worker-description .ant-form-item .ant-form-item-explain-error {
   color: red;
@@ -218,14 +221,14 @@
 .worker-profile-left .worker-identity .no-avatar{
   margin: 0;
   margin-right: 25px;
-  min-width: 100px;
-  width: 100px;
-  height: 100px;
+  min-width: 120px;
+  width: 120px;
+  height: 120px;
   background-color: #d9d9d9;
   border-radius: 50%;
   display: flex;
   justify-content: center;
-  font-size: 50px;
+  font-size: 60px;
   color: white;
 }
 .worker-profile-left .worker-identity .worker-name-star{
@@ -246,7 +249,7 @@
 
 .worker-profile-left .worker-view-rating-btn{
   width: 100%;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 .worker-profile-left .worker-view-rating-btn button{
   font-size: 18px;
@@ -340,6 +343,10 @@
     width: 100%;
     justify-content: center;
   }
+  .worker-profile-left .worker-view-rating-btn{
+    display: flex;
+    justify-content: center;
+  }
   .worker-profile-container .worker-profile-right{
     width: 100%;
     margin-top: 10px;
@@ -367,6 +374,40 @@
   }
 }
 
+@media (max-width: 850px) {
+  .worker-edit-profile-content .modal-worker-double-field{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field {
+    width: 100%;
+  }
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .input {
+    padding-left: 30px;
+  }
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .ant-select-single .ant-select-selector {
+    padding-left: 30px;
+  }
+
+  .worker-edit-profile-content .modal-worker-trible-field{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field {
+    width: 100%;
+  }
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .input {
+    padding-left: 30px;
+  }
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    padding-left: 30px;
+  }
+
+  .worker-edit-profile-content .modal-worker-description .ql-container.ql-snow .ql-editor {
+    padding: 20px 15px;
+  }
+}
+
 @media (max-width: 750px) {
   .worker-profile-container .worker-edit-profile-btn{
     top: 10px;
@@ -380,6 +421,20 @@
   }
 }
 @media (max-width: 500px) {
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .input {
+    padding-left: 20px;
+  }
+  .worker-edit-profile-content .modal-worker-double-field .modal-worker-field .ant-select-single .ant-select-selector {
+    padding-left: 20px;
+  }
+
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .input {
+    padding-left: 20px;
+  }
+  .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+    padding-left: 20px;
+  }
+
   .worker-profile-left .worker-identity{
     flex-wrap: wrap;
   }

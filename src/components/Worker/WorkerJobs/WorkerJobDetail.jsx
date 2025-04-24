@@ -130,9 +130,9 @@ const WorkerJobDetail = () => {
     }, [])
 
     const updateJobExecute = async (jobId, data) => {
+        message.loading('Updating...');
         try {
             const formData = new FormData();
-
             if (
                 data.checkInFileList.length > 0 &&
                 data.checkInFileList[0].originFileObj
@@ -148,18 +148,20 @@ const WorkerJobDetail = () => {
             }
 
             formData.append('processComplete', data.progressCompleted || 0);
-            for (let pair of formData.entries()) {
-                console.log(pair[0] + ': ' + pair[1]); // In ra key và value của FormData
-            }
+            // for (let pair of formData.entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]); // In ra key và value của FormData
+            // }
 
             const result = await jobExecuteApi.updateJobExecute(jobId, formData);
 
             if (result.status === 200) {
+                message.destroy()
                 message.success('Update successfully');
             }
 
         } catch (error) {
             console.error('Error:', error);
+            message.destroy()
             message.error('An error occurred while updating');
         }
     };
@@ -433,7 +435,7 @@ const WorkerJobDetail = () => {
             )}
 
             <h1 className='worker-job-execute-title' ref={jobTitleRef} >Work Progress Table</h1>
-            <p className='warning-notice'> * You are required to submit both Check-in and Check-out photos every day. If not submitted, your Progress Completed for that day will be automatically set to 0%.</p>
+            <p className='warning-notice'> * You are required to submit both Check-in and Check-out photos on the specified Assignment Date. If not submitted, your Progress Completed for that day will be automatically set to 0%.</p>
             <div className="worker-job-execute-whole-table">
                 <table className="worker-job-execute-table">
                     <thead>
@@ -469,7 +471,15 @@ const WorkerJobDetail = () => {
                                                 //     });
                                                 //     return false; // Ngăn upload thật
                                                 // }}
-                                                beforeUpload={() => false} // 🚫 Không upload tự động
+                                                // beforeUpload={() => false} // 🚫 Không upload tự động
+                                                beforeUpload={(file) => {
+                                                    const isImage = file.type.startsWith('image/'); // Kiểm tra xem file có phải là ảnh không
+                                                    if (!isImage) {
+                                                        message.error('You can only upload image files!');
+                                                        return Upload.LIST_IGNORE;
+                                                    }
+                                                    return false; // Nếu không phải ảnh, sẽ không cho upload
+                                                }}
                                                 fileList={data.checkInFileList}
                                                 onChange={(e) => handleCheckInChange(index, e)}
                                                 onPreview={(file) => handlePreview(file, 'check-in')}
@@ -506,20 +516,6 @@ const WorkerJobDetail = () => {
                                                 // onClick={() => setPreviewImage(data.checkInFileList[0].url)}
                                                 style={{ cursor: 'pointer' }}
                                             />
-                                            {/* {previewImage && ( */}
-                                            {checkInPreviewImage && (
-                                                <Image
-                                                    wrapperStyle={{ display: 'none' }}
-                                                    preview={{
-                                                        visible: previewOpen,
-                                                        onVisibleChange: (visible) => setPreviewOpen(visible),
-                                                        // afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                                                        afterOpenChange: (visible) => !visible && setCheckInPreviewImage(''),
-                                                    }}
-                                                    // src={previewImage}
-                                                    src={checkInPreviewImage}
-                                                />
-                                            )}
                                         </td>
                                     ) : (
                                         <td className="check-in not-allowed">
@@ -530,7 +526,15 @@ const WorkerJobDetail = () => {
                                     {data.assignmentDate === today ? (
                                         <td className="check-out">
                                             <Upload
-                                                beforeUpload={() => false} // 🚫 Không upload tự động
+                                                // beforeUpload={() => false} // 🚫 Không upload tự động
+                                                beforeUpload={(file) => {
+                                                    const isImage = file.type.startsWith('image/'); // Kiểm tra xem file có phải là ảnh không
+                                                    if (!isImage) {
+                                                        message.error('You can only upload image files!');
+                                                        return Upload.LIST_IGNORE;
+                                                    }
+                                                    return false; // Nếu không phải ảnh, sẽ không cho upload
+                                                }}
                                                 // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
                                                 listType="picture-card"
                                                 fileList={data.checkOutFileList}
@@ -569,20 +573,6 @@ const WorkerJobDetail = () => {
                                                 // onClick={() => setPreviewImage(data.checkOutFileList[0].url)}
                                                 style={{ cursor: 'pointer' }}
                                             />
-                                            {/* {previewImage && ( */}
-                                            {checkOutPreviewImage && (
-                                                <Image
-                                                    wrapperStyle={{ display: 'none' }}
-                                                    preview={{
-                                                        visible: previewOpen,
-                                                        onVisibleChange: (visible) => setPreviewOpen(visible),
-                                                        // afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                                                        afterOpenChange: (visible) => !visible && setCheckOutPreviewImage(''),
-                                                    }}
-                                                    // src={previewImage}
-                                                    src={checkOutPreviewImage}
-                                                />
-                                            )}
                                         </td>
                                     ) : (
                                         <td className="check-out not-allowed">

@@ -8,6 +8,8 @@ import { getJobGroupById } from '../../../redux/actions/jobgroups.action';
 import { getJobPostingByJGId } from '../../../redux/actions/jobposting.action';
 import { jobExecuteApi } from '../../../apis/job-execute.request';
 import { jobGroupApi } from '../../../apis/job-group.request';
+import { paymentApi } from '../../../apis/payment.request';
+import { getApplicationsForJob } from '../../../apis/application.request';
 
 
 const EmployerJobGroupDetail = () => {
@@ -32,8 +34,6 @@ const EmployerJobGroupDetail = () => {
     const startDate = new Date(jobGroupInfo?.start_date);
     const endDate = new Date(jobGroupInfo?.end_date);
     endDate.setHours(23, 59, 59, 999)
-    console.log(endDate);
-
 
     const listData = [
         {
@@ -85,7 +85,7 @@ const EmployerJobGroupDetail = () => {
     useEffect(() => {
         dispatch(getJobGroupById(id))
         dispatch(getJobPostingByJGId(id))
-    }, [dispatch])
+    }, [confirmLoading])
 
     const handleOpenModal = (action) => {
         setActionType(action); // Cập nhật actionType khi nhấn Start hoặc End
@@ -95,10 +95,11 @@ const EmployerJobGroupDetail = () => {
 
     const handleStartJobGroup = async () => {
         setConfirmLoading(true);
+        let numberWorkers = 0
         try {
             for (const element of jobPostings) {
                 const res = await jobExecuteApi.getJobExecuteByJobPostingId(element.id)
-                console.log(res.data);
+                // console.log(res.data);
                 if (res.data.message === "No job execute for this job posting") {
                     message.error(`Job Execute is not created for Job Posting: ${element.title}`);
                     setOpenResponsive(false)
@@ -123,13 +124,31 @@ const EmployerJobGroupDetail = () => {
                         return; // Dừng vòng lặp, không tiếp tục kiểm tra các jobExecute khác
                     }
                 }
+
+                const applications = await getApplicationsForJob(element.id);
+
+                const filteredApplications = applications.filter(item =>
+                    item.status === 'approved'
+                );
+
+                if (filteredApplications.length > 0) {
+                    numberWorkers += 1
+                }
             }
+
+            if (numberWorkers === 0) {
+                message.error("There are no workers assigned to this job group");
+                setOpenResponsive(false)
+                setConfirmLoading(false);
+                return;
+            }
+
             const res = await jobGroupApi.updateJobGroup(jobGroupInfo.id, { status: "active" })
             setConfirmLoading(false);
             setOpenResponsive(false)
             message.success("Job Group started successfully!");
             // navigate(`employer/employer-job-groups/employer-job-group-detail/${jobGroupInfo.id}`)
-            navigate(0)
+            // navigate(0)
         } catch (error) {
             console.log(error);
             setOpenResponsive(false)
@@ -141,6 +160,29 @@ const EmployerJobGroupDetail = () => {
         // alert("End job group");
         const res = await jobGroupApi.updateJobGroup(jobGroupInfo.id, { status: "completed" })
         setOpenResponsive(false)
+    }
+
+    const handlePayment = async () => {
+        message.loading('Processing...');
+        try {
+            const data = {
+                jobGroupId: id,
+                orderId: Date.now()
+            }
+            console.log(data);
+
+            const resPayment = await paymentApi.createPayment(data)
+            // console.log(resPayment);
+
+            if (resPayment.status === 200) {
+                message.destroy()
+                window.location.href = resPayment.data.checkoutUrl
+            }
+        } catch (error) {
+            console.log(error);
+            message.destroy()
+            message.error('Payment failed')
+        }
     }
 
     return (
@@ -202,9 +244,14 @@ const EmployerJobGroupDetail = () => {
                                 Bên cạnh đó, nhân viên đóng gói cần phải tuân thủ các quy định và tiêu chuẩn về an toàn lao động, đặc biệt là khi làm việc với các vật liệu đóng gói có thể gây hại nếu không sử dụng đúng cách. Công ty tổ chức sự kiện sẽ cung cấp đầy đủ trang thiết bị bảo hộ lao động và đào tạo về các biện pháp an toàn khi làm việc với các vật liệu đóng gói.
 
                                 Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p> */}
-                                <p><FileTextOutlined /> Description: <br />
+                                
+                                {/* <p><FileTextOutlined /> Description: <br />
                                     {jobGroupInfo?.description}
-                                </p>
+                                </p> */}
+
+                                <p><FileTextOutlined /> Description:</p>
+                                <div className='description' dangerouslySetInnerHTML={{ __html: jobGroupInfo?.description }} style={{ whiteSpace: 'pre-wrap' }} />
+                                
                                 {/* Nút Show less */}
                                 <div className="show-more-less-btn">
                                     <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>
@@ -223,6 +270,11 @@ const EmployerJobGroupDetail = () => {
                                 <button>Expired</button>
                                 <p>The Job Group has expired because the payment was not made before the Start Date.</p>
                             </div>
+                        ) : (jobGroupInfo?.isPaid && jobGroupInfo?.status === 'inactive' && today > endDate) ? (
+                            <div className='expired-message'>
+                                <button>Expired</button>
+                                <p>The Job Group has expired</p>
+                            </div>
                         ) : jobGroupInfo?.isPaid ? (
                             <div className="start-end-btn">
                                 {(jobGroupInfo?.status === 'inactive' && today < endDate) && (
@@ -237,19 +289,18 @@ const EmployerJobGroupDetail = () => {
                                         onClick={() => handleOpenModal('end')}
                                     >End</button>
                                 )}
+                                {(jobGroupInfo?.status === 'completed') && (
+                                    <button className='completed-btn'>Completed</button>
+                                )}
                                 {/* <button
                                     className='end-btn'
                                     disabled={jobGroupInfo?.status !== 'active'}
                                 >End</button> */}
                             </div>
-                        ) : (today < startDate && !jobGroupInfo?.isPaid) ? (
+                        ) : (today < startDate && !jobGroupInfo?.isPaid) && (
                             <div className='payment-btn'>
                                 <p>You haven't paid <br /> to post job</p>
-                                <button>Payment</button>
-                            </div>
-                        ) : (
-                            <div className='expired-message'>
-                                <p>The Job Group has expired</p>
+                                <button onClick={() => handlePayment()}>Payment</button>
                             </div>
                         )}
                     </div>

@@ -79,6 +79,19 @@
     font-size: 28px;
     margin-right: 11px;
 }
+.employer-job-posting-detail-container .employer-job-posting-detail-info .description p{
+    margin: 0;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .description p span,
+.employer-job-posting-detail-container .employer-job-posting-detail-info .description ul li,
+.employer-job-posting-detail-container .employer-job-posting-detail-info .description ol li{
+  color: #3d3d3d !important;
+}
+.employer-job-posting-detail-container .employer-job-posting-detail-info .description p a,
+.employer-job-posting-detail-container .employer-job-posting-detail-info .description ul li a,
+.employer-job-posting-detail-container .employer-job-posting-detail-info .description ol li a{
+  color: #187bcd !important;
+}
 
 .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info{
     width: 100%;

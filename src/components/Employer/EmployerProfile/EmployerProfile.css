@@ -1,0 +1,404 @@
+.employer-profile-container{
+  width: 75%;
+  margin: 50px 7.5% 70px;
+  padding: 50px 5% 70px;
+  min-height: 350px;
+  background-color: white;
+  box-shadow: 0 1px 10px 3px rgba(118, 118, 118, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.employer-profile-container .employer-edit-profile-btn{
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 30px;
+  color: #187bcd;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.employer-profile-container .employer-edit-profile-btn:hover{
+  color: #0059b3;
+  transform: scale(1.2);
+  transition: 0.3s ease;
+}
+
+/* chỉnh Modal Edit Profile */
+/* có chỉnh ở component WorkerDetailForEmployer */
+/* .ant-modal .ant-modal-content {
+  margin: 0 5% !important;
+} */
+.employer-edit-profile-title{
+  margin: 10px 0 15px;
+  font-size: 22px;
+  color: #187bcd;
+}
+.employer-edit-profile-content{
+  width: 96%;
+  padding: 0 2%;
+  margin-bottom: 50px;
+}
+.employer-edit-profile-content .modal-employer-avatar{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.employer-edit-profile-content .modal-employer-double-field{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field {
+  width: 47%;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field p{
+  font-size: 18px;
+  margin: 10px 0;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field p span{
+  color: red;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field p.city,
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field p.district{
+  margin: 10px 0 13px;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field .input {
+  width: 100%;
+  padding-left: 7%;
+  font-size: 17px;
+  font-family: var(--font-oswald);
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field .input.dob{
+  margin-top: -1px;
+  height: 42px;
+  border-radius: 10px;
+}
+ /* chỉnh chiều cao của field Select */
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+  height: 130%;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field .ant-select-single .ant-select-selector {
+  font-size: 18px;
+  padding-left: 7%;
+}
+/* chỉnh màu khi field Select bị disabled */
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  cursor: not-allowed;
+  background: rgb(255, 255, 255) !important;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: 0;
+}
+/* chỉnh size chữ khi mở dropdown select */
+.ant-select-dropdown .ant-select-item-option-content {
+  font-size: 16px !important;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field .ant-form-item {
+  margin-bottom: 10px;
+}
+.employer-edit-profile-content .modal-employer-double-field .modal-employer-field .ant-form-item .ant-form-item-explain-error {
+  color: red;
+  font-size: 16px;
+  padding: 2% 0 3%;
+}
+
+.employer-edit-profile-content .modal-employer-description {
+  width: 100%;
+}
+.employer-edit-profile-content .modal-employer-description p{
+  font-size: 18px;
+  margin: 10px 0;
+}
+.employer-edit-profile-content .modal-employer-description p span{
+  color: red;
+}
+/* .employer-edit-profile-content .modal-employer-description .input {
+  padding-left: 3%;
+  font-size: 17px;
+  font-family: var(--font-oswald);
+} */
+.employer-edit-profile-content .modal-employer-description .ql-snow * {
+  color: #3d3d3d !important;
+  font-family: var(--font-oswald) !important;
+  margin: 0;
+}
+.employer-edit-profile-content .modal-employer-description .ql-toolbar.ql-snow {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.employer-edit-profile-content .modal-employer-description .ql-toolbar.ql-snow + .ql-container.ql-snow {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.employer-edit-profile-content .modal-employer-description .ant-form-item .ant-form-item-explain-error {
+  color: red;
+  font-size: 16px;
+  /* padding: 1% 0 0; */
+  padding: 0% 0 0;
+}
+
+
+
+.employer-profile-container .employer-profile-left{
+  width: 50%;
+}
+
+.employer-profile-left .employer-identity{
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+.employer-profile-left .employer-identity img{
+  width: 120px;
+  height: 120px;
+  /* background-color: black; */
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  margin-right: 25px;
+}
+.employer-profile-left .employer-identity .no-avatar{
+  margin: 0;
+  margin-right: 25px;
+  min-width: 120px;
+  width: 120px;
+  height: 120px;
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  font-size: 65px;
+  color: white;
+}
+.employer-profile-left .employer-identity .employer-name-star{
+  width: 100%;
+}
+.employer-profile-left .employer-identity .employer-name-star p{
+  width: 80%;
+  padding-right: 20%;
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+.employer-profile-left .employer-identity .employer-name-star div{
+  width: 100%;
+}
+.employer-profile-left .employer-identity .employer-name-star .anticon{
+  font-size: 27px;
+}
+
+.employer-profile-left .employer-view-rating-btn{
+  width: 100%;
+  margin-top: 30px;
+}
+.employer-profile-left .employer-view-rating-btn button{
+  font-size: 18px;
+  color: white;
+  background-color:	#FFB300;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 15px 7px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.employer-profile-left .employer-view-rating-btn button:hover{
+  background-color: #FFA000;
+  transition: 0.3s ease;
+}
+
+
+.employer-profile-container .employer-profile-right{
+  width: 50%;
+}
+
+.employer-profile-right .employer-info{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.employer-profile-right .employer-info p{
+  width: 70%;
+  min-width: fit-content;
+  font-size: 20px;
+  color: #3d3d3d;
+  margin-bottom: 10px;
+}
+.employer-profile-right .employer-info p:last-child{
+  width: 30%;
+}
+.employer-profile-right .employer-info p .anticon{
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+.employer-profile-right .employer-description{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+.employer-profile-right .employer-description p{
+  max-width: fit-content;
+  font-size: 20px;
+  color: #3d3d3d;
+  margin-right: 15px;
+  margin-bottom: 0px;
+}
+.employer-profile-right .employer-description .employer-description-content{
+  /* width: 100%; */
+  font-size: 20px !important;
+  color: #3d3d3d;
+  margin-top: 10px;
+  /* word-break: break-word; */
+}
+.employer-profile-right .employer-description .employer-description-content p{
+  margin: 0;
+}
+.employer-profile-right .employer-description .employer-description-content p span,
+.employer-profile-right .employer-description .employer-description-content ul li,
+.employer-profile-right .employer-description .employer-description-content ol li{
+  color: #3d3d3d !important;
+}
+.employer-profile-right .employer-description .employer-description-content p a,
+.employer-profile-right .employer-description .employer-description-content ul li a,
+.employer-profile-right .employer-description .employer-description-content ol li a{
+  color: #187bcd !important;
+}
+.employer-profile-right .employer-description p:last-child{
+  max-width: fit-content;
+  /* margin-top: 15px; */
+}
+.employer-profile-right .employer-description .anticon{
+  font-size: 30px;
+  margin-right: 10px;
+}
+
+@media (max-width: 1300px) {
+  .employer-profile-container{
+    width: 70%;
+    margin: 50px 7.5% 70px;
+    padding: 50px 7.5% 70px;
+  }
+  .employer-profile-container .employer-profile-left{
+    width: 100%;
+    justify-content: center;
+  }
+  .employer-profile-left .employer-view-rating-btn{
+    display: flex;
+    justify-content: center;
+  }
+  .employer-profile-container .employer-profile-right{
+    width: 100%;
+    margin-top: 10px;
+  }
+  .employer-profile-left .employer-identity{
+    margin-bottom: 15px;
+    justify-content: center;
+    align-items: center;
+  }
+  .employer-profile-left .employer-identity .employer-name-star{
+    width: fit-content;
+  }
+  .employer-profile-left .employer-identity .employer-name-star p{
+    width: fit-content;
+    padding-right: 7%;
+  }
+  .employer-profile-left .employer-identity .employer-name-star div{
+    width: fit-content;
+  }
+}
+
+@media (max-width: 850px) {
+  .employer-profile-container{
+    width: 65%;
+    margin: 50px 7.5% 70px;
+    padding: 50px 10% 70px;
+  }
+
+  .employer-edit-profile-content .modal-employer-double-field{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .employer-edit-profile-content .modal-employer-double-field .modal-employer-field {
+    width: 100%;
+  }
+  .employer-edit-profile-content .modal-employer-double-field .modal-employer-field .input {
+    padding-left: 30px;
+  }
+  .employer-edit-profile-content .modal-employer-double-field .modal-employer-field .ant-select-single .ant-select-selector {
+    padding-left: 30px;
+  }
+
+  .employer-edit-profile-content .modal-employer-description .ql-container.ql-snow .ql-editor {
+    padding: 15px 30px;
+  }
+
+  .employer-profile-left .employer-identity{
+    flex-wrap: wrap;
+  }
+  .employer-profile-left .employer-identity img{
+    margin-right: 0;
+  }
+  .employer-profile-left .employer-identity .no-avatar{
+    margin-right: 0;
+  }
+  .employer-profile-left .employer-identity .employer-name-star{
+    width: 100%;
+  }
+  .employer-profile-left .employer-identity .employer-name-star p{
+    width: 80%;
+    padding: 0 7% 0 13%;
+    font-size: 28px;
+    margin-top: 20px;
+  }
+  .employer-profile-left .employer-identity .employer-name-star div{
+    width: 70%;
+    padding: 0 15%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 750px) {
+  .employer-profile-container .employer-edit-profile-btn{
+    top: 10px;
+    right: 20px;
+  }
+  .employer-profile-container .employer-profile-left{
+    margin-top: 30px;
+  }
+  .employer-profile-right .employer-info p{
+    width: 100%;
+  }
+}
+@media (max-width: 500px) {
+  .employer-edit-profile-content .modal-employer-double-field .modal-employer-field .input {
+    padding-left: 20px;
+  }
+  .employer-edit-profile-content .modal-employer-double-field .modal-employer-field .ant-select-single .ant-select-selector {
+    padding-left: 20px;
+  }
+
+  .employer-edit-profile-content .modal-employer-description .ql-container.ql-snow .ql-editor {
+    padding: 15px 20px;
+  }
+
+  .employer-profile-left .employer-identity .employer-name-star p{
+    width: 80%;
+    padding: 0 0 0 20%;
+  }
+  .employer-profile-right .employer-info p.employer-email{
+    word-break: break-all;
+  }
+  .employer-profile-right .employer-description .employer-description-content{
+    width: 90%;
+    padding: 0 5%;
+  }
+}

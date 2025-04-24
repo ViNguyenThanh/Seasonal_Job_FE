@@ -93,6 +93,19 @@
     font-size: 28px;
     margin-right: 11px;
 }
+.employer-job-group-detail-container .employer-job-group-detail-info .description p{
+    margin: 0;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .description p span,
+.employer-job-group-detail-container .employer-job-group-detail-info .description ul li,
+.employer-job-group-detail-container .employer-job-group-detail-info .description ol li{
+  color: #3d3d3d !important;
+}
+.employer-job-group-detail-container .employer-job-group-detail-info .description p a,
+.employer-job-group-detail-container .employer-job-group-detail-info .description ul li a,
+.employer-job-group-detail-container .employer-job-group-detail-info .description ol li a{
+  color: #187bcd !important;
+}
 
 .employer-job-group-detail-container .employer-job-group-detail-info .employer-job-group-detail-short-info{
     width: 100%;
@@ -238,6 +251,11 @@
     background-color: #d9d9d9;
     cursor: not-allowed;
 } */
+.employer-job-group-detail-container .employer-job-group-detail-info .start-end-btn .completed-btn{
+    background-color: rgba(0, 221, 0, 0.39);
+    color: rgb(0, 180, 0);
+    cursor: default;
+}
 
 .notice-before-start{
     font-size: 18px;
