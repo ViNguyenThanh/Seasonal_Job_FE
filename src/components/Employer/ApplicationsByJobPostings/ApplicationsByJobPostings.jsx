@@ -29,6 +29,8 @@ const ApplicationsByJobPostings = () => {
     const fetchApplications = async () => {
       try {
         const newList = await Promise.all(payload.map(async (jobPosting) => {
+          console.log('payload', jobPosting.id);
+          
           const res = await getApplicationsForJob(jobPosting.id);
           console.log(res);
 

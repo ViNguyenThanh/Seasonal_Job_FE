@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
 import {
-    HomeFilled,
-    SnippetsOutlined,
     ProductOutlined,
-    BaiduOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
-    LogoutOutlined
+    LogoutOutlined,
+    ProfileOutlined
 } from '@ant-design/icons'
-import { Avatar, Button, ConfigProvider, Dropdown, Layout, Menu, Space, message, theme } from 'antd';
+import { Avatar, Button, ConfigProvider, Dropdown, Layout, Menu, Space, message } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './Admin.css'
 import logo from '/assets/logo.png'
@@ -17,60 +15,43 @@ import { logout } from '../../redux/actions/auth.action';
 
 const { Header, Sider, Content } = Layout;
 
+const theme = {
+    components: {
+        Menu: {
+            colorText: '#ffffff',
+            itemSelectedColor: '#ffffff',
+        }
+    }
+};
+
 const items = [
-    {
-        key: "home",
-        icon: <HomeFilled />,
-        label: "Trang chủ",
-        route: "admin-home",
-    },
-    {
-        key: "pet",
-        icon: <BaiduOutlined />,
-        label: "Quản lý thú cưng",
-        children: [
-            {
-                key: "pet-list",
-                label: "Danh sách thú cưng",
-                route: "manage-pet",
-            },
-            {
-                key: "pet-adoption",
-                label: "Đơn xin nhận nuôi",
-                route: "adopted-management",
-            },
-        ]
-    },
     {
         key: "product",
         icon: <ProductOutlined />,
-        label: "Quản lý sản phẩm",
-        route: "manage-product",
+        label: "Dashboard",
+        route: "dashboard",
     },
     {
         key: "news",
-        icon: <SnippetsOutlined />,
-        label: "Quản lý đơn hàng",
-        route: "manage-order",
+        icon: <ProfileOutlined />,
+        label: "Manage Accounts",
+        route: "manage-accounts",
     }
 ]
-
-const customTheme = {
-    components: {
-        Menu: {
-            itemColor: "var(--color-font-admin)",
-            itemBg: "var(--color-bg-admin)",
-            itemSelectedColor: "var(--color-font-admin-active)",
-            itemSelectedBg: "var(--color-bg-admin)",
-            itemHoverBg: "var(--color-bg-admin)"
-        }
-    },
-};
 
 const siderStyle = {
     position: 'fixed',
     top: 0,
     bottom: 0,
+    backgroundColor: '#003366',
+};
+
+const headerStyle = {
+    padding: 0,
+    display: 'flex',
+    justifyContent: 'space-between',
+    // backgroundColor: '#f1f9ff',  // Light blue background for header
+    backgroundColor: '#ffffff',
 };
 
 
@@ -102,13 +83,13 @@ export default function Admin() {
             }
         })
         if (selectedItem?.route) {
-            navigate(selectedItem.route);
+            navigate(`/admin/${selectedItem.route}`);
         }
     };
 
     const handleLogout = () => {
         dispatch(logout());
-        message.success("Đăng xuất thành công");
+        message.success("Log out successfully!");
         navigate("/")
     }
 
@@ -123,41 +104,37 @@ export default function Admin() {
 
     return (
         <div className="admin-whole-container">
-            <Layout hasSider className='admin-container'>
-                <ConfigProvider theme={{
-                    components: {
-                        Layout: {
-                            bodyBg: '#dfedff',
-                            siderBg: '#dfedff',
-                            lightTriggerBg: '#dfedff',
-                        }
-                    },
-                }}>
+            <ConfigProvider theme={theme}> {/* Áp dụng theme ở đây */}
+                <Layout hasSider className='admin-container'>
                     <Sider style={siderStyle} trigger={null} collapsible collapsed={collapsed}>
                         <div className="header-admin">
                             {!collapsed ? <img src={logo} className='logo' /> : <></>}
                         </div>
                         <Menu
                             mode="inline"
-                            // selectedKeys={[selectedKey]}
                             defaultSelectedKeys={[selectedKey]}
-                            style={{ height: '100%', outline: "none" }}
+                            style={{
+                                height: '100%',
+                                outline: 'none',
+                                backgroundColor: '#003366',
+                            }}
                             onClick={handleMenuClick}
                             items={items}
-
                         />
                     </Sider>
 
                     <Layout style={{
                         marginInlineStart: collapsed ? "80px" : '200px',
+                        backgroundColor: '#dfedff',
                     }}>
                         <Header
-                            style={{
-                                padding: 0,
-                                // background: colorBgContainer,
-                                display: 'flex',
-                                justifyContent: 'space-between'
-                            }}
+                            style={headerStyle}
+                        // style={{
+                        //     padding: 0,
+                        //     // background: colorBgContainer,
+                        //     display: 'flex',
+                        //     justifyContent: 'space-betwee n'
+                        // }}
                         >
                             <Button
                                 type="text"
@@ -183,20 +160,12 @@ export default function Admin() {
                                 </a>
                             </Dropdown>
                         </Header>
-                        <Content
-                        // style={{
-                        //     margin: isAdminHome ? '0' : '24px 16px',
-                        //     padding: 24,
-                        //     minHeight: 590,
-                        //     background: isAdminHome ? 'none' : colorBgContainer,
-                        //     borderRadius: isAdminHome ? '0' : borderRadiusLG,
-                        // }}
-                        >
+                        <Content>
                             <Outlet />
                         </Content>
                     </Layout>
-                </ConfigProvider>
-            </Layout>
+                </Layout>
+            </ConfigProvider>
         </div>
 
     )
