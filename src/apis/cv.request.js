@@ -24,7 +24,7 @@ export const uploadCV = async (file) => {
     });
 
     console.log("Upload response:", response.data); // Log the server response
-    return response.data; // Return only the response data
+    return response; // Return the response data directly
   } catch (error) {
     console.error("Error uploading CV:", error.response?.data || error.message); // Log backend error details
     throw error;
@@ -43,7 +43,7 @@ export const cvApi = {
     try {
       const response = await API.post(`/cvs/job/${jobpostingId}/apply`, data, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, 
         },
       });
       return response.data;
