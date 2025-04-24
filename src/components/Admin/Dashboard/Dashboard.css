@@ -11,7 +11,7 @@
 }
 
 .dashboard-container .dashboard-top-cards .card-general {
-    padding: 1.5rem;
+    padding: 0 1.5rem;
     border-radius: 1rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     color: white;
@@ -59,6 +59,12 @@
     color: black;
 }
 
+.dashboard-container .chart-card .chart-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .dashboard-container .chart-card .card-title {
     font-size: 1.5rem;
     font-weight: 600;
@@ -81,8 +87,13 @@
     align-items: center;
 }
 
-.chart-selector-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    min-width: 100px;
+.chart-selector-wrapper select {
+    /* margin-right: 3.5rem; */
+    margin-bottom: 1rem;
+    border: #003366 2px solid;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: #003366;
+    font-weight: 600;
+    font-size: 1rem;
 }

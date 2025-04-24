@@ -1,17 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './ApplicationWorkerDetail.css'
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Breadcrumb, Button, message, Modal, Rate } from 'antd';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Breadcrumb, Button, message, Modal, Rate, Skeleton } from 'antd';
 import { ContainerOutlined, EnvironmentOutlined, ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SolutionOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
 import { updateApplicationStatus } from '../../../apis/application.request';
+import { userApi } from '../../../apis/user.request';
+import { cvApi } from '../../../apis/cv.request';
+import { formatDate } from '../../../utils/formatDate';
 
 const ApplicationWorkerDetail = () => {
 
   const navigate = useNavigate()
   const location = useLocation();
   const item = location.state // gồm thông tin của 1 jobGroup (jobGroupInfo) và thông tin của 1 worker (workerInfo)
-  console.log(item)
+  // console.log(item)
+
+  const { workerId } = useParams();
+  const [workerLoading, setWorkerLoading] = useState(true);
+  const [workerInfo, setWorkerInfo] = useState({});
+  const [cv, setCv] = useState('');
 
   /* Hiển thị file pdf */
   const [previewVisible, setPreviewVisible] = useState(false); // hiển thị modal preview
@@ -20,6 +28,27 @@ const ApplicationWorkerDetail = () => {
   // const defaultCvFile = new File([""], "defaultCV.pdf", { type: "application/pdf" });
   const defaultCvFileUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Freviewcongnghe.net%2Fhinh-nen-may-tinh-dep%2F&psig=AOvVaw30VWPW_bAo63KTJJAMvS9i&ust=1744266952200000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMim5vKqyowDFQAAAAAdAAAAABAE";
 
+  useEffect(() => {
+    try {
+      const fetchWorkerInfo = async () => {
+        const res = await userApi.getUserById(workerId);
+        // console.log(res.data.data);
+        setWorkerLoading(false);
+        setWorkerInfo(res.data.data);
+      }
+      fetchWorkerInfo();
+
+      const fetchCV = async () => {
+        const res = await cvApi.previewCV(item.workerInfo.cvId)
+        // console.log(res);
+        setCv(res);
+      }
+      fetchCV();
+    } catch (error) {
+      console.log(error);
+      setWorkerLoading(false);
+    }
+  }, []);
 
   // Hiển thị modal khi nhấn vào 'Preview CV'
   const showPreview = () => {
@@ -111,13 +140,17 @@ const ApplicationWorkerDetail = () => {
       <div className='application-worker-detail-container'>
         <div className="application-worker-detail-left">
 
-          <div className="worker-identity">
-            <img src={avatar} />
+          {workerLoading ? (
+            <div className='worker-identity'>
+              <Skeleton.Avatar active size={120} />
+            </div>
+          ) : (<div className="worker-identity">
+            <img src={workerInfo?.avatar ? workerInfo.avatar : avatar} />
             <div className="worker-name-star">
               <p>{item.workerInfo?.workerName}</p>
               <div><Rate defaultValue={4} disabled /></div>
             </div>
-          </div>
+          </div>)}
 
           <div className="preview-cv">
             <Button onClick={showPreview}><EyeOutlined />Preview CV</Button>
@@ -150,51 +183,61 @@ const ApplicationWorkerDetail = () => {
                 <p>No CV available for preview.</p>
               )} */}
               <embed
-                src={defaultCvFileUrl} // Đưa URL trực tiếp vào đây
+                src={/*defaultCvFileUrl*/cv} // Đưa URL trực tiếp vào đây
                 type="application/pdf"
                 width="100%"
                 height="500px"
               />
             </Modal>
           </div>
-          <div className='worker-cover-letter'>
-            <p><FileDoneOutlined /> Cover Letter: </p>
-            <p>I am an energetic individual with experience in seasonal jobs such as sales,
+          {item.workerInfo.coverLetter && (
+            <div className='worker-cover-letter'>
+              <p><FileDoneOutlined /> Cover Letter: </p>
+              {/* <p>I am an energetic individual with experience in seasonal jobs such as sales,
               customer service support, and gift wrapping during holidays. I have also worked
               in production environments with high workloads and participated in event organization,
               assisting with exhibitions and fairs. I am adaptable, work efficiently under pressure,
-              and quickly adjust to job demands.</p>
-          </div>
+              and quickly adjust to job demands.</p> */}
+              <p>{item.workerInfo?.coverLetter}</p>
+            </div>
+          )}
         </div>
 
-        <div className="application-worker-detail-right">
-          <h2>Worker Information</h2>
-          <div className="worker-info">
-            <p className='worker-email'><MailOutlined /> {item.workerInfo?.email}</p>
-            <p><UserSwitchOutlined /> Female  </p> {/* -- None -- */}
+        {workerLoading ? (
+          <div className='application-worker-detail-right'>
+            <Skeleton active />
+            <Skeleton active />
           </div>
-          <div className="worker-info">
-            <p><EnvironmentOutlined /> Tỉnh Tây Ninh, Huyện Dương Minh Châu</p>
-            <p><PhoneOutlined rotate={90} /> 0123456789 </p>
-          </div>
-          <div className="worker-info">
-            <p><GiftOutlined /> 01/01/2000</p>
-          </div>
-          <div className='worker-description'>
-            <p> <IdcardOutlined /> About me: </p>
-            <p>I am an energetic individual with experience in seasonal jobs such as sales,
-              customer service support, and gift wrapping during holidays. I have also worked
-              in production environments with high workloads and participated in event organization,
-              assisting with exhibitions and fairs. I am adaptable, work efficiently under pressure,
-              and quickly adjust to job demands.</p>
-            {/* <p>-- None --</p> */}
-            {/* <div
+        ) : (
+          <div className="application-worker-detail-right">
+            <h2>Worker Information</h2>
+            <div className="worker-info">
+              <p className='worker-email'><MailOutlined /> {workerInfo?.email}</p>
+              <p><UserSwitchOutlined /> {workerInfo?.sex? workerInfo.sex : "-- None --"}  </p> {/* -- None -- */}
+            </div>
+            <div className="worker-info">
+              <p><EnvironmentOutlined /> {workerInfo?.address ? workerInfo.address : "-- None --"}</p>
+              <p><PhoneOutlined rotate={90} /> {workerInfo?.phoneNumber ? workerInfo.phoneNumber : "-- None --"} </p>
+            </div>
+            <div className="worker-info">
+              <p><GiftOutlined /> {workerInfo?.dateOfBirth ? formatDate(workerInfo.dateOfBirth) : "-- None --"}</p>
+            </div>
+            <div className='worker-description'>
+              <p> <IdcardOutlined /> About me: </p>
+              {/* <p>I am an energetic individual with experience in seasonal jobs such as sales,
+                customer service support, and gift wrapping during holidays. I have also worked
+                in production environments with high workloads and participated in event organization,
+                assisting with exhibitions and fairs. I am adaptable, work efficiently under pressure,
+                and quickly adjust to job demands.</p> */}
+                <p>{workerInfo?.description ? workerInfo.description : "-- None --"}</p>
+              {/* <p>-- None --</p> */}
+              {/* <div
               className='worker-description-content'
               dangerouslySetInnerHTML={{ __html: workerInfo?.description || "-- None --" }}
               style={{ whiteSpace: 'pre-wrap' }}
             /> */}
-          </div>
-        </div>
+            </div>
+          </div>)}
 
         <div className="approve-reject-btn" >
           {(item.workerInfo.status === 'submitted' || item.workerInfo.status === 'viewed') && !isApproved && !isRejected ? (
@@ -203,8 +246,8 @@ const ApplicationWorkerDetail = () => {
               <button className='reject-btn' onClick={() => showConfirm("rejected")}>Reject</button>
             </>
           ) : (
-            <button className={`disabled-btn ${item.workerInfo.status === 'approved' ? 'approved' : 'rejected'}`} disabled>
-              {item.workerInfo.status === 'approved' ? 'Approved' : 'Rejected'}
+            <button className={`disabled-btn ${item.workerInfo.status === 'approved' || isApproved ? 'approved' : 'rejected'}`} disabled>
+              {item.workerInfo.status === 'approved' || isApproved ? 'Approved' : 'Rejected'}
             </button>
           )}
 

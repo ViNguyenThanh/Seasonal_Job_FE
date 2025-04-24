@@ -48,6 +48,7 @@ import EmployerTransactions from './components/Employer/EmployerTransactions/Emp
 import EmployerTransactionDetail from './components/Employer/EmployerTransactions/EmployerTransactionDetail'
 import Dashboard from './components/Admin/Dashboard/Dashboard'
 import AccountManagement from './components/Admin/ManageAccounts/AccountManagement'
+import AccessDeniedPage from './pages/AccessDeniedPage/AccessDeniedPage'
 
 
 
@@ -67,6 +68,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path='/access-denied' element={<AccessDeniedPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/employer-home" element={<EmployerHome />} />
 
