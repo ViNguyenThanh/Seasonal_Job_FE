@@ -10,6 +10,7 @@ import { jobExecuteApi } from '../../../apis/job-execute.request';
 import { jobGroupApi } from '../../../apis/job-group.request';
 import { paymentApi } from '../../../apis/payment.request';
 import { getApplicationsForJob } from '../../../apis/application.request';
+import { formatDate } from '../../../utils/formatDate';
 
 
 const EmployerJobGroupDetail = () => {
@@ -73,14 +74,6 @@ const EmployerJobGroupDetail = () => {
             salary: 6000000,
         }
     ];
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm số 0 nếu ngày < 10
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng, nhớ cộng 1 vì tháng trong JavaScript bắt đầu từ 0
-        const year = date.getFullYear(); // Lấy năm
-        return `${day}/${month}/${year}`; // Định dạng lại thành dd/mm/yyyy
-    };
 
     useEffect(() => {
         dispatch(getJobGroupById(id))
@@ -244,14 +237,14 @@ const EmployerJobGroupDetail = () => {
                                 Bên cạnh đó, nhân viên đóng gói cần phải tuân thủ các quy định và tiêu chuẩn về an toàn lao động, đặc biệt là khi làm việc với các vật liệu đóng gói có thể gây hại nếu không sử dụng đúng cách. Công ty tổ chức sự kiện sẽ cung cấp đầy đủ trang thiết bị bảo hộ lao động và đào tạo về các biện pháp an toàn khi làm việc với các vật liệu đóng gói.
 
                                 Tóm lại, công việc này yêu cầu sự tỉ mỉ, cẩn thận và khả năng làm việc hiệu quả dưới sự giám sát chặt chẽ. Đây là cơ hội để bạn có thể tham gia vào một sự kiện lớn và học hỏi được nhiều kỹ năng quan trọng, đặc biệt là trong việc tổ chức sự kiện và đóng gói sản phẩm. Bạn sẽ được làm việc trong một môi trường năng động và đầy thử thách, nơi mà mỗi ngày đều mang lại những trải nghiệm mới và cơ hội phát triển nghề nghiệp. Nếu bạn là người chăm chỉ, cẩn thận và có khả năng làm việc dưới áp lực, công việc này sẽ là một cơ hội tuyệt vời cho bạn để phát triển bản thân và đóng góp vào sự thành công của sự kiện.</p> */}
-                                
+
                                 {/* <p><FileTextOutlined /> Description: <br />
                                     {jobGroupInfo?.description}
                                 </p> */}
 
                                 <p><FileTextOutlined /> Description:</p>
                                 <div className='description' dangerouslySetInnerHTML={{ __html: jobGroupInfo?.description }} style={{ whiteSpace: 'pre-wrap' }} />
-                                
+
                                 {/* Nút Show less */}
                                 <div className="show-more-less-btn">
                                     <button onClick={() => { setShowMore(false); window.scroll({ top: 0, left: 0, behavior: 'smooth' }); }}><UpOutlined /> Show less</button>

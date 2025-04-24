@@ -45,14 +45,16 @@ export default function Dashboard() {
 
             {/* Chart for revenue */}
             <div className="card chart-card">
-                <h4 className="card-title">Revenue of {selectedYear}</h4>
-                <div className="chart-selector-wrapper">
-                    <select className="year-selector" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                    </select>
+                <div className="chart-card-header">
+                    <h4 className="card-title">Revenue of {selectedYear}</h4>
+                    <div className="chart-selector-wrapper">
+                        <select className="year-selector" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
                 </div>
-                <AreaChart width={730} height={250} data={revenueData[selectedYear]}
+                <AreaChart width={1200} height={300} data={revenueData[selectedYear]}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                     <defs>
                         <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">

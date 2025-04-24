@@ -28,6 +28,7 @@ const WorkerDetailForEmployer = () => {
     try {
       const fetchWorkerInfo = async () => {
         const res = await userApi.getUserById(workerId);
+        console.log(res.data.data);
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
       }
@@ -567,14 +568,14 @@ const WorkerDetailForEmployer = () => {
               <h2>Worker Information</h2>
               <div className="worker-info">
                 <p className='worker-email'><MailOutlined /> {workerInfo?.email}</p>
-                <p><UserSwitchOutlined /> Female  </p> {/* -- None -- */}
+                <p><UserSwitchOutlined /> {workerInfo?.sex ? workerInfo?.sex : "-- None --"}  </p> {/* -- None -- */}
               </div>
               <div className="worker-info">
                 <p><EnvironmentOutlined /> {workerInfo?.address ? workerInfo?.address : "-- None --"}</p>
                 <p><PhoneOutlined rotate={90} /> {workerInfo?.phoneNumber ? workerInfo?.phoneNumber : "-- None --"} </p>
               </div>
               <div className="worker-info">
-                <p><GiftOutlined /> 01/01/2000</p>
+                <p><GiftOutlined /> {workerInfo?.dateOfBirth ? workerInfo?.dateOfBirth : "-- None --"}</p>
               </div>
               {showMore && (
                 <>

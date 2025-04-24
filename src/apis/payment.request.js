@@ -21,4 +21,13 @@ export const paymentApi = {
             },
         });
     },
+
+    getEscrowWallet: () => {
+        const token = getToken();
+        return API.post("/payment/escrowWallet", {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        });
+    },
 }

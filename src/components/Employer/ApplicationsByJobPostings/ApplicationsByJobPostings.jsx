@@ -28,24 +28,27 @@ const ApplicationsByJobPostings = () => {
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const newList = await Promise.all(payload.map(async (jobPosting) => {
-          console.log('payload', jobPosting.id);
+        const newList = await Promise.all(payload.map(async (jobPosting, index) => {
+          // console.log('payload', jobPosting.id);
           
           const res = await getApplicationsForJob(jobPosting.id);
-          console.log(res);
+          // console.log(res);
 
           // const filteredApplications = res.filter(item =>
           //   item.status === 'submitted' || item.status === 'viewed'
           // );
 
-          return /*filteredApplications*/res.map(item => ({
+          return /*filteredApplications*/res.map((item) => ({
+            no: `${index + 1}-${jobPosting.id}-${item.id}`,
             id: item.CV.User.id,
             applicationId: item.id,
             workerName: item.CV.User.fullName,
             email: item.CV.User.email,
             avatar: avatar,
             jobPostingName: item.jobPostingId === jobPosting.id ? jobPosting.title : '',
-            status: item.status
+            status: item.status,
+            coverLetter: item.CV.coverLetter,
+            cvId: item.CV.id
           }));
         }));
 
@@ -210,7 +213,7 @@ const ApplicationsByJobPostings = () => {
                   </button> */}
                   <h1 className='pending'>Pending <br /> Applications</h1>
 
-                  {/*listWorkers.*/listApplications?.length === 0 ? (
+                  {/*listWorkers.*/listApplications?.filter(item => item.status === 'viewed' || item.status === 'submitted').length === 0 ? (
                     <div className="no-applications">
                       <Empty description="You currently have no pending applications" />
                     </div>
@@ -261,7 +264,7 @@ const ApplicationsByJobPostings = () => {
                       ) : (
                         <>
                           {/*listWorkers*/ paginatedData.map((worker) => (
-                            <div className="worker-item" key={worker.id} onClick={() => {
+                            <div className="worker-item" key={worker.no} onClick={() => {
                               if (worker.status === "submitted") {
                                 handleUpdateStatus(worker.applicationId)
                               }
@@ -308,7 +311,7 @@ const ApplicationsByJobPostings = () => {
                 <div className="workers-list">
                   <h1 className='approved'>Approved <br /> Applications</h1>
 
-                  {/*listWorkers.*/listApplications?.length === 0 ? (
+                  {/*listWorkers.*/listApplications?.filter(item => item.status === 'approved').length === 0 ? (
                     <div className="no-applications">
                       <Empty description="You currently have no approved applications" />
                     </div>
@@ -351,7 +354,7 @@ const ApplicationsByJobPostings = () => {
                       ) : (
                         <>
                           {/*listWorkers*/ paginatedData.map((worker) => (
-                            <div className="worker-item" key={worker.id} onClick={() => {
+                            <div className="worker-item" key={worker.no} onClick={() => {
                               if (worker.status === "submitted") {
                                 handleUpdateStatus(worker.applicationId)
                               }
@@ -398,7 +401,7 @@ const ApplicationsByJobPostings = () => {
                 <div className="workers-list">
                   <h1 className='rejected'>Rejected <br /> Applications</h1>
 
-                  {/*listWorkers.*/listApplications?.length === 0 ? (
+                  {/*listWorkers.*/listApplications?.filter(item => item.status === 'rejected').length === 0 ? (
                     <div className="no-applications">
                       <Empty description="You currently have no rejected applications" />
                     </div>
@@ -441,7 +444,7 @@ const ApplicationsByJobPostings = () => {
                       ) : (
                         <>
                           {/*listWorkers*/ paginatedData.map((worker) => (
-                            <div className="worker-item" key={worker.id} onClick={() => {
+                            <div className="worker-item" key={worker.no} onClick={() => {
                               if (worker.status === "submitted") {
                                 handleUpdateStatus(worker.applicationId)
                               }

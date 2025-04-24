@@ -25,6 +25,16 @@ const EmployerTransactions = () => {
       }
     }
     fetchTransactions();
+
+    const fetchWallet = async () => {
+      try {
+        const res = await paymentApi.getEscrowWallet();
+        console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchWallet();
   }, []);
 
   const transactionData = [
