@@ -166,10 +166,35 @@
 }
 
 @media (max-width: 750px) {
+    .job-posting-flow-layout-container .ant-breadcrumb ol {
+        width: 90%;
+        padding: 0 5%;
+        justify-content: flex-start;
+        margin: 20px 0 0 0;
+        height: 50px;
+    }
+    .job-posting-flow-layout-container .ant-breadcrumb .ant-breadcrumb-link{
+        display: flex;
+    }
+
     .job-posting-flow-layout-content .ant-steps .ant-steps-item-finish>.ant-steps-item-container>.ant-steps-item-tail::after {
         background-color: #FFCD37 !important;
     }
     .job-posting-flow-layout-content .ant-steps.ant-steps-vertical >.ant-steps-item>.ant-steps-item-container>.ant-steps-item-tail::after {
         width: 2px !important;
+    }
+}
+@media (max-width: 620px) {
+    .job-posting-flow-layout-container .ant-breadcrumb ol {
+        margin: 20px 0 50px 0;
+    }
+
+    .job-posting-flow-layout-content .job-posting-flow-layout-btn button{
+        margin-top: 20px !important;
+    }
+}
+@media (max-width: 400px) {
+    .job-posting-flow-layout-content .job-posting-flow-layout-btn button{
+        margin-top: 40px !important;
     }
 }

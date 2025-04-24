@@ -190,6 +190,7 @@
 .worker-edit-profile-content .modal-worker-description .ql-toolbar.ql-snow + .ql-container.ql-snow {
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+  padding: 0 15px;
 }
 .worker-edit-profile-content .modal-worker-description .ant-form-item .ant-form-item-explain-error {
   color: red;
@@ -403,7 +404,7 @@
   }
 
   .worker-edit-profile-content .modal-worker-description .ql-container.ql-snow .ql-editor {
-    padding: 15px 30px;
+    padding: 20px 15px;
   }
 }
 
@@ -432,10 +433,6 @@
   }
   .worker-edit-profile-content .modal-worker-trible-field .modal-worker-field .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
     padding-left: 20px;
-  }
-
-  .worker-edit-profile-content .modal-worker-description .ql-container.ql-snow .ql-editor {
-    padding: 15px 20px;
   }
 
   .worker-profile-left .worker-identity{

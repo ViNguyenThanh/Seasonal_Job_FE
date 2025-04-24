@@ -208,7 +208,8 @@ const EmployerHeader = () => {
                                     navigate("/job-posting-flow/posting-notifications")
                                     window.scrollTo(0, 0);
                                 }}
-                                className={location.pathname === '/job-posting-flow/posting-notifications' ? 'active' : ''}
+                                // className={location.pathname === '/job-posting-flow/posting-notifications' ? 'active' : ''}
+                                className={location.pathname === '/job-posting-flow/posting-notifications' || location.pathname === '/job-posting-flow/creating-new-job-group' ? 'active' : ''}
                             >
                                 Job Posting
                             </li>

@@ -580,8 +580,12 @@ const WorkerDetailForEmployer = () => {
                 <>
                   <div className='worker-description'>
                     <p> <IdcardOutlined /> About me: </p>
-                    <p>{workerInfo?.description ? workerInfo?.description : "-- None --"}</p>
-                    {/* <p>-- None --</p> */}
+                    {/* <p>{workerInfo?.description ? workerInfo?.description : "-- None --"}</p> */}
+                    <div
+                      className='worker-description-content'
+                      dangerouslySetInnerHTML={{ __html: workerInfo?.description || "-- None --" }}
+                      style={{ whiteSpace: 'pre-wrap' }}
+                    />
                   </div>
                   {/* Nút Show less */}
                   <div className="show-more-less-btn show-less">
