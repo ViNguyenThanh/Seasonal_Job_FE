@@ -9,7 +9,9 @@ const { Dragger } = Upload;
 const WorkerCV = () => {
   const [selectedFile, setSelectedFile] = useState(null); // State to store the selected file
   const [previewVisible, setPreviewVisible] = useState(false); // State to control preview modal visibility
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null); // For the uploaded CV preview
+  const [defaultPreviewVisible, setDefaultPreviewVisible] = useState(false); // For the default CV modal visibility
+  const [defaultPreviewUrl, setDefaultPreviewUrl] = useState(null); // For the default CV preview
   const [defaultCV, setDefaultCV] = useState(null);
   const [userId, setUserId] = useState(null);
 
@@ -19,7 +21,7 @@ const WorkerCV = () => {
       const file = info.file.originFileObj; // Get the selected file
       console.log("File selected:", file); // Log the file details
       setSelectedFile(file); // Store the file in state
-      setPreviewUrl(URL.createObjectURL(file));
+      setPreviewUrl(URL.createObjectURL(file)); // Set preview URL for the uploaded CV
       message.success(`${info.file.name} file is ready to upload.`);
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} file upload failed.`);
@@ -117,9 +119,6 @@ const WorkerCV = () => {
         url: uploadedCV.file_Url,
       });
 
-      // Update the preview URL to the uploaded file's URL
-      setPreviewUrl(uploadedCV.file_Url);
-
       // Clear the selected file after saving
       setSelectedFile(null);
     } catch (error) {
@@ -128,15 +127,21 @@ const WorkerCV = () => {
     }
   };
 
-  const handlePreview = async (cvId) => {
+  const handleDefaultPreview = async () => {
     try {
-      // Fetch the preview URL from the API
-      const response = await cvApi.previewCV(cvId);
-      setPreviewUrl(response.file_Url); // Assuming the API returns `file_Url` in the response
-      setPreviewVisible(true);
+      // Fetch the file as a Blob
+      const response = await fetch(defaultCV.url);
+      const blob = await response.blob();
+
+      // Force the Blob to be treated as a PDF
+      const pdfBlob = new Blob([blob], { type: "application/pdf" });
+      const objectUrl = URL.createObjectURL(pdfBlob);
+
+      setDefaultPreviewUrl(objectUrl); // Set the object URL for the default CV preview
+      setDefaultPreviewVisible(true); // Open the modal
     } catch (error) {
-      console.error("Error previewing CV:", error);
-      message.error("Failed to preview CV.");
+      console.error("Error fetching the PDF:", error);
+      message.error("Failed to load the CV for preview.");
     }
   };
 
@@ -152,9 +157,9 @@ const WorkerCV = () => {
           <Button
             // type="link"
             // style={{ color: "#1890ff", textDecoration: "underline" }}
-            size='large'
-            onClick={() => handlePreview(previewUrl)}>
-
+            size="large"
+            onClick={() => setPreviewVisible(true)} // Directly set previewVisible to true
+          >
             <FilePdfOutlined /> {selectedFile.name}
           </Button>
           <Modal
@@ -165,7 +170,7 @@ const WorkerCV = () => {
             width="80%"
           >
             <embed
-              src={previewUrl}
+              src={previewUrl} // Use the preview URL for the uploaded CV
               type="application/pdf"
               width="100%"
               height="500px"
@@ -177,22 +182,31 @@ const WorkerCV = () => {
       <h3>Your current default CV:</h3>
       {defaultCV ? (
         <div className="worker-cv-default">
-          <Button size="large" onClick={() => handlePreview(defaultCV.id)}>
+          <Button
+            size="large"
+            onClick={handleDefaultPreview} // Use a separate handler for the default CV preview
+          >
             <FilePdfOutlined /> {defaultCV.name}
           </Button>
           <Modal
-            open={previewVisible}
+            open={defaultPreviewVisible}
             title="Preview Default CV"
             footer={null}
-            onCancel={() => setPreviewVisible(false)}
+            onCancel={() => {
+              setDefaultPreviewVisible(false);
+              setDefaultPreviewUrl(null); // Clean up the object URL for the default CV
+            }}
             width="80%"
           >
-            <embed
-              src={previewUrl}
-              type="application/pdf"
-              width="100%"
-              height="500px"
-            />
+            {defaultPreviewUrl && (
+              <iframe
+                src={defaultPreviewUrl} // Use the object URL for the default CV
+                type="application/pdf"
+                width="100%"
+                height="500px"
+                style={{ border: "none" }} // Remove iframe border
+              />
+            )}
           </Modal>
         </div>
       ) : (
