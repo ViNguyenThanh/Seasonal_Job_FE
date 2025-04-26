@@ -279,7 +279,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
                             rows={10}
                             id="descriptionJobGroup"
                             name="descriptionJobGroup"
-                            placeholder="Enter Job Group Description here..."
+                            placeholder="Input Job Group Description here..."
                             style={{ height: 300, resize: 'none' }}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -288,7 +288,7 @@ const CreatingNewJobGroup = ({ jobGroup, setJobGroup, setCheckErrorJobGroup  /*,
                         <ReactQuill
                             theme="snow"
                             value={formik.values.descriptionJobGroup}
-                            placeholder="Enter Job Group Description here..."
+                            placeholder="Input Job Group Description here..."
                             onChange={(value) => formik.setFieldValue("descriptionJobGroup", value)}
                             onBlur={() => formik.setFieldTouched("descriptionJobGroup", true)}
                             style={{ height: '200px', marginBottom: '50px' }}
