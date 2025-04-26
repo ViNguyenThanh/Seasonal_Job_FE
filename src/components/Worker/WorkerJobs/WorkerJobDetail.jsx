@@ -98,7 +98,7 @@ const WorkerJobDetail = () => {
                         id: item.id,
                         no: index + 1,
                         jobRequirement: item.note || "No description", // nếu bạn có trường mô tả
-                        // assignmentDate: '22/04/2025',
+                        // assignmentDate: '27/04/2025',
                         assignmentDate: item.assigned_at || '',
                         checkInFileList: item.checkin_img ? [{
                             uid: '-1',
@@ -299,7 +299,7 @@ const WorkerJobDetail = () => {
 
     // Hàm xem trước ảnh (check-in hoặc check-out)
     const handlePreview = async (file, type) => {
-        console.log(file);
+        // console.log(file);
 
         // Nếu ảnh không có URL hoặc preview, tạo preview bằng FileReader
         if (!file.url && !file.preview) {
