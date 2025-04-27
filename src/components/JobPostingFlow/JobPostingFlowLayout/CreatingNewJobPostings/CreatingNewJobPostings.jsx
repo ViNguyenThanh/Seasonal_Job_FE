@@ -528,7 +528,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
             <ReactQuill
               theme="snow"
               value={formik.values.descriptionJobPosting}
-              placeholder="Enter Job Group Description here..."
+              placeholder="Input Job Posting Description here..."
               onChange={(value) => formik.setFieldValue("descriptionJobPosting", value)}
               onBlur={() => formik.setFieldTouched("descriptionJobPosting", true)}
               style={{ height: '200px', marginBottom: '50px' }}
