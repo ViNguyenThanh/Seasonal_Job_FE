@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import {
-    ProductOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     LogoutOutlined,
-    ProfileOutlined
+    ProfileOutlined,
+    CommentOutlined
 } from '@ant-design/icons'
 import { Avatar, Button, ConfigProvider, Dropdown, Layout, Menu, Space, message } from 'antd';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import './Admin.css'
+import './SupportStaff.css'
 import logo from '/assets/logo.png'
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/actions/auth.action';
@@ -26,16 +26,16 @@ const theme = {
 
 const items = [
     {
-        key: "dashboard",
-        icon: <ProductOutlined />,
-        label: "Dashboard",
-        route: "dashboard",
+        key: "complaint",
+        icon: <CommentOutlined />,
+        label: "Manage Complaints",
+        route: "manage-complaints",
     },
     {
-        key: "accounts",
+        key: "jobexecute",
         icon: <ProfileOutlined />,
-        label: "Manage Accounts",
-        route: "manage-accounts",
+        label: "Manage Job Execute",
+        route: "manage-jobExecute",
     }
 ]
 
@@ -54,15 +54,12 @@ const headerStyle = {
     backgroundColor: '#ffffff',
 };
 
-
-export default function Admin() {
+export default function SupportStaff() {
     const dispatch = useDispatch();
     const [collapsed, setCollapsed] = useState(false);
 
     const navigate = useNavigate()
     const location = useLocation();
-
-    const isAdminHome = location.pathname === '/admin/admin-home';
 
     const selectedKey = items.find((item) =>
         location.pathname.includes(item.route)
@@ -83,7 +80,7 @@ export default function Admin() {
             }
         })
         if (selectedItem?.route) {
-            navigate(`/admin/${selectedItem.route}`);
+            navigate(`/support-staff/${selectedItem.route}`);
         }
     };
 
@@ -103,11 +100,11 @@ export default function Admin() {
     ];
 
     return (
-        <div className="admin-whole-container">
+        <div className="support-staff-whole-container">
             <ConfigProvider theme={theme}> {/* Áp dụng theme ở đây */}
-                <Layout hasSider className='admin-container'>
+                <Layout hasSider className='support-staff-container'>
                     <Sider style={siderStyle} trigger={null} collapsible collapsed={collapsed}>
-                        <div className="header-admin">
+                        <div className="header-support-staff">
                             {!collapsed ? <img src={logo} className='logo' /> : <></>}
                         </div>
                         <Menu

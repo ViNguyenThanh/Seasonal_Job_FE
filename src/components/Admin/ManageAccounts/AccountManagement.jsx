@@ -7,12 +7,12 @@ const { Option } = Select;
 
 // Dữ liệu giả Worker
 const workerData = [
-  { key: '1', no: 1, fullName: 'Nguyen Van A', email: 'vana@example.com', role: 'worker', address: 'Hanoi', phoneNumber: '0901234567', isVerified: true },
-  { key: '2', no: 2, fullName: 'Tran Thi B', email: 'thib@example.com', role: 'worker', address: 'HCM City', phoneNumber: '0902345678', isVerified: false },
-  { key: '3', no: 3, fullName: 'Le Van C', email: 'lvc@example.com', role: 'worker', address: 'Da Nang', phoneNumber: '0911111111', isVerified: true },
-  { key: '4', no: 4, fullName: 'Pham Thi D', email: 'ptd@example.com', role: 'worker', address: 'Can Tho', phoneNumber: '0922222222', isVerified: false },
-  { key: '5', no: 5, fullName: 'Hoang Van E', email: 'hve@example.com', role: 'worker', address: 'Hue', phoneNumber: '0933333333', isVerified: true },
-  { key: '6', no: 6, fullName: 'Nguyen Thi F', email: 'ntf@example.com', role: 'worker', address: 'Vinh', phoneNumber: '0944444444', isVerified: false },
+  { key: '1', no: 1, fullName: 'Nguyễn Minh Tú', email: 'minhtu@example.com', role: 'worker', address: 'Số 123, Phố Nguyễn Trãi, Quận Thanh Xuân, Hà Nội', phoneNumber: '0987654321', isVerified: true },
+  { key: '2', no: 2, fullName: 'Trần Thị Mai', email: 'thimai@example.com', role: 'worker', address: 'Số 45, Đường Cộng Hòa, Quận Tân Bình, TP. Hồ Chí Minh', phoneNumber: '0934567890', isVerified: false },
+  { key: '3', no: 3, fullName: 'Lê Quang Hiếu', email: 'hieuq@example.com', role: 'worker', address: 'Số 67, Phố Hải Châu, Quận Hải Châu, Đà Nẵng', phoneNumber: '0912345678', isVerified: true },
+  { key: '4', no: 4, fullName: 'Phạm Thùy Hằng', email: 'hangpt@example.com', role: 'worker', address: 'Số 30, Đường Lý Thái Tổ, Quận Ninh Kiều, Cần Thơ', phoneNumber: '0923456789', isVerified: false },
+  { key: '5', no: 5, fullName: 'Hoàng Anh Tú', email: 'tuanh@example.com', role: 'worker', address: 'Số 101, Đường Lê Lợi, Quận Thành phố Huế, Thừa Thiên Huế', phoneNumber: '0945678901', isVerified: true },
+  { key: '6', no: 6, fullName: 'Nguyễn Lan Chi', email: 'chi.nguyen@example.com', role: 'worker', address: 'Số 89, Phố Trường Chinh, Thành phố Vinh, Nghệ An', phoneNumber: '0909876543', isVerified: false },
 ];
 
 // Dữ liệu giả Employer
@@ -87,7 +87,7 @@ export default function AccountManagement() {
   return (
     <div className="account-management-container">
       <div className="account-management-content">
-        <h1>Quản lý tài khoản người dùng</h1>
+        <h1>Manage Accounts</h1>
 
         <Tabs type="card" activeKey={activeTab} onChange={setActiveTab}>
           <TabPane tab="Worker" key="worker">
