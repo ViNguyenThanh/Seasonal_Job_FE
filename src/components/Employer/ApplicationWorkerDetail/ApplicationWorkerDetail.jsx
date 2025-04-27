@@ -229,13 +229,13 @@ const ApplicationWorkerDetail = () => {
                 in production environments with high workloads and participated in event organization,
                 assisting with exhibitions and fairs. I am adaptable, work efficiently under pressure,
                 and quickly adjust to job demands.</p> */}
-                <p>{workerInfo?.description ? workerInfo.description : "-- None --"}</p>
+                {/* <p>{workerInfo?.description ? workerInfo.description : "-- None --"}</p> */}
               {/* <p>-- None --</p> */}
-              {/* <div
+              <div
               className='worker-description-content'
               dangerouslySetInnerHTML={{ __html: workerInfo?.description || "-- None --" }}
               style={{ whiteSpace: 'pre-wrap' }}
-            /> */}
+            />
             </div>
           </div>)}
 
