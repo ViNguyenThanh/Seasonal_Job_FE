@@ -140,7 +140,7 @@ const WorkerTransactions = () => {
     onSubmit: (values) => {
       setConfirmLoading(true);
       setTimeout(() => {
-        message.success('Feedback submitted successfully!');
+        message.success('Withdrawal request submitted successfully!');
         // Xử lý khi bấm Submit
         setConfirmLoading(false);
         setConfirmVisible(false);
