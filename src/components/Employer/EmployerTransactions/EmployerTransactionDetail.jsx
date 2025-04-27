@@ -27,8 +27,8 @@ const EmployerTransactionDetail = () => {
 
       <div className="employer-transaction-detail-info">
         <p><ContainerOutlined /> Job Group Name: {location.state.jobGroupName}</p>
-        <p className='double-content'> <ScheduleOutlined /> Start Date: {location.state.date}</p>
-        <p className='double-content'> <ScheduleOutlined /> End Date: {location.state.date}</p>
+        <p className='double-content'> <ScheduleOutlined /> Start Date: {location.state.startDate}</p>
+        <p className='double-content'> <ScheduleOutlined /> End Date: {location.state.endDate}</p>
         <p className='double-content'><CalendarOutlined /> Transaction Date: {location.state.date}</p>
         <p className='double-content'><TagOutlined /> Status:
           <span className={getStatusClass(location.state.status)}> {location.state.status}</span>
