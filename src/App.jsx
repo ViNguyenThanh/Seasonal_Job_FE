@@ -49,6 +49,7 @@ import EmployerTransactionDetail from './components/Employer/EmployerTransaction
 import Dashboard from './components/Admin/Dashboard/Dashboard'
 import AccountManagement from './components/Admin/ManageAccounts/AccountManagement'
 import AccessDeniedPage from './pages/AccessDeniedPage/AccessDeniedPage'
+import SupportStaff from './pages/SupportStaff/SupportStaff'
 
 
 
@@ -155,6 +156,12 @@ function App() {
 
         {/* Admin */}
         <Route path='/admin/*' element={<Admin />}>
+          <Route path='manage-accounts' element={<AccountManagement />} />
+          <Route path='dashboard' element={<Dashboard />} />
+        </Route>
+
+        {/* support staff */}
+        <Route path='/support-staff/*' element={<SupportStaff />}>
           <Route path='manage-accounts' element={<AccountManagement />} />
           <Route path='dashboard' element={<Dashboard />} />
         </Route>

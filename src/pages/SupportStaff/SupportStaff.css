@@ -1,0 +1,48 @@
+.support-staff-whole-container{
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    flex-direction: column;
+}
+.support-staff-container{
+    max-width: 1560px;
+    width: 100%;
+}
+
+.header-support-staff {
+    width: 100%;
+    /* background-color: var(--color-bg-support-staff); */
+    /* background-color: #dfedff; */
+    display: flex;
+    justify-content: center;
+    padding-top: 3%;
+}
+
+.header-support-staff img {
+    width: 180px;
+}
+
+/* .ant-menu-item:focus, .ant-menu-item-selected {
+    outline: none !important;  Tắt hoàn toàn viền focus 
+} */
+
+.support-staff-container .ant-menu-item {
+    user-select: none; /* Tắt chọn text khi click vào */
+    /*-webkit-tap-highlight-color: transparent;  Tắt hiệu ứng khi click trên mobile */
+}
+
+/* .ant-menu-item a {
+    pointer-events: none;  Chặn sự kiện focus trên các thẻ link bên trong 
+} */
+
+/* chỉnh màu nút khi hover */
+.support-staff-container .ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover, 
+.support-staff-container .ant-menu-light>.ant-menu:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover {
+    background-color: #22D8DB;
+}
+/* chỉnh màu nút khi active */
+.support-staff-container .ant-menu-light .ant-menu-item-selected, 
+.support-staff-container .ant-menu-light>.ant-menu .ant-menu-item-selected {
+    background-color: #22D8DB;
+}

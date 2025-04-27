@@ -5,6 +5,8 @@ import { EyeOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Empty, Pagination, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { paymentApi } from '../../../apis/payment.request';
+import { formatDate } from '../../../utils/formatDate';
+import { jobGroupApi } from '../../../apis/job-group.request';
 
 const EmployerTransactions = () => {
   const navigate = useNavigate();
@@ -14,9 +16,28 @@ const EmployerTransactions = () => {
     const fetchTransactions = async () => {
       try {
         const res = await paymentApi.getTransactions();
-        console.log(res.data);
-        setTransactions(res.data.data);
-
+        // console.log(res.data);
+        const newTransactions = await Promise.all(res.data.data.map(async (item) => {
+          const jobGroup = await jobGroupApi.getJobGroupById(item.jobGroupId);
+          // console.log(jobGroup);
+          return {
+            id: item.id,
+            jobGroupName: jobGroup.data.data.title,
+            date: formatDate(item.createdAt),
+            amount: parseFloat(item.amount).toLocaleString('vi-VN'),
+            status: item.status,
+            description: item.description,
+            employerId: item.employerId,
+            workerId: item.workerId,
+            userId: item.userId,
+            orderCode: item.orderCode,
+            startDate: formatDate(jobGroup.data.data.start_date),
+            endDate: formatDate(jobGroup.data.data.end_date)
+          };
+        }));
+        // console.log(newTransactions);
+        
+        setTransactions(newTransactions);
       } catch (error) {
         console.log(error);
         if (error.status === 404) {
@@ -26,15 +47,15 @@ const EmployerTransactions = () => {
     }
     fetchTransactions();
 
-    const fetchWallet = async () => {
-      try {
-        const res = await paymentApi.getEscrowWallet();
-        console.log(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchWallet();
+    // const fetchWallet = async () => {
+    //   try {
+    //     const res = await paymentApi.getEscrowWallet();
+    //     console.log(res.data);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    // fetchWallet();
   }, []);
 
   const transactionData = [
@@ -119,7 +140,7 @@ const EmployerTransactions = () => {
           )}
           <div className="employer-name-money">
             <p className='employer-name'>CÔNG TY TNHH THƯƠNG MẠI & DỊCH VỤ NHÂN LỰC TRÍ VIỆT</p>
-            <p className='employer-money'>Wallet Balance: 0 VND</p>
+            <p className='employer-money'>Wallet Balance: 1.500.000 VND</p>
           </div>
         </div>
         <div className="employer-withdraw">
