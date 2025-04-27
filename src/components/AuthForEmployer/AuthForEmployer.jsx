@@ -337,10 +337,12 @@ const AuthForEmployer = ({ comp }) => {
                                                     formik.setFieldValue("district", '0'); // Reset district về '0' khi city thay đổi
                                                 }}
                                                 onBlur={() => formik.setFieldTouched("city", true)}
-                                            // options={cityList.map((city) => ({
-                                            //     label: city.full_name,
-                                            //     value: city.full_name,
-                                            // }))}
+                                                // options={cityList.map((city) => ({
+                                                //     label: city.full_name,
+                                                //     value: city.full_name,
+                                                // }))}
+                                                showSearch
+                                                allowClear
                                             >
                                                 <Select.Option value="0" disabled>
                                                     <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -371,7 +373,13 @@ const AuthForEmployer = ({ comp }) => {
                                                     display: 'flex',
                                                     alignItems: 'center'
                                                 }}
-                                                placeholder="Select District"
+                                                // placeholder="Select District"
+                                                placeholder={
+                                                    <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                        <AimOutlined />
+                                                        Select Province/City
+                                                    </span>
+                                                }
                                                 value={formik.values.district || undefined}
                                                 onChange={(value) => formik.setFieldValue("district", value)}
                                                 onBlur={() => formik.setFieldTouched("district", true)}
@@ -380,6 +388,8 @@ const AuthForEmployer = ({ comp }) => {
                                                 //     value: district.full_name,
                                                 // }))}
                                                 disabled={!formik.values.city} // Vô hiệu hóa nếu chưa chọn tỉnh/thành
+                                                showSearch
+                                                allowClear
                                             >
                                                 <Select.Option value="0" disabled>
                                                     <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>

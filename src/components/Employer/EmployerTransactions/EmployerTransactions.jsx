@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react'
 import './EmployerTransactions.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { EyeOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Empty, Pagination, Select } from 'antd';
+import { Button, Empty, Form, Input, InputNumber, message, Modal, Pagination, Select, Skeleton } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { paymentApi } from '../../../apis/payment.request';
 import { formatDate } from '../../../utils/formatDate';
 import { jobGroupApi } from '../../../apis/job-group.request';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
 
 const EmployerTransactions = () => {
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -28,7 +31,7 @@ const EmployerTransactions = () => {
             status: item.status,
             description: item.description,
             employerId: item.employerId,
-            workerId: item.workerId,
+            employerId: item.employerId,
             userId: item.userId,
             orderCode: item.orderCode,
             startDate: formatDate(jobGroup.data.data.start_date),
@@ -36,13 +39,15 @@ const EmployerTransactions = () => {
           };
         }));
         // console.log(newTransactions);
-        
+        setIsLoading(false);
         setTransactions(newTransactions);
       } catch (error) {
         console.log(error);
         if (error.status === 404) {
           setTransactions([]);
+          setIsLoading(false);
         }
+        setIsLoading(false);
       }
     }
     fetchTransactions();
@@ -129,6 +134,72 @@ const EmployerTransactions = () => {
   // nếu không có avatar
   const [noAvatar, setNoAvatar] = useState(true);
 
+  // Modal Withdraw 
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  // Mở modal
+  const showConfirmModal = () => {
+    setConfirmVisible(true);
+  };
+
+  // Đóng modal
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+    setPreviewImage('');
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      accountNumber: "",
+      accountName: "",
+      amount: "",
+      bankCode: "",
+    },
+    validationSchema: Yup.object({
+      accountNumber: Yup.string()
+        .test("no-leading-space", "* No spaces at the beginning", value => !/^\s/.test(value || ""))
+        .matches(/^\d+$/, "* Account Number must contain digits only")
+        .required("* Required"),
+      accountName: Yup.string()
+        .test("no-leading-space", "* No spaces at the beginning", value => !/^\s/.test(value || ""))
+        // .matches(/^[A-Za-zÀ-ỹ\s]+$/, "* Only letters and spaces are allowed")
+        .matches(/^(?!.*\s{2,})[A-ZÀ-Ỹ\s]+$/, "* Only uppercase letters are allowed") // Ko cho nhập dư 2 dấu cách
+        .required("* Required"),
+      amount: Yup.number().required("* Required"),
+      bankCode: Yup.string()
+        .notOneOf(["0"], "* Bank Code must be selected")
+        .required("* Required"),
+    }),
+    onSubmit: (values) => {
+      setConfirmLoading(true);
+      setTimeout(() => {
+        message.success('Withdrawal request submitted successfully!');
+        // Xử lý khi bấm Submit
+        setConfirmLoading(false);
+        setConfirmVisible(false);
+        formik.resetForm();
+      }, 2000);
+    },
+  });
+
+  // lấy API danh sách ngân hàng
+  const [bankList, setBankList] = useState([]);
+  useEffect(() => {
+    const fetchBanks = async () => {
+      try {
+        const res = await fetch('https://api.vietqr.io/v2/banks');
+        const json = await res.json();
+        setBankList(json.data);
+      } catch (error) {
+        console.error('Failed to fetch banks', error);
+      }
+    };
+    fetchBanks();
+  }, []);
+
+  const [walletBalance, setWalletBalance] = useState(1500000); // 200,000 VND mặc định
+
   return (
     <div className='employer-transactions-container'>
       <div className="employer-transactions-top">
@@ -140,18 +211,133 @@ const EmployerTransactions = () => {
           )}
           <div className="employer-name-money">
             <p className='employer-name'>CÔNG TY TNHH THƯƠNG MẠI & DỊCH VỤ NHÂN LỰC TRÍ VIỆT</p>
-            <p className='employer-money'>Wallet Balance: 1.500.000 VND</p>
+            <p className='employer-money'>Wallet Balance: {walletBalance.toLocaleString('vi-VN')} VND</p>
           </div>
         </div>
         <div className="employer-withdraw">
-          <button><PhoneOutlined rotate={90} /> Withdraw</button>
+          <button onClick={showConfirmModal}>
+            <PhoneOutlined rotate={90} /> Withdraw
+          </button>
+
+          <Modal
+            title="Withdrawal Request"
+            open={confirmVisible}
+            onCancel={closeConfirm}
+            footer={null}
+          >
+            <form onSubmit={formik.handleSubmit} className="employer-withdraw-form">
+              <div className="employer-withdraw-field">
+                <p><span>*</span> Account Number: </p>
+                <Form.Item
+                  validateStatus={formik.errors.accountNumber && formik.touched.accountNumber ? "error" : ""}
+                  help={formik.errors.accountNumber && formik.touched.accountNumber ? formik.errors.accountNumber : ""}
+                >
+                  <Input
+                    className='input'
+                    placeholder="Input your Account Number..."
+                    name="accountNumber"
+                    value={formik.values.accountNumber}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </Form.Item>
+              </div>
+
+              <div className="employer-withdraw-field">
+                <p><span>*</span> Account Name: </p>
+                <Form.Item
+                  validateStatus={formik.errors.accountName && formik.touched.accountName ? "error" : ""}
+                  help={formik.errors.accountName && formik.touched.accountName ? formik.errors.accountName : ""}
+                >
+                  <Input
+                    className='input'
+                    placeholder="Input your Account Name..."
+                    name="accountName"
+                    value={formik.values.accountName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                </Form.Item>
+              </div>
+              <div className="employer-withdraw-field">
+                <p><span>*</span> Bank: </p>
+                <Form.Item
+                  validateStatus={formik.errors.bankCode && formik.touched.bankCode ? "error" : ""}
+                  help={formik.errors.bankCode && formik.touched.bankCode ? formik.errors.bankCode : ""}
+                >
+                  <Select
+                    style={{
+                      width: '100%',
+                      margin: '0% 0 1%',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                    placeholder="Select a Bank"
+                    options={bankList.map(bank => ({
+                      value: bank.shortName,
+                      label: bank.shortName + " - " + bank.name,
+                    }))}
+                    size="large"
+                    value={formik.values.bankCode || undefined}
+                    onChange={(value) => formik.setFieldValue('bankCode', value || "")}
+                    onBlur={() => formik.setTouched({ amount: true })}
+                    allowClear
+                    showSearch
+                  >
+                    <Select.Option value="0" disabled>
+                      Select a Bank
+                    </Select.Option>
+                  </Select>
+                </Form.Item>
+              </div>
+
+              <div className="employer-withdraw-field">
+                <p><span>*</span> Amount: </p>
+                <Form.Item
+                  validateStatus={formik.errors.amount && formik.touched.amount ? "error" : ""}
+                  help={formik.errors.amount && formik.touched.amount ? formik.errors.amount : ""}
+                >
+                  <InputNumber
+                    className='input-number'
+                    size="large"
+                    placeholder="Input the amount you want to withdraw..."
+                    name="amount"
+                    addonAfter="VND"
+                    formatter={(value) => value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
+                    parser={(value) => value?.replace(/\./g, "")}
+                    // defaultValue={1}
+                    min={2000} // Không cho nhập số âm hoặc 0
+                    max={walletBalance}
+                    // InputNumber nhận giá trị kiểu number, trong khi formik.handleChange mặc định xử lý event.target.value. 
+                    // //Vì vậy, cần dùng formik.setFieldValue thay vì formik.handleChange.
+                    onChange={(value) => formik.setFieldValue("amount", value)}
+                    onBlur={() => formik.setTouched({ amount: true })}
+                    value={formik.values.amount}
+                  />
+                </Form.Item>
+              </div>
+              <div className="send-request-btn">
+                <Button
+                  type="primary"
+                  onClick={formik.handleSubmit}
+                  // htmlType="submit"
+                  loading={confirmLoading}
+                  size='large'
+                >
+                  Send request
+                </Button>
+              </div>
+            </form>
+          </Modal>
         </div>
       </div>
 
       <div className="employer-transactions-bottom">
         <h1>My transaction history</h1>
 
-        {/*transactionData*/transactions.length === 0 ? (
+        {isLoading ? (
+          <Skeleton active paragraph={{ rows: 10 }} />
+        ) : /*transactionData*/transactions.length === 0 ? (
           <div className="no-transactions">
             <Empty description="You do not have a transaction yet!" />
           </div>

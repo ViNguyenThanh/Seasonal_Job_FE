@@ -276,6 +276,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 }}
                 onBlur={() => formik.setFieldTouched("city", true)}
                 allowClear
+                showSearch
               >
                 <Select.Option value="0" disabled>
                   Select Province/City
@@ -314,6 +315,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 // disabled={!formik.values.city} // Vô hiệu hóa nếu chưa chọn tỉnh/thành
                 disabled={!formik.values.city || formik.values.city === '0'}
                 allowClear
+                showSearch
               >
                 <Select.Option value="0" disabled>
                   Select District
@@ -349,6 +351,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 onBlur={() => formik.setFieldTouched("ward", true)}
                 disabled={!formik.values.city || !formik.values.district || formik.values.city === '0' || formik.values.district === '0'}
                 allowClear
+                showSearch
               >
                 <Select.Option value="0" disabled>
                   Select Ward
