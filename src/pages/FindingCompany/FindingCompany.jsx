@@ -146,7 +146,7 @@ const FindingCompany = () => {
                         <Row gutter={[16, 16]}>
                             {companies.map((company) => (
                                 <Col key={company.id} xs={24} sm={12} md={12} lg={8}>
-                                    <a href={"/company-detail"} className="list-company-card-link">
+                                    <a href={`/company-detail/${company.id}`} className="list-company-card-link">
                                         <div className="list-company-card">
                                             <div className="list-company-detail1">
                                                 <img

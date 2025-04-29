@@ -1,14 +1,71 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom"; // For extracting the ID from the URL
+import { userApi } from "../../apis/user.request";
+import { jobGroupApi } from "../../apis/job-group.request";
+import { jobApi } from "../../apis/job.request";
 import "./CompanyDetail.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Avatar, Button, Divider, Tag } from 'antd';
-import { AntDesignOutlined, ArrowRightOutlined, FacebookOutlined, InstagramOutlined, CalendarOutlined, ClockCircleOutlined, EnvironmentOutlined, FileProtectOutlined, TwitterOutlined, YoutubeOutlined, GlobalOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons';
-import { Typography, Row, Col, Space } from 'antd';
+import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined } from '@ant-design/icons';
+import { Typography, Row, Col } from 'antd';
 const { Title, Paragraph } = Typography;
 
 const CompanyDetail = () => {
+    const { id } = useParams(); // Extract the company ID from the URL
+    const [userData, setUserData] = useState(null); // State to store user data
+    const [jobGroups, setJobGroups] = useState([]); // State to store job groups
+
+    useEffect(() => {
+        console.log("Company ID:", id); // Log the company ID in the console
+
+        // Fetch user data by ID
+        userApi.getUserById(id)
+            .then(response => {
+                console.log("User Data:", response.data); // Log the fetched user data
+                setUserData(response.data.data); // Store the user data in state
+            })
+            .catch(error => {
+                console.error("Error fetching user data:", error);
+            });
+    }, [id]);
+
+    useEffect(() => {
+        if (userData) {
+            // Fetch job groups related to the user
+            jobGroupApi.getAllJobGroupsInactive()
+                .then(response => {
+                    console.log("All Job Groups Data:", response.data); // Log all fetched job groups data
+                    const filteredJobs = response.data.data.filter(
+                        job => job.userId === userData.id && job.isPaid === true // Filter jobs by userId and isPaid
+                    );
+                    console.log("Filtered Job Groups Data (isPaid: true):", filteredJobs); // Log the filtered job groups data
+                    setJobGroups(filteredJobs); // Store the filtered job groups in state
+                })
+                .catch(error => {
+                    console.error("Error fetching job groups data:", error);
+                });
+        }
+    }, [userData]);
+
+    useEffect(() => {
+        if (jobGroups.length > 0) {
+            // Fetch job postings for the filtered job groups
+            jobApi.getJobPostingsByJobGroupsIsPaid()
+                .then(response => {
+                    console.log("All Job Postings Data:", response.data); // Log all fetched job postings data
+                    const filteredPostings = response.data.data.filter(posting =>
+                        jobGroups.some(jobGroup => jobGroup.id === posting.jobGroupId) // Filter postings by matching jobGroupId
+                    );
+                    console.log("Filtered Job Postings Data:", filteredPostings); // Log the filtered job postings data
+                })
+                .catch(error => {
+                    console.error("Error fetching job postings data:", error);
+                });
+        }
+    }, [jobGroups]);
+
     const [companies] = useState([
         {
             id: 1,
@@ -79,8 +136,10 @@ const CompanyDetail = () => {
                                 />
                             </div>
                             <div className="company-detail-title-section">
-                                <Title level={3} style={{ fontWeight: 'bold', margin: 0 }}>Twitter</Title>
-                                <Paragraph style={{ margin: 0, color: 'gray' }}>Information Technology (IT)</Paragraph>
+                                <Title level={3} style={{ fontWeight: 'bold', margin: 0 }}>
+                                    {userData ? userData.companyName : "Loading..."}
+                                </Title>
+                                <Paragraph style={{ margin: 0, color: 'gray' }}><EnvironmentOutlined /> {userData ? userData.address : "Loading..."}</Paragraph>
                             </div>
                         </div>
                         <div className="company-detail-buttons">
@@ -102,12 +161,16 @@ const CompanyDetail = () => {
 
                             <Typography className="company-description-leftSide-typography">
                                 <Title level={3} className="company-description-leftSide-title">Description</Title>
-                                <Paragraph>
-                                    Fusce et erat at nibh maximus fermentum. Mauris ac justo nibh. Praesent nec lorem lorem. Donec ullamcorper lacus mollis tortor pretium malesuada. In quis porta nisi, quis fringilla orci. Donec porttitor, odio a efficitur blandit, orci nisl porta elit, eget vulputate quam nibh ut tellus. Sed ut posuere risus, vitae commodo velit. Nullam in lorem dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla tincidunt ac quam quis vehicula. Quisque sagittis ullamcorper magna. Vivamus elementum eu leo et gravida. Sed dignissim placerat diam, ac laoreet eros rutrum sit amet. Donec imperdiet in leo et imperdiet. In hac habitasse platea dictumst. Sed quis nisl molestie diam ullamcorper condimentum. Sed aliquet, arcu eget pretium bibendum, odio enim rutrum arcu, quis suscipit mauris turpis in neque. Vestibulum id vestibulum odio. Sed dolor felis, iaculis eget turpis eu, lobortis imperdiet massa.
+                                <Paragraph style={{ fontSize: '19px', lineHeight: '1.5' }}>
+                                    {userData ? (
+                                        <span dangerouslySetInnerHTML={{ __html: userData.description }} />
+                                    ) : (
+                                        "Loading..."
+                                    )}
                                 </Paragraph>
                             </Typography>
 
-                            <Typography className="company-description-leftSide-typography">
+                            {/* <Typography className="company-description-leftSide-typography">
                                 <Title level={3} className="company-description-leftSide-title">Company Benefits</Title>
                                 <Paragraph>
                                     Donec dignissim nunc eu tellus malesuada fermentum. Sed blandit in magna at accumsan. Etiam imperdiet massa aliquam, consectetur leo in, auctor neque.
@@ -147,9 +210,9 @@ const CompanyDetail = () => {
                                 <Title level={3} className="company-description-leftSide-title">Company Vision</Title>
                                 <Paragraph>
                                     Praesent ultrices mauris at nisi euismod, ut venenatis augue blandit. Etiam massa risus, accumsan nec tempus nec, venenatis in nisl. Maecenas nulla ex, blandit in magna id, pellentesque facilisis sapien. In feugiat auctor mi, eget commodo lectus convallis ac.                                 </Paragraph>
-                            </Typography>
+                            </Typography> */}
 
-                            <div className="share-profile desktop-n-tablet-only">
+                            {/* <div className="share-profile desktop-n-tablet-only">
                                 <Title level={4} style={{ margin: 0 }}>Share profile:</Title>
                                 <div className="social-media-buttons">
                                     <Button
@@ -167,14 +230,14 @@ const CompanyDetail = () => {
                                         Instagram
                                     </Button>
                                 </div>
-                            </div>
+                            </div> */}
 
                         </div>
                     </Col>
 
                     <Col xs={24} sm={24} md={12}>
                         <div className="company-description-rightSide">
-                            <div className="company-overview">
+                            {/* <div className="company-overview">
                                 <Space.Compact size="large" className="custom-space-compact">
                                     <Paragraph>
                                         <Row gutter={[16, 16]} className="company-overview-grid">
@@ -209,24 +272,24 @@ const CompanyDetail = () => {
                                         </Row>
                                     </Paragraph>
                                 </Space.Compact>
-                            </div>
+                            </div> */}
 
                             <div className="company-contact-info">
                                 <Title level={4}>Contact Infomation</Title>
                                 <div style={{ padding: '10px 0' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
+                                    {/* <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
                                         <GlobalOutlined className="company-contact-info-icon" />
                                         <Paragraph className="company-overview-text">
                                             WEBSITE<br />
                                             <span className="company-overview-highlight">www.estherhoward.com</span>
                                         </Paragraph>
                                     </div>
-                                    <Divider />
+                                    <Divider /> */}
                                     <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
                                         <PhoneOutlined className="company-contact-info-icon" style={{ transform: 'scaleX(-1)' }} />
                                         <Paragraph className="company-overview-text">
                                             PHONE<br />
-                                            <span className="company-overview-highlight">+1-202-555-0141</span>
+                                            <span className="company-overview-highlight">{userData ? userData.phoneNumber : "Loading..."}</span>
                                         </Paragraph>
                                     </div>
                                     <Divider />
@@ -234,14 +297,14 @@ const CompanyDetail = () => {
                                         <MailOutlined className="company-contact-info-icon" />
                                         <Paragraph className="company-overview-text">
                                             EMAIL ADDRESS<br />
-                                            <span className="company-overview-highlight">esther.howard@gmail.com</span>
+                                            <span className="company-overview-highlight">{userData ? userData.email : "Loading..."}</span>
                                         </Paragraph>
                                     </div>
                                 </div>
 
                             </div>
 
-                            <div className="company-others-info">
+                            {/* <div className="company-others-info">
                                 <Title level={5} style={{ marginTop: '10px' }}>Follow us on:</Title>
                                 <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px', padding: '10px 0' }}>
                                     <Button
@@ -270,9 +333,9 @@ const CompanyDetail = () => {
                                     </Button>
                                 </div>
 
-                            </div>
+                            </div> */}
 
-                            <div className="share-profile-mobile-only">
+                            {/* <div className="share-profile-mobile-only">
                                 <Title level={4} style={{ margin: 0 }}>Share profile:</Title>
                                 <div className="social-media-buttons">
                                     <Button
@@ -290,7 +353,7 @@ const CompanyDetail = () => {
                                         Instagram
                                     </Button>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </Col>
                 </Row>
@@ -313,7 +376,9 @@ const CompanyDetail = () => {
                                                 <div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                         <Title level={5} style={{ margin: 0 }}>{company.company}</Title>
-                                                        {company.isFeatured && <Tag color="red">Featured</Tag>}
+                                                        <Tag color="yellow" style={{ marginLeft: '-10px', marginTop: '1%' }}>
+                                                            <StarOutlined />
+                                                        </Tag>
                                                     </div>
                                                     <Paragraph style={{ color: 'grey', margin: 0 }}>
                                                         <EnvironmentOutlined /> {company.location}
