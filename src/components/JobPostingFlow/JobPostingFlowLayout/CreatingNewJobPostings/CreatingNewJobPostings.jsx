@@ -276,6 +276,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 }}
                 onBlur={() => formik.setFieldTouched("city", true)}
                 allowClear
+                showSearch
               >
                 <Select.Option value="0" disabled>
                   Select Province/City
@@ -314,6 +315,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 // disabled={!formik.values.city} // Vô hiệu hóa nếu chưa chọn tỉnh/thành
                 disabled={!formik.values.city || formik.values.city === '0'}
                 allowClear
+                showSearch
               >
                 <Select.Option value="0" disabled>
                   Select District
@@ -349,6 +351,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 onBlur={() => formik.setFieldTouched("ward", true)}
                 disabled={!formik.values.city || !formik.values.district || formik.values.city === '0' || formik.values.district === '0'}
                 allowClear
+                showSearch
               >
                 <Select.Option value="0" disabled>
                   Select Ward
@@ -528,7 +531,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
             <ReactQuill
               theme="snow"
               value={formik.values.descriptionJobPosting}
-              placeholder="Enter Job Group Description here..."
+              placeholder="Input Job Posting Description here..."
               onChange={(value) => formik.setFieldValue("descriptionJobPosting", value)}
               onBlur={() => formik.setFieldTouched("descriptionJobPosting", true)}
               style={{ height: '200px', marginBottom: '50px' }}

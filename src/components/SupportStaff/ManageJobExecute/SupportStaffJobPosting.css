@@ -1,19 +1,15 @@
-.account-management-container {
+.job-posting-execute-container {
     padding: 1.5rem;
     display: grid;
     gap: 1.5rem;
     height: calc(100vh - 64px);
 }
 
-.account-management-container .account-management-content {
+.job-posting-execute-container .job-posting-execute-content {
     padding: 1.5rem;
     border-radius: 1rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     color: #003366;
     background-color: #ffffff;
     height: fit-content;
-}
-
-.modal-create-update-sstaff .input-account {
-    margin-top: 1rem;
 }

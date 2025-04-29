@@ -28,6 +28,7 @@ const WorkerDetailForEmployer = () => {
     try {
       const fetchWorkerInfo = async () => {
         const res = await userApi.getUserById(workerId);
+        console.log(res.data.data);
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
       }
@@ -48,7 +49,7 @@ const WorkerDetailForEmployer = () => {
           // if (res.data.jobs.length === 0) {
           setJobExecutes([]);
         } else {
-          const sortedJobExecutes = res.data.jobs.sort((a, b) => {
+          const sortedJobExecutes = res.data.data.sort((a, b) => {
             const dateA = dayjs(a.assigned_at, 'DD/MM/YYYY');
             const dateB = dayjs(b.assigned_at, 'DD/MM/YYYY');
             return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0; // Sắp xếp theo ngày tăng dần
@@ -58,7 +59,7 @@ const WorkerDetailForEmployer = () => {
             id: item.id,
             no: index + 1,
             jobRequirement: item.note || "No description", // nếu bạn có trường mô tả
-            // assignmentDate: '22/04/2025',
+            // assignmentDate: '28/04/2025',
             assignmentDate: item.assigned_at || '',
             checkInUrl: item.checkin_img || '',
             checkOutUrl: item.checkout_img || '',
@@ -567,14 +568,14 @@ const WorkerDetailForEmployer = () => {
               <h2>Worker Information</h2>
               <div className="worker-info">
                 <p className='worker-email'><MailOutlined /> {workerInfo?.email}</p>
-                <p><UserSwitchOutlined /> Female  </p> {/* -- None -- */}
+                <p><UserSwitchOutlined /> {workerInfo?.sex ? workerInfo?.sex : "-- None --"}  </p> {/* -- None -- */}
               </div>
               <div className="worker-info">
                 <p><EnvironmentOutlined /> {workerInfo?.address ? workerInfo?.address : "-- None --"}</p>
                 <p><PhoneOutlined rotate={90} /> {workerInfo?.phoneNumber ? workerInfo?.phoneNumber : "-- None --"} </p>
               </div>
               <div className="worker-info">
-                <p><GiftOutlined /> 01/01/2000</p>
+                <p><GiftOutlined /> {workerInfo?.dateOfBirth ? workerInfo?.dateOfBirth : "-- None --"}</p>
               </div>
               {showMore && (
                 <>
@@ -707,7 +708,7 @@ const WorkerDetailForEmployer = () => {
                               }
                               help={
                                 formik.errors.rows && formik.errors.rows[globalIndex]?.progressCompleted && formik.touched.rows && formik.touched.rows[globalIndex]?.progressCompleted
-                                  ? formik.errors.rows[globalIndex].progressCompleted
+                                  ? formik.errors.rows[globalIndex]?.progressCompleted
                                   : null
                               }
                             >
@@ -715,14 +716,14 @@ const WorkerDetailForEmployer = () => {
                                 className='input'
                                 min={0}
                                 max={data.progress}
-                                value={formik.values.rows[globalIndex].progressCompleted}
+                                value={formik.values.rows[globalIndex]?.progressCompleted}
                                 onChange={(value) => {
-                                  formik.setFieldValue(`rows[${globalIndex}].progressCompleted`, value)
+                                  formik.setFieldValue(`rows[${globalIndex}]?.progressCompleted`, value)
                                   if (value === data.progress) {
                                     formik.setFieldValue(`rows[${globalIndex}].reason`, "");
                                   }
                                 }}
-                                onBlur={() => formik.setFieldTouched(`rows[${globalIndex}].progressCompleted`, true)}
+                                onBlur={() => formik.setFieldTouched(`rows[${globalIndex}]?.progressCompleted`, true)}
                               />
                             </Form.Item>
                           </td>
@@ -735,7 +736,7 @@ const WorkerDetailForEmployer = () => {
                             (isToday(data.assignmentDate) && data.checkInUrl && data.checkOutUrl) ||
                             isYesterday(data.assignmentDate)
                           ) &&
-                          formik.values.rows[globalIndex].progressCompleted !== data.progress ? (
+                          formik.values.rows[globalIndex]?.progressCompleted !== data.progress ? (
 
                           <td className="reason edit">
                             <Form.Item
@@ -759,11 +760,11 @@ const WorkerDetailForEmployer = () => {
                               <TextArea
                                 className="input"
                                 style={{ height: 80, resize: 'none' }}
-                                value={formik.values.rows[globalIndex].reason}
+                                value={formik.values.rows[globalIndex]?.reason}
                                 onChange={(e) =>
-                                  formik.setFieldValue(`rows[${globalIndex}].reason`, e.target.value)
+                                  formik.setFieldValue(`rows[${globalIndex}]?.reason`, e.target.value)
                                 }
-                                onBlur={() => formik.setFieldTouched(`rows[${globalIndex}].reason`, true)}
+                                onBlur={() => formik.setFieldTouched(`rows[${globalIndex}]?.reason`, true)}
                               />
                             </Form.Item>
                           </td>

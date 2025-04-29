@@ -5,6 +5,7 @@ import { DollarOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Empty, Input, Pagination, Select, Skeleton } from 'antd';
 import { getApplicationsByUserId } from '../../../apis/application.request';
+import { formatDate } from '../../../utils/formatDate';
 const { Search } = Input;
 
 const WorkerJobs = () => {
@@ -115,7 +116,7 @@ const WorkerJobs = () => {
           };
         });
         console.log(transformedApplications);
-        
+
         const sortedApplications = transformedApplications.sort((a, b) => new Date(b.today) - new Date(a.today));
         // Cập nhật lại state với dữ liệu mới
         setApplications(sortedApplications);
@@ -125,15 +126,6 @@ const WorkerJobs = () => {
 
     fetchJobApplied()
   }, [])
-
-  //Chuyển về trạng thái DD/MM/YYYY
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0'); // Lấy ngày và thêm số 0 nếu ngày < 10
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Lấy tháng, nhớ cộng 1 vì tháng trong JavaScript bắt đầu từ 0
-    const year = date.getFullYear(); // Lấy năm
-    return `${day}/${month}/${year}`; // Định dạng lại thành dd/mm/yyyy
-  };
 
   const filteredJobs = /*listData*/applications.length > 0 ? applications.filter(item => {
     const searchTermLower = searchTerm.toLowerCase();

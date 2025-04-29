@@ -91,6 +91,10 @@
 .creating-new-job-postings-form .job-postings-info .job-postings-address .ant-select-single .ant-select-selector {
     font-size: 16px;
 }
+/* chỉnh font-size khi search select*/
+.creating-new-job-postings-form .job-postings-info .job-postings-address .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector input {
+    font-size: 16px !important;
+}
 /* chỉnh màu khi field Select bị disabled */
 .creating-new-job-postings-form .job-postings-info .job-postings-address .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
     cursor: not-allowed;

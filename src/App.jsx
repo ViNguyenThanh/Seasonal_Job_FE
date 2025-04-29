@@ -48,6 +48,12 @@ import EmployerTransactions from './components/Employer/EmployerTransactions/Emp
 import EmployerTransactionDetail from './components/Employer/EmployerTransactions/EmployerTransactionDetail'
 import Dashboard from './components/Admin/Dashboard/Dashboard'
 import AccountManagement from './components/Admin/ManageAccounts/AccountManagement'
+import AccessDeniedPage from './pages/AccessDeniedPage/AccessDeniedPage'
+import SupportStaff from './pages/SupportStaff/SupportStaff'
+import ManageComplaints from './components/SupportStaff/ManageComplaints/ManageComplaints'
+import SupportStaffJobGroup from './components/SupportStaff/ManageJobExecute/SupportStaffJobGroup'
+import SupportStaffJobPosting from './components/SupportStaff/ManageJobExecute/SupportStaffJobPosting'
+import ManageJobExecute from './components/SupportStaff/ManageJobExecute/ManageJobExecute'
 
 
 
@@ -67,6 +73,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path='/access-denied' element={<AccessDeniedPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/employer-home" element={<EmployerHome />} />
 
@@ -155,6 +162,14 @@ function App() {
         <Route path='/admin/*' element={<Admin />}>
           <Route path='manage-accounts' element={<AccountManagement />} />
           <Route path='dashboard' element={<Dashboard />} />
+        </Route>
+
+        {/* support staff */}
+        <Route path='/support-staff/*' element={<SupportStaff />}>
+          <Route path='manage-complaints' element={<ManageComplaints />} />
+          <Route path='manage-jobExecute' element={<SupportStaffJobGroup />} />
+          <Route path='manage-jobExecute/:jobGroupId' element={<SupportStaffJobPosting />} />
+          <Route path='manage-jobExecute/:jobGroupId/:jobPostingId' element={<ManageJobExecute />} />
         </Route>
       </Routes>
     </>

@@ -90,6 +90,70 @@
   transition: 0.3s ease;
 }
 
+/* Modal Withdraw */
+.worker-withdraw-form .worker-withdraw-field {
+  width: 100%;
+}
+.worker-withdraw-form .worker-withdraw-field p{
+  font-size: 17px;
+  font-weight: 500;
+  margin: 15px 0 10px;
+}
+.worker-withdraw-form .worker-withdraw-field p span{
+  color: red;
+}
+.worker-withdraw-form .worker-withdraw-field .input {
+  width: 100%;
+  padding-left: 20px;
+  font-size: 17px;
+  font-family: var(--font-oswald);
+}
+.worker-withdraw-form .worker-withdraw-field .ant-form-item-additional{
+  min-height: 15px !important;
+}
+.worker-withdraw-form .worker-withdraw-field .ant-form-item .ant-form-item-explain-error {
+  color: red;
+  font-size: 15px;
+  padding: 5px 0 10px;
+}
+
+.worker-withdraw-form .worker-withdraw-field .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid #d9d9d9;
+}
+/* chỉnh font-size khi search select*/
+.worker-withdraw-form .worker-withdraw-field .ant-select-show-search.ant-select:not(.ant-select-customize-input) .ant-select-selector input {
+  font-size: 17px !important;
+}
+/* chỉnh độ dài thanh Select */
+.worker-withdraw-form .worker-withdraw-field .ant-select-single.ant-select-lg {
+  width: 100%;
+  margin-right: 20px;
+}
+.worker-withdraw-form .worker-withdraw-field .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
+  padding-left: 20px;
+}
+.worker-withdraw-form .worker-withdraw-field .ant-select-focused.ant-select-outlined:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+  border-color: #1677ff;
+  box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+  outline: 0;
+}
+
+.worker-withdraw-form .worker-withdraw-field .input-number {
+  width: 100% !important;
+  font-size: 17px;
+}
+.worker-withdraw-form .worker-withdraw-field .ant-input-number .ant-input-number-input {
+  font-family: var(--font-oswald);
+  padding-left: 20px;
+}
+
+.worker-withdraw-form .send-request-btn{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+
 
 .worker-transactions-container .worker-transactions-bottom {
   width: 90%;
