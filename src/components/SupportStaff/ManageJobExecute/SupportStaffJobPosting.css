@@ -1,11 +1,11 @@
-.job-execute-container {
+.job-posting-execute-container {
     padding: 1.5rem;
     display: grid;
     gap: 1.5rem;
     height: calc(100vh - 64px);
 }
 
-.job-execute-container .job-execute-content {
+.job-posting-execute-container .job-posting-execute-content {
     padding: 1.5rem;
     border-radius: 1rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
