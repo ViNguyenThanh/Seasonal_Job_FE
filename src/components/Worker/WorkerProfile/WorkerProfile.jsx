@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import './WorkerProfile.css'
 import { Button, DatePicker, Form, Image, Input, message, Modal, Rate, Select, Upload } from 'antd'
@@ -10,22 +11,81 @@ import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Giao diện mặc định
 import { useLocation, useNavigate } from 'react-router-dom';
+import { userApi } from '../../../apis/user.request'; // Adjust the path if necessary
+import { getToken } from '../../../utils/Token'; // Import the function to get the token
 
 
 const WorkerProfile = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = getToken(); // Get the token
+        if (!token) {
+          console.error("No token found");
+          return;
+        }
+
+        let decodedToken;
+        try {
+          decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
+        } catch (error) {
+          console.error("Failed to decode token:", error);
+          return;
+        }
+
+        const { id, role } = decodedToken || {}; // Extract id and role
+
+        if (!id || role !== "worker") {
+          console.error("Invalid token or unauthorized role");
+          return;
+        }
+
+        const response = await userApi.getUserById(id); // Fetch user data
+        console.log("API Response:", response.data);
+
+        // Update the fullName and email in profileData
+        setProfileData((prevData) => {
+          const updatedData = {
+            ...prevData,
+            fullname: response.data.data.fullName,
+            email: response.data.data.email,
+            phoneNumber: response.data.data.phoneNumber,
+            dob: response.data.data.dateOfBirth,
+            gender: response.data.data.sex
+              ? response.data.data.sex.charAt(0).toUpperCase() + response.data.data.sex.slice(1)
+              : "-- None --",
+            city: response.data.data.address
+              ? response.data.data.address.split(",")[0].trim() // Get the part before the comma
+              : "-- None --",
+            district: response.data.data.address
+              ? response.data.data.address.split(",")[1]?.trim() || "-- None --" // Get the part after the comma
+              : "-- None --",
+            description: response.data.data.description || "-- None --",
+          };
+          // console.log("Updated Profile Data:", updatedData);
+          return updatedData;
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const [profileData, setProfileData] = useState({
     // avatar: avatar,
     avatar: '',
-    fullname: 'Trương Thị Quỳnh Giang',
-    email: 'truongthiquynhgiang@example.com',
-    phoneNumber: '0123456789',
-    dob: '01/01/2000',
-    gender: 'Female',
-    city: 'Tỉnh Tây Ninh',
-    district: 'Huyện Dương Minh Châu',
-    description: `I am an energetic individual with experience in seasonal jobs such as sales, customer service support, and gift wrapping during holidays. I have also worked in production environments with high workloads and participated in event organization, assisting with exhibitions and fairs. I am adaptable, work efficiently under pressure, and quickly adjust to job demands.`
+    fullname: '',
+    email: '',
+    phoneNumber: '',
+    dob: '',
+    gender: '',
+    city: '',
+    district: '',
+    description: ``
   });
 
   /* Upload ảnh */
@@ -133,84 +193,56 @@ const WorkerProfile = () => {
     },
     validationSchema: Yup.object({
       fullname: Yup.string()
-        .matches(
-          /^[^0-9]*$/,
-          "* Full Name cannot be entered in numbers"
-        )
-        .matches(
-          /^[^!@#$%^&*(),.?":;{}|<>]*$/,
-          "* Full name cannot contain special characters"
-        )
-        .matches(
-          /^[A-ZÀ-Ỹ][a-zà-ỹ]*(\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$/,
-          "* Each word must have its first letter capitalized"
-        )
-
+        .matches(/^[^0-9]*$/, "* Full Name cannot be entered in numbers")
+        .matches(/^[^!@#$%^&*(),.?":;{}|<>]*$/, "* Full name cannot contain special characters")
+        .matches(/^[A-ZÀ-Ỹ][a-zà-ỹ]*(\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$/, "* Each word must have its first letter capitalized")
         .max(30, "* Full Name cannot be longer than 30 characters")
         .required("* Required"),
-      email: Yup.string()
-        .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "* Invalid Email")
-        .required("* Required"),
-      phoneNumber: Yup.string()
-        // .matches(`[^a-zA-Z]+`, "Numbers only")
-        .matches(/^\S+$/, "* Phone numbers cannot contain spaces")
-        .matches(/^\d+$/, "* Numbers only")
-        .matches(`^[0][1-9]*`, "* Phone number must start with 0")
-        .max(10, "* Phone number must be 10 digits")
-        .min(10, "* Phone number must be 10 digits")
-        .required("* Required"),
-      dob: Yup.date()
-        // .nullable(),
-        .required("* Required"),
-      gender: Yup.string()
-        // .max(new Date(new Date().setFullYear(new Date().getFullYear() - 18)), "* You must be at least 18 years old"),
-        .required("* Required"),
-      city: Yup.string()
-        .notOneOf(["0"], "* Province/City must be selected")
-        .required("* Required"),
-      district: Yup.string()
-        .notOneOf(["0"], "* District must be selected")
-        .required("* Required"),
-      description: Yup.string()
-        // .test("no-leading-space", "* No spaces at the beginning", value => !/^\s/.test(value || ""))
-        // .test("not-empty", "* Required", value => {
-        //   const div = document.createElement("div");
-        //   div.innerHTML = value || "";
-        //   const plainText = div.textContent || div.innerText || ""; // Chuyển HTML thành văn bản thuần túy
-        //   return plainText.trim() !== ""; // Kiểm tra nếu chuỗi không rỗng
-        // })
-
-        // khi ko bắt lỗi Required thì không cho người dùng nhập khoảng trắng(dấu cách) không
-        // .test("no-leading-space", "* No spaces at the beginning", value => {
-        //   const div = document.createElement("div");
-        //   div.innerHTML = value || "";
-        //   const plainText = div.textContent || div.innerText || "";
-        //   return !/^\s/.test(plainText);
-        // })
-        .test("no-question-mark", '* Cannot contain "?" character', value => !/\?/.test(value || "")),
-      // .required("* Required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
-        message.success('Edit profile successfully!');
-        // Xử lý khi bấm Yes
-        setConfirmLoading(false);
+      try {
+        const token = getToken(); // Get the token
+        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
+        const { id } = decodedToken; // Extract user ID from the token
+    
+        const updateData = {
+          fullname: values.fullname, // Map to 'fullName' in the backend
+          dateOfBirth: values.dob ? dayjs(values.dob).format('YYYY-MM-DD') : null,
+          gender: values.gender && values.gender.toLowerCase() !== "-- none --" ? values.gender.toLowerCase() : null, // Normalize to lowercase
+          address: `${values.city}, ${values.district}`,
+          phoneNumber: values.phoneNumber,
+          description: values.description ? values.description.trim() : null, // Trim description
+        };
+    
+        console.log("Update Data Sent to Backend:", updateData); // Debugging: Log the payload
+    
+        const response = await userApi.updateUserProfile(id, updateData); // Call the API
+        console.log("Update Response:", response.data);
+    
+        message.success("Profile updated successfully!");
+        setProfileData((prevData) => ({
+          ...prevData,
+          ...updateData,
+          gender: updateData.gender
+            ? updateData.gender.charAt(0).toUpperCase() + updateData.gender.slice(1)
+            : "-- None --", // Capitalize the first letter of gender
+          dob: updateData.dateOfBirth || "-- None --", // Ensure dateOfBirth is updated
+          city: updateData.address ? updateData.address.split(",")[0].trim() : "-- None --", // Extract city from address
+          district: updateData.address ? updateData.address.split(",")[1]?.trim() || "-- None --" : "-- None --", // Extract district from address
+          description: updateData.description || "-- None --", // Ensure description is updated
+        }));
         setConfirmVisible(false);
-
-        // Kiểm tra nếu chỉ có dấu cách hoặc chuỗi trống thì thay thế bằng "-- None --"
-        const cleanedDescription = values.description.trim().length === 0 ? "-- None --" : values.description;
-
-        setProfileData({
-          ...values,
-          description: cleanedDescription,
-          email: 'truongthiquynhgiang@example.com', // Email giả định vì bị disable
-          avatar: fileList[0]?.url || fileList[0]?.thumbUrl || profileData.avatar, // thêm dòng này để cập nhật ảnh
-        });
-
-        formik.resetForm();
-      }, 2000);
-    },
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        if (error.response) {
+          console.error("Backend Response:", error.response.data); // Log backend error response
+        }
+        message.error("Failed to update profile.");
+      } finally {
+        setConfirmLoading(false);
+      }
+    }
   });
 
   // link trang để lấy api Tỉnh Thành, Quận Huyện, Phường Xã
@@ -248,7 +280,7 @@ const WorkerProfile = () => {
   }, [formik.values.city]);
 
   const location = useLocation();
-  const averageRating = location.state?.averageRating || 0;  
+  const averageRating = location.state?.averageRating || 0;
 
   return (
     <div className='worker-profile-container'>
@@ -261,7 +293,7 @@ const WorkerProfile = () => {
         onCancel={closeConfirm}
         footer={[
           <Button key="no" onClick={closeConfirm} size='large'>No</Button>,
-          <Button key="yes" type="primary" size='large' /*onClick={handleConfirm}*/ onClick={formik.handleSubmit} loading={confirmLoading}>
+          <Button key="yes" type="primary" size='large' onClick={formik.handleSubmit} loading={confirmLoading}>
             Yes
           </Button>
         ]}
@@ -539,7 +571,7 @@ const WorkerProfile = () => {
             <p className='no-avatar'><UserOutlined /></p>
           )}
           <div className="worker-name-star">
-            <p>{profileData.fullname}</p>
+            <p>{profileData.fullname || "Loading..."}</p>
             <div><Rate defaultValue={averageRating} allowHalf disabled /></div>
           </div>
         </div>

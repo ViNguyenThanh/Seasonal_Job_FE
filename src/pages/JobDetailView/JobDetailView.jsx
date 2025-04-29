@@ -15,6 +15,7 @@ import { jobApi } from "../../apis/job.request";
 import { jobGroupApi } from "../../apis/job-group.request";
 import { cvApi, uploadCV } from "../../apis/cv.request";
 import { userApi } from "../../apis/user.request";
+import { getApplicationsByUserId } from "../../apis/application.request";
 
 const JobDetailView = () => {
 
@@ -37,44 +38,32 @@ const JobDetailView = () => {
             try {
                 const jobResponse = await jobApi.getJobById(id);
                 const jobData = jobResponse.data.data;
-                // console.log("Job Detail:", jobData); // Debug log
                 setJobDetail(jobData);
 
                 // Fetch job group details
                 if (jobData.jobGroupId) {
-                    try {
-                        const jobGroupResponse = await jobGroupApi.getJobGroupById(jobData.jobGroupId);
-                        setJobGroupDetail(jobGroupResponse.data.data);
-                        // console.log("Job Group Detail:", jobGroupResponse.data.data); // Debug log
-                    } catch (error) {
-                        console.error("Error fetching job group details:", error);
-                    }
+                    const jobGroupResponse = await jobGroupApi.getJobGroupById(jobData.jobGroupId);
+                    setJobGroupDetail(jobGroupResponse.data.data);
                 }
 
                 // Fetch job type details
                 if (jobData.jobTypeId) {
-                    try {
-                        const jobTypeResponse = await jobApi.getJobTypeById(jobData.jobTypeId);
-                        setJobTypeDetail(jobTypeResponse.data.data);
-                    } catch (error) {
-                        console.error("Error fetching job type details:", error);
-                    }
+                    const jobTypeResponse = await jobApi.getJobTypeById(jobData.jobTypeId);
+                    setJobTypeDetail(jobTypeResponse.data.data);
                 }
 
                 // Fetch user company details
-                try {
-                    const userCompaniesResponse = await userApi.getUserCompanies();
-                    const companies = userCompaniesResponse.data.data;
-                    // console.log("All Companies:", companies); // Debug log
+                const userCompaniesResponse = await userApi.getUserCompanies();
+                const companies = userCompaniesResponse.data.data;
+                const filteredCompany = companies.find(company => company.id === jobData.userId);
+                setUserCompanies(filteredCompany || null);
 
-                    // Filter companies where `id` matches `userId`
-                    const filteredCompany = companies.find(company => company.id === jobData.userId);
-                    // console.log("Filtered Company:", filteredCompany); // Debug log
-
-                    setUserCompanies(filteredCompany || null); // Set the filtered company or null if not found
-                } catch (error) {
-                    console.error("Error fetching user companies:", error);
-                }
+                // Check if the user has already applied for this job
+                const applications = await getApplicationsByUserId();
+                const alreadyApplied = applications.data.some(
+                    (application) => application.jobPostingId === jobData.id
+                );
+                setIsApplied(alreadyApplied);
 
                 setIsLoading(false);
             } catch (error) {
@@ -139,26 +128,36 @@ const JobDetailView = () => {
         enterLoading(1); // Pass the index of the button to enable loading
 
         try {
-            const response = await uploadCV(selectedFile); // Call the uploadCV API with the selected file
-            console.log("Application submitted successfully:", response);
-            if (response.status === 201) {
-                const resApply = await cvApi.applyjob(jobDetail.id, {
-                    jobPostingId: jobDetail.id,
-                    cvId: response.data.data
-                })
-                // console.log(resApply);
+            // Fetch existing applications by the user
+            const applications = await getApplicationsByUserId();
+            const alreadyApplied = applications.data.some(
+                (application) => application.jobPostingId === jobDetail.id
+            );
 
+            if (alreadyApplied) {
+                message.warning("You have already applied for this job.");
+                setIsApplied(true);
+                setIsModalOpen(false); // Close the modal
+                return;
             }
+
+            // Upload the CV
+            const response = await uploadCV(selectedFile);
+            console.log("Application submitted successfully:", response);
+
+            if (response.status === 201) {
+                // Apply for the job
+                await cvApi.applyjob(jobDetail.id, {
+                    jobPostingId: jobDetail.id,
+                    cvId: response.data.data,
+                });
+            }
+
             message.success("Your application has been submitted successfully!");
 
             // Mark the job as applied
             setIsApplied(true);
             setIsModalOpen(false); // Close the modal
-
-            // Save the application status in localStorage
-            const appliedJobs = JSON.parse(localStorage.getItem("appliedJobs")) || {};
-            appliedJobs[id] = true; // Mark this job as applied
-            localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
         } catch (error) {
             console.error("Error submitting application:", error);
             message.error(error.message || "Failed to submit your application.");
