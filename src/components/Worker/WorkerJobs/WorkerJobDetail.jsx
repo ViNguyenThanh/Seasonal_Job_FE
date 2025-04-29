@@ -98,8 +98,8 @@ const WorkerJobDetail = () => {
                         id: item.id,
                         no: index + 1,
                         jobRequirement: item.note || "No description", // nếu bạn có trường mô tả
-                        // assignmentDate: '27/04/2025',
-                        assignmentDate: item.assigned_at || '',
+                        assignmentDate: '28/04/2025',
+                        // assignmentDate: item.assigned_at || '',
                         checkInFileList: item.checkin_img ? [{
                             uid: '-1',
                             name: 'Checkin.jpg',

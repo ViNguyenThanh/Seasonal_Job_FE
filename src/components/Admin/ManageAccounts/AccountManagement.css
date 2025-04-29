@@ -13,3 +13,7 @@
     background-color: #ffffff;
     height: fit-content;
 }
+
+.modal-create-update-sstaff .input-account {
+    margin-top: 1rem;
+}

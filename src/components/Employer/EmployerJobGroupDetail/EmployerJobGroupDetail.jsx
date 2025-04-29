@@ -343,7 +343,19 @@ const EmployerJobGroupDetail = () => {
                             </ul>
                         </div>
                     ) : (
-                        <p>Before you end your Job Group, please note the following:</p>
+                        <div className='notice-before-end'>
+                            <ul>
+                                <li>
+                                    After <span>End Date</span> has passed, <span>Employer</span> will be able to end Job Group by clicking the <strong>End</strong> button.
+                                </li>
+                                <li>
+                                    Once you click <strong>End</strong>, the deposit money will be automatically used to pay the <span>Workers</span> based on their work progress and performance.
+                                </li>
+                                <li>
+                                    If <span>Employer</span> does not click <strong>End</strong> within 3 days after the End Date, Job Group will be automatically closed, and the payment will be processed accordingly.
+                                </li>
+                            </ul>
+                        </div>
                     )}
                 </Modal>
 
