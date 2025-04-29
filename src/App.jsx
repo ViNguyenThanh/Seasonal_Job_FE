@@ -115,7 +115,7 @@ function App() {
         <Route path="/finding-job" element={<FindingJob />} />
         <Route path="/job-detail-view/:id" element={<JobDetailView />} />
         <Route path="/finding-company" element={<FindingCompnay />} />
-        <Route path="/company-detail" element={<CompanyDetail />} />
+        <Route path="/company-detail/:id" element={<CompanyDetail />} />
 
         {/* Job Posting Flow */}
         {newUser && newUser.role === 'employer' ? (

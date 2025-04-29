@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import './EmployerProfile.css'
 import { Button, DatePicker, Form, Image, Input, message, Modal, Rate, Select, Upload } from 'antd'
@@ -10,10 +11,44 @@ import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Giao diện mặc định
 import { useLocation, useNavigate } from 'react-router-dom';
+import { userApi } from '../../../apis/user.request'; // Adjust the path if necessary
+import { getToken } from '../../../utils/Token'; // Import the function to get the token
 
 
 const EmployerProfile = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const fetchProfileData = async () => {
+    try {
+      const token = getToken(); // Get the token
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
+      const { id } = decodedToken; // Extract user ID from the token
+
+      const response = await userApi.getUserById(id); // Fetch the profile data
+      const data = response.data.data;
+
+      console.log("Fetched Employer Profile Data:", data); // Log the fetched data
+
+      setProfileData({
+        avatar: data.avatar || '',
+        companyName: data.companyName || '',
+        email: data.email || '',
+        phoneNumber: data.phoneNumber || '',
+        // dob: data.dateOfBirth ? dayjs(data.dateOfBirth).format('DD/MM/YYYY') : '-- None --', // Properly format dateOfBirth
+        dob: data.dateOfBirth || '-- None --', // Properly format dateOfBirth
+        city: data.address ? data.address.split(',')[0].trim() : '-- None --',
+        district: data.address ? data.address.split(',')[1]?.trim() || '-- None --' : '-- None --',
+        description: data.description || '-- None --',
+      });
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+      message.error("Failed to fetch profile data.");
+    }
+  };
+
+  fetchProfileData();
+}, []);
 
   const [profileData, setProfileData] = useState({
     avatar: '',
@@ -180,26 +215,45 @@ const EmployerProfile = () => {
         .test("no-question-mark", '* Cannot contain "?" character', value => !/\?/.test(value || "")),
       // .required("* Required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
-        message.success('Edit profile successfully!');
-        // Xử lý khi bấm Yes
-        setConfirmLoading(false);
+      try {
+        const token = getToken(); // Get the token
+        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
+        const { id } = decodedToken; // Extract user ID from the token
+    
+        const updateData = {
+          companyName: values.companyName.trim(),
+          phoneNumber: values.phoneNumber,
+          dateOfBirth: values.dob ? dayjs(values.dob).format('YYYY-MM-DD') : null,
+          address: `${values.city}, ${values.district}`,
+          description: values.description.trim(),
+        };
+    
+        console.log("Update Data Sent to Backend:", updateData); // Debugging: Log the payload
+    
+        const response = await userApi.updateUserProfile(id, updateData); // Call the API
+        console.log("Update Response:", response.data);
+    
+        message.success("Profile updated successfully!");
+        setProfileData((prevData) => ({
+          ...prevData,
+          ...updateData,
+          dob: updateData.dateOfBirth || '-- None --', // Ensure dateOfBirth is updated
+          city: updateData.address ? updateData.address.split(',')[0].trim() : '-- None --', // Extract city from address
+          district: updateData.address ? updateData.address.split(',')[1]?.trim() || '-- None --' : '-- None --', // Extract district from address
+          description: updateData.description || '-- None --', // Ensure description is updated
+        }));
         setConfirmVisible(false);
-
-        // Kiểm tra nếu chỉ có dấu cách hoặc chuỗi trống thì thay thế bằng "-- None --"
-        const cleanedDescription = values.description.trim().length === 0 ? "-- None --" : values.description;
-
-        setProfileData({
-          ...values,
-          description: cleanedDescription,
-          email: 'truongthiquynhgiang@example.com', // Email giả định vì bị disable
-          avatar: fileList[0]?.url || fileList[0]?.thumbUrl || profileData.avatar, // thêm dòng này để cập nhật ảnh
-        });
-
-        formik.resetForm();
-      }, 2000);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        if (error.response) {
+          console.error("Backend Response:", error.response.data); // Log backend error response
+        }
+        message.error("Failed to update profile.");
+      } finally {
+        setConfirmLoading(false);
+      }
     },
   });
 
