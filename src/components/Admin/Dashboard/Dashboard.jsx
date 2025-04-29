@@ -35,11 +35,11 @@ export default function Dashboard() {
                 </div>
                 <div className="card-general card-job-groups">
                     <h3 className="card-title">Total Job Groups</h3>
-                    <p className="card-value"><ShoppingOutlined /> 125</p>
+                    <p className="card-value"><ShoppingOutlined /> 27</p>
                 </div>
                 <div className="card-general card-job-postings">
                     <h3 className="card-title">Total Job Postings</h3>
-                    <p className="card-value"><ShoppingOutlined /> 125</p>
+                    <p className="card-value"><ShoppingOutlined /> 48</p>
                 </div>
             </div>
 
