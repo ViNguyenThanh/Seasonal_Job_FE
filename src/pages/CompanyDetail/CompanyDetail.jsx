@@ -202,7 +202,7 @@ const CompanyDetail = () => {
                                                 <Paragraph className="company-overview-text">
                                                     FOUNDED IN:<br />
                                                     <span className="company-overview-highlight">
-                                                        {userData.dateOfBirth ? new Date(userData.dateOfBirth).toLocaleDateString('en-US', {
+                                                        {userData && userData.dateOfBirth ? new Date(userData.dateOfBirth).toLocaleDateString('en-US', {
                                                             year: 'numeric',
                                                             month: 'long',
                                                             day: 'numeric',
@@ -221,7 +221,9 @@ const CompanyDetail = () => {
                                                 <EnvironmentOutlined className="company-overview-icon" />
                                                 <Paragraph className="company-overview-text">
                                                     LOCATION:<br />
-                                                    <span className="company-overview-highlight">{userData.address}</span>
+                                                    <span className="company-overview-highlight">
+                                                        {userData && userData.address ? userData.address : "Loading..."}
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                         </Row>
