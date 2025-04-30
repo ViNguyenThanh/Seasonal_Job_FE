@@ -249,3 +249,15 @@
 .share-profile-mobile-only {
   display: none;
 }
+
+.company-detail-job-title{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  /* Giới hạn văn bản ở 1 dòng */
+  overflow: hidden;
+  /* Ẩn phần văn bản bị thừa */
+  text-overflow: ellipsis;
+  /* Hiển thị dấu ba chấm khi quá dài */
+  margin-top: -10px;
+}
