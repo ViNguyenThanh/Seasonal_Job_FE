@@ -78,6 +78,10 @@
   font-size: 20px !important;
 }
 
+.custom-breadcrumb .ant-breadcrumb-link:hover {
+  background-color: transparent !important;
+}
+
 .list-company-card {
   background-color: #fff; /* White background for the card */
   border: 1px solid #e0e0e0; /* Light gray border */

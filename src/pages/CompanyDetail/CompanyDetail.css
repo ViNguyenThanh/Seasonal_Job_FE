@@ -45,7 +45,7 @@
   width: 100%;
 }
 
-.open-position{
+.open-position {
   margin-top: 100px;
 }
 
@@ -250,7 +250,7 @@
   display: none;
 }
 
-.company-detail-job-title{
+.company-detail-job-title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
