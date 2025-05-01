@@ -1,10 +1,9 @@
-/* eslint-disable no-dupe-keys */
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Select, Space, Button, Flex, Card, Tag, Empty } from "antd";
+import { Select, Space, Button, Flex, Card, Tag, Empty, Spin } from "antd";
 import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined, HomeOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb, ConfigProvider } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +18,7 @@ const FindingJob = () => {
     const [allJobs, setAllJobs] = useState([]); // Original list of all jobs
     const [selectedMinStarRequirement, setSelectedMinStarRequirement] = useState(null);
     const [filteredJobs, setFilteredJobs] = useState(allJobs); // State to manage filtered jobs
+    const [loading, setLoading] = useState(true);
 
 
     const [currentPage, setCurrentPage] = useState(1); // State to track the current page
@@ -36,26 +36,27 @@ const FindingJob = () => {
 
     // Fetch job postings by paid job groups when the component loads
     const fetchPaidJobPostings = async () => {
+        setLoading(true);
         try {
             // Fetch inactive job groups
             const inactiveJobGroupsResponse = await jobGroupApi.getAllJobGroupsInactive();
             const inactiveJobGroups = inactiveJobGroupsResponse.data?.data || [];
-    
+
             // Extract inactive job group IDs
             const inactiveJobGroupIds = inactiveJobGroups.map((group) => group.id);
-    
+
             // Fetch job postings
             const jobPostingsResponse = await jobApi.getJobPostingsByJobGroupsIsPaid();
             const jobPostings = jobPostingsResponse.data?.data || [];
-    
+
             // Filter job postings by inactive job group IDs
             const filteredJobs = jobPostings.filter((job) =>
                 inactiveJobGroupIds.includes(job.jobGroupId)
             );
-    
+
             // Sort the filtered jobs by the latest updated date
             const sortedJobs = filteredJobs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-    
+
             // Update state with the filtered and sorted jobs
             setAllJobs(sortedJobs);
             setJobData(sortedJobs);
@@ -63,9 +64,11 @@ const FindingJob = () => {
             console.error('Error fetching paid job postings or inactive job groups:', error);
             setAllJobs([]); // Fallback to an empty array
             setJobData([]); // Fallback to an empty array
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
-    
+
     useEffect(() => {
         fetchPaidJobPostings(); // Fetch paid job postings when the component loads
     }, []);
@@ -127,6 +130,7 @@ const FindingJob = () => {
     const navigate = useNavigate();
 
     return (
+        <Spin spinning={loading} tip="Loading..." style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
         <div className='finding-job-whole-container'>
             <Header />
 
@@ -180,7 +184,7 @@ const FindingJob = () => {
                                     height: '50px',
                                 }}
                                 onSearch={(value) => {
-                                    setSelectedTitle(value); // Update state
+                                    setSelectedTitle(value); // Update state with user input
                                     applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
                                 }}
                                 value={selectedTitle} // Bind state
@@ -190,11 +194,13 @@ const FindingJob = () => {
                                 }}
                                 filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                {[...new Set(allJobs.map((job) => job.title))].map((title, index) => (
-                                    <Option key={index} value={title}>
-                                        {title}
-                                    </Option>
-                                ))}
+                                {[...new Set(allJobs.map((job) => job.title))]
+                                    .filter((title) => title.toLowerCase().includes(selectedTitle?.toLowerCase() || ''))
+                                    .map((title, index) => (
+                                        <Option key={index} value={title}>
+                                            {title}
+                                        </Option>
+                                    ))}
                             </Select>
 
                             <Select
@@ -497,6 +503,7 @@ const FindingJob = () => {
             <div style={{ height: '100px' }}></div>
             <Footer />
         </div>
+        </Spin>
     );
 };
 

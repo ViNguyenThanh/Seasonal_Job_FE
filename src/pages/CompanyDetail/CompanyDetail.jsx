@@ -8,7 +8,7 @@ import "./CompanyDetail.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Avatar, Button, Divider, Tag, Space } from 'antd';
-import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, SolutionOutlined, FileProtectOutlined } from '@ant-design/icons';
 import { Typography, Row, Col } from 'antd';
 const { Title, Paragraph } = Typography;
 
@@ -206,15 +206,21 @@ const CompanyDetail = () => {
                                                             year: 'numeric',
                                                             month: 'long',
                                                             day: 'numeric',
-                                                        }) : "Loading..."}
+                                                        }) : "None"}
                                                     </span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={12} className="company-overview-item">
-                                                <ClockCircleOutlined className="company-overview-icon" />
+                                                <SolutionOutlined className="company-overview-icon" />
                                                 <Paragraph className="company-overview-text">
-                                                    ORGANIZATION TYPE:<br />
-                                                    <span className="company-overview-highlight">Private Company</span>
+                                                    RECORD INITIATION:<br />
+                                                    <span className="company-overview-highlight">
+                                                        {userData && userData.createdAt ? new Date(userData.createdAt).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                        }) : "Loading..."}
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={12} className="company-overview-item">
@@ -223,6 +229,15 @@ const CompanyDetail = () => {
                                                     LOCATION:<br />
                                                     <span className="company-overview-highlight">
                                                         {userData && userData.address ? userData.address : "Loading..."}
+                                                    </span>
+                                                </Paragraph>
+                                            </Col>
+                                            <Col xs={24} sm={12} md={12} className="company-overview-item">
+                                                <FileProtectOutlined className="company-overview-icon" />
+                                                <Paragraph className="company-overview-text">
+                                                    VERIFICATION:<br />
+                                                    <span className="company-overview-highlight">
+                                                        {userData && userData.isVerified ? "Verified" : "Not Verified"}
                                                     </span>
                                                 </Paragraph>
                                             </Col>
