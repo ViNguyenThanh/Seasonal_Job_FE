@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { jobApi } from '../../apis/job.request'; // Import the jobApi
 import { jobGroupApi } from '../../apis/job-group.request'; // Import jobGroupApi
 import { useEffect } from 'react';
+import { userApi } from '../../apis/user.request';
 
 const { Option } = Select;
 
@@ -57,9 +58,27 @@ const FindingJob = () => {
             // Sort the filtered jobs by the latest updated date
             const sortedJobs = filteredJobs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-            // Update state with the filtered and sorted jobs
-            setAllJobs(sortedJobs);
-            setJobData(sortedJobs);
+            // Fetch user details for each job and add avatar to the job data
+            const jobsWithAvatars = await Promise.all(
+                sortedJobs.map(async (job) => {
+                    const userId = job.userId; // Assuming each job contains a `userId` field
+                    if (userId) {
+                        try {
+                            const userResponse = await userApi.getUserById(userId);
+                            const userAvatar = userResponse.data?.data?.avatar || null; // Fetch avatar from user details
+                            return { ...job, avatar: userAvatar }; // Add avatar to job data
+                        } catch (userError) {
+                            console.error(`Error fetching user details for userId ${userId}:`, userError);
+                            return { ...job, avatar: null }; // Fallback to null if error occurs
+                        }
+                    }
+                    return { ...job, avatar: null }; // Fallback to null if no userId
+                })
+            );
+
+            // Update state with the jobs including avatars
+            setAllJobs(jobsWithAvatars);
+            setJobData(jobsWithAvatars);
         } catch (error) {
             console.error('Error fetching paid job postings or inactive job groups:', error);
             setAllJobs([]); // Fallback to an empty array
@@ -68,10 +87,6 @@ const FindingJob = () => {
             setLoading(false); // Stop loading
         }
     };
-
-    useEffect(() => {
-        fetchPaidJobPostings(); // Fetch paid job postings when the component loads
-    }, []);
 
     useEffect(() => {
         fetchPaidJobPostings(); // Fetch paid job postings when the component loads
@@ -131,133 +146,133 @@ const FindingJob = () => {
 
     return (
         <Spin spinning={loading} tip="Loading..." style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <div className='finding-job-whole-container'>
-            <Header />
+            <div className='finding-job-whole-container'>
+                <Header />
 
-            <div className="finding-job-container">
-                <div className="search-filter-layer1">
-                    <div className="header-title">
-                        <p className="ebc-p">Find Jobs</p>
-                        <ConfigProvider
-                            theme={{
-                                components: {
-                                    Breadcrumb: {
-                                        fontSize: 18, // Increase font size for breadcrumb text
-                                        iconFontSize: 20, // Increase icon size
+                <div className="finding-job-container">
+                    <div className="search-filter-layer1">
+                        <div className="header-title">
+                            <p className="ebc-p">Find Jobs</p>
+                            <ConfigProvider
+                                theme={{
+                                    components: {
+                                        Breadcrumb: {
+                                            fontSize: 18, // Increase font size for breadcrumb text
+                                            iconFontSize: 20, // Increase icon size
+                                        },
                                     },
-                                },
-                            }}
-                        >
-                            <Breadcrumb
-                                className="custom-breadcrumb"
-                                items={[
-                                    {
-                                        href: '/',
-                                        title: (
-                                            <span>
-                                                <HomeOutlined />
-                                                <span style={{ marginLeft: '5px' }}>Home</span>
-                                            </span>
-                                        ),
-                                    },
-                                    {
-                                        href: '',
-                                        title: (
-                                            <span style={{ color: 'black' }}> {/* Highlight current page */}
-                                                <SearchOutlined />
-                                                <span style={{ marginLeft: '5px' }}>Find Jobs</span>
-                                            </span>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </ConfigProvider>
-                    </div>
-                    <div className="search-filter-layer2">
-                        <Space.Compact size="large" className="custom-space-compact">
-                            <Select
-                                showSearch
-                                placeholder="Job title, Keyword..."
-                                prefix={<SearchOutlined className="custom-icon" />}
-                                style={{
-                                    width: '90%',
-                                    height: '50px',
                                 }}
-                                onSearch={(value) => {
-                                    setSelectedTitle(value); // Update state with user input
-                                    applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
-                                }}
-                                value={selectedTitle} // Bind state
-                                onChange={(value) => {
-                                    setSelectedTitle(value); // Update state
-                                    applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
-                                }}
-                                filterOption={false} // Disable default filtering to rely on custom logic
                             >
-                                {[...new Set(allJobs.map((job) => job.title))]
-                                    .filter((title) => title.toLowerCase().includes(selectedTitle?.toLowerCase() || ''))
-                                    .map((title, index) => (
-                                        <Option key={index} value={title}>
-                                            {title}
+                                <Breadcrumb
+                                    className="custom-breadcrumb"
+                                    items={[
+                                        {
+                                            href: '/',
+                                            title: (
+                                                <span>
+                                                    <HomeOutlined />
+                                                    <span style={{ marginLeft: '5px' }}>Home</span>
+                                                </span>
+                                            ),
+                                        },
+                                        {
+                                            href: '',
+                                            title: (
+                                                <span style={{ color: 'black' }}> {/* Highlight current page */}
+                                                    <SearchOutlined />
+                                                    <span style={{ marginLeft: '5px' }}>Find Jobs</span>
+                                                </span>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </ConfigProvider>
+                        </div>
+                        <div className="search-filter-layer2">
+                            <Space.Compact size="large" className="custom-space-compact">
+                                <Select
+                                    showSearch
+                                    placeholder="Job title, Keyword..."
+                                    prefix={<SearchOutlined className="custom-icon" />}
+                                    style={{
+                                        width: '90%',
+                                        height: '50px',
+                                    }}
+                                    onSearch={(value) => {
+                                        setSelectedTitle(value); // Update state with user input
+                                        applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
+                                    }}
+                                    value={selectedTitle} // Bind state
+                                    onChange={(value) => {
+                                        setSelectedTitle(value); // Update state
+                                        applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
+                                    }}
+                                    filterOption={false} // Disable default filtering to rely on custom logic
+                                >
+                                    {[...new Set(allJobs.map((job) => job.title))]
+                                        .filter((title) => title.toLowerCase().includes(selectedTitle?.toLowerCase() || ''))
+                                        .map((title, index) => (
+                                            <Option key={index} value={title}>
+                                                {title}
+                                            </Option>
+                                        ))}
+                                </Select>
+
+                                <Select
+                                    showSearch
+                                    placeholder="Location"
+                                    prefix={<EnvironmentOutlined className="custom-icon" />}
+                                    style={{
+                                        width: '60%',
+                                        height: '50px',
+                                    }}
+                                    onSearch={(value) => {
+                                        setSelectedLocation(value); // Update state
+                                        applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
+                                    }}
+                                    value={selectedLocation} // Bind state
+                                    onChange={(value) => {
+                                        setSelectedLocation(value); // Update state
+                                        applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
+                                    }}
+                                    filterOption={false} // Disable default filtering to rely on custom logic
+                                >
+                                    {[...new Set(allJobs.map((job) => job.location))].map((location, index) => (
+                                        <Option key={index} value={location}>
+                                            {location}
                                         </Option>
                                     ))}
-                            </Select>
+                                </Select>
 
-                            <Select
-                                showSearch
-                                placeholder="Location"
-                                prefix={<EnvironmentOutlined className="custom-icon" />}
-                                style={{
-                                    width: '60%',
-                                    height: '50px',
-                                }}
-                                onSearch={(value) => {
-                                    setSelectedLocation(value); // Update state
-                                    applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
-                                }}
-                                value={selectedLocation} // Bind state
-                                onChange={(value) => {
-                                    setSelectedLocation(value); // Update state
-                                    applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
-                                }}
-                                filterOption={false} // Disable default filtering to rely on custom logic
-                            >
-                                {[...new Set(allJobs.map((job) => job.location))].map((location, index) => (
-                                    <Option key={index} value={location}>
-                                        {location}
-                                    </Option>
-                                ))}
-                            </Select>
+                                <Select
+                                    showSearch
+                                    placeholder="Minimum Star Requirement"
+                                    prefix={<StarOutlined className="custom-icon" />}
+                                    style={{
+                                        width: '60%',
+                                        height: '50px',
+                                    }}
+                                    onSearch={(value) => {
+                                        setSelectedMinStarRequirement(value); // Update state
+                                        applyFilters(selectedTitle, selectedLocation, value); // Apply cumulative filters
+                                    }}
+                                    value={selectedMinStarRequirement} // Bind state
+                                    onChange={(value) => {
+                                        setSelectedMinStarRequirement(value); // Update state
+                                        applyFilters(selectedTitle, selectedLocation, value); // Apply cumulative filters
+                                    }}
+                                    filterOption={false} // Disable default filtering to rely on custom logic
+                                >
+                                    {[...new Set(allJobs.map((job) => job.min_star_requirement))]
+                                        .sort((a, b) => a - b) // Sort star requirements in ascending order
+                                        .map((minStar, index) => (
+                                            <Option key={index} value={minStar.toString()}>
+                                                {minStar} <StarOutlined />
+                                            </Option>
+                                        ))}
+                                </Select>
 
-                            <Select
-                                showSearch
-                                placeholder="Minimum Star Requirement"
-                                prefix={<StarOutlined className="custom-icon" />}
-                                style={{
-                                    width: '60%',
-                                    height: '50px',
-                                }}
-                                onSearch={(value) => {
-                                    setSelectedMinStarRequirement(value); // Update state
-                                    applyFilters(selectedTitle, selectedLocation, value); // Apply cumulative filters
-                                }}
-                                value={selectedMinStarRequirement} // Bind state
-                                onChange={(value) => {
-                                    setSelectedMinStarRequirement(value); // Update state
-                                    applyFilters(selectedTitle, selectedLocation, value); // Apply cumulative filters
-                                }}
-                                filterOption={false} // Disable default filtering to rely on custom logic
-                            >
-                                {[...new Set(allJobs.map((job) => job.min_star_requirement))]
-                                    .sort((a, b) => a - b) // Sort star requirements in ascending order
-                                    .map((minStar, index) => (
-                                        <Option key={index} value={minStar.toString()}>
-                                            {minStar} <StarOutlined />
-                                        </Option>
-                                    ))}
-                            </Select>
-
-                            {/* <Select
+                                {/* <Select
                                 placeholder=""
                                 prefix={<span style={{ color: isFiltered ? 'blue' : 'inherit' }}>Advance Filter</span>}
                                 style={{
@@ -269,7 +284,7 @@ const FindingJob = () => {
                             >
                             </Select> */}
 
-                            {/* <Modal
+                                {/* <Modal
                                 title=" "
                                 open={isModalOpen}
                                 onOk={handleOk}
@@ -337,172 +352,178 @@ const FindingJob = () => {
                                 </div>
                             </Modal> */}
 
-                            <Flex gap="small" wrap>
-                                <Button
-                                    type="primary"
-                                    icon={<ReloadOutlined />} // Add the reset icon
+                                <Flex gap="small" wrap>
+                                    <Button
+                                        type="primary"
+                                        icon={<ReloadOutlined />} // Add the reset icon
+                                        style={{
+                                            height: '50px',
+                                            borderRadius: '5px',
+                                            width: '100%',
+                                        }}
+                                        onClick={() => {
+                                            setJobData(allJobs); // Reset the job data to show all jobs
+                                            setSelectedTitle(null); // Clear the job title input
+                                            setSelectedLocation(null); // Clear the location input
+                                            setSelectedMinStarRequirement(null); // Clear the min star requirement input
+                                        }}
+                                    >
+                                        Reset
+                                    </Button>
+                                </Flex>
+                            </Space.Compact>
+                        </div>
+                    </div>
+
+                    <Row justify="end" align="middle" style={{ marginTop: '30px', marginRight: '39px' }}>
+                        <Col>
+                            <Select
+                                defaultValue="latest"
+                                className="sort-select"
+                                style={{
+                                    width: 120,
+                                    marginRight: '10px',
+                                    border: '1px solid gray',
+                                    borderRadius: '5px',
+                                }}
+                                onChange={(value) => {
+                                    const sortedJobs = [...jobData].sort((a, b) => {
+                                        const dateA = new Date(a.updatedAt);
+                                        const dateB = new Date(b.updatedAt);
+                                        return value === 'latest' ? dateB - dateA : dateA - dateB; // Sort by latest or oldest
+                                    });
+                                    setJobData(sortedJobs); // Update the job data with the sorted list
+                                }}
+                                options={[
+                                    {
+                                        value: 'latest',
+                                        label: 'Latest',
+                                    },
+                                    {
+                                        value: 'oldest',
+                                        label: 'Oldest',
+                                    },
+                                ]}
+                            />
+                            <Select
+                                defaultValue="12 per page"
+                                style={{
+                                    width: 120,
+                                    border: '1px solid gray',
+                                    borderRadius: '5px',
+                                    marginRight: '30px',
+                                }}
+                                onChange={(value) => {
+                                    const jobsPerPageValue = value === '12perpage' ? 12 : 24; // Determine jobs per page
+                                    setJobsPerPage(jobsPerPageValue); // Update the jobs per page
+                                    setCurrentPage(1); // Reset to the first page
+                                }}
+                                options={[
+                                    {
+                                        value: '12perpage',
+                                        label: '12 per page',
+                                    },
+                                    {
+                                        value: '24perpage',
+                                        label: '24 per page',
+                                    },
+                                ]}
+                            />
+                        </Col>
+                    </Row>
+
+                    {Array.isArray(currentJobs) && currentJobs.length > 0 ? (
+                        currentJobs.map((job) => (
+                            <div key={job.id} style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Card
                                     style={{
-                                        height: '50px',
-                                        borderRadius: '5px',
                                         width: '100%',
-                                    }}
-                                    onClick={() => {
-                                        setJobData(allJobs); // Reset the job data to show all jobs
-                                        setSelectedTitle(null); // Clear the job title input
-                                        setSelectedLocation(null); // Clear the location input
-                                        setSelectedMinStarRequirement(null); // Clear the min star requirement input
+                                        marginTop: 30,
+                                        marginLeft: 50,
+                                        marginRight: 50,
                                     }}
                                 >
-                                    Reset
-                                </Button>
-                            </Flex>
-                        </Space.Compact>
-                    </div>
-                </div>
-
-                <Row justify="end" align="middle" style={{ marginTop: '30px', marginRight: '39px' }}>
-                    <Col>
-                        <Select
-                            defaultValue="latest"
-                            className="sort-select"
-                            style={{
-                                width: 120,
-                                marginRight: '10px',
-                                border: '1px solid gray',
-                                borderRadius: '5px',
-                            }}
-                            onChange={(value) => {
-                                const sortedJobs = [...jobData].sort((a, b) => {
-                                    const dateA = new Date(a.updatedAt);
-                                    const dateB = new Date(b.updatedAt);
-                                    return value === 'latest' ? dateB - dateA : dateA - dateB; // Sort by latest or oldest
-                                });
-                                setJobData(sortedJobs); // Update the job data with the sorted list
-                            }}
-                            options={[
-                                {
-                                    value: 'latest',
-                                    label: 'Latest',
-                                },
-                                {
-                                    value: 'oldest',
-                                    label: 'Oldest',
-                                },
-                            ]}
-                        />
-                        <Select
-                            defaultValue="12 per page"
-                            style={{
-                                width: 120,
-                                border: '1px solid gray',
-                                borderRadius: '5px',
-                                marginRight: '30px',
-                            }}
-                            onChange={(value) => {
-                                const jobsPerPageValue = value === '12perpage' ? 12 : 24; // Determine jobs per page
-                                setJobsPerPage(jobsPerPageValue); // Update the jobs per page
-                                setCurrentPage(1); // Reset to the first page
-                            }}
-                            options={[
-                                {
-                                    value: '12perpage',
-                                    label: '12 per page',
-                                },
-                                {
-                                    value: '24perpage',
-                                    label: '24 per page',
-                                },
-                            ]}
-                        />
-                    </Col>
-                </Row>
-
-                {Array.isArray(currentJobs) && currentJobs.length > 0 ? (
-                    currentJobs.map((job) => (
-                        <div key={job.id} style={{ display: 'flex', justifyContent: 'center' }}>
-                            <Card
-                                style={{
-                                    width: '100%',
-                                    marginTop: 30,
-                                    marginLeft: 50,
-                                    marginRight: 50,
-                                }}
-                            >
-                                <Card.Meta
-                                    title={
-                                        <div className="job-card-meta" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <span>{job.title}</span>
-                                            <Tag color="blue">
-                                                {(() => {
-                                                    const startDate = new Date(job.started_date);
-                                                    const endDate = new Date(job.end_date);
-                                                    const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
-                                                    return `${durationInDays} days`; // Display duration
-                                                })()}
-                                            </Tag>
-                                            <Tag color="yellow" style={{ marginLeft: '-10px' }}>
-                                                {job.min_star_requirement} <StarOutlined />
-                                            </Tag>
-                                        </div>
-                                    }
-                                    description={
-                                        <>
-                                            <div className="job-card-description" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <div style={{ display: 'flex', gap: '10px', flexDirection: 'row-reverse' }}>
-                                                    <span>
-                                                        <DollarOutlined /> {new Intl.NumberFormat('vi-VN').format(job.salary)} VND
-                                                    </span>
-                                                    <span><EnvironmentOutlined /> {job.location}</span>
-                                                    <span>
-                                                        <ContainerOutlined /> {new Date(job.updatedAt).toLocaleString('en-US', {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                            hour: '2-digit',
-                                                            minute: '2-digit',
-                                                            second: '2-digit',
-                                                        })}
-                                                    </span>
-                                                </div>
-                                                <div className="job-card-buttons" style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
-                                                    <Button
-                                                        type="primary"
-                                                        className="apply-now-button"
-                                                        style={{ height: '40px' }}
-                                                        onClick={() => {
-                                                            navigate(`/job-detail-view/${job.id}`);
-                                                            window.scrollTo(0, 0);
-                                                        }}
-                                                    >
-                                                        Apply now <ArrowRightOutlined />
-                                                    </Button>
-                                                </div>
+                                    <Card.Meta
+                                        title={
+                                            <div className="job-card-meta" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <span>{job.title}</span>
+                                                <Tag color="blue">
+                                                    {(() => {
+                                                        const startDate = new Date(job.started_date);
+                                                        const endDate = new Date(job.end_date);
+                                                        const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
+                                                        return `${durationInDays} days`; // Display duration
+                                                    })()}
+                                                </Tag>
+                                                <Tag color="yellow" style={{ marginLeft: '-10px' }}>
+                                                    {job.min_star_requirement} <StarOutlined />
+                                                </Tag>
                                             </div>
-                                        </>
-                                    }
-                                    avatar={<img alt="example" src={"https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} style={{ width: '100px', height: '100px', borderRadius: '5px' }} />}
-                                />
-                            </Card>
+                                        }
+                                        description={
+                                            <>
+                                                <div className="job-card-description" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <div style={{ display: 'flex', gap: '10px', flexDirection: 'row-reverse' }}>
+                                                        <span>
+                                                            <DollarOutlined /> {new Intl.NumberFormat('vi-VN').format(job.salary)} VND
+                                                        </span>
+                                                        <span><EnvironmentOutlined /> {job.location}</span>
+                                                        <span>
+                                                            <ContainerOutlined /> {new Date(job.updatedAt).toLocaleString('en-US', {
+                                                                year: 'numeric',
+                                                                month: 'long',
+                                                                day: 'numeric',
+                                                                hour: '2-digit',
+                                                                minute: '2-digit',
+                                                                second: '2-digit',
+                                                            })}
+                                                        </span>
+                                                    </div>
+                                                    <div className="job-card-buttons" style={{ display: 'flex', gap: '10px', marginRight: '10px' }}>
+                                                        <Button
+                                                            type="primary"
+                                                            className="apply-now-button"
+                                                            style={{ height: '40px' }}
+                                                            onClick={() => {
+                                                                navigate(`/job-detail-view/${job.id}`);
+                                                                window.scrollTo(0, 0);
+                                                            }}
+                                                        >
+                                                            Apply now <ArrowRightOutlined />
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        }
+                                        avatar={
+                                            <img
+                                                alt="example"
+                                                src={job.avatar || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"}
+                                                style={{ width: '100px', height: '100px', borderRadius: '5px' }}
+                                            />
+                                        }
+                                    />
+                                </Card>
+                            </div>
+                        ))
+                    ) : (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+                            <Empty description="No Data" />
                         </div>
-                    ))
-                ) : (
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
-                        <Empty description="No Data" />
-                    </div>
-                )}
+                    )}
 
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
+                    <Pagination
+                        current={currentPage} // Bind the current page
+                        total={jobData.length} // Total number of jobs
+                        pageSize={jobsPerPage} // Number of jobs per page
+                        onChange={(page) => setCurrentPage(page)} // Update the current page
+                    />
+                </div>
+                <div style={{ height: '100px' }}></div>
+                <Footer />
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px', marginBottom: '20px' }}>
-                <Pagination
-                    current={currentPage} // Bind the current page
-                    total={jobData.length} // Total number of jobs
-                    pageSize={jobsPerPage} // Number of jobs per page
-                    onChange={(page) => setCurrentPage(page)} // Update the current page
-                />
-            </div>
-            <div style={{ height: '100px' }}></div>
-            <Footer />
-        </div>
         </Spin>
     );
 };

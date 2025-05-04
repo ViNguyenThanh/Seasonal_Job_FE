@@ -76,6 +76,7 @@ const FindingCompany = () => {
                             console.log(`Fetched user data for company ID ${company.id}:`, userResponse.data); // Log the user data
                             return {
                                 ...company,
+                                avatar: userResponse.data.data.avatar, // Include avatar
                                 createdAt: userResponse.data.createdAt, // Add the createdAt field
                             };
                         })
@@ -325,7 +326,7 @@ const FindingCompany = () => {
                                                     <div className="list-company-detail1">
                                                         <img
                                                             alt={company.companyName}
-                                                            src={"https://i.pinimg.com/736x/27/e0/74/27e074008b1d54fb474224de9102651b.jpg"}
+                                                            src={company.avatar || "https://i.pinimg.com/736x/27/e0/74/27e074008b1d54fb474224de9102651b.jpg"} // Use avatar if available
                                                             className="company-image"
                                                         />
                                                         <div>

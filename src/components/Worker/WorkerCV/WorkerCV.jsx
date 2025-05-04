@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import './WorkerCV.css';
 import { Button, message, Modal, Upload } from 'antd';
