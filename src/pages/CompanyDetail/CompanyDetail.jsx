@@ -7,7 +7,7 @@ import { jobApi } from "../../apis/job.request";
 import "./CompanyDetail.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Avatar, Button, Divider, Tag, Space } from 'antd';
+import { Avatar, Button, Divider, Tag, Space, Tooltip } from 'antd';
 import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, SolutionOutlined, FileProtectOutlined } from '@ant-design/icons';
 import { Typography, Row, Col } from 'antd';
 const { Title, Paragraph } = Typography;
@@ -88,6 +88,7 @@ const CompanyDetail = () => {
                                 <Avatar
                                     shape="square" size={80}
                                     icon={<AntDesignOutlined />}
+                                    src={userData ? userData.avatar : "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} // Default avatar if none provided
                                 />
                             </div>
                             <div className="company-detail-title-section">
@@ -337,42 +338,42 @@ const CompanyDetail = () => {
                         <Row gutter={[16, 16]} justify="start">
                             {jobPostings.map((job) => (
                                 <Col key={job.id} xs={24} sm={12} md={8} lg={8}>
-                                    <a href={`/job-detail-view/${job.id}`} className="list-company-card-link">
-                                        <div className="list-company-card" style={{
-                                        }}>
-                                            <div className="list-company-detail1">
-                                                <img
-                                                    alt={job.title}
-                                                    src={job.companyAvatar || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} // Default avatar if none provided
-                                                    className="company-image"
-                                                />
-                                                <div>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                        <Title level={4} className="company-detail-job-title">
-                                                            {job.title}
-                                                        </Title>
+                                    <Tooltip title={job.title}>
+                                        <a href={`/job-detail-view/${job.id}`} className="list-company-card-link">
+                                            <div className="list-company-card">
+                                                <div className="list-company-detail1">
+                                                    <img
+                                                        alt={job.title}
+                                                        src={userData ? userData.avatar : "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"}
+                                                        className="company-image"
+                                                    />
+                                                    <div>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                            <Title level={4} className="company-detail-job-title">
+                                                                {job.title}
+                                                            </Title>
+                                                        </div>
+                                                        <Paragraph style={{ color: 'grey', margin: 0 }}>
+                                                            <EnvironmentOutlined /> {job.location}
+                                                        </Paragraph>
                                                     </div>
-                                                    <Paragraph style={{ color: 'grey', margin: 0 }}>
-                                                        <EnvironmentOutlined /> {job.location}
-                                                    </Paragraph>
-
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'right', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                                                    <Tag color="blue">
+                                                        {(() => {
+                                                            const startDate = new Date(job.started_date);
+                                                            const endDate = new Date(job.end_date);
+                                                            const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                                                            return `${durationInDays} days`;
+                                                        })()}
+                                                    </Tag>
+                                                    <Tag color="yellow">
+                                                        {job.min_star_requirement}<StarOutlined />
+                                                    </Tag>
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'right', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
-                                                <Tag color="blue">
-                                                    {(() => {
-                                                        const startDate = new Date(job.started_date);
-                                                        const endDate = new Date(job.end_date);
-                                                        const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
-                                                        return `${durationInDays} days`; // Display duration
-                                                    })()}
-                                                </Tag>
-                                                <Tag color="yellow">
-                                                    {job.min_star_requirement}<StarOutlined />
-                                                </Tag>
-                                            </div>
-                                        </div>
-                                    </a>
+                                        </a>
+                                    </Tooltip>
                                 </Col>
                             ))}
                         </Row>

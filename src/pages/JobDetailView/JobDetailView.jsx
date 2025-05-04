@@ -1,11 +1,10 @@
-/* eslint-disable no-undef */
-// eslint-disable-next-line no-unused-vars
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import "./JobDetailView.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message, ConfigProvider, notification, Spin } from 'antd';
-import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined, HomeOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message, ConfigProvider, notification, Spin, Radio } from 'antd';
+import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined, HomeOutlined, SearchOutlined, FileTextOutlined, FilePdfOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
 import { CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, PushpinOutlined, SolutionOutlined, StarOutlined } from '@ant-design/icons';
@@ -16,6 +15,7 @@ import { jobGroupApi } from "../../apis/job-group.request";
 import { cvApi, uploadCV } from "../../apis/cv.request";
 import { userApi } from "../../apis/user.request";
 import { getApplicationsByUserId } from "../../apis/application.request";
+import { getToken } from "../../utils/Token";
 
 const JobDetailView = () => {
 
@@ -31,6 +31,13 @@ const JobDetailView = () => {
     const [jobGroupDetail, setJobGroupDetail] = useState(null); // State to store job group details
     const [jobTypeDetail, setJobTypeDetail] = useState(null); // State to store job type details
     const [userCompanies, setUserCompanies] = useState(null); // State to store user company details
+    const [selectedCVOption, setSelectedCVOption] = useState("default"); // State to track selected CV option
+    const [userId, setUserId] = useState(null); // State to store the logged-in user's ID
+    const [defaultCV, setDefaultCV] = useState(null); // State to store the default CV
+    const [defaultPreviewUrl, setDefaultPreviewUrl] = useState(null); // State for the default CV preview URL
+    const [defaultPreviewVisible, setDefaultPreviewVisible] = useState(false); // State for the default CV preview modal
+    const [avatarUrl, setAvatarUrl] = useState(null); // State for the avatar URL
+
 
     // Fetch job details when the component loads
     useEffect(() => {
@@ -38,7 +45,15 @@ const JobDetailView = () => {
             try {
                 const jobResponse = await jobApi.getJobById(id);
                 const jobData = jobResponse.data.data;
+                console.log("Job Detail:", jobData); // Log the job details
                 setJobDetail(jobData);
+
+                // Fetch user details using userId from jobData
+                if (jobData.userId) {
+                    const userResponse = await userApi.getUserById(jobData.userId);
+                    console.log("User Detail:", userResponse.data); // Log user details here
+                    setAvatarUrl(userResponse.data.data.avatar); // Set the avatar URL
+                }
 
                 // Fetch job group details
                 if (jobData.jobGroupId) {
@@ -74,6 +89,41 @@ const JobDetailView = () => {
 
         fetchJobDetails();
     }, [id]);
+
+    useEffect(() => {
+        const token = getToken();
+        if (token) {
+            const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the JWT token
+            setUserId(decodedToken.id); // Extract and set the user ID
+        }
+
+        const fetchDefaultCV = async () => {
+            if (!userId) return;
+
+            try {
+                const response = await cvApi.getUserCVs(userId); // Fetch all CVs for the user
+                const cvs = response.data;
+                if (Array.isArray(cvs)) {
+                    const defaultCV = cvs.find((cv) => cv.status === "Default"); // Find the default CV
+                    if (defaultCV) {
+                        setDefaultCV({
+                            id: defaultCV.id,
+                            name: defaultCV.filename,
+                            url: defaultCV.file_Url,
+                        });
+                        console.log("Default CV:", defaultCV); // Log the default CV
+                    } else {
+                        setDefaultCV(null);
+                        console.log("No default CV found.");
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching default CV:", error);
+            }
+        };
+
+        fetchDefaultCV();
+    }, [userId]);
 
     if (isLoading) {
         return (
@@ -119,8 +169,13 @@ const JobDetailView = () => {
     };
 
     const handleApplyNow = async () => {
-        if (!selectedFile) {
-            message.error("Please select a CV before applying.");
+        if (selectedCVOption === "upload" && !selectedFile) {
+            message.error("Please upload a CV before applying.");
+            return;
+        }
+
+        if (selectedCVOption === "default" && !defaultCV) {
+            message.error("No default CV is available. Please upload a CV.");
             return;
         }
 
@@ -141,17 +196,22 @@ const JobDetailView = () => {
                 return;
             }
 
-            // Upload the CV
-            const response = await uploadCV(selectedFile);
-            console.log("Application submitted successfully:", response);
+            let cvId;
 
-            if (response.status === 201) {
-                // Apply for the job
-                await cvApi.applyjob(jobDetail.id, {
-                    jobPostingId: jobDetail.id,
-                    cvId: response.data.data,
-                });
+            if (selectedCVOption === "upload") {
+                // Upload the CV
+                const response = await uploadCV(selectedFile);
+                cvId = response.data.data;
+            } else if (selectedCVOption === "default") {
+                // Use the default CV
+                cvId = defaultCV.id;
             }
+
+            // Apply for the job
+            await cvApi.applyjob(jobDetail.id, {
+                jobPostingId: jobDetail.id,
+                cvId,
+            });
 
             message.success("Your application has been submitted successfully!");
 
@@ -204,6 +264,28 @@ const JobDetailView = () => {
             openNotificationWithIcon('warning'); // Show warning notification if no token
         } else {
             showModal(); // Show the modal if the user is signed in
+        }
+    };
+
+    const handleCVOptionChange = (e) => {
+        setSelectedCVOption(e.target.value); // Update the selected option
+    };
+
+    const handleDefaultPreview = async () => {
+        try {
+            // Fetch the file as a Blob
+            const response = await fetch(defaultCV.url);
+            const blob = await response.blob();
+
+            // Force the Blob to be treated as a PDF
+            const pdfBlob = new Blob([blob], { type: "application/pdf" });
+            const objectUrl = URL.createObjectURL(pdfBlob);
+
+            setDefaultPreviewUrl(objectUrl); // Set the object URL for the default CV preview
+            setDefaultPreviewVisible(true); // Open the modal
+        } catch (error) {
+            console.error("Error fetching the PDF:", error);
+            message.error("Failed to load the CV for preview.");
         }
     };
 
@@ -261,7 +343,8 @@ const JobDetailView = () => {
                     <div className="job-detail-avatar-section">
                         <Avatar
                             style={{ width: '100px', height: '100px' }}
-                            icon={<AntDesignOutlined />}
+                            src={avatarUrl} // Use the avatar URL from state
+                            icon={!avatarUrl && <AntDesignOutlined />} // Fallback to icon if no avatar
                         />
                         <div style={{ marginLeft: '10px' }}>
                             <div className="job-detail-title-section">
@@ -648,22 +731,64 @@ const JobDetailView = () => {
                                 <Title level={5} style={{ margin: 0 }}>
                                     Choose CV
                                 </Title>
-                                <Upload {...props}>
-                                    <Button icon={<UploadOutlined />} style={{ marginTop: "15px" }}>
-                                        Upload
-                                    </Button>
-                                </Upload>
-                                {selectedFile && (
+                                <Radio.Group
+                                    style={{ marginTop: "10px" }}
+                                    onChange={(e) => {
+                                        handleCVOptionChange(e);
+                                        if (e.target.value === "default" && defaultCV) {
+                                            message.success("Default CV is ready to upload.");
+                                        }
+                                    }}
+                                    value={selectedCVOption} // Bind the selected value
+                                >
+                                    <Radio value="default">Default CV</Radio>
+                                    <Radio value="upload">Upload</Radio>
+                                </Radio.Group>
+                                <br />
+                                {selectedCVOption === "upload" && (
+                                    <Upload {...props}>
+                                        <Button icon={<UploadOutlined />} style={{ marginTop: "15px" }}>
+                                            Upload
+                                        </Button>
+                                    </Upload>
+                                )}
+                                {selectedCVOption === "default" && defaultCV && (
+                                    <div style={{ marginTop: "15px" }}>
+                                        <Title level={5} style={{ margin: 0 }}>
+                                            Preview Default CV
+                                        </Title>
+                                        <Button
+                                            size="large"
+                                            onClick={handleDefaultPreview} // Open preview for default CV
+                                        >
+                                            <FilePdfOutlined /> {defaultCV.name}
+                                        </Button>
+                                        <Modal
+                                            open={defaultPreviewVisible}
+                                            title="Preview Default CV"
+                                            footer={null}
+                                            onCancel={() => setDefaultPreviewVisible(false)}
+                                            width="80%"
+                                        >
+                                            <embed
+                                                src={defaultPreviewUrl} // Preview default CV
+                                                type="application/pdf"
+                                                width="100%"
+                                                height="500px"
+                                            />
+                                        </Modal>
+                                    </div>
+                                )}
+                                {selectedCVOption === "upload" && selectedFile && (
                                     <div style={{ marginTop: "15px" }}>
                                         <Title level={5} style={{ margin: 0 }}>
                                             Preview CV
                                         </Title>
                                         <Button
-                                            type="link"
-                                            style={{ color: "#1890ff", textDecoration: "underline" }}
-                                            onClick={() => setPreviewVisible(true)}
+                                            size="large"
+                                            onClick={() => setPreviewVisible(true)} // Open preview for uploaded file
                                         >
-                                            {selectedFile.name}
+                                            <FilePdfOutlined /> {selectedFile.name}
                                         </Button>
                                         <Modal
                                             open={previewVisible}
@@ -672,21 +797,18 @@ const JobDetailView = () => {
                                             onCancel={() => setPreviewVisible(false)}
                                             width="80%"
                                         >
-                                            {selectedFile.type === "application/pdf" ? (
-                                                <embed
-                                                    src={URL.createObjectURL(selectedFile)}
-                                                    type="application/pdf"
-                                                    width="100%"
-                                                    height="500px"
-                                                />
-                                            ) : (
-                                                <img
-                                                    alt="Preview"
-                                                    src={URL.createObjectURL(selectedFile)}
-                                                    style={{ width: "100%" }}
-                                                />
-                                            )}
+                                            <embed
+                                                src={URL.createObjectURL(selectedFile)} // Preview uploaded file
+                                                type="application/pdf"
+                                                width="100%"
+                                                height="500px"
+                                            />
                                         </Modal>
+                                    </div>
+                                )}
+                                {!defaultCV && selectedCVOption === "default" && (
+                                    <div style={{ marginTop: "15px", color: "red" }}>
+                                        No available default CV.
                                     </div>
                                 )}
                                 <Title level={5} style={{ marginTop: "20px" }}>

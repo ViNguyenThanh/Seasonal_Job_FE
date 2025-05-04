@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import './WorkerProfile.css'
@@ -11,12 +12,13 @@ import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Giao diện mặc định
 import { useLocation, useNavigate } from 'react-router-dom';
-import { userApi } from '../../../apis/user.request'; // Adjust the path if necessary
-import { getToken } from '../../../utils/Token'; // Import the function to get the token
+import { getToken } from '../../../utils/Token';
+import { Api } from '../../../utils/BaseUrlServer';
 
 
 const WorkerProfile = () => {
   const navigate = useNavigate();
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -42,31 +44,44 @@ const WorkerProfile = () => {
           return;
         }
 
-        const response = await userApi.getUserById(id); // Fetch user data
+        const api = Api(); // Create an Axios instance
+        const response = await api.get(`/users/${id}`); // Use the Axios instance
         console.log("API Response:", response.data);
 
-        // Update the fullName and email in profileData
-        setProfileData((prevData) => {
-          const updatedData = {
-            ...prevData,
-            fullname: response.data.data.fullName,
-            email: response.data.data.email,
-            phoneNumber: response.data.data.phoneNumber,
-            dob: response.data.data.dateOfBirth,
-            gender: response.data.data.sex
-              ? response.data.data.sex.charAt(0).toUpperCase() + response.data.data.sex.slice(1)
-              : "-- None --",
-            city: response.data.data.address
-              ? response.data.data.address.split(",")[0].trim() // Get the part before the comma
-              : "-- None --",
-            district: response.data.data.address
-              ? response.data.data.address.split(",")[1]?.trim() || "-- None --" // Get the part after the comma
-              : "-- None --",
-            description: response.data.data.description || "-- None --",
-          };
-          // console.log("Updated Profile Data:", updatedData);
-          return updatedData;
-        });
+        // Update the profileData and fileList
+        setProfileData((prevData) => ({
+          ...prevData,
+          avatar: response.data.data.avatar || '', // Ensure avatar URL is set
+          fullname: response.data.data.fullName,
+          email: response.data.data.email,
+          phoneNumber: response.data.data.phoneNumber,
+          dob: response.data.data.dateOfBirth,
+          gender: response.data.data.sex
+            ? response.data.data.sex.charAt(0).toUpperCase() + response.data.data.sex.slice(1)
+            : "-- None --",
+          city: response.data.data.address
+            ? response.data.data.address.split(",")[0].trim()
+            : "-- None --",
+          district: response.data.data.address
+            ? response.data.data.address.split(",")[1]?.trim() || "-- None --"
+            : "-- None --",
+          description: response.data.data.description || "-- None --",
+        }));
+
+        // Initialize fileList with the current avatar
+        if (response.data.data.avatar) {
+          setFileList([
+            {
+              uid: '-1',
+              name: 'avatar.png',
+              status: 'done',
+              url: response.data.data.avatar, // Use the current avatar URL
+            },
+          ]);
+        }
+
+        // Save the user ID for later use
+        setUserId(id);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -119,19 +134,27 @@ const WorkerProfile = () => {
   const handleChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
 
-    // Kiểm tra nếu không có ảnh trong fileList
     if (newFileList.length === 0) {
-      setProfileData(prev => ({
-        ...prev,
-        avatar: '', // Đặt avatar thành chuỗi rỗng khi không có ảnh
+      // Clear the avatar if no file is uploaded
+      setProfileData((prevData) => ({
+        ...prevData,
+        avatar: '', // Clear the avatar
       }));
     } else if (newFileList.length > 0 && newFileList[0].status === "done") {
-      getBase64(newFileList[0].originFileObj).then(base64 => {
-        setProfileData(prev => ({
-          ...prev,
-          avatar: base64
+      try {
+        const uploadedFile = newFileList[0].response; // Assuming the backend returns the uploaded file info
+        const avatarUrl = uploadedFile?.avatar || ''; // Extract the avatar URL from the response
+
+        setProfileData((prevData) => ({
+          ...prevData,
+          avatar: avatarUrl, // Update the avatar URL in the state
         }));
-      });
+
+        message.success("Avatar updated successfully!");
+      } catch (error) {
+        console.error("Error processing upload response:", error);
+        message.error("Failed to process uploaded avatar.");
+      }
     }
   };
 
@@ -143,6 +166,7 @@ const WorkerProfile = () => {
   // Mở modal
   const showConfirmModal = () => {
     formik.setValues({
+      avatar: profileData.avatar || avatar,
       fullname: profileData.fullname || '',
       email: profileData.email || '',
       phoneNumber: profileData.phoneNumber || '',
@@ -152,6 +176,21 @@ const WorkerProfile = () => {
       district: profileData.district || '',
       description: profileData.description || '',
     });
+
+    // Reinitialize fileList with the current avatar
+    if (profileData.avatar) {
+      setFileList([
+        {
+          uid: '-1',
+          name: 'avatar.png',
+          status: 'done',
+          url: profileData.avatar, // Use the current avatar URL
+        },
+      ]);
+    } else {
+      setFileList([]); // Clear fileList if no avatar exists
+    }
+
     setConfirmVisible(true);
   };
 
@@ -191,53 +230,66 @@ const WorkerProfile = () => {
       district: '',
       description: '',
     },
-    validationSchema: Yup.object({
-      fullname: Yup.string()
-        .matches(/^[^0-9]*$/, "* Full Name cannot be entered in numbers")
-        .matches(/^[^!@#$%^&*(),.?":;{}|<>]*$/, "* Full name cannot contain special characters")
-        .matches(/^[A-ZÀ-Ỹ][a-zà-ỹ]*(\s[A-ZÀ-Ỹ][a-zà-ỹ]*)*$/, "* Each word must have its first letter capitalized")
-        .max(30, "* Full Name cannot be longer than 30 characters")
-        .required("* Required"),
-    }),
     onSubmit: async (values) => {
       setConfirmLoading(true);
       try {
-        const token = getToken(); // Get the token
-        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
-        const { id } = decodedToken; // Extract user ID from the token
-    
+        let avatarUrl = profileData.avatar;
+
+        // Upload the avatar if a new file is selected
+        if (fileList.length > 0 && fileList[0].originFileObj) {
+          const formData = new FormData();
+          formData.append("avatar", fileList[0].originFileObj);
+
+          const api = Api(); // Create an Axios instance
+          const uploadResponse = await api.put(`/users/update/${userId}`, formData, {
+            headers: {
+              Authorization: `Bearer ${getToken()}`, // Include the token if required
+            },
+          });
+
+          if (uploadResponse.status === 200) {
+            avatarUrl = uploadResponse.data.data.avatar; // Get the uploaded avatar URL
+          } else {
+            throw new Error("Failed to upload avatar");
+          }
+        }
+
+        // Prepare the profile update data
         const updateData = {
-          fullname: values.fullname, // Map to 'fullName' in the backend
+          avatar: avatarUrl, // Use the uploaded avatar URL
+          fullname: values.fullname,
           dateOfBirth: values.dob ? dayjs(values.dob).format('YYYY-MM-DD') : null,
-          gender: values.gender && values.gender.toLowerCase() !== "-- none --" ? values.gender.toLowerCase() : null, // Normalize to lowercase
+          gender: values.gender && values.gender.toLowerCase() !== "-- none --" ? values.gender.toLowerCase() : null,
           address: `${values.city}, ${values.district}`,
           phoneNumber: values.phoneNumber,
-          description: values.description ? values.description.trim() : null, // Trim description
+          description: values.description ? values.description.trim() : null,
         };
-    
-        console.log("Update Data Sent to Backend:", updateData); // Debugging: Log the payload
-    
-        const response = await userApi.updateUserProfile(id, updateData); // Call the API
-        console.log("Update Response:", response.data);
-    
-        message.success("Profile updated successfully!");
-        setProfileData((prevData) => ({
-          ...prevData,
-          ...updateData,
-          gender: updateData.gender
-            ? updateData.gender.charAt(0).toUpperCase() + updateData.gender.slice(1)
-            : "-- None --", // Capitalize the first letter of gender
-          dob: updateData.dateOfBirth || "-- None --", // Ensure dateOfBirth is updated
-          city: updateData.address ? updateData.address.split(",")[0].trim() : "-- None --", // Extract city from address
-          district: updateData.address ? updateData.address.split(",")[1]?.trim() || "-- None --" : "-- None --", // Extract district from address
-          description: updateData.description || "-- None --", // Ensure description is updated
-        }));
-        setConfirmVisible(false);
+
+        console.log("Update Data Sent to Backend:", updateData);
+
+        // Send the profile update request
+        const api = Api(); // Create an Axios instance
+        const response = await api.put(`/users/update/${userId}`, updateData, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+
+        if (response.status === 200) {
+          console.log("Update Response:", response.data);
+
+          // Show success message
+          message.success("Profile updated successfully!");
+
+          // Delay the page refresh to allow the message to appear
+          setTimeout(() => {
+            window.location.reload(); // Refresh the page
+          }, 1500); // 1.5 seconds delay
+        } else {
+          throw new Error("Failed to update profile");
+        }
       } catch (error) {
         console.error("Error updating profile:", error);
-        if (error.response) {
-          console.error("Backend Response:", error.response.data); // Log backend error response
-        }
         message.error("Failed to update profile.");
       } finally {
         setConfirmLoading(false);
@@ -299,15 +351,16 @@ const WorkerProfile = () => {
         ]}
         width={1000}
       >
+
         <div className="worker-edit-profile-content">
           <div className="modal-worker-avatar">
             <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType="picture-circle"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
               maxCount={1}
+              beforeUpload={() => false} // Disable the default POST request
             >
               {fileList.length >= 1 ? null : (
                 <button style={{ border: 0, background: 'none' }} type="button">
