@@ -55,6 +55,8 @@ import SupportStaffJobGroup from './components/SupportStaff/ManageJobExecute/Sup
 import SupportStaffJobPosting from './components/SupportStaff/ManageJobExecute/SupportStaffJobPosting'
 import ManageJobExecute from './components/SupportStaff/ManageJobExecute/ManageJobExecute'
 
+import EmployerPremiumPage from './pages/EmployerPremiumPage/EmployerPremiumPage'
+
 
 
 
@@ -118,14 +120,10 @@ function App() {
         <Route path="/company-detail/:id" element={<CompanyDetail />} />
 
         {/* Job Posting Flow */}
-        {newUser && newUser.role === 'employer' ? (
-          <Route path='/job-posting-flow/*' element={<JobPostingFlow />}>
-            <Route path='posting-notifications' element={<PostingNotifications />} />
-            <Route path="creating-new-job-group" element={<JobPostingFlowLayout />} />
-          </Route>
-        ) : (
-          <Route path='/job-posting-flow/*' element={<Navigate to="/login-for-employer" />} />
-        )}
+        <Route path='/job-posting-flow/*' element={<JobPostingFlow />}>
+          <Route path='posting-notifications' element={<PostingNotifications />} />
+          <Route path="creating-new-job-group" element={<JobPostingFlowLayout />} />
+        </Route>
 
         {/* Worker */}
         <Route path='/worker/*' element={<Worker />}>
@@ -157,6 +155,9 @@ function App() {
           <Route path='employer-transactions' element={<EmployerTransactions />} />
           <Route path="employer-transactions/employer-transaction-detail/:id" element={<EmployerTransactionDetail />} />
         </Route>
+
+        {/* Employer Premium */}
+        <Route path='/employer-premium' element={<EmployerPremiumPage />} />
 
         {/* Admin */}
         <Route path='/admin/*' element={<Admin />}>
