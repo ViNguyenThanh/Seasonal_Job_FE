@@ -1,0 +1,27 @@
+.employer-premium-page-whole-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex-direction: column;
+  background-color: #edf5ff;
+}
+
+.employer-premium-page-container {
+  max-width: var(--max-screen-width);
+  width: 100%;
+  margin-top: 95px;
+  min-height: 100vh;
+  height: fit-content;
+}
+
+@media (max-width: 950px) {
+  .employer-premium-page-container{
+      margin-top: 125px;
+  }
+}
+@media (max-width: 650px) {
+  .employer-premium-page-container{
+      margin-top: 95px;
+  }
+}
