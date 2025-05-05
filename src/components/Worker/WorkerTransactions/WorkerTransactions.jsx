@@ -7,46 +7,87 @@ import { paymentApi } from '../../../apis/payment.request';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { userApi } from '../../../apis/user.request';
+import { formatDate } from '../../../utils/formatDate';
 
-const WorkerTransactions = () => {
+const WorkerTransactions = ({ newUser }) => {
   const navigate = useNavigate();
 
   const [transactions, setTransactions] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const res = await paymentApi.getTransactions();
-        console.log(res.data);
-        setTransactions(res.data.data);
-
-      } catch (error) {
-        // console.log(error);
-        if (error.status === 404) {
-          setTransactions([]);
-        }
-      }
-    }
     fetchTransactions();
   }, []);
 
+  useEffect(() => {
+    fetchWallet();
+  }, []);
+
+  useEffect(() => {
+    if (newUser?.id) fetchUser(newUser.id);
+  }, [newUser]);
+
+
+  const fetchTransactions = async () => {
+    try {
+      const res = await paymentApi.getTransactions();
+      console.log(res.data);
+      const newTransactions = await Promise.all(res.data.data.map(async (item) => {
+        const employer = await userApi.getUserById(item.senderId);
+        return {
+          id: item.id,
+          sender: employer.data.data.companyName,
+          date: formatDate(item.createdAt),
+          amount: parseFloat(item.amount).toLocaleString('vi-VN'),
+          status: item.status
+        };
+      }))
+      
+      setTransactions(newTransactions);
+    } catch (error) {
+      if (error.status === 404) setTransactions([]);
+      else console.error('Fetch transactions failed', error);
+    }
+  };
+
+  const fetchWallet = async () => {
+    try {
+      const res = await paymentApi.getEscrowWallet();
+      setWalletBalance(res.data.balance);
+    } catch (error) {
+      if (error.status === 404) setWalletBalance(0);
+      else console.error('Fetch wallet failed', error);
+    }
+  };
+
+  const fetchUser = async (userId) => {
+    try {
+      const res = await userApi.getUserById(userId);
+      setUser(res.data.data);
+    } catch (error) {
+      console.error('Fetch user failed', error);
+    }
+  };
+
+
   const transactionData = [
-    { id: 1, jobPostingName: 'Công việc thời vụ cho sự kiện tổ chức vào tháng 7, cần người hỗ trợ công việc chuẩn bị, trang trí và quản lý sự kiện', date: '25/07/2025', amount: 6300000, status: 'PENDING' },
-    { id: 2, jobPostingName: 'Vị trí freelancer marketing cho chiến dịch quảng bá trong tháng 8, cần người có kinh nghiệm digital marketing', date: '20/07/2025', amount: 1200000, status: 'RELEASED' },
-    { id: 3, jobPostingName: 'Trợ lý tạm thời cho các công việc văn phòng, giúp đỡ trong việc quản lý hồ sơ, sắp xếp tài liệu và các nhiệm vụ hành chính khác', date: '15/07/2025', amount: 3300000, status: 'CANCELLED' },
-    { id: 4, jobPostingName: 'Công việc bán thời gian cho vị trí chăm sóc khách hàng trong tháng 9, yêu cầu kỹ năng giao tiếp và giải quyết khiếu nại', date: '10/07/2025', amount: 7000000, status: 'PENDING' },
-    { id: 5, jobPostingName: 'Công việc nhập liệu tạm thời trong tháng 6, yêu cầu nhanh nhẹn, chính xác và có khả năng làm việc với dữ liệu lớn', date: '05/07/2025', amount: 400000, status: 'RELEASED' },
-    { id: 6, jobPostingName: 'Vị trí hỗ trợ hành chính tạm thời cho dự án tháng 7, cần người có kỹ năng tổ chức công việc và hỗ trợ nhóm hiệu quả', date: '02/07/2025', amount: 2100000, status: 'RELEASED' },
-    { id: 7, jobPostingName: 'Công việc freelancer nhiếp ảnh cho sự kiện đặc biệt, cần người có kinh nghiệm chụp hình sự kiện và khả năng sáng tạo', date: '28/06/2025', amount: 1800000, status: 'CANCELLED' },
-    { id: 8, jobPostingName: 'Công việc bán thời gian viết nội dung mô tả sản phẩm cho các cửa hàng trực tuyến, yêu cầu khả năng viết sáng tạo và nhanh chóng', date: '22/06/2025', amount: 5500000, status: 'PENDING' },
-    { id: 9, jobPostingName: 'Điều phối viên sự kiện cho một dự án tạm thời, yêu cầu kỹ năng tổ chức và làm việc dưới áp lực trong thời gian ngắn', date: '17/06/2025', amount: 690000, status: 'RELEASED' },
-    { id: 10, jobPostingName: 'Công việc bán hàng tạm thời cho cuối tuần, cần người có kỹ năng giao tiếp và thuyết phục khách hàng', date: '12/06/2025', amount: 2600000, status: 'CANCELLED' },
-    { id: 11, jobPostingName: 'Công việc kho tạm thời cho tháng 7, yêu cầu người có khả năng làm việc chăm chỉ và quản lý kho hiệu quả', date: '08/06/2025', amount: 4100000, status: 'RELEASED' },
-    { id: 12, jobPostingName: 'Vị trí freelancer quản lý mạng xã hội cho chiến dịch ngắn hạn, yêu cầu kỹ năng truyền thông và sáng tạo nội dung', date: '03/06/2025', amount: 370000, status: 'PENDING' },
-    { id: 13, jobPostingName: 'Công việc hành chính bán thời gian trong tháng 6, yêu cầu khả năng tổ chức và quản lý các công việc văn phòng', date: '29/05/2025', amount: 5000000, status: 'RELEASED' },
-    { id: 14, jobPostingName: 'Vị trí thiết kế đồ họa tạm thời, yêu cầu người có kỹ năng sử dụng phần mềm thiết kế và sáng tạo', date: '25/05/2025', amount: 2800000, status: 'CANCELLED' },
-    { id: 15, jobPostingName: 'Công việc viết nội dung freelancer cho chiến dịch tạo nội dung, yêu cầu khả năng viết sáng tạo và am hiểu về SEO', date: '20/05/2025', amount: 100000, status: 'PENDING' },
-    { id: 16, jobPostingName: 'Nhân viên sự kiện tạm thời cho công việc tổ chức sự kiện, yêu cầu kỹ năng tổ chức và hỗ trợ đội ngũ trong công việc', date: '15/05/2025', amount: 3200000, status: 'RELEASED' },
+    { id: 1, jobPostingName: 'Staff Of Event For Art', date: '30/04/2025', amount: 100000, status: 'RELEASED' },
+    { id: 2, jobPostingName: 'Art Installation Coordinator', date: '26/04/2025', amount: 1000, status: 'RELEASED' },
+    // { id: 3, jobPostingName: 'Trợ lý tạm thời cho các công việc văn phòng, giúp đỡ trong việc quản lý hồ sơ, sắp xếp tài liệu và các nhiệm vụ hành chính khác', date: '15/07/2025', amount: 3300000, status: 'CANCELLED' },
+    // { id: 4, jobPostingName: 'Công việc bán thời gian cho vị trí chăm sóc khách hàng trong tháng 9, yêu cầu kỹ năng giao tiếp và giải quyết khiếu nại', date: '10/07/2025', amount: 7000000, status: 'PENDING' },
+    // { id: 5, jobPostingName: 'Công việc nhập liệu tạm thời trong tháng 6, yêu cầu nhanh nhẹn, chính xác và có khả năng làm việc với dữ liệu lớn', date: '05/07/2025', amount: 400000, status: 'RELEASED' },
+    // { id: 6, jobPostingName: 'Vị trí hỗ trợ hành chính tạm thời cho dự án tháng 7, cần người có kỹ năng tổ chức công việc và hỗ trợ nhóm hiệu quả', date: '02/07/2025', amount: 2100000, status: 'RELEASED' },
+    // { id: 7, jobPostingName: 'Công việc freelancer nhiếp ảnh cho sự kiện đặc biệt, cần người có kinh nghiệm chụp hình sự kiện và khả năng sáng tạo', date: '28/06/2025', amount: 1800000, status: 'CANCELLED' },
+    // { id: 8, jobPostingName: 'Công việc bán thời gian viết nội dung mô tả sản phẩm cho các cửa hàng trực tuyến, yêu cầu khả năng viết sáng tạo và nhanh chóng', date: '22/06/2025', amount: 5500000, status: 'PENDING' },
+    // { id: 9, jobPostingName: 'Điều phối viên sự kiện cho một dự án tạm thời, yêu cầu kỹ năng tổ chức và làm việc dưới áp lực trong thời gian ngắn', date: '17/06/2025', amount: 690000, status: 'RELEASED' },
+    // { id: 10, jobPostingName: 'Công việc bán hàng tạm thời cho cuối tuần, cần người có kỹ năng giao tiếp và thuyết phục khách hàng', date: '12/06/2025', amount: 2600000, status: 'CANCELLED' },
+    // { id: 11, jobPostingName: 'Công việc kho tạm thời cho tháng 7, yêu cầu người có khả năng làm việc chăm chỉ và quản lý kho hiệu quả', date: '08/06/2025', amount: 4100000, status: 'RELEASED' },
+    // { id: 12, jobPostingName: 'Vị trí freelancer quản lý mạng xã hội cho chiến dịch ngắn hạn, yêu cầu kỹ năng truyền thông và sáng tạo nội dung', date: '03/06/2025', amount: 370000, status: 'PENDING' },
+    // { id: 13, jobPostingName: 'Công việc hành chính bán thời gian trong tháng 6, yêu cầu khả năng tổ chức và quản lý các công việc văn phòng', date: '29/05/2025', amount: 5000000, status: 'RELEASED' },
+    // { id: 14, jobPostingName: 'Vị trí thiết kế đồ họa tạm thời, yêu cầu người có kỹ năng sử dụng phần mềm thiết kế và sáng tạo', date: '25/05/2025', amount: 2800000, status: 'CANCELLED' },
+    // { id: 15, jobPostingName: 'Công việc viết nội dung freelancer cho chiến dịch tạo nội dung, yêu cầu khả năng viết sáng tạo và am hiểu về SEO', date: '20/05/2025', amount: 100000, status: 'PENDING' },
+    // { id: 16, jobPostingName: 'Nhân viên sự kiện tạm thời cho công việc tổ chức sự kiện, yêu cầu kỹ năng tổ chức và hỗ trợ đội ngũ trong công việc', date: '15/05/2025', amount: 3200000, status: 'RELEASED' },
   ];
 
   const getStatusClass = (status) => {
@@ -70,12 +111,12 @@ const WorkerTransactions = () => {
   const [amountValue, setAmountValue] = useState(null);
   const [statusValue, setStatusValue] = useState(null);
 
-  const filteredTransactions = transactionData/*transactions.length > 0 ? transactions*/.filter(item => {
+  const filteredTransactions = /*transactionData*/transactions.length > 0 ? transactions.filter(item => {
     return (
       (!statusValue || item.status === statusValue) &&
       (!amountValue || (item.amount >= amountValue[0] && item.amount <= amountValue[1]))
     );
-  }) /*: []*/
+  }) : []
 
   const [dateFilter, setDateFilter] = useState(null);
   const convertToDate = (dateString) => {
@@ -164,20 +205,21 @@ const WorkerTransactions = () => {
     fetchBanks();
   }, []);
 
-  const [walletBalance, setWalletBalance] = useState(200000); // 200,000 VND mặc định
+  const [walletBalance, setWalletBalance] = useState(0); // 200,000 VND mặc định
 
   return (
     <div className='worker-transactions-container'>
       <div className="worker-transactions-top">
         <div className="worker-identity-wallet">
-          {noAvatar ? (
-            <p className='no-avatar'><UserOutlined /></p>
+          {user?.avatar ? (
+            <img src={user.avatar} />
           ) : (
-            <img src={avatar} />
+            <p className='no-avatar'><UserOutlined /></p>
           )}
           <div className="worker-name-money">
-            <p className='worker-name'>Trương Thị Quỳnh Giang</p>
-            <p className='worker-money'>Wallet Balance: {walletBalance.toLocaleString('vi-VN')} VND</p>
+            <p className='worker-name'>{user?.fullName}</p>
+            <p className='worker-money'>Wallet Balance: {parseFloat(walletBalance).toLocaleString('vi-VN')} VND</p>
+            {/* <p className='worker-money'>Wallet Balance: 101.000 VND</p> */}
           </div>
         </div>
         <div className="worker-withdraw">
@@ -232,18 +274,18 @@ const WorkerTransactions = () => {
                   help={formik.errors.bankCode && formik.touched.bankCode ? formik.errors.bankCode : ""}
                 >
                   <Select
-                  style={{
-                    width: '100%',
-                    margin: '0% 0 1%',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
+                    style={{
+                      width: '100%',
+                      margin: '0% 0 1%',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
                     placeholder="Select a Bank"
                     options={bankList.map(bank => ({
                       value: bank.shortName,
                       label: bank.shortName + " - " + bank.name,
                     }))}
-                    size="large"   
+                    size="large"
                     value={formik.values.bankCode || undefined}
                     onChange={(value) => formik.setFieldValue('bankCode', value || "")}
                     onBlur={() => formik.setTouched({ amount: true })}
@@ -301,7 +343,7 @@ const WorkerTransactions = () => {
       <div className="worker-transactions-bottom">
         <h1>My transaction history</h1>
 
-        {transactionData/*transactions*/.length === 0 ? (
+        {/*transactionData*/transactions.length === 0 ? (
           <div className="no-transactions">
             <Empty description="You do not have a transaction yet!" />
           </div>
@@ -379,7 +421,7 @@ const WorkerTransactions = () => {
                   <table className='worker-transactions-table'>
                     <thead>
                       <tr>
-                        <th className='job-posting-name'>Job Posting Name</th>
+                        <th className='job-posting-name'>Sender</th>
                         <th className='date'>Date</th>
                         <th className='amount'>Amount (VND)</th>
                         <th className='status'>Status</th>
@@ -389,7 +431,7 @@ const WorkerTransactions = () => {
                     <tbody>
                       {/*transactionData*/paginatedData.map(item => (
                         <tr key={item.id}>
-                          <td className='job-posting-name'>{item.jobPostingName}</td>
+                          <td className='job-posting-name'>{item.sender}</td>
                           <td className='date'>{item.date}</td>
                           <td className='amount'>{item.amount.toLocaleString('vi-VN')}</td>
                           <td className='status'>

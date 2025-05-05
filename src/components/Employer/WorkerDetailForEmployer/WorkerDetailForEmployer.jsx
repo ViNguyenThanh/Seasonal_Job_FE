@@ -9,6 +9,7 @@ import { useFormik } from 'formik';
 import { userApi } from '../../../apis/user.request';
 import { jobExecuteApi } from '../../../apis/job-execute.request';
 import dayjs from 'dayjs';
+import { formatDate } from '../../../utils/formatDate';
 const { TextArea } = Input;
 
 const WorkerDetailForEmployer = () => {
@@ -43,7 +44,7 @@ const WorkerDetailForEmployer = () => {
     const fetchJobExecute = async () => {
       try {
         // const res = await jobExecuteApi.getDailyJobExecutes(workerId);
-        const res = await jobExecuteApi.getJobExecuteByJobPostingId(postingId);
+        const res = await jobExecuteApi.getJobPostingByWorkerId(postingId, workerId);
         // console.log(res.data);
         if (res.data.message === 'No job execute for this job posting') {
           // if (res.data.jobs.length === 0) {
@@ -58,9 +59,13 @@ const WorkerDetailForEmployer = () => {
           const transformedExecutes = sortedJobExecutes.map((item, index) => ({
             id: item.id,
             no: index + 1,
+            userId: item.userId,
             jobRequirement: item.note || "No description", // nếu bạn có trường mô tả
-            // assignmentDate: '28/04/2025',
+            // assignmentDate: '03/05/2025',
             assignmentDate: item.assigned_at || '',
+            // assignmentDate: item.assigned_at
+            //   ? dayjs(item.assigned_at, 'DD/MM/YYYY').subtract(1, 'day').format('DD/MM/YYYY')
+            //   : '',
             checkInUrl: item.checkin_img || '',
             checkOutUrl: item.checkout_img || '',
             progress: item.work_process || 0,
@@ -279,6 +284,7 @@ const WorkerDetailForEmployer = () => {
 
   // bắt lỗi khi thay đổi Progress Completed và Reason 
   const formik = useFormik({
+    // enableReinitialize: true,
     initialValues: {
       rows: /*dummyData*/jobExecutes.length > 0 && jobExecutes.map((row) => ({
         progressCompleted: row.progressCompleted,
@@ -292,22 +298,30 @@ const WorkerDetailForEmployer = () => {
             .test("editable-row-required", "* Required", function (value) {
               const index = parseInt(this.path.match(/\d+/)?.[0] || "-1");
               const row = /*dummyData*/jobExecutes[index];
-              if (!row) return true; // fallback
-              if ((isToday(row.assignmentDate) && row.checkInUrl && row.checkOutUrl) || isYesterday(row.assignmentDate)) {
-                return value !== undefined && value !== null;
-              }
-              return true; // không validate nếu không được edit
+              if (!row) return true; // callback
+              // if ((isToday(row.assignmentDate) && row.checkInUrl && row.checkOutUrl) || isYesterday(row.assignmentDate)) {
+              //   return value !== undefined && value !== null;
+              // }
+              // return true; // không validate nếu không được edit\
+              const editable =
+                (isToday(row.assignmentDate) && row.checkInUrl && row.checkOutUrl) ||
+                isYesterday(row.assignmentDate);
+
+              return editable ? value !== undefined && value !== null : true;
             }),
 
           reason: Yup.string()
             .test("editable-row-reason-required", "* Required if Progress Completed changed", function (value) {
               const index = parseInt(this.path.match(/\d+/)?.[0] || "-1");
               const row = /*dummyData*/jobExecutes[index];
-              const progressCompleted = this.parent.progressCompleted;
+              // const progressCompleted = this.parent.progressCompleted;
               if (!row) return true;
 
               const isEditable = (isToday(row.assignmentDate) && row.checkInUrl && row.checkOutUrl) || isYesterday(row.assignmentDate);
-              const isChanged = progressCompleted !== row.progress;
+              // const isChanged = progressCompleted !== row.progress;
+              const isChanged =
+                this.parent.progressCompleted !== undefined &&
+                this.parent.progressCompleted < row.progress;
 
               if (isEditable && isChanged) {
                 return !!value?.trim();
@@ -320,19 +334,71 @@ const WorkerDetailForEmployer = () => {
 
 
     onSubmit: async (values) => {
-      const updated = [.../*dummyData*/jobExecutes];
-      values.rows.forEach((row, i) => {
-        updated[i].progressCompleted = row.progressCompleted;
-        updated[i].reason = row.reason;
-      });
-      // setDummyData(updated); // cập nhật lại dữ liệu
-      setJobExecutes(updated);
-      message.success("Update successfully!");
-      setIsEditing(false);
+      try {
+        const updated = [.../*dummyData*/jobExecutes];
+        const updateList = [];
 
-      scrollToValidRow(updated);
+        values.rows.forEach((row, i) => {
+          const hasProgressChanged = row.progressCompleted !== updated[i].progressCompleted;
+          const hasReasonChanged = row.reason !== updated[i].reason;
+          
+
+          if(hasProgressChanged || hasReasonChanged){
+            updated[i].progressCompleted = row.progressCompleted;
+            updated[i].reason = row.reason;
+            updateList.push(updated[i]);
+          }
+        });
+        // setDummyData(updated); // cập nhật lại dữ liệu
+        console.log(updateList);
+
+        if(updateList.length > 0){
+          for (const item of updateList) {
+            await jobExecuteApi.updateJobExecute(item.id, {
+              processComplete: item.progressCompleted,
+              reason: item.reason,
+            });
+          }
+        }
+        setJobExecutes(updated);
+        message.success("Update successfully!");
+        setIsEditing(false);
+        scrollToValidRow(updated);
+      } catch (error) {
+        setIsEditing(false);
+      }
     }
   });
+
+  useEffect(() => {
+    if (
+      jobExecutes.length > 0 &&
+      (!formik.values.rows || formik.values.rows.length !== jobExecutes.length)
+    ) {
+      const initialRows = jobExecutes.map((row) => ({
+        // progressCompleted: row.checkInUrl && row.checkOutUrl ? row.progress : 0,
+        progressCompleted: row.progressCompleted,
+        reason: row.reason || "",
+      }));
+      formik.setValues({ rows: initialRows });
+    }
+  }, [jobExecutes]);
+  //   const [isInitialized, setIsInitialized] = useState(false);
+
+  // useEffect(() => {
+  //   if (
+  //     !isInitialized &&
+  //     jobExecutes.length > 0
+  //   ) {
+  //     const initialRows = jobExecutes.map((row) => ({
+  //       progressCompleted: row.checkInUrl && row.checkOutUrl ? row.progress : 0,
+  //       reason: row.reason || "",
+  //     }));
+  //     formik.setValues({ rows: initialRows });
+  //     setIsInitialized(true);
+  //   }
+  // }, [jobExecutes, isInitialized]);
+
 
   const isToday = (dateStr) => {
     const [day, month, year] = dateStr.split('/');
@@ -429,7 +495,7 @@ const WorkerDetailForEmployer = () => {
             title:
               (
                 <div className='b-title-2 gray' onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}`, { state: item.jobGroupInfo })}>
-                  <ContainerOutlined /> Job Group Detail
+                  <ContainerOutlined /> {item.jobGroupInfo.title}
                 </div>
               )
           },
@@ -437,14 +503,14 @@ const WorkerDetailForEmployer = () => {
             title:
               (
                 <div className='b-title-2 gray' onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}`, { state: { jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } })}>
-                  <SnippetsOutlined /> Job Posting Detail
+                  <SnippetsOutlined /> {item.jobPostingInfo.title}
                 </div>
               )
           },
           {
             title: (
               <div className='b-title-2'>
-                <SolutionOutlined /> Worker Detail
+                <SolutionOutlined /> {item.workerInfo.workerName}
               </div>
             ),
           },
@@ -575,7 +641,7 @@ const WorkerDetailForEmployer = () => {
                 <p><PhoneOutlined rotate={90} /> {workerInfo?.phoneNumber ? workerInfo?.phoneNumber : "-- None --"} </p>
               </div>
               <div className="worker-info">
-                <p><GiftOutlined /> {workerInfo?.dateOfBirth ? workerInfo?.dateOfBirth : "-- None --"}</p>
+                <p><GiftOutlined /> {workerInfo?.dateOfBirth ? formatDate(workerInfo?.dateOfBirth) : "-- None --"}</p>
               </div>
               {showMore && (
                 <>
@@ -604,7 +670,7 @@ const WorkerDetailForEmployer = () => {
           )}
         </div>
 
-        {statusStart && (
+        {statusStart && jobExecutes.length > 0 && (
           <>
             <h1 className='worker-detail-job-execute-title' ref={jobTitleRef} >Work Progress Table</h1>
             <div className="editing-rules">
@@ -718,12 +784,16 @@ const WorkerDetailForEmployer = () => {
                                 max={data.progress}
                                 value={formik.values.rows[globalIndex]?.progressCompleted}
                                 onChange={(value) => {
-                                  formik.setFieldValue(`rows[${globalIndex}]?.progressCompleted`, value)
+                                  if (value) {
+                                    formik.setFieldValue(`rows[${globalIndex}].progressCompleted`, value)
+                                  } else {
+                                    formik.setFieldValue(`rows[${globalIndex}].progressCompleted`, 0)
+                                  }
                                   if (value === data.progress) {
                                     formik.setFieldValue(`rows[${globalIndex}].reason`, "");
                                   }
                                 }}
-                                onBlur={() => formik.setFieldTouched(`rows[${globalIndex}]?.progressCompleted`, true)}
+                                onBlur={() => formik.setFieldTouched(`rows[${globalIndex}].progressCompleted`, true)}
                               />
                             </Form.Item>
                           </td>
@@ -753,7 +823,7 @@ const WorkerDetailForEmployer = () => {
                                   formik.errors.rows[globalIndex]?.reason &&
                                   formik.touched.rows &&
                                   formik.touched.rows[globalIndex]?.reason
-                                  ? formik.errors.rows[globalIndex].reason
+                                  ? formik.errors.rows[globalIndex]?.reason
                                   : null
                               }
                             >
@@ -762,17 +832,20 @@ const WorkerDetailForEmployer = () => {
                                 style={{ height: 80, resize: 'none' }}
                                 value={formik.values.rows[globalIndex]?.reason}
                                 onChange={(e) =>
-                                  formik.setFieldValue(`rows[${globalIndex}]?.reason`, e.target.value)
+                                  formik.setFieldValue(`rows[${globalIndex}].reason`, e.target.value)
                                 }
-                                onBlur={() => formik.setFieldTouched(`rows[${globalIndex}]?.reason`, true)}
+                                onBlur={() => formik.setFieldTouched(`rows[${globalIndex}].reason`, true)}
                               />
                             </Form.Item>
                           </td>
                         ) : (
-                          <td className="reason">
-                            {formik.values.rows[globalIndex]?.progressCompleted === data.progress
-                              ? ""
-                              : formik.values.rows[globalIndex]?.reason || ""}
+                          // <td className="reason">
+                          //   {formik.values.rows[globalIndex]?.progressCompleted === data.progress
+                          //     ? ""
+                          //     : formik.values.rows[globalIndex]?.reason || ""}
+                          // </td>
+                          <td className='reason'>
+                            {data.reason}
                           </td>
                         )}
 
@@ -795,13 +868,24 @@ const WorkerDetailForEmployer = () => {
 
             <div className="save-edit-btn">
               {isEditing ? (
-                <button className='save-btn' onClick={formik.handleSubmit} type="submit">Save</button>
+                <button
+                  className='save-btn'
+                  // onClick={formik.handleSubmit}
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    formik.handleSubmit();
+                  }}
+                >
+                  Save
+                </button>
               ) : (
                 <button
                   className='edit-btn'
                   disabled={!hasTodayOrYesterday}
-                  onClick={() => {
-                    scrollToValidRow(/*dummyData*/jobExecutes);
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToValidRow(jobExecutes);
                     setIsEditing(true);
                   }}
                 >
@@ -809,6 +893,7 @@ const WorkerDetailForEmployer = () => {
                 </button>
               )}
             </div>
+
           </>
         )}
       </div>

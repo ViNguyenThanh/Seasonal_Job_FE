@@ -13,7 +13,7 @@ export const paymentApi = {
         });
     },
 
-    getTransactions: () => {
+    getPaymentHistory: () => {
         const token = getToken();
         return API.get("/payment/paymentHistory", {
             headers: {
@@ -24,10 +24,28 @@ export const paymentApi = {
 
     getEscrowWallet: () => {
         const token = getToken();
-        return API.post("/payment/escrowWallet", {
+        return API.get("/payment/escrowWallet", {
             headers: {
                 authorization: `Bearer ${token}`,
             },
         });
     },
+
+    getTransactions: () => {
+        const token = getToken();
+        return API.get("/transactions/", {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        });
+    },
+
+    releasePayment: (data) => {
+        const token = getToken();
+        return API.post("/payment/release", data, {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        });
+    }
 }

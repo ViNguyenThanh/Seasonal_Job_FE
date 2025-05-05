@@ -72,6 +72,7 @@
 .employer-job-posting-detail-container .employer-job-posting-detail-info p{
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     align-items: flex-start;
     margin: 1.5% 0;
 }

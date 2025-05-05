@@ -423,7 +423,7 @@ const EmployerJobPostingDetail = () => {
 
         <div className="employer-job-posting-detail-info">
           <p><SnippetsOutlined /> Job Posting Name: {item.jobPostingInfo.title}</p>
-          <p><EnvironmentOutlined /> Address: {item.jobPostingInfo.location}</p>
+          <p><EnvironmentOutlined /> Address: {item.jobPostingInfo.address}</p>
           <div className="employer-job-posting-detail-short-info">
             <p><TeamOutlined /> Number of workers: 1</p>
             <p><CreditCardOutlined /> Salary: {parseFloat(item.jobPostingInfo.salary).toLocaleString('vi-VN')} VND</p>

@@ -208,11 +208,12 @@ const WorkerProfile = () => {
     
         const updateData = {
           fullname: values.fullname, // Map to 'fullName' in the backend
-          dateOfBirth: values.dob ? dayjs(values.dob).format('YYYY-MM-DD') : null,
+          birth: values.dob ? dayjs(values.dob).format('YYYY-MM-DD') : null,
           gender: values.gender && values.gender.toLowerCase() !== "-- none --" ? values.gender.toLowerCase() : null, // Normalize to lowercase
           address: `${values.city}, ${values.district}`,
           phoneNumber: values.phoneNumber,
           description: values.description ? values.description.trim() : null, // Trim description
+          role: "worker"
         };
     
         console.log("Update Data Sent to Backend:", updateData); // Debugging: Log the payload
