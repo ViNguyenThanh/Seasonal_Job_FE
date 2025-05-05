@@ -91,7 +91,7 @@
 }
 .confirm-posting-container .confirm-posting-table tbody tr td.job-posting-name {
     width: 14%;
-    padding: 0 2%;
+    padding: 20px 2%;
 }
 .confirm-posting-container .confirm-posting-table tbody tr td.address {
     width: 20%;
@@ -115,15 +115,45 @@
     text-align: center;
 }
 
-
-.confirm-posting-container .total-amount{
+.confirm-posting-container .payable-amount{
     width: 100%;
+    position: relative;
+}
+.confirm-posting-container .payable-amount .job-total-salary{
+    width: 100%;
+    margin: 20px 0 0;
+    padding-bottom: 5px;
+    text-align: right;
+    font-size: 19.5px;
+    /* color: rgb(240, 51, 136); */
+    color: black;
+}
+.confirm-posting-container .payable-amount .service-fee {
+    width: 100%;
+    margin: 0 0 5px;
+    text-align: right;
+    font-size: 19.5px;
+    color: black;
+    /* border-bottom: 1px solid #d3d3d3; */
+    
+}
+.confirm-posting-container .payable-amount .total-amount-border {
+    position: absolute;
+    right: 0;
+    border-bottom: 1px solid #d3d3d3;
+    width: 275px;
+    /* width: 25%;
+    margin: 0 0 0 75%; */
+}
+.confirm-posting-container .payable-amount .total-amount{
+    width: 100%;
+    margin: 10px 0 0;
     text-align: right;
     font-size: 20px;
     font-weight: 420;
     color:#e00430;
 }
-.confirm-posting-container .total-amount .break-line{
+.confirm-posting-container .payable-amount .total-amount .break-line{
     display: none;
 }
 
@@ -179,7 +209,10 @@
     .confirm-posting-container .confirm-posting-whole-table{
         margin-top: 3%
     }
-    .confirm-posting-container .total-amount .break-line{
+    .confirm-posting-container .payable-amount .total-amount-border {
+        width: 200px;
+    }
+    .confirm-posting-container .payable-amount .total-amount .break-line{
         display: block;
     }
 }

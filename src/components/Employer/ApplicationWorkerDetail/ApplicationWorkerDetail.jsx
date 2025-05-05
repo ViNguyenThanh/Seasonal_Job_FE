@@ -32,16 +32,22 @@ const ApplicationWorkerDetail = () => {
     try {
       const fetchWorkerInfo = async () => {
         const res = await userApi.getUserById(workerId);
-        // console.log(res.data.data);
+        console.log(res.data.data);
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
       }
       fetchWorkerInfo();
 
       const fetchCV = async () => {
-        const res = await cvApi.previewCV(item.workerInfo.cvId)
-        // console.log(res);
-        setCv(res);
+        const res = await cvApi.getUserCVs(workerId);
+        console.log(res.data);
+        
+        // const res = await cvApi.previewCV(item.workerInfo.cvId)
+        if(res.data.length > 0) {
+          const cv = res.data.filter(cv => cv.id === item.workerInfo.cvId);
+          // console.log(cv[0].file_Url);
+          setCv(cv[0].file_Url);
+        }
       }
       fetchCV();
     } catch (error) {
@@ -51,9 +57,23 @@ const ApplicationWorkerDetail = () => {
   }, []);
 
   // Hiển thị modal khi nhấn vào 'Preview CV'
-  const showPreview = () => {
+  const showPreview = async () => {
     // setCvFile(defaultCvFile); // Đặt file CV mặc định
     setPreviewVisible(true); // Hiển thị modal preview
+    try {
+      // Fetch the file as a Blob
+      const response = await fetch(cv);
+      const blob = await response.blob();
+
+      // Force the Blob to be treated as a PDF
+      const pdfBlob = new Blob([blob], { type: "application/pdf" });
+      const objectUrl = URL.createObjectURL(pdfBlob);
+
+      setCv(objectUrl);
+    } catch (error) {
+      console.error("Error fetching the PDF:", error);
+      message.error("Failed to load the CV for preview.");
+    }
   };
 
   // Đóng modal
@@ -182,7 +202,7 @@ const ApplicationWorkerDetail = () => {
               ) : (
                 <p>No CV available for preview.</p>
               )} */}
-              <embed
+              <iframe
                 src={/*defaultCvFileUrl*/cv} // Đưa URL trực tiếp vào đây
                 type="application/pdf"
                 width="100%"

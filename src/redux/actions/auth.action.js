@@ -12,5 +12,6 @@ export const login = (user) => async (dispatch) => {
 }
 
 export const logout = () => async (dispatch) => {
+    dispatch({ type: actionsType.AUTH_START })
     await dispatch({ type: actionsType.AUTH_LOGOUT });
 }

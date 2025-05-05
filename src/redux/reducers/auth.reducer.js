@@ -14,7 +14,7 @@ export const authReducer = (
             return { isLoading: false, error: payload, payload: null };
         case actionType.AUTH_LOGOUT:
             localStorage.removeItem("token");
-            return { isLoading: false, error: "", payload: null };
+            return { isLoading: false, error: "", payload: "Log out successfully" };
         default:
             return state;
     }

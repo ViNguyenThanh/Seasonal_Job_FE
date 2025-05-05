@@ -104,6 +104,8 @@ const WorkerJobs = () => {
       const res = await getApplicationsByUserId()
       // console.log(res);
       if (res.data.length > 0) {
+        const sortedData = res.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
         const transformedApplications = res.data.map(application => {
           return {
             id: application.JobPosting.id,
@@ -115,11 +117,11 @@ const WorkerJobs = () => {
             today: application.JobPosting.JobGroup.updatedAt  // Lấy ngày hôm nay, định dạng "dd/mm/yyyy"
           };
         });
-        console.log(transformedApplications);
+        // console.log(transformedApplications);
 
-        const sortedApplications = transformedApplications.sort((a, b) => new Date(b.today) - new Date(a.today));
+        // const sortedApplications = transformedApplications.sort((a, b) => new Date(b.today) - new Date(a.today));
         // Cập nhật lại state với dữ liệu mới
-        setApplications(sortedApplications);
+        setApplications(transformedApplications);
         setLoading(false);
       }
     }

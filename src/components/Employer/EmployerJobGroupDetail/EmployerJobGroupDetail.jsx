@@ -78,6 +78,8 @@ const EmployerJobGroupDetail = () => {
     useEffect(() => {
         dispatch(getJobGroupById(id))
         dispatch(getJobPostingByJGId(id))
+        console.log(jobPostings);
+
     }, [confirmLoading])
 
     const handleOpenModal = (action) => {
@@ -151,8 +153,32 @@ const EmployerJobGroupDetail = () => {
 
     const handleEndJobGroup = async () => {
         // alert("End job group");
-        const res = await jobGroupApi.updateJobGroup(jobGroupInfo.id, { status: "completed" })
-        setOpenResponsive(false)
+        setConfirmLoading(true);
+        try {
+            const res = await jobGroupApi.updateJobGroup(jobGroupInfo.id, { status: "completed" })
+            // console.log(res);
+
+            for (const element of jobPostings) {
+                const applications = await getApplicationsForJob(element.id);
+
+                const filteredApplications = applications.filter(item =>
+                    item.status === 'approved'
+                ).map(item => item.CV.userId);
+
+                await paymentApi.releasePayment({
+                    userIds: filteredApplications,
+                    jobPostingId: element.id
+                })
+            }
+            message.success("Job Group ended successfully! Please check your mail to get payment details.");
+            setConfirmLoading(false);
+            setOpenResponsive(false)
+        } catch (error) {
+            console.log(error);
+            // message.error(error.response.data.message)
+            setConfirmLoading(false);
+            setOpenResponsive(false)
+        }
     }
 
     const handlePayment = async () => {
@@ -300,7 +326,7 @@ const EmployerJobGroupDetail = () => {
                 )}
 
                 <Modal
-                    title="Before you start your Job Group, please note the following:"
+                    title={`Before you ${actionType === "start" ? 'start' : 'end'} your Job Group, please note the following:`}
                     centered
                     open={openResponsive}
                     onOk={actionType === 'start' ? handleStartJobGroup : handleEndJobGroup}

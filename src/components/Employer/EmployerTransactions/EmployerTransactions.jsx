@@ -9,16 +9,18 @@ import { formatDate } from '../../../utils/formatDate';
 import { jobGroupApi } from '../../../apis/job-group.request';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { userApi } from '../../../apis/user.request';
 
 const EmployerTransactions = () => {
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
+  const [walletBalance, setWalletBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const res = await paymentApi.getTransactions();
+        const res = await paymentApi.getPaymentHistory();
         // console.log(res.data);
         const newTransactions = await Promise.all(res.data.data.map(async (item) => {
           const jobGroup = await jobGroupApi.getJobGroupById(item.jobGroupId);
@@ -30,7 +32,6 @@ const EmployerTransactions = () => {
             amount: parseFloat(item.amount).toLocaleString('vi-VN'),
             status: item.status,
             description: item.description,
-            employerId: item.employerId,
             employerId: item.employerId,
             userId: item.userId,
             orderCode: item.orderCode,
@@ -52,15 +53,26 @@ const EmployerTransactions = () => {
     }
     fetchTransactions();
 
-    // const fetchWallet = async () => {
-    //   try {
-    //     const res = await paymentApi.getEscrowWallet();
-    //     console.log(res.data);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // }
-    // fetchWallet();
+    const fetchWallet = async () => {
+      try {
+        const res = await paymentApi.getEscrowWallet();
+        // console.log(res.data);
+        setWalletBalance(res.data.balance);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchWallet();
+
+    const fetchUser = async () => {
+      try {
+        const res = await userApi.getUserById();
+        console.log(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUser();
   }, []);
 
   const transactionData = [
@@ -198,8 +210,6 @@ const EmployerTransactions = () => {
     fetchBanks();
   }, []);
 
-  const [walletBalance, setWalletBalance] = useState(1500000); // 200,000 VND mặc định
-
   return (
     <div className='employer-transactions-container'>
       <div className="employer-transactions-top">
@@ -211,7 +221,7 @@ const EmployerTransactions = () => {
           )}
           <div className="employer-name-money">
             <p className='employer-name'>CÔNG TY TNHH THƯƠNG MẠI & DỊCH VỤ NHÂN LỰC TRÍ VIỆT</p>
-            <p className='employer-money'>Wallet Balance: {walletBalance.toLocaleString('vi-VN')} VND</p>
+            <p className='employer-money'>Wallet Balance: {parseFloat(walletBalance).toLocaleString('vi-VN')} VND</p>
           </div>
         </div>
         <div className="employer-withdraw">

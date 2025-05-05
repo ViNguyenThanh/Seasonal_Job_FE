@@ -67,8 +67,6 @@ function App() {
   useEffect(() => {
     const { user } = getUserFromToken();
     setNewUser(user);
-    // console.log(user);
-
   }, [payload]);
 
 
@@ -133,7 +131,7 @@ function App() {
           <Route path='worker-applications' element={<WorkerApplications />} />
           <Route path="worker-jobs" element={<WorkerJobs />} />
           <Route path="worker-jobs/worker-job-detail/:id" element={<WorkerJobDetail />} />
-          <Route path="worker-transactions" element={<WorkerTransactions />} />
+          <Route path="worker-transactions" element={<WorkerTransactions newUser={newUser} />} />
           <Route path="worker-transactions/worker-transaction-detail/:id" element={<WorkerTransactionDetail />} />
         </Route>
 

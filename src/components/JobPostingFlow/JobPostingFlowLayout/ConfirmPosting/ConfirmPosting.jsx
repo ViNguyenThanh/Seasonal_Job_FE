@@ -4,8 +4,8 @@ import { Rate } from 'antd'
 import { ScheduleOutlined } from '@ant-design/icons';
 
 
-const ConfirmPosting = ({jobGroupName, startDate, endDate, jobPostings}) => {
-  
+const ConfirmPosting = ({ jobGroupName, startDate, endDate, jobPostings }) => {
+
   const jobPostingsTemporaryData = [
     {
       id: 1,
@@ -53,7 +53,7 @@ const ConfirmPosting = ({jobGroupName, startDate, endDate, jobPostings}) => {
             </tr>
           </thead>
           <tbody>
-          {/*jobPostingsTemporaryData*/jobPostings.map((job, index) => (
+            {/*jobPostingsTemporaryData*/jobPostings.map((job, index) => (
               <tr key={index}>
                 <td className="no-column">{index + 1}</td>
                 <td className="job-posting-name">{job.jobPostingName}</td>
@@ -68,9 +68,14 @@ const ConfirmPosting = ({jobGroupName, startDate, endDate, jobPostings}) => {
         </table>
       </div>
 
-      <p className='total-amount'>
-        Total amount payable: <br className="break-line" />  {jobPostings.reduce((total, job) => total + job.salary * job.numberOfPeople, 0).toLocaleString('vi-VN')} VND
-      </p>
+      <div className="payable-amount">
+        <p className='job-total-salary'>Total salary: {jobPostings.reduce((total, job) => total + job.salary * job.numberOfPeople, 0).toLocaleString('vi-VN')} VND</p>
+        <p className='service-fee'>Service fee: 50.000 VND</p>
+        <div className='total-amount-border'></div>
+        <p className='total-amount'>
+          Total amount payable: <br className="break-line" />  {jobPostings.reduce((total, job) => 50000 + total + job.salary * job.numberOfPeople, 0).toLocaleString('vi-VN')} VND
+        </p>
+      </div>
     </div>
   )
 }

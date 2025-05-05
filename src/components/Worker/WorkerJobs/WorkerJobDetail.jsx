@@ -8,10 +8,12 @@ import { jobGroupApi } from '../../../apis/job-group.request';
 import { jobExecuteApi } from '../../../apis/job-execute.request';
 import dayjs from 'dayjs';
 import { formatDate } from '../../../utils/formatDate';
+import { getUserFromToken } from '../../../utils/Token';
 
 const WorkerJobDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { user } = getUserFromToken();
     const { id } = useParams();
     // const jobInfo = location.state;  // Dữ liệu truyền qua state từ WorkerJobs component
     const [showMore, setShowMore] = useState(false);
@@ -83,41 +85,47 @@ const WorkerJobDetail = () => {
     useEffect(() => {
         const fetchJobExecute = async () => {
             try {
-                const res = await jobExecuteApi.getJobExecuteByJobPostingId(id)
-                console.log(res.data);
-                if (res.data.message === 'No job execute for this job posting') {
-                    setJobExecutes([]);
+                // const res = await jobExecuteApi.getJobExecuteByJobPostingId(id)
+                if (user) {
+                    const res = await jobExecuteApi.getJobPostingByWorkerId(id, user.id)
+                    console.log(res.data);
+                    if (res.data.message === 'No job execute for this job posting') {
+                        setJobExecutes([]);
+                    } else {
+                        const sortedJobExecutes = res.data.data.sort((a, b) => {
+                            const dateA = dayjs(a.assigned_at, 'DD/MM/YYYY');
+                            const dateB = dayjs(b.assigned_at, 'DD/MM/YYYY');
+                            return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0; // Sắp xếp theo ngày tăng dần
+                        });
+
+                        const transformedExecutes = sortedJobExecutes.map((item, index) => ({
+                            id: item.id,
+                            no: index + 1,
+                            userId: item.userId,
+                            jobRequirement: item.note || "No description", // nếu bạn có trường mô tả
+                            // assignmentDate: '03/05/2025',
+                            assignmentDate: item.assigned_at || '',
+                            checkInFileList: item.checkin_img ? [{
+                                uid: '-1',
+                                name: 'Checkin.jpg',
+                                status: 'done',
+                                url: item.checkin_img
+                            }] : [],
+                            checkOutFileList: item.checkout_img ? [{
+                                uid: '-2',
+                                name: 'Checkout.jpg',
+                                status: 'done',
+                                url: item.checkout_img
+                            }] : [],
+                            progress: item.work_process || 0,
+                            progressCompleted: (item.checkin_img && item.checkout_img) ? item.processComplete : 0,
+                            reason: item.reason || ''
+                        }));
+
+                        setJobExecutes(transformedExecutes);
+                    }
                 } else {
-                    const sortedJobExecutes = res.data.data.sort((a, b) => {
-                        const dateA = dayjs(a.assigned_at, 'DD/MM/YYYY');
-                        const dateB = dayjs(b.assigned_at, 'DD/MM/YYYY');
-                        return dateA.isBefore(dateB) ? -1 : dateA.isAfter(dateB) ? 1 : 0; // Sắp xếp theo ngày tăng dần
-                    });
-
-                    const transformedExecutes = sortedJobExecutes.map((item, index) => ({
-                        id: item.id,
-                        no: index + 1,
-                        jobRequirement: item.note || "No description", // nếu bạn có trường mô tả
-                        assignmentDate: '28/04/2025',
-                        // assignmentDate: item.assigned_at || '',
-                        checkInFileList: item.checkin_img ? [{
-                            uid: '-1',
-                            name: 'Checkin.jpg',
-                            status: 'done',
-                            url: item.checkin_img
-                        }] : [],
-                        checkOutFileList: item.checkout_img ? [{
-                            uid: '-2',
-                            name: 'Checkout.jpg',
-                            status: 'done',
-                            url: item.checkout_img
-                        }] : [],
-                        progress: item.work_process || 0,
-                        progressCompleted: (item.checkin_img && item.checkout_img) ? item.work_process : 0,
-                        reason: item.reason || ''
-                    }));
-
-                    setJobExecutes(transformedExecutes);
+                    setJobExecutes([]);
                 }
                 setJobPostingLoading(false);
             } catch (error) {

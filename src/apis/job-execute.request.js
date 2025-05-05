@@ -22,6 +22,12 @@ export const jobExecuteApi = {
             headers: { authorization: `Bearer ${token}` },
         })
     },
+    getJobPostingByWorkerId: (jobPostingId, workerId) => {
+        const token = getToken();
+        return API.get(`/executes/job-execute/job-posting/${jobPostingId}/${workerId}`, {
+            headers: { authorization: `Bearer ${token}` },
+        })
+    },
     updateJobExecute: (id, data) => {
         const token = getToken();
         return API.patch(`/executes/job-execute/${id}`, data, {

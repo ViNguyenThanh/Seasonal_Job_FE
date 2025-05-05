@@ -101,7 +101,9 @@ const WorkerApplications = () => {
       const res = await getApplicationsByUserId()
       console.log(res);
       if (res.data.length > 0) {
-        const transformedApplications = res.data.map(application => {
+        const sortedData = res.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+        const transformedApplications = sortedData.map(application => {
           return {
             id: application.JobPosting.id,
             image: application.JobPosting.User.avatar,
