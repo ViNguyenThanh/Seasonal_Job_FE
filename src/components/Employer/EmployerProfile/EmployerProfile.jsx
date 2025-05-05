@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import './EmployerProfile.css'
@@ -11,44 +13,47 @@ import dayjs from 'dayjs';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Giao diện mặc định
 import { useLocation, useNavigate } from 'react-router-dom';
-import { userApi } from '../../../apis/user.request'; // Adjust the path if necessary
-import { getToken } from '../../../utils/Token'; // Import the function to get the token
+import { userApi } from '../../../apis/user.request';
+import { getToken } from '../../../utils/Token';
+import { Api } from '../../../utils/BaseUrlServer';
+
 
 
 const EmployerProfile = () => {
   const navigate = useNavigate();
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-  const fetchProfileData = async () => {
-    try {
-      const token = getToken(); // Get the token
-      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
-      const { id } = decodedToken; // Extract user ID from the token
+    const fetchProfileData = async () => {
+      try {
+        const token = getToken(); // Get the token
+        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
+        const { id } = decodedToken; // Extract user ID from the token
 
-      const response = await userApi.getUserById(id); // Fetch the profile data
-      const data = response.data.data;
+        const response = await userApi.getUserById(id); // Fetch the profile data
+        const data = response.data.data;
 
-      console.log("Fetched Employer Profile Data:", data); // Log the fetched data
+        console.log("Fetched Employer Profile Data:", data); // Log the fetched data
 
-      setProfileData({
-        avatar: data.avatar || '',
-        companyName: data.companyName || '',
-        email: data.email || '',
-        phoneNumber: data.phoneNumber || '',
-        // dob: data.dateOfBirth ? dayjs(data.dateOfBirth).format('DD/MM/YYYY') : '-- None --', // Properly format dateOfBirth
-        dob: data.dateOfBirth || '-- None --', // Properly format dateOfBirth
-        city: data.address ? data.address.split(',')[0].trim() : '-- None --',
-        district: data.address ? data.address.split(',')[1]?.trim() || '-- None --' : '-- None --',
-        description: data.description || '-- None --',
-      });
-    } catch (error) {
-      console.error("Error fetching profile data:", error);
-      message.error("Failed to fetch profile data.");
-    }
-  };
+        setProfileData({
+          avatar: data.avatar || '',
+          companyName: data.companyName || '',
+          email: data.email || '',
+          phoneNumber: data.phoneNumber || '',
+          // dob: data.dateOfBirth ? dayjs(data.dateOfBirth).format('DD/MM/YYYY') : '-- None --', // Properly format dateOfBirth
+          dob: data.dateOfBirth || '-- None --', // Properly format dateOfBirth
+          city: data.address ? data.address.split(',')[0].trim() : '-- None --',
+          district: data.address ? data.address.split(',')[1]?.trim() || '-- None --' : '-- None --',
+          description: data.description || '-- None --',
+        });
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+        message.error("Failed to fetch profile data.");
+      }
+    };
 
-  fetchProfileData();
-}, []);
+    fetchProfileData();
+  }, []);
 
   const [profileData, setProfileData] = useState({
     avatar: '',
@@ -89,22 +94,41 @@ const EmployerProfile = () => {
     setPreviewOpen(true);
   };
 
+  // const handleChange = ({ fileList: newFileList }) => {
+  //   setFileList(newFileList);
+
+  //   // Kiểm tra nếu không có ảnh trong fileList
+  //   if (newFileList.length === 0) {
+  //     setProfileData(prev => ({
+  //       ...prev,
+  //       avatar: '', // Đặt avatar thành chuỗi rỗng khi không có ảnh
+  //     }));
+  //   } else if (newFileList.length > 0 && newFileList[0].status === "done") {
+  //     getBase64(newFileList[0].originFileObj).then(base64 => {
+  //       setProfileData(prev => ({
+  //         ...prev,
+  //         avatar: base64
+  //       }));
+  //     });
+  //   }
+  // };
+
   const handleChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
 
-    // Kiểm tra nếu không có ảnh trong fileList
-    if (newFileList.length === 0) {
-      setProfileData(prev => ({
-        ...prev,
-        avatar: '', // Đặt avatar thành chuỗi rỗng khi không có ảnh
-      }));
-    } else if (newFileList.length > 0 && newFileList[0].status === "done") {
-      getBase64(newFileList[0].originFileObj).then(base64 => {
-        setProfileData(prev => ({
+    // If a new file is selected, update the preview
+    if (newFileList.length > 0 && newFileList[0].originFileObj) {
+      getBase64(newFileList[0].originFileObj).then((base64) => {
+        setProfileData((prev) => ({
           ...prev,
-          avatar: base64
+          avatar: base64, // Update the avatar preview
         }));
       });
+    } else {
+      setProfileData((prev) => ({
+        ...prev,
+        avatar: '', // Clear the avatar preview if no file is selected
+      }));
     }
   };
 
@@ -125,20 +149,49 @@ const EmployerProfile = () => {
       district: profileData.district || '',
       description: profileData.description || '',
     });
-    setConfirmVisible(true);
+
+    // Preload the current avatar into the fileList
+    const initialFileList = profileData.avatar
+      ? [
+        {
+          uid: '-1',
+          name: 'avatar.png',
+          status: 'done',
+          url: profileData.avatar, // Use the current avatar URL
+        },
+      ]
+      : [];
+
+    setFileList(initialFileList); // Update the fileList state
+    setConfirmVisible(true); // Open the modal
   };
+
 
   // Đóng modal
   const closeConfirm = () => {
     setConfirmVisible(false);
-    setFileList([
-      // {
-      //   uid: '-1',
-      //   name: 'avatar.png',
-      //   status: 'done',
-      //   url: profileData.avatar,
-      // }
-    ]);
+    // setFileList([
+    //   // {
+    //   //   uid: '-1',
+    //   //   name: 'avatar.png',
+    //   //   status: 'done',
+    //   //   url: profileData.avatar,
+    //   // }
+    // ]);
+
+    setFileList(
+      profileData.avatar
+        ? [
+          {
+            uid: '-1',
+            name: 'avatar.png',
+            status: 'done',
+            url: profileData.avatar, // Use the current avatar URL
+          },
+        ]
+        : []
+    );
+
   };
 
   // Xử lý khi bấm Yes
@@ -218,43 +271,67 @@ const EmployerProfile = () => {
     onSubmit: async (values) => {
       setConfirmLoading(true);
       try {
-        const token = getToken(); // Get the token
-        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token
-        const { id } = decodedToken; // Extract user ID from the token
-    
+        let avatarUrl = profileData.avatar;
+
+        // Upload the avatar if a new file is selected
+        if (fileList.length > 0 && fileList[0].originFileObj) {
+          const formData = new FormData();
+          formData.append("avatar", fileList[0].originFileObj);
+
+          const api = Api(); // Create an Axios instance
+          const uploadResponse = await api.put(`/users/update/${userId}`, formData, {
+            headers: {
+              Authorization: `Bearer ${getToken()}`, // Include the token if required
+            },
+          });
+
+          if (uploadResponse.status === 200) {
+            avatarUrl = uploadResponse.data.data.avatar; // Get the uploaded avatar URL
+          } else {
+            throw new Error("Failed to upload avatar");
+          }
+        }
+
+        // Prepare the profile update data
         const updateData = {
           companyName: values.companyName.trim(),
           phoneNumber: values.phoneNumber,
           dateOfBirth: values.dob ? dayjs(values.dob).format('YYYY-MM-DD') : null,
           address: `${values.city}, ${values.district}`,
           description: values.description.trim(),
+          avatar: avatarUrl, // Use the uploaded avatar URL
         };
-    
-        console.log("Update Data Sent to Backend:", updateData); // Debugging: Log the payload
-    
-        const response = await userApi.updateUserProfile(id, updateData); // Call the API
-        console.log("Update Response:", response.data);
-    
-        message.success("Profile updated successfully!");
-        setProfileData((prevData) => ({
-          ...prevData,
-          ...updateData,
-          dob: updateData.dateOfBirth || '-- None --', // Ensure dateOfBirth is updated
-          city: updateData.address ? updateData.address.split(',')[0].trim() : '-- None --', // Extract city from address
-          district: updateData.address ? updateData.address.split(',')[1]?.trim() || '-- None --' : '-- None --', // Extract district from address
-          description: updateData.description || '-- None --', // Ensure description is updated
-        }));
-        setConfirmVisible(false);
+
+        console.log("Update Data Sent to Backend:", updateData);
+
+        // Send the profile update request
+        const api = Api(); // Create an Axios instance
+        const response = await api.put(`/users/update/${userId}`, updateData, {
+          headers: {
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+
+        if (response.status === 200) {
+          console.log("Update Response:", response.data);
+
+          // Show success message
+          message.success("Profile updated successfully!");
+
+          // Delay the page refresh to allow the message to appear
+          setTimeout(() => {
+            window.location.reload(); // Refresh the page
+          }, 1500); // 1.5 seconds delay
+        } else {
+          throw new Error("Failed to update profile");
+        }
       } catch (error) {
         console.error("Error updating profile:", error);
-        if (error.response) {
-          console.error("Backend Response:", error.response.data); // Log backend error response
-        }
         message.error("Failed to update profile.");
       } finally {
         setConfirmLoading(false);
       }
-    },
+    }
   });
 
   // link trang để lấy api Tỉnh Thành, Quận Huyện, Phường Xã
@@ -314,12 +391,12 @@ const EmployerProfile = () => {
         <div className="employer-edit-profile-content">
           <div className="modal-employer-avatar">
             <Upload
-              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType="picture-circle"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
               maxCount={1}
+              beforeUpload={() => false} // Disable the default POST request
             >
               {fileList.length >= 1 ? null : (
                 <button style={{ border: 0, background: 'none' }} type="button">

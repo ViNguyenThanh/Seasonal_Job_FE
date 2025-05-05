@@ -3,6 +3,7 @@ import './PostingNotifications.css'
 import { Breadcrumb } from 'antd'
 import { BellOutlined, HomeOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
+import { getUserFromToken } from '../../../utils/Token';
 
 const PostingNotifications = () => {
 
@@ -62,15 +63,15 @@ const PostingNotifications = () => {
                         {/* <span className='blue'>• You must pay the full amount and deposit in one transaction before the Job Posting is posted.</span> <br /> */}
                         <span className='warning'>⚠️</span> <span className='yellow'>Important:  </span> <br />
                         &emsp; • &#160; Your <span className='dark-red'>Job Postings</span> will <span className='dark-orange'> only be posted
-                        after the payment is completed.</span> <br />
-                        &emsp; • &#160; Once the payment is made, you will  <span className='red'> not be able to edit the <span className='dark-red'>Job Postings information </span> </span> <br/>
+                            after the payment is completed.</span> <br />
+                        &emsp; • &#160; Once the payment is made, you will  <span className='red'> not be able to edit the <span className='dark-red'>Job Postings information </span> </span> <br />
                         &emsp; &emsp; ➜ &#160;So please DOUBLE-CHECK all the details before completing the payment. <br />
                         &emsp; • &#160; This amount will be temporarily locked when starting the <span className='purple'>Job Group</span>,
                         after the <span className='purple'>Job Group</span> is completed and confirmed by both parties, this amount
                         will be unlocked and then the salary will be paid. <br />
                         <span className='warning'>🚩</span> <span className='red'>Note: </span> <br />
                         &emsp; • &#160; After the <span className='dark-red'>Job Postings</span> is approved, <span className='dark-green'>after 7 days </span>,
-                        the <span className='purple'>Job Group</span> must have <span className='red'>at least 1 worker </span> whose application has been approved 
+                        the <span className='purple'>Job Group</span> must have <span className='red'>at least 1 worker </span> whose application has been approved
                         in a <span className='dark-red'>Job Posting</span> before the <span className='purple'>Job Group</span> can be started. <br />
                         &emsp; • &#160; If the <span className='dark-red'>other Job Postings</span> in the <span className='purple'>Job Group </span>
                         <span className='red'>have reached the start date</span> but <span className='red'>no worker</span> has been approved yet, then after the <span className='purple'>Job Group </span>
@@ -82,8 +83,13 @@ const PostingNotifications = () => {
                     </p>
 
                     <button onClick={() => {
-                        navigate("/job-posting-flow/creating-new-job-group");
-                        window.scrollTo(0, 0);
+                        const { user } = getUserFromToken();
+                        if (!user || user.role !== 'employer') {
+                            navigate('/login-for-employer', window.scrollTo(0, 0))
+                        } else {
+                            navigate("/job-posting-flow/creating-new-job-group");
+                            window.scrollTo(0, 0);
+                        }
                     }}>
                         Continue <span>➜</span>
                     </button>

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom"; // For extracting the ID from the URL
 import { userApi } from "../../apis/user.request";
 import { jobGroupApi } from "../../apis/job-group.request";
@@ -7,15 +7,17 @@ import { jobApi } from "../../apis/job.request";
 import "./CompanyDetail.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Avatar, Button, Divider, Tag } from 'antd';
-import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined } from '@ant-design/icons';
+import { Avatar, Button, Divider, Tag, Space, Tooltip } from 'antd';
+import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, SolutionOutlined, FileProtectOutlined } from '@ant-design/icons';
 import { Typography, Row, Col } from 'antd';
 const { Title, Paragraph } = Typography;
 
 const CompanyDetail = () => {
     const { id } = useParams(); // Extract the company ID from the URL
-    const [userData, setUserData] = useState(null); // State to store user data
-    const [jobGroups, setJobGroups] = useState([]); // State to store job groups
+    const [userData, setUserData] = useState(null);
+    const [jobGroups, setJobGroups] = useState([]);
+    const [jobPostings, setJobPostings] = useState([]);
+    const openPositionRef = useRef(null);
 
     useEffect(() => {
         console.log("Company ID:", id); // Log the company ID in the console
@@ -59,6 +61,7 @@ const CompanyDetail = () => {
                         jobGroups.some(jobGroup => jobGroup.id === posting.jobGroupId) // Filter postings by matching jobGroupId
                     );
                     console.log("Filtered Job Postings Data:", filteredPostings); // Log the filtered job postings data
+                    setJobPostings(filteredPostings); // Store the filtered job postings in state
                 })
                 .catch(error => {
                     console.error("Error fetching job postings data:", error);
@@ -66,58 +69,10 @@ const CompanyDetail = () => {
         }
     }, [jobGroups]);
 
-    const [companies] = useState([
-        {
-            id: 1,
-            company: "Reddit",
-            title: "Marketing Officer",
-            location: "United Kingdom of Great Britain",
-            salary: "$30K-$35K",
-            duration: "Full Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: true,
-        },
-        {
-            id: 2,
-            company: "Google",
-            title: "Software Engineer",
-            location: "United States",
-            salary: "$100K-$120K",
-            duration: "Full Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: false,
-        },
-        {
-            id: 3,
-            company: "Microsoft",
-            title: "Data Analyst",
-            location: "Canada",
-            salary: "$70K-$80K",
-            duration: "Part Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: true,
-        },
-        {
-            id: 4,
-            company: "Amazon",
-            title: "Product Manager",
-            location: "Germany",
-            salary: "$90K-$110K",
-            duration: "Full Time",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: false,
-        },
-        {
-            id: 5,
-            company: "Apple",
-            title: "UX Designer",
-            location: "Australia",
-            salary: "$80K-$95K",
-            duration: "Contract",
-            avatar: "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png",
-            isFeatured: true,
-        },
-    ]);
+    const handleScrollToOpenPosition = () => {
+        openPositionRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll to the Open Position section
+    };
+
     return (
         <div className='finding-company-whole-container'>
             <Header />
@@ -133,6 +88,7 @@ const CompanyDetail = () => {
                                 <Avatar
                                     shape="square" size={80}
                                     icon={<AntDesignOutlined />}
+                                    src={userData ? userData.avatar : "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} // Default avatar if none provided
                                 />
                             </div>
                             <div className="company-detail-title-section">
@@ -146,6 +102,7 @@ const CompanyDetail = () => {
                             <Button
                                 type="primary"
                                 className="vop-now-button"
+                                onClick={handleScrollToOpenPosition}
                             >
                                 View Open Position <ArrowRightOutlined />
                             </Button>
@@ -237,7 +194,7 @@ const CompanyDetail = () => {
 
                     <Col xs={24} sm={24} md={12}>
                         <div className="company-description-rightSide">
-                            {/* <div className="company-overview">
+                            <div className="company-overview">
                                 <Space.Compact size="large" className="custom-space-compact">
                                     <Paragraph>
                                         <Row gutter={[16, 16]} className="company-overview-grid">
@@ -245,34 +202,50 @@ const CompanyDetail = () => {
                                                 <CalendarOutlined className="company-overview-icon" />
                                                 <Paragraph className="company-overview-text">
                                                     FOUNDED IN:<br />
-                                                    <span className="company-overview-highlight">14 June, 2021</span>
+                                                    <span className="company-overview-highlight">
+                                                        {userData && userData.dateOfBirth ? new Date(userData.dateOfBirth).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                        }) : "None"}
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={12} className="company-overview-item">
-                                                <ClockCircleOutlined className="company-overview-icon" />
+                                                <SolutionOutlined className="company-overview-icon" />
                                                 <Paragraph className="company-overview-text">
-                                                    ORGANIZATION TYPE:<br />
-                                                    <span className="company-overview-highlight">Private Company</span>
+                                                    RECORD INITIATION:<br />
+                                                    <span className="company-overview-highlight">
+                                                        {userData && userData.createdAt ? new Date(userData.createdAt).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                        }) : "Loading..."}
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={12} className="company-overview-item">
                                                 <EnvironmentOutlined className="company-overview-icon" />
                                                 <Paragraph className="company-overview-text">
                                                     LOCATION:<br />
-                                                    <span className="company-overview-highlight">New York, USA</span>
+                                                    <span className="company-overview-highlight">
+                                                        {userData && userData.address ? userData.address : "Loading..."}
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={12} className="company-overview-item">
                                                 <FileProtectOutlined className="company-overview-icon" />
                                                 <Paragraph className="company-overview-text">
-                                                    JOB TYPE:<br />
-                                                    <span className="company-overview-highlight">Full Time</span>
+                                                    VERIFICATION:<br />
+                                                    <span className="company-overview-highlight">
+                                                        {userData && userData.isVerified ? "Verified" : "Not Verified"}
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                         </Row>
                                     </Paragraph>
                                 </Space.Compact>
-                            </div> */}
+                            </div>
 
                             <div className="company-contact-info">
                                 <Title level={4}>Contact Infomation</Title>
@@ -358,39 +331,49 @@ const CompanyDetail = () => {
                     </Col>
                 </Row>
             </div>
-            <div className="open-position">
-                <Title level={2} style={{ marginLeft: '40px' }}>Open Position (05)</Title>
+            <div className="open-position" ref={openPositionRef}>
+                <Title level={2} style={{ marginLeft: '50px' }}>Open Position ({jobPostings.length})</Title>
                 <div className="list-company">
                     <div className="list-company-container">
-                        <Row gutter={[16, 16]} justify="center">
-                            {companies.map((company) => (
-                                <Col key={company.id} xs={24} sm={12} md={12} lg={8}>
-                                    <a href={`/company/${company.id}`} className="list-company-card-link">
-                                        <div className="list-company-card">
-                                            <div className="list-company-detail1">
-                                                <img
-                                                    alt={company.company}
-                                                    src={company.avatar}
-                                                    className="company-image"
-                                                />
-                                                <div>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                        <Title level={5} style={{ margin: 0 }}>{company.company}</Title>
-                                                        <Tag color="yellow" style={{ marginLeft: '-10px', marginTop: '1%' }}>
-                                                            <StarOutlined />
-                                                        </Tag>
+                        <Row gutter={[16, 16]} justify="start">
+                            {jobPostings.map((job) => (
+                                <Col key={job.id} xs={24} sm={12} md={8} lg={8}>
+                                    <Tooltip title={job.title}>
+                                        <a href={`/job-detail-view/${job.id}`} className="list-company-card-link">
+                                            <div className="list-company-card">
+                                                <div className="list-company-detail1">
+                                                    <img
+                                                        alt={job.title}
+                                                        src={userData ? userData.avatar : "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"}
+                                                        className="company-image"
+                                                    />
+                                                    <div>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                            <Title level={4} className="company-detail-job-title">
+                                                                {job.title}
+                                                            </Title>
+                                                        </div>
+                                                        <Paragraph style={{ color: 'grey', margin: 0 }}>
+                                                            <EnvironmentOutlined /> {job.location}
+                                                        </Paragraph>
                                                     </div>
-                                                    <Paragraph style={{ color: 'grey', margin: 0 }}>
-                                                        <EnvironmentOutlined /> {company.location}
-                                                    </Paragraph>
+                                                </div>
+                                                <div style={{ display: 'flex', justifyContent: 'right', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                                                    <Tag color="blue">
+                                                        {(() => {
+                                                            const startDate = new Date(job.started_date);
+                                                            const endDate = new Date(job.end_date);
+                                                            const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+                                                            return `${durationInDays} days`;
+                                                        })()}
+                                                    </Tag>
+                                                    <Tag color="yellow">
+                                                        {job.min_star_requirement}<StarOutlined />
+                                                    </Tag>
                                                 </div>
                                             </div>
-                                            <Title level={3} style={{ marginTop: '15px' }}>{company.title}</Title>
-                                            <Paragraph style={{ color: 'grey' }}>
-                                                {company.duration} <span>⦁</span> {company.salary}
-                                            </Paragraph>
-                                        </div>
-                                    </a>
+                                        </a>
+                                    </Tooltip>
                                 </Col>
                             ))}
                         </Row>
