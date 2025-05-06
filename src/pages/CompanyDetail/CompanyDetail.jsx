@@ -23,7 +23,7 @@ const CompanyDetail = () => {
         console.log("Company ID:", id); // Log the company ID in the console
 
         // Fetch user data by ID
-        userApi.getUserById(id)
+        userApi.getPublicUserById(id)
             .then(response => {
                 console.log("User Data:", response.data); // Log the fetched user data
                 setUserData(response.data.data); // Store the user data in state
