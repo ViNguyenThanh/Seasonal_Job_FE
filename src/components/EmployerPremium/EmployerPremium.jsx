@@ -12,7 +12,7 @@ const EmployerPremium = () => {
       title: "BASIC",
       content:
         "Just starting out or hiring occasionally? BASIC is a budget-friendly way to post jobs efficiently — perfect for small businesses or occasional hires.",
-      price: "199.000 VND",
+      price: 199000,
       numberOfMonths: 3,
       benefits: [
         "✅ 100% free job posting fees.",
@@ -23,7 +23,7 @@ const EmployerPremium = () => {
       title: "STANDARD",
       content:
         "Hiring more often? STANDARD helps you post jobs regularly without overspending. A great fit for businesses with ongoing hiring needs.",
-      price: "299.000 VND",
+      price: 299000,
       numberOfMonths: 6,
       benefits: [
         "✅ 100% free job posting fees.",
@@ -34,7 +34,7 @@ const EmployerPremium = () => {
       title: "PREMIUM",
       content:
         "Hiring all year round? PREMIUM gives you unlimited postings with no extra fees. Total freedom for long-term recruitment.",
-      price: "499.000 VND",
+      price: 499000,
       numberOfMonths: 12,
       benefits: [
         "✅ 100% free job posting fees.",
@@ -69,7 +69,7 @@ const EmployerPremium = () => {
           <div key={index} className="employer-premium-bottom-item">
             <p className='plan-title'>{plan.title}</p>
             <p className='plan-content'>{plan.content}</p>
-            <p className='plan-price'><span>{plan.price}</span> / {plan.numberOfMonths} month{plan.numberOfMonths > 1 ? "s" : ""}</p>
+            <p className='plan-price'><span>{plan.price.toLocaleString('vi-VN')} VND</span> / {plan.numberOfMonths} month{plan.numberOfMonths > 1 ? "s" : ""}</p>
             <div className="line"></div>
             {plan.benefits.map((benefit, i) => (
               <p className='plan-benefit' key={i}>{benefit}</p>
