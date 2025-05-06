@@ -45,7 +45,11 @@ const WorkerProfile = () => {
         }
 
         const api = Api(); // Create an Axios instance
-        const response = await api.get(`/users/${id}`); // Use the Axios instance
+        const response = await api.get(`/users/${id}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        });
         console.log("API Response:", response.data);
 
         // Update the profileData and fileList
@@ -262,8 +266,7 @@ const WorkerProfile = () => {
           gender: values.gender && values.gender.toLowerCase() !== "-- none --" ? values.gender.toLowerCase() : null,
           address: `${values.city}, ${values.district}`,
           phoneNumber: values.phoneNumber,
-          description: values.description ? values.description.trim() : null, // Trim description
-          role: "worker"
+          description: values.description ? values.description.trim() : null,
         };
 
         console.log("Update Data Sent to Backend:", updateData);
