@@ -91,8 +91,8 @@ const WorkerTransactions = ({ newUser }) => {
   ];
 
   const getStatusClass = (status) => {
-    if (status === 'PENDING') return 'pending';
-    if (status === 'RELEASED') return 'released';
+    if (status === 'HELD') return 'pending';
+    if (status === 'COMPLETED') return 'released';
     if (status === 'CANCELLED') return 'cancelled';
     return '';
   };
@@ -404,8 +404,8 @@ const WorkerTransactions = ({ newUser }) => {
                 size="large"
                 allowClear
                 options={[
-                  { value: 'PENDING', label: 'PENDING' },
-                  { value: 'RELEASED', label: 'RELEASED' },
+                  { value: 'HELD', label: 'HELD' },
+                  { value: 'COMPLETED', label: 'COMPLETED' },
                   { value: 'CANCELLED', label: 'CANCELLED' },
                 ]}
               />
@@ -425,7 +425,7 @@ const WorkerTransactions = ({ newUser }) => {
                         <th className='date'>Date</th>
                         <th className='amount'>Amount (VND)</th>
                         <th className='status'>Status</th>
-                        <th className='detail'>Detail</th>
+                        {/* <th className='detail'>Detail</th> */}
                       </tr>
                     </thead>
                     <tbody>
@@ -437,11 +437,11 @@ const WorkerTransactions = ({ newUser }) => {
                           <td className='status'>
                             <span className={getStatusClass(item.status)}>{item.status}</span>
                           </td>
-                          <td className='detail'>
+                          {/* <td className='detail'>
                             <Button onClick={() => navigate(`/worker/worker-transactions/worker-transaction-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
                               <EyeOutlined />
                             </Button>
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                     </tbody>
