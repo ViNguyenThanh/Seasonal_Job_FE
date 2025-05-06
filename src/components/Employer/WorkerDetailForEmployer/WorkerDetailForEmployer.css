@@ -123,6 +123,10 @@
   width: 90%;
   margin: 0 5%;
 }
+.ant-modal .ant-modal-footer {
+  display: flex;
+  justify-content: space-between;
+}
 .employer-evaluate-worker-title{
   margin: 10px 0;
 }

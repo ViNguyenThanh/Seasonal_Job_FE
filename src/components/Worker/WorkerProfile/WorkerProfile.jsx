@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import './WorkerProfile.css'
 import { Button, DatePicker, Form, Image, Input, message, Modal, Rate, Select, Upload } from 'antd'
-import { EditOutlined, EnvironmentOutlined, EyeOutlined, FormOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, PlusOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { EditOutlined, EnvironmentOutlined, EyeOutlined, FormOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, PlusOutlined, SettingOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -338,8 +338,133 @@ const WorkerProfile = () => {
   const location = useLocation();
   const averageRating = location.state?.averageRating || 0;
 
+
+  /* Modal Change Password */
+  const [changePasswordVisible, setChangePasswordVisible] = useState(false);
+  const [confirmChangePasswordLoading, setConfirmChangePasswordLoading] = useState(false);
+
+  const showChangePasswordModal = () => {
+    setChangePasswordVisible(true);
+  };
+
+  const closeChangePasswordModal = () => {
+    setChangePasswordVisible(false);
+  };
+
+  // Formik for Change Password
+  const formikChangePassword = useFormik({
+    initialValues: {
+      oldPassword: '',
+      newPassword: '',
+      confirmNewPassword: ''
+    },
+    validationSchema: Yup.object({
+      oldPassword: Yup.string()
+        .min(6, '*Old Password must be at least 6 characters or more')
+        .required('* Required'),
+      newPassword: Yup.string()
+        .min(6, '* Password must be at least 6 characters or more')
+        .notOneOf([Yup.ref('oldPassword'), null], '*New Password cannot be the same as Old Password')
+        .required('* Required'),
+      confirmNewPassword: Yup.string()
+        .oneOf([Yup.ref('newPassword'), null], '* Confirm New Password must match New Password')
+        .required('* Please enter your confirm New Password')
+    }),
+    onSubmit: (values) => {
+      setConfirmChangePasswordLoading(true);
+      setTimeout(() => {
+        message.success("Password changed successfully!");
+
+        // Xử lý khi bấm Change Password
+        setConfirmChangePasswordLoading(false);
+        setChangePasswordVisible(false);
+        formikChangePassword.resetForm();
+      }, 2000);
+    }
+  });
+
   return (
     <div className='worker-profile-container'>
+
+      <button className='worker-change-pw-btn' onClick={showChangePasswordModal}><SettingOutlined /></button>
+
+      <Modal
+        title={<p className="worker-change-pw-title"><SettingOutlined /> Change Password</p>}
+        open={changePasswordVisible}
+        onCancel={closeChangePasswordModal}
+        footer={[
+          <Button key="no" onClick={closeChangePasswordModal} size="large"> Cancel </Button>,
+          <Button
+            key="yes"
+            type="primary"
+            size="large"
+            onClick={formikChangePassword.handleSubmit}
+            loading={confirmChangePasswordLoading}
+          >
+            Change Password
+          </Button>
+        ]}
+        width={500}
+      >
+        <div className="worker-change-pw-content">
+          <div className="modal-worker-field">
+            <p><span>*</span> Old Password: </p>
+            <Form.Item
+              validateStatus={formikChangePassword.errors.oldPassword && formikChangePassword.touched.oldPassword ? 'error' : ''}
+              help={formikChangePassword.errors.oldPassword && formikChangePassword.touched.oldPassword ? formikChangePassword.errors.oldPassword : ''}
+            >
+              <Input.Password
+                className='input'
+                size="large"
+                placeholder="Old Password"
+                id="oldPassword"
+                name="oldPassword"
+                onChange={formikChangePassword.handleChange}
+                onBlur={formikChangePassword.handleBlur}
+                value={formikChangePassword.values.oldPassword}
+              />
+            </Form.Item>
+          </div>
+
+          <div className="modal-worker-field">
+            <p><span>*</span> New Password: </p>
+            <Form.Item
+              validateStatus={formikChangePassword.errors.newPassword && formikChangePassword.touched.newPassword ? 'error' : ''}
+              help={formikChangePassword.errors.newPassword && formikChangePassword.touched.newPassword ? formikChangePassword.errors.newPassword : ''}
+            >
+              <Input.Password
+                className='input'
+                size="large"
+                placeholder="New Password"
+                id="newPassword"
+                name="newPassword"
+                onChange={formikChangePassword.handleChange}
+                onBlur={formikChangePassword.handleBlur}
+                value={formikChangePassword.values.newPassword}
+              />
+            </Form.Item>
+          </div>
+
+          <div className="modal-worker-field">
+            <p><span>*</span> Confirm New Password: </p>
+            <Form.Item
+              validateStatus={formikChangePassword.errors.confirmNewPassword && formikChangePassword.touched.confirmNewPassword ? 'error' : ''}
+              help={formikChangePassword.errors.confirmNewPassword && formikChangePassword.touched.confirmNewPassword ? formikChangePassword.errors.confirmNewPassword : ''}
+            >
+              <Input.Password
+                className='input'
+                size="large"
+                placeholder="Confirm New Password"
+                id="confirmNewPassword"
+                name="confirmNewPassword"
+                onChange={formikChangePassword.handleChange}
+                onBlur={formikChangePassword.handleBlur}
+                value={formikChangePassword.values.confirmNewPassword}
+              />
+            </Form.Item>
+          </div>
+        </div>
+      </Modal>
 
       <button className='worker-edit-profile-btn' onClick={showConfirmModal}><FormOutlined /></button>
 
@@ -348,9 +473,9 @@ const WorkerProfile = () => {
         open={confirmVisible}
         onCancel={closeConfirm}
         footer={[
-          <Button key="no" onClick={closeConfirm} size='large'>No</Button>,
+          <Button key="no" onClick={closeConfirm} size='large'>Cancel</Button>,
           <Button key="yes" type="primary" size='large' onClick={formik.handleSubmit} loading={confirmLoading}>
-            Yes
+            Save
           </Button>
         ]}
         width={1000}

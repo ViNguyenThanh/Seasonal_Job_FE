@@ -55,7 +55,7 @@ const AuthForWorker = ({ comp }) => {
       confirmPassword:
         comp === "Register"
           ? Yup.string()
-            .oneOf([Yup.ref("password"), null], "Confirm Password must match Password")
+            .oneOf([Yup.ref("password"), null], "* Confirm Password must match Password")
             .required("* Please enter your confirm password")
           : Yup.string()
     }),
