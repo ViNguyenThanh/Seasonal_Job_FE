@@ -341,9 +341,9 @@ const WorkerDetailForEmployer = () => {
         values.rows.forEach((row, i) => {
           const hasProgressChanged = row.progressCompleted !== updated[i].progressCompleted;
           const hasReasonChanged = row.reason !== updated[i].reason;
-          
 
-          if(hasProgressChanged || hasReasonChanged){
+
+          if (hasProgressChanged || hasReasonChanged) {
             updated[i].progressCompleted = row.progressCompleted;
             updated[i].reason = row.reason;
             updateList.push(updated[i]);
@@ -352,7 +352,7 @@ const WorkerDetailForEmployer = () => {
         // setDummyData(updated); // cập nhật lại dữ liệu
         console.log(updateList);
 
-        if(updateList.length > 0){
+        if (updateList.length > 0) {
           for (const item of updateList) {
             await jobExecuteApi.updateJobExecute(item.id, {
               processComplete: item.progressCompleted,
@@ -478,6 +478,9 @@ const WorkerDetailForEmployer = () => {
   });
 
   const [statusStart, setStatusStart] = useState(true)
+
+  // Tính tổng cho total progress completed
+  const totalProgressCompleted = jobExecutes.reduce((sum, jobExecute) => sum + jobExecute.progressCompleted, 0);
 
   return (
     <div className='worker-detail-for-employer-whole-container'>
@@ -855,6 +858,11 @@ const WorkerDetailForEmployer = () => {
                 </tbody>
               </table>
             </div>
+
+            <p className='total-progress-completed'>
+              Total Progress Completed: <br />
+              <span className={`${totalProgressCompleted < 100 ? 'orange' : ''}`}>{totalProgressCompleted}%</span> / 100%
+            </p>
             <Pagination
               current={currentPage}
               pageSize={pageSize}

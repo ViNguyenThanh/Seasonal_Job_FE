@@ -40,7 +40,6 @@
     font-size: 20px;
     display: flex;
     flex-wrap: wrap;
-    border-bottom: 1px solid rgba(118, 118, 118, 0.16);
 }
 .worker-job-detail-container .worker-job-detail-info p{
     width: 100%;
@@ -65,11 +64,25 @@
     margin: 1.5% 0;
 }
 
+.worker-job-detail-container .worker-job-detail-info .description p{
+    margin: 0;
+}
+.worker-job-detail-container .worker-job-detail-info .description p span,
+.worker-job-detail-container .worker-job-detail-info .description ul li,
+.worker-job-detail-container .worker-job-detail-info .description ol li{
+  color: #3d3d3d !important;
+}
+.worker-job-detail-container .worker-job-detail-info .description p a,
+.worker-job-detail-container .worker-job-detail-info .description ul li a,
+.worker-job-detail-container .worker-job-detail-info .description ol li a{
+  color: #187bcd !important;
+}
+
 .worker-job-detail-container .worker-job-detail-info .show-more-less-btn{
     width: 100%;
     display: flex;
     justify-content: center;
-    margin: 1% 0;
+    margin: 1% 0 0;
 }
 .worker-job-detail-container .worker-job-detail-info .show-more-less-btn button {
     border: none;
@@ -84,12 +97,96 @@
     transition: 0.3s ease;
 }
 
+.worker-job-detail-container .employer-rating{
+    width: 90%;
+    padding: 10px 5% 30px;
+}
+.worker-job-detail-container .employer-rating p{
+    width: 100%;
+    /* text-align: center; */
+    margin-top: 0;
+    font-size: 17px;
+    color: #f31010;
+}
+.worker-job-detail-container .employer-rating .employer-rating-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.worker-job-detail-container .employer-rating .employer-rating-btn button{
+    font-size: 17.5px;
+    color: white;
+    background-color:#FFB300;
+    border: none;
+    border-radius: 5px;
+    padding: 6px 15px 7px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+.worker-job-detail-container .employer-rating .employer-rating-btn button:hover{
+    background-color: #FFA000;
+    transition: 0.3s ease;
+}
+.worker-job-detail-container .employer-rating .employer-rating-btn button:disabled{
+    color: gray;
+    background-color: #d9d9d9;
+    cursor: not-allowed;
+}
+  
+  /* Modal Review (lấy từ WorkerDetailForEmployer)*/
+.ant-modal .ant-modal-content {
+    width: 90%;
+    margin: 0 5%;
+}
+.employer-evaluate-worker-title{
+    margin: 10px 0;
+}
+.employer-evaluate-worker-rating{
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+}
+.employer-evaluate-worker-rating p{
+    font-size: 17.5px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+.employer-evaluate-worker-reason p{
+    font-size: 17px;
+    font-weight: 500;
+}
+.employer-evaluate-worker-reason p span{
+    color: red;
+}
+/* chỉnh font chữ cho reason */
+.employer-evaluate-worker-reason .ant-input {
+    font-family: var(--font-oswald);
+    font-size: 16px;
+    padding-left: 5%;
+}
+/* chỉnh message error */
+.employer-evaluate-worker-reason .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 1% 0 0 1%;
+}
+.employer-evaluate-worker-reason p.content{
+    font-size: 16px;
+    font-weight: 450;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin: 10px 0 30px;
+}
+  
 
 /* Worker Job Execute */
 .worker-job-detail-container .worker-job-execute-title{
     width: 100%;
     text-align: center;
-    margin: 4% 0 2.5%;
+    margin: 0 0 2.5%;
+    padding-top: 4%;
+    border-top: 1px solid rgba(118, 118, 118, 0.16);
 }
 .worker-job-detail-container .warning-notice{
     width: 95%;
@@ -263,6 +360,26 @@
     cursor: pointer;
 }
 
+
+.worker-job-detail-container .total-progress-completed {
+    width: 90%;
+    margin: 0 0 20px;
+    padding: 0 5%;
+    text-align: right;
+    font-size: 20px;
+}
+.worker-job-detail-container .total-progress-completed span{
+    font-size: 25px;
+    color: green;
+}
+.worker-job-detail-container .total-progress-completed span.orange{
+    color: orange;
+}
+.worker-job-detail-container .total-progress-completed br{
+    display: none;
+}
+
+
 .worker-job-detail-container .ant-pagination {
     margin: 10px 0;
 }
@@ -348,5 +465,9 @@
     }
     .worker-job-detail-container .worker-job-detail-title{
         padding: 2% 0 5%;
+    }
+
+    .worker-job-detail-container .total-progress-completed br{
+        display: block;
     }
 }
