@@ -64,7 +64,7 @@ const FindingJob = () => {
                     const userId = job.userId; // Assuming each job contains a `userId` field
                     if (userId) {
                         try {
-                            const userResponse = await userApi.getUserById(userId);
+                            const userResponse = await userApi.getPublicUserById(userId); // Use the public API endpoint
                             const userAvatar = userResponse.data?.data?.avatar || null; // Fetch avatar from user details
                             return { ...job, avatar: userAvatar }; // Add avatar to job data
                         } catch (userError) {

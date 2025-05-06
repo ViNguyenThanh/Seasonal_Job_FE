@@ -9,6 +9,9 @@ export const userApi = {
             headers: { authorization: `Bearer ${token}` },
         })
     },
+    getPublicUserById: (id) => {
+        return API.get(`/users/public/${id}`);
+    },
     getUserById: (id) => {
         const token = getToken()
         return API.get(`/users/${id}`, {

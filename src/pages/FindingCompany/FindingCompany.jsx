@@ -72,7 +72,7 @@ const FindingCompany = () => {
                 if (Array.isArray(response.data.data)) {
                     const companiesWithCreatedAt = await Promise.all(
                         response.data.data.map(async (company) => {
-                            const userResponse = await userApi.getUserById(company.id); // Fetch user data by company ID
+                            const userResponse = await userApi.getPublicUserById(company.id); // Fetch user data by company ID
                             console.log(`Fetched user data for company ID ${company.id}:`, userResponse.data); // Log the user data
                             return {
                                 ...company,

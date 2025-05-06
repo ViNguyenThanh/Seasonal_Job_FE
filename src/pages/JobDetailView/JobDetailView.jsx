@@ -50,7 +50,7 @@ const JobDetailView = () => {
 
                 // Fetch user details using userId from jobData
                 if (jobData.userId) {
-                    const userResponse = await userApi.getUserById(jobData.userId);
+                    const userResponse = await userApi.getPublicUserById(jobData.userId);
                     console.log("User Detail:", userResponse.data); // Log user details here
                     setAvatarUrl(userResponse.data.data.avatar); // Set the avatar URL
                 }
@@ -207,10 +207,10 @@ const JobDetailView = () => {
                 cvId = defaultCV.id;
             }
 
-            // Apply for the job
             await cvApi.applyjob(jobDetail.id, {
                 jobPostingId: jobDetail.id,
                 cvId,
+                coverLetter: value,
             });
 
             message.success("Your application has been submitted successfully!");
