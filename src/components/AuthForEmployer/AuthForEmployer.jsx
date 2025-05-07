@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import './AuthForEmployer.css'
-import { AimOutlined, EnvironmentOutlined, HomeFilled, IdcardOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+import { AimOutlined, EnvironmentOutlined, ExclamationCircleOutlined, HomeFilled, IdcardOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import background_employer from '/assets/background_employer.gif'
 import logo from '/assets/logo.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Checkbox, Form, Input, message, Select } from 'antd';
+import { Button, Checkbox, Form, Input, message, Modal, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '../../apis/auth.request';
 import { login } from '../../redux/actions/auth.action';
@@ -168,6 +168,47 @@ const AuthForEmployer = ({ comp }) => {
         }
     }, [formik.values.city]);
 
+    /* Modal Forgot Password */
+    const [confirmVisible, setConfirmVisible] = useState(false);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+
+    const showConfirmModal = () => {
+        formikForgotPassword.setValues({
+            email: '',
+        });
+        formikForgotPassword.setTouched({
+            email: false,
+        });
+
+        setConfirmVisible(true);
+    };
+
+    const closeConfirm = () => {
+        setConfirmVisible(false);
+    };
+
+    const formikForgotPassword = useFormik({
+        initialValues: {
+            email: '',
+        },
+        validationSchema: Yup.object({
+            email: Yup.string().matches(
+                /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "* Invalid Email"
+            ).required('* Required'),
+        }),
+        onSubmit: (values) => {
+            setConfirmLoading(true);
+            setTimeout(() => {
+                message.success("Your request to reset the password has been submitted successfully! Please check your email to proceed.");
+
+                // Xử lý khi bấm Change Password
+                setConfirmLoading(false);
+                setConfirmVisible(false);
+                formikForgotPassword.resetForm();
+            }, 2000);
+        }
+    });
+
     return (
         <div className='auth-employer-whole-container'>
             <div className="auth-employer-container">
@@ -235,9 +276,55 @@ const AuthForEmployer = ({ comp }) => {
                         </div>
 
                         {comp === "Login" && (
-                            <div className='forgot-password'>
-                                <p onClick={() => navigate("/forgot-password")}>Forgot password?</p>
-                            </div>
+                            <>
+                                <div className='forgot-password'>
+                                    <p
+                                        // onClick={() => navigate("/forgot-password")}
+                                        onClick={showConfirmModal}
+                                    >
+                                        Forgot password?
+                                    </p>
+                                </div>
+
+                                <Modal
+                                    title={<p className='employer-forgot-pw-title'>  <ExclamationCircleOutlined /> &#160;Forgot Password </p>}
+                                    open={confirmVisible}
+                                    onCancel={closeConfirm}
+                                    footer={[
+                                        <Button key="no" onClick={closeConfirm} size='large'>Cancel</Button>,
+                                        <Button key="yes" type="primary" size='large' onClick={formikForgotPassword.handleSubmit} loading={confirmLoading}>
+                                            Send Request
+                                        </Button>
+                                    ]}
+                                    width={500}
+                                >
+                                    <div className="employer-forgot-pw-content">
+                                        <div className='employer-forgot-pw-field'>
+                                            <p className='title'> <span>*</span> Email</p>
+                                            <Form.Item
+                                                validateStatus={formikForgotPassword.errors.email && formikForgotPassword.touched.email ? "error" : ""}
+                                                help={formikForgotPassword.errors.email && formikForgotPassword.touched.email ? formikForgotPassword.errors.email : ""}
+                                            >
+                                                <Input
+                                                    className='input'
+                                                    size="large"
+                                                    placeholder="Input your Email..."
+                                                    id="email"
+                                                    name="email"
+                                                    type="text"
+                                                    onChange={formikForgotPassword.handleChange}
+                                                    onBlur={formikForgotPassword.handleBlur}
+                                                    value={formikForgotPassword.values.email}
+                                                />
+                                            </Form.Item>
+                                        </div>
+
+                                        <p className="reset-password-guideline">
+                                            After sending your request, please check your email for instructions on how to reset your password.
+                                        </p>
+                                    </div>
+                                </Modal>
+                            </>
                         )}
 
                         {comp === "Register" && (

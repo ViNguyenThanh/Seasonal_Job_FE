@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import './AuthForWorker.css'
-import { HomeFilled, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, HomeFilled, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import background_worker from '/assets/background_worker.gif'
 import logo from '/assets/logo.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Checkbox, Form, Input, message } from 'antd';
+import { Button, Checkbox, Form, Input, message, Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import google from '/assets/google.png'
 import store from "../../store/ReduxStore";
@@ -116,6 +116,47 @@ const AuthForWorker = ({ comp }) => {
   };
 
 
+  /* Modal Forgot Password */
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const showConfirmModal = () => {
+    formikForgotPassword.setValues({
+      email: '',
+    });
+    formikForgotPassword.setTouched({
+      email: false,
+    });
+    
+    setConfirmVisible(true);
+  };
+
+  const closeConfirm = () => {
+    setConfirmVisible(false);
+  };
+
+  const formikForgotPassword = useFormik({
+    initialValues: {
+      email: '',
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().matches(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "* Invalid Email"
+      ).required('* Required'),
+    }),
+    onSubmit: (values) => {
+      setConfirmLoading(true);
+      setTimeout(() => {
+        message.success("Your request to reset the password has been submitted successfully! Please check your email to proceed.");
+
+        // Xử lý khi bấm Change Password
+        setConfirmLoading(false);
+        setConfirmVisible(false);
+        formikForgotPassword.resetForm();
+      }, 2000);
+    }
+  });
+
   return (
     <div className='auth-worker-whole-container'>
       <div className="auth-worker-container">
@@ -197,9 +238,55 @@ const AuthForWorker = ({ comp }) => {
             </div>
 
             {comp === "Login" && (
-              <div className='forgot-password'>
-                <p onClick={() => navigate("/forgot-password")}>Forgot password?</p>
-              </div>
+              <>
+                <div className='forgot-password'>
+                  <p
+                    // onClick={() => navigate("/forgot-password")}
+                    onClick={showConfirmModal}
+                  >
+                    Forgot password?
+                  </p>
+                </div>
+
+                <Modal
+                  title={<p className='worker-forgot-pw-title'>  <ExclamationCircleOutlined /> &#160;Forgot Password </p>}
+                  open={confirmVisible}
+                  onCancel={closeConfirm}
+                  footer={[
+                    <Button key="no" onClick={closeConfirm} size='large'>Cancel</Button>,
+                    <Button key="yes" type="primary" size='large' onClick={formikForgotPassword.handleSubmit} loading={confirmLoading}>
+                      Send Request
+                    </Button>
+                  ]}
+                  width={500}
+                >
+                  <div className="worker-forgot-pw-content">
+                    <div className='worker-forgot-pw-field'>
+                      <p className='title'> <span>*</span> Email</p>
+                      <Form.Item
+                        validateStatus={formikForgotPassword.errors.email && formikForgotPassword.touched.email ? "error" : ""}
+                        help={formikForgotPassword.errors.email && formikForgotPassword.touched.email ? formikForgotPassword.errors.email : ""}
+                      >
+                        <Input
+                          className='input'
+                          size="large"
+                          placeholder="Input your Email..."
+                          id="email"
+                          name="email"
+                          type="text"
+                          onChange={formikForgotPassword.handleChange}
+                          onBlur={formikForgotPassword.handleBlur}
+                          value={formikForgotPassword.values.email}
+                        />
+                      </Form.Item>
+                    </div>
+
+                    <p className="reset-password-guideline">
+                      After sending your request, please check your email for instructions on how to reset your password.
+                    </p>
+                  </div>
+                </Modal>
+              </>
             )}
 
             {comp === "Register" && (
