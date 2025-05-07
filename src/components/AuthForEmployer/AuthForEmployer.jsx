@@ -93,7 +93,7 @@ const AuthForEmployer = ({ comp }) => {
                     const user = await authApi.register({
                         email: values.email,
                         password: values.password,
-                        address: values.district + ", " + values.city,
+                        address: values.city + ", " + values.district,
                         companyName: values.companyName,
                         phoneNumber: values.phoneNumber,
                         role: "employer",
@@ -112,9 +112,15 @@ const AuthForEmployer = ({ comp }) => {
                     const authState = store.getState().authReducer;
 
                     if (authState.payload) {
-                        message.destroy()
-                        message.success("Login successfully!");
-                        navigate("/employer-home");
+                        if (authState.payload.role === "employer") {
+                            message.destroy()
+                            message.success("Login successfully!");
+                            navigate("/employer-home");
+                        } else {
+                            message.destroy()
+                            message.error("You are not a employer! Can't log in here");
+                            localStorage.removeItem("token");
+                        }
                     } else {
                         message.destroy()
                         message.error(authState.error.message);

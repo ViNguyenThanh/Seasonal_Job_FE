@@ -91,9 +91,15 @@ const AuthForWorker = ({ comp }) => {
           const authState = store.getState().authReducer;
 
           if (authState.payload) {
-            message.destroy()
-            message.success("Login successfully!");
-            navigate("/");
+            if (authState.payload.role === "worker") {
+              message.destroy()
+              message.success("Login successfully!");
+              navigate("/");
+            }else{
+              message.destroy()
+              message.error("You are not a worker! Can't log in here");
+              localStorage.removeItem("token");
+            }
           } else {
             message.destroy()
             message.error(authState.error.message);

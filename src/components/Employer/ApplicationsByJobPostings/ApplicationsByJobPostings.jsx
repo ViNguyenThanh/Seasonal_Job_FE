@@ -47,14 +47,14 @@ const ApplicationsByJobPostings = () => {
             avatar: avatar,
             jobPostingName: item.jobPostingId === jobPosting.id ? jobPosting.title : '',
             status: item.status,
-            coverLetter: item.CV.coverLetter,
+            coverLetter: item.coverLetter,
             cvId: item.CV.id
           }));
         }));
 
         setIsLoading(false);
         setListApplications(newList.flat());
-        console.log(newList.flat()); // Hiển thị kết quả đã xử lý
+        // console.log(newList.flat()); // Hiển thị kết quả đã xử lý
       } catch (error) {
         console.log(error);
         // message.error(error.data.message);

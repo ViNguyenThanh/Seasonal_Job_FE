@@ -6,14 +6,18 @@ import support_staff_img from '/assets/image_support_staff_login.png'
 import logo from '/assets/logo.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Form, Input } from 'antd'
+import { Form, Input, message } from 'antd'
 import { HomeFilled, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom'
+import store from "../../store/ReduxStore";
+import { login } from '../../redux/actions/auth.action';
+import { useDispatch } from 'react-redux';
 
 const AuthForManagementTeam = ({ comp }) => {
 
   const [passwordVisible, setPasswordVisible] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const formik = useFormik({
     initialValues: {
@@ -27,7 +31,39 @@ const AuthForManagementTeam = ({ comp }) => {
       password: Yup.string().min(6, "* Password must be at least 6 characters or more").required("* Required"),
     }),
     onSubmit: async (values) => {
-      alert(`email: ${values.email}`);
+      message.loading('Please wait a moment...')
+      try {
+        await dispatch(login({
+          email: values.email,
+          password: values.password
+        }))
+        const authState = store.getState().authReducer;
+
+        if (authState.payload) {
+          if (authState.payload.role === "admin" && comp === "Admin") {
+            message.destroy()
+            message.success("Login successfully!");
+            navigate("/admin/dashboard");
+          } else if (authState.payload.role === "support staff" && comp === "SupportStaff") {
+            message.destroy()
+            message.success("Login successfully!");
+            navigate("/support-staff/manage-complaints");
+          } else if (authState.payload.role === "worker" || authState.payload.role === "employer") {
+            message.destroy()
+            message.error("Employer and worker can't log in here");
+            localStorage.removeItem("token");
+          } else {
+            message.destroy()
+            message.error("You don't have permission to log in here");
+          }
+        } else {
+          message.destroy()
+          message.error(authState.error.message);
+        }
+      } catch (error) {
+        message.destroy()
+        message.error(error.response.data.message);
+      }
     }
   });
 

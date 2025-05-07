@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { userApi } from '../../../apis/user.request';
 import { formatDate } from '../../../utils/formatDate';
+import { complaintApi } from '../../../apis/complaint.request';
 
 const WorkerTransactions = ({ newUser }) => {
   const navigate = useNavigate();
@@ -32,19 +33,22 @@ const WorkerTransactions = ({ newUser }) => {
   const fetchTransactions = async () => {
     try {
       const res = await paymentApi.getTransactions();
-      console.log(res.data);
+      // console.log(res.data);
       const newTransactions = await Promise.all(res.data.data.map(async (item) => {
-        const employer = await userApi.getUserById(item.senderId);
+        const sender = await userApi.getUserById(item.senderId);
+        const receiver = await userApi.getUserById(item.receiverId);
         return {
           id: item.id,
-          sender: employer.data.data.companyName,
+          sender: sender.data.data.companyName ? sender.data.data.companyName : 'Support Staff',
+          receiver: receiver.data.data.fullName,
           date: formatDate(item.createdAt),
           amount: parseFloat(item.amount).toLocaleString('vi-VN'),
-          status: item.status
+          status: item.status,
+          description: item.description ? item.description : 'SALARY PAYMENT',
         };
       }))
-      
-      setTransactions(newTransactions);
+      const sorted = newTransactions.sort((a, b) => convertToDate(b.date) - convertToDate(a.date));
+      setTransactions(sorted);
     } catch (error) {
       if (error.status === 404) setTransactions([]);
       else console.error('Fetch transactions failed', error);
@@ -178,15 +182,27 @@ const WorkerTransactions = ({ newUser }) => {
         .notOneOf(["0"], "* Bank Code must be selected")
         .required("* Required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
-        message.success('Withdrawal request submitted successfully!');
+      try {
+        await complaintApi.createComplaint({
+          description: `Account Number: ${values.accountNumber}
+                  Account Name: ${values.accountName}
+                  Amount: ${values.amount.toLocaleString('vi-VN')} VND
+                  Bank Code: ${values.bankCode}`,
+          type: 'WITHDRAWAL',
+        });
+        message.success('Withdrawal request submitted successfully! Please wait for the support staff to review.');
         // Xử lý khi bấm Submit
         setConfirmLoading(false);
         setConfirmVisible(false);
         formik.resetForm();
-      }, 2000);
+      } catch (error) {
+        message.error('Failed to submit withdrawal request.');
+        setConfirmLoading(false);
+        setConfirmVisible(false);
+        formik.resetForm();
+      }
     },
   });
 
@@ -425,7 +441,7 @@ const WorkerTransactions = ({ newUser }) => {
                         <th className='date'>Date</th>
                         <th className='amount'>Amount (VND)</th>
                         <th className='status'>Status</th>
-                        {/* <th className='detail'>Detail</th> */}
+                        <th className='detail'>Detail</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -437,11 +453,11 @@ const WorkerTransactions = ({ newUser }) => {
                           <td className='status'>
                             <span className={getStatusClass(item.status)}>{item.status}</span>
                           </td>
-                          {/* <td className='detail'>
+                          <td className='detail'>
                             <Button onClick={() => navigate(`/worker/worker-transactions/worker-transaction-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
                               <EyeOutlined />
                             </Button>
-                          </td> */}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
