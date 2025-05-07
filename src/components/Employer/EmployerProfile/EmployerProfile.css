@@ -11,6 +11,64 @@
   position: relative;
 }
 
+/* Nút Change Password */
+.employer-profile-container .employer-change-pw-btn{
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-size: 30px;
+  color: #187bcd;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.employer-profile-container .employer-change-pw-btn:hover{
+  color: #0059b3;
+  transform: scale(1.2);
+  transition: 0.3s ease;
+}
+
+/* chỉnh Modal Change Password */
+.employer-change-pw-title{
+  margin: 10px 0 15px;
+  font-size: 22px;
+  color: #187bcd;
+}
+.employer-change-pw-title .anticon{
+  font-size: 30px;
+  margin-right: 5px;
+}
+.employer-change-pw-content{
+  width: 96%;
+  padding: 0 2%;
+  margin-bottom: 40px;
+}
+.employer-change-pw-content .modal-employer-field {
+  width: 100%;
+}
+.employer-change-pw-content .modal-employer-field p{
+  font-size: 18px;
+  margin: 10px 0;
+}
+.employer-change-pw-content .modal-employer-field p span{
+  color: red;
+}
+.employer-change-pw-content .modal-employer-field .input {
+  width: 100%;
+  font-size: 17px;
+}
+.employer-change-pw-content .modal-employer-field .ant-input-affix-wrapper>input.ant-input {
+  padding-left: 3%;
+  font-family: var(--font-oswald);
+}
+.employer-change-pw-content .modal-employer-field .ant-form-item .ant-form-item-explain-error {
+  color: red;
+  font-size: 16px;
+  padding: 7px 0 12px;
+}
+
+/* Nút Edit Profile */
 .employer-profile-container .employer-edit-profile-btn{
   position: absolute;
   top: 20px;
@@ -32,7 +90,12 @@
 /* có chỉnh ở component WorkerDetailForEmployer */
 /* .ant-modal .ant-modal-content {
   margin: 0 5% !important;
-} */
+} 
+.ant-modal .ant-modal-footer {
+  display: flex;
+  justify-content: space-between;
+}  
+*/
 .employer-edit-profile-title{
   margin: 10px 0 15px;
   font-size: 22px;
@@ -150,6 +213,7 @@
 
 .employer-profile-container .employer-profile-left{
   width: 50%;
+  margin-top: 20px;
 }
 
 .employer-profile-left .employer-identity{
@@ -371,6 +435,10 @@
     top: 10px;
     right: 20px;
   }
+  .employer-profile-container .employer-change-pw-btn{
+    top: 10px;
+    left: 20px;
+  }
   .employer-profile-container .employer-profile-left{
     margin-top: 30px;
   }
@@ -391,8 +459,13 @@
   }
 
   .employer-profile-left .employer-identity .employer-name-star p{
-    width: 80%;
-    padding: 0 0 0 20%;
+    width: 85%;
+    padding: 0 0 0 15%;
+  }
+  .employer-profile-left .employer-identity .employer-name-star div{
+    width: 100%;
+    padding: 0;
+    text-align: center;
   }
   .employer-profile-right .employer-info p.employer-email{
     word-break: break-all;

@@ -81,6 +81,22 @@
   color: rgb(249, 58, 58);
 }
 
+/* chỉnh tabs của antd */
+.applications-by-job-postings-container .tab-title{
+  text-align: center;
+  margin: 0;
+}
+.applications-by-job-postings-container .tab-title br{
+  display: none;
+}
+.applications-by-job-postings-container .ant-tabs-tab{
+  font-size: 18px;
+}
+.applications-by-job-postings-container .ant-tabs-card >.ant-tabs-nav .ant-tabs-tab {
+  margin: 0;
+  padding: 8px 25px;
+}
+
 .applications-by-job-postings-container .workers-list{
   width: 100%;
 }
@@ -148,28 +164,6 @@
 }
 .applications-by-job-postings-container .workers-list .workers-list-search .ant-select-single.ant-select-lg:not(.ant-select-customize-input) .ant-select-selector {
   border: 1px solid #d9d9d9;
-}
-
-/* chỉnh tabs của antd */
-.applications-by-job-postings-container .tab-title{
-  text-align: center;
-  margin: 0;
-}
-.applications-by-job-postings-container .tab-title br{
-  display: none;
-}
-.applications-by-job-postings-container .ant-tabs-tab{
-  font-size: 18px;
-}
-.applications-by-job-postings-container .ant-tabs-card >.ant-tabs-nav .ant-tabs-tab {
-  margin: 0;
-  padding: 8px 25px;
-}
-
-.applications-by-job-postings-container .ant-tabs .ant-tabs-tab-btn:nth-of-type(2) {
-  /* outline: none;
-  transition: all 0.3s; */
-  color: red;
 }
 
 /* chỉnh worker */

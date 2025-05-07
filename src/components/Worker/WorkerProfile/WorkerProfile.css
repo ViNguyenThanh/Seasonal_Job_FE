@@ -11,6 +11,65 @@
   position: relative;
 }
 
+/* Nút Change Password */
+.worker-profile-container .worker-change-pw-btn{
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  font-size: 30px;
+  color: #187bcd;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.worker-profile-container .worker-change-pw-btn:hover{
+  color: #0059b3;
+  transform: scale(1.2);
+  transition: 0.3s ease;
+}
+
+/* chỉnh Modal Change Password */
+.worker-change-pw-title{
+  margin: 10px 0 15px;
+  font-size: 22px;
+  color: #187bcd;
+}
+.worker-change-pw-title .anticon{
+  font-size: 30px;
+  margin-right: 5px;
+}
+.worker-change-pw-content{
+  width: 96%;
+  padding: 0 2%;
+  margin-bottom: 40px;
+}
+.worker-change-pw-content .modal-worker-field {
+  width: 100%;
+}
+.worker-change-pw-content .modal-worker-field p{
+  font-size: 18px;
+  margin: 10px 0;
+}
+.worker-change-pw-content .modal-worker-field p span{
+  color: red;
+}
+.worker-change-pw-content .modal-worker-field .input {
+  width: 100%;
+  font-size: 17px;
+}
+.worker-change-pw-content .modal-worker-field .ant-input-affix-wrapper>input.ant-input {
+  padding-left: 3%;
+  font-family: var(--font-oswald);
+}
+.worker-change-pw-content .modal-worker-field .ant-form-item .ant-form-item-explain-error {
+  color: red;
+  font-size: 16px;
+  padding: 7px 0 12px;
+}
+
+
+/* Nút Edit Profile */
 .worker-profile-container .worker-edit-profile-btn{
   position: absolute;
   top: 20px;
@@ -32,7 +91,12 @@
 /* có chỉnh ở component WorkerDetailForEmployer */
 /* .ant-modal .ant-modal-content {
   margin: 0 5% !important;
-} */
+} 
+.ant-modal .ant-modal-footer {
+  display: flex;
+  justify-content: space-between;
+}  
+*/
 .worker-edit-profile-title{
   margin: 10px 0 15px;
   font-size: 22px;
@@ -203,6 +267,7 @@
 
 .worker-profile-container .worker-profile-left{
   width: 50%;
+  margin-top: 20px;
 }
 
 .worker-profile-left .worker-identity{
@@ -412,6 +477,10 @@
   .worker-profile-container .worker-edit-profile-btn{
     top: 10px;
     right: 20px;
+  }
+  .worker-profile-container .worker-change-pw-btn{
+    top: 10px;
+    left: 20px;
   }
   .worker-profile-container .worker-profile-left{
     margin-top: 30px;

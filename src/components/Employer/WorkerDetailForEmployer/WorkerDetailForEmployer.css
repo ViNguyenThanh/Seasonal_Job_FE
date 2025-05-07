@@ -122,6 +122,11 @@
 .ant-modal .ant-modal-content {
   width: 90%;
   margin: 0 5%;
+  padding-bottom: 30px;
+}
+.ant-modal .ant-modal-footer {
+  display: flex;
+  justify-content: space-between;
 }
 .employer-evaluate-worker-title{
   margin: 10px 0;
@@ -450,6 +455,26 @@
   padding: 2% 2% 0%;
 }
 
+
+.worker-detail-for-employer-container .total-progress-completed {
+  width: 90%;
+  margin: 0 0 20px;
+  padding: 0 5%;
+  text-align: right;
+  font-size: 20px;
+}
+.worker-detail-for-employer-container .total-progress-completed span{
+  font-size: 25px;
+  color: green;
+}
+.worker-detail-for-employer-container .total-progress-completed span.orange{
+  color: orange;
+}
+.worker-detail-for-employer-container .total-progress-completed br{
+  display: none;
+}
+
+
 .worker-detail-for-employer-container .ant-pagination {
   margin: 10px 0 30px;
 }
@@ -620,5 +645,9 @@
   }
   .worker-detail-for-employer-info-right .worker-info p.worker-email{
     word-break: break-all;
+  }
+
+  .worker-detail-for-employer-container .total-progress-completed br{
+    display: block;
   }
 }

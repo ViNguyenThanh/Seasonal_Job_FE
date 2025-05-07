@@ -499,6 +499,9 @@ const WorkerDetailForEmployer = ({ newUser }) => {
 
   const [statusStart, setStatusStart] = useState(true)
 
+  // Tính tổng cho total progress completed
+  const totalProgressCompleted = jobExecutes.reduce((sum, jobExecute) => sum + jobExecute.progressCompleted, 0);
+
   return (
     <div className='worker-detail-for-employer-whole-container'>
       <Breadcrumb className='breadcrumb'
@@ -875,6 +878,11 @@ const WorkerDetailForEmployer = ({ newUser }) => {
                 </tbody>
               </table>
             </div>
+
+            <p className='total-progress-completed'>
+              Total Progress Completed: <br />
+              <span className={`${totalProgressCompleted < 100 ? 'orange' : ''}`}>{totalProgressCompleted}%</span> / 100%
+            </p>
             <Pagination
               current={currentPage}
               pageSize={pageSize}
