@@ -118,26 +118,26 @@ const EmployerHeader = () => {
             label: "Profile",
             key: '1',
             icon: <UserOutlined />,
-            onClick: () => navigate('/employer/employer-profile'),
+            onClick: () => navigate('/employer/employer-profile', window.scrollTo(0, 0)),
         },
         {
             label: "Applications",
             key: '2',
             icon: <SolutionOutlined/>,
-            onClick: () => navigate('/employer/application/job-groups')
+            onClick: () => navigate('/employer/application/job-groups', window.scrollTo(0, 0))
         },
         {
             label: "Jobs Management",
             key: '3',
             icon: <ProfileOutlined/>,
-            onClick: () => navigate('/employer/employer-job-groups'),
+            onClick: () => navigate('/employer/employer-job-groups', window.scrollTo(0, 0)),
         },
         {
             label: "Wallet & Transaction",
             key: '4',
             icon: <CreditCardOutlined/>,
             style: { width: '160px' },
-            onClick: () => navigate('/employer/employer-transactions'),
+            onClick: () => navigate('/employer/employer-transactions', window.scrollTo(0, 0)),
         },
         {
             label: "Log Out",

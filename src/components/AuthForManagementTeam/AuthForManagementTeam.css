@@ -6,11 +6,11 @@
     flex-direction: column;
     position: relative;
     background-image: url('/assets/background_admin.png');
-    background-size: 100% 100%;
+    background-size: 100% 696px;
 }
 .auth-management-team-whole-container.support-staff {
     background-image: url('/assets/background_support_staff.png');
-    background-size: 100% 100%;
+    background-size: 100% 700px;
 }
 
 .auth-management-team-container {
@@ -109,6 +109,59 @@
 .auth-management-team-left .auth-management-team-form .forgot-password p:hover {
     text-decoration: underline;
 }
+
+/* chỉnh Modal Forgot Password */
+/* có chỉnh ở component WorkerDetailForEmployer */
+/* .ant-modal .ant-modal-content {
+  margin: 0 5% !important;
+} 
+.ant-modal .ant-modal-footer {
+  display: flex;
+  justify-content: space-between;
+}  
+*/
+.management-team-forgot-pw-title{
+    margin: 10px 0 15px;
+    font-size: 22px;
+    color: #187bcd;
+}
+.management-team-forgot-pw-title .anticon{
+    font-size: 30px;
+    margin-right: 2px;
+}
+.management-team-forgot-pw-content{
+    width: 96%;
+    padding: 0 2%;
+    margin-bottom: 20px;
+}
+.management-team-forgot-pw-content .management-team-forgot-pw-field {
+    width: 100%;
+}
+.management-team-forgot-pw-content .management-team-forgot-pw-field p{
+    font-size: 18px;
+    margin: 10px 0;
+}
+.management-team-forgot-pw-content .management-team-forgot-pw-field p span{
+    color: red;
+}
+.management-team-forgot-pw-content .management-team-forgot-pw-field .input {
+    width: 100%;
+    font-size: 17px;
+    padding-left: 7%;
+    font-family: var(--font-oswald);
+}
+.management-team-forgot-pw-content .management-team-forgot-pw-field .ant-form-item .ant-form-item-explain-error {
+    color: red;
+    font-size: 16px;
+    padding: 7px 0 12px;
+}
+
+.management-team-forgot-pw-content .reset-password-guideline{
+    font-size: 17px;
+    color: rgb(0, 157, 0);
+    margin: 0;
+}
+
 
 .auth-management-team-left .auth-management-team-form button {
     width: 100%;

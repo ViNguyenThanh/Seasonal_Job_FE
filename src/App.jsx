@@ -57,6 +57,9 @@ import ManageJobExecute from './components/SupportStaff/ManageJobExecute/ManageJ
 
 import EmployerPremiumPage from './pages/EmployerPremiumPage/EmployerPremiumPage'
 
+import VerifyEmail from './pages/VerifyEmail/VerifyEmail'
+import ResetPassword from './pages/ResetPassword/ResetPassword'
+
 
 
 
@@ -106,6 +109,9 @@ function App() {
           ) : (
             < RegisterForEmployer />
           )} />
+
+        <Route path="/verify-email" element={<VerifyEmail />}/>
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route path="/sjcp-admin-login" element={<LoginForAdmin />} />
         <Route path="/sjcp-support-staff-login" element={<LoginForSupportStaff />} />
