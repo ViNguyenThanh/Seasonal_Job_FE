@@ -530,6 +530,7 @@ const JobDetailView = () => {
                                                             day: '2-digit',
                                                             month: 'long',
                                                             year: 'numeric',
+                                                            timeZone: 'UTC',
                                                         }).format(new Date(jobDetail.started_date))}</span>
                                                 </Paragraph>
                                             </Col>
@@ -542,7 +543,9 @@ const JobDetailView = () => {
                                                             day: '2-digit',
                                                             month: 'long',
                                                             year: 'numeric',
-                                                        }).format(new Date(jobDetail.end_date))}</span>
+                                                            timeZone: 'UTC',
+                                                        }).format(new Date(jobDetail.end_date))}
+                                                    </span>
                                                 </Paragraph>
                                             </Col>
                                             <Col xs={24} sm={12} md={8} className="job-overview-item">

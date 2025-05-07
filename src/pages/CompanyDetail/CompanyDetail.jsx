@@ -7,7 +7,7 @@ import { jobApi } from "../../apis/job.request";
 import "./CompanyDetail.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Avatar, Button, Divider, Tag, Space, Tooltip } from 'antd';
+import { Avatar, Button, Divider, Tag, Space, Tooltip, Rate } from 'antd';
 import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, SolutionOutlined, FileProtectOutlined } from '@ant-design/icons';
 import { Typography, Row, Col } from 'antd';
 const { Title, Paragraph } = Typography;
@@ -18,6 +18,15 @@ const CompanyDetail = () => {
     const [jobGroups, setJobGroups] = useState([]);
     const [jobPostings, setJobPostings] = useState([]);
     const openPositionRef = useRef(null);
+    const [companyDetails, setCompanyDetails] = useState(null); // State to store the company details
+
+    // Calculate the filtered job count
+    const filteredJobCount = jobPostings.filter((job) => {
+        const startDate = new Date(job.started_date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
+        return startDate > today; // Exclude jobs where startDate is today or earlier
+    }).length;
 
     useEffect(() => {
         console.log("Company ID:", id); // Log the company ID in the console
@@ -73,6 +82,29 @@ const CompanyDetail = () => {
         openPositionRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll to the Open Position section
     };
 
+    useEffect(() => {
+        // Fetch user companies and log details
+        userApi.getUserCompanies()
+            .then(response => {
+                console.log("User Companies Data:", response.data.data); // Log all fetched user companies data
+                const details = response.data.data.find(company => company.id === parseInt(id)); // Ensure `id` is compared as a number
+                if (details) {
+                    console.log("Company Details for ID:", details); // Log the specific company details
+                    setCompanyDetails(details); // Store the entire company details in state
+                } else {
+                    console.log(`No company found for ID: ${id}`); // Log if no matching company is found
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching user companies data:", error);
+            });
+    }, [id]);
+
+    // In the JSX
+    <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '5px' }}>
+        <Rate disabled value={companyDetails?.avgRating || 0} style={{ fontSize: '24px' }} />
+    </div>
+
     return (
         <div className='finding-company-whole-container'>
             <Header />
@@ -96,6 +128,9 @@ const CompanyDetail = () => {
                                     {userData ? userData.companyName : "Loading..."}
                                 </Title>
                                 <Paragraph style={{ margin: 0, color: 'gray' }}><EnvironmentOutlined /> {userData ? userData.address : "Loading..."}</Paragraph>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '5px' }}>
+                                    <Rate disabled value={companyDetails?.avgRating || 0} style={{ fontSize: '24px' }} />
+                                </div>
                             </div>
                         </div>
                         <div className="company-detail-buttons">
@@ -332,50 +367,79 @@ const CompanyDetail = () => {
                 </Row>
             </div>
             <div className="open-position" ref={openPositionRef}>
-                <Title level={2} style={{ marginLeft: '50px' }}>Open Position ({jobPostings.length})</Title>
+                <Title level={2} style={{ display: "flex", justifyContent: 'center' }}>
+                    Open Position ({filteredJobCount})
+                </Title>
                 <div className="list-company">
                     <div className="list-company-container">
                         <Row gutter={[16, 16]} justify="start">
-                            {jobPostings.map((job) => (
-                                <Col key={job.id} xs={24} sm={12} md={8} lg={8}>
-                                    <Tooltip title={job.title}>
-                                        <a href={`/job-detail-view/${job.id}`} className="list-company-card-link">
-                                            <div className="list-company-card">
-                                                <div className="list-company-detail1">
-                                                    <img
-                                                        alt={job.title}
-                                                        src={userData ? userData.avatar : "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"}
-                                                        className="company-image"
-                                                    />
-                                                    <div>
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                            <Title level={4} className="company-detail-job-title">
-                                                                {job.title}
-                                                            </Title>
+                            {jobPostings
+                                .filter((job) => {
+                                    const startDate = new Date(job.started_date);
+                                    const today = new Date();
+                                    today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
+                                    return startDate > today; // Exclude jobs where startDate is today or earlier
+                                })
+                                .map((job) => (
+                                    <Col key={job.id} xs={24} sm={24} md={24} lg={24}>
+                                        <Tooltip title={job.title}>
+                                            <a href={`/job-detail-view/${job.id}`} className="list-company-card-link">
+                                                <div className="list-company-card">
+                                                    <div className="list-company-detail1">
+                                                        <img
+                                                            alt={job.title}
+                                                            src={
+                                                                userData
+                                                                    ? userData.avatar
+                                                                    : "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+                                                            }
+                                                            className="company-image"
+                                                        />
+                                                        <div>
+                                                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                                                <Title level={4} className="company-detail-job-title">
+                                                                    {job.title}
+                                                                </Title>
+                                                            </div>
+                                                            <Paragraph style={{ color: "grey", margin: 0 }}>
+                                                                <EnvironmentOutlined /> {job.location}
+                                                            </Paragraph>
                                                         </div>
-                                                        <Paragraph style={{ color: 'grey', margin: 0 }}>
-                                                            <EnvironmentOutlined /> {job.location}
-                                                        </Paragraph>
+                                                    </div>
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            justifyContent: "right",
+                                                            alignItems: "center",
+                                                            gap: "10px",
+                                                            marginTop: "10px",
+                                                        }}
+                                                    >
+                                                        <Tag color="blue">
+                                                            {(() => {
+                                                                const startDate = new Date(job.started_date);
+                                                                const endDate = new Date(job.end_date);
+                                                                const durationInDays = Math.ceil(
+                                                                    (endDate - startDate) / (1000 * 60 * 60 * 24)
+                                                                );
+                                                                if (durationInDays === 0) {
+                                                                    return "Same-day";
+                                                                } else if (durationInDays === 1) {
+                                                                    return "1 day";
+                                                                } else {
+                                                                    return `${durationInDays} days`;
+                                                                }
+                                                            })()}
+                                                        </Tag>
+                                                        <Tag color="yellow">
+                                                            {job.min_star_requirement} <StarOutlined />
+                                                        </Tag>
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', justifyContent: 'right', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
-                                                    <Tag color="blue">
-                                                        {(() => {
-                                                            const startDate = new Date(job.started_date);
-                                                            const endDate = new Date(job.end_date);
-                                                            const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-                                                            return `${durationInDays} days`;
-                                                        })()}
-                                                    </Tag>
-                                                    <Tag color="yellow">
-                                                        {job.min_star_requirement}<StarOutlined />
-                                                    </Tag>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </Tooltip>
-                                </Col>
-                            ))}
+                                            </a>
+                                        </Tooltip>
+                                    </Col>
+                                ))}
                         </Row>
                     </div>
                 </div>
