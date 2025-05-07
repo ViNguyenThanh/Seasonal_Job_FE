@@ -6,7 +6,7 @@ import support_staff_img from '/assets/image_support_staff_login.png'
 import logo from '/assets/logo.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { Button, Form, Input, message, Modal, message } from 'antd'
+import { Button, Form, Input, message, Modal } from 'antd'
 import { ExclamationCircleOutlined, HomeFilled, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom'
 import store from "../../store/ReduxStore";
