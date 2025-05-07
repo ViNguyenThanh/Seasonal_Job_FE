@@ -10,70 +10,106 @@ import { jobGroupApi } from '../../../apis/job-group.request';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { userApi } from '../../../apis/user.request';
+import { complaintApi } from '../../../apis/complaint.request';
 
-const EmployerTransactions = () => {
+const EmployerTransactions = ({ newUser }) => {
   const navigate = useNavigate();
   const [transactions, setTransactions] = useState([]);
   const [walletBalance, setWalletBalance] = useState(0);
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchWallet = async () => {
+    try {
+      const res = await paymentApi.getEscrowWallet();
+      // console.log(res.data);
+      setWalletBalance(res.data.balance);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const fetchUser = async (userId) => {
+    try {
+      const res = await userApi.getUserById(userId);
+      // console.log(res.data);
+      setUser(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
-    const fetchTransactions = async () => {
+    const fetchAllTransactions = async () => {
+      let payments = [];
+      let transfers = [];
+  
       try {
         const res = await paymentApi.getPaymentHistory();
-        // console.log(res.data);
-        const newTransactions = await Promise.all(res.data.data.map(async (item) => {
+        payments = await Promise.all(res.data.data.map(async (item) => {
           const jobGroup = await jobGroupApi.getJobGroupById(item.jobGroupId);
-          // console.log(jobGroup);
           return {
             id: item.id,
             jobGroupName: jobGroup.data.data.title,
             date: formatDate(item.createdAt),
-            amount: parseFloat(item.amount).toLocaleString('vi-VN'),
+            amount: parseFloat(item.amount),
             status: item.status,
             description: item.description,
             employerId: item.employerId,
             userId: item.userId,
             orderCode: item.orderCode,
             startDate: formatDate(jobGroup.data.data.start_date),
-            endDate: formatDate(jobGroup.data.data.end_date)
+            endDate: formatDate(jobGroup.data.data.end_date),
+            type: 'PAYMENT',
           };
         }));
-        // console.log(newTransactions);
-        setIsLoading(false);
-        setTransactions(newTransactions);
-      } catch (error) {
-        console.log(error);
-        if (error.status === 404) {
-          setTransactions([]);
-          setIsLoading(false);
+      } catch (err) {
+        if (err?.response?.status !== 404) {
+          console.error("Error fetching payments:", err);
         }
-        setIsLoading(false);
       }
-    }
-    fetchTransactions();
-
-    const fetchWallet = async () => {
+  
       try {
-        const res = await paymentApi.getEscrowWallet();
+        const res = await paymentApi.getTransactions();
         // console.log(res.data);
-        setWalletBalance(res.data.balance);
-      } catch (error) {
-        console.log(error);
+        
+        transfers = res.data.data.map(item => ({
+          id: item.id,
+          jobGroupName: '',
+          date: formatDate(item.createdAt),
+          amount: parseFloat(item.amount),
+          status: item.status,
+          description: item.description? item.description : 'SALARY PAYMENT',
+          employerId: item.senderId,
+          userId: item.receiverId,
+          orderCode: item.id,
+          startDate: null,
+          endDate: null,
+          type: item.description? 'WITHDRAW' : 'TRANSFER',
+        }));
+      } catch (err) {
+        if (err?.response?.status !== 404) {
+          console.error("Error fetching transfers:", err);
+        }
       }
-    }
-    fetchWallet();
-
-    const fetchUser = async () => {
-      try {
-        const res = await userApi.getUserById();
-        console.log(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    fetchUser();
+  
+      const merged = [...payments, ...transfers];
+      const sorted = merged.sort((a, b) => convertToDate(b.date) - convertToDate(a.date));
+      setTransactions(sorted);
+      setIsLoading(false);
+    };
+  
+    fetchAllTransactions();
   }, []);
+  
+
+  useEffect(() => {
+    fetchWallet();
+  }, []);
+
+  useEffect(() => {
+    if (newUser?.id) fetchUser(newUser.id);
+  }, [newUser]);
 
   const transactionData = [
     { id: 1, jobGroupName: 'Công việc chuẩn bị cho sự kiện lớn vào tháng 7, cần người hỗ trợ dọn dẹp, trang trí và quản lý sự kiện', date: '25/07/2025', amount: 1050000, status: 'PENDING' },
@@ -98,6 +134,7 @@ const EmployerTransactions = () => {
     if (status === 'PENDING') return 'pending';
     if (status === 'HELD') return 'held';
     if (status === 'RELEASED') return 'released';
+    if(status === 'COMPLETED') return 'released';
     if (status === 'CANCELLED') return 'cancelled';
     return '';
   };
@@ -183,15 +220,27 @@ const EmployerTransactions = () => {
         .notOneOf(["0"], "* Bank Code must be selected")
         .required("* Required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
-        message.success('Withdrawal request submitted successfully!');
+      try {
+        await complaintApi.createComplaint({
+          description: `Account Number: ${values.accountNumber}
+            Account Name: ${values.accountName}
+            Amount: ${values.amount}
+            Bank Code: ${values.bankCode}`,
+          type: 'WITHDRAWAL',
+        });
+        message.success('Withdrawal request submitted successfully! Please wait for the support staff to review.');
         // Xử lý khi bấm Submit
         setConfirmLoading(false);
         setConfirmVisible(false);
         formik.resetForm();
-      }, 2000);
+      } catch (error) {
+        message.error('Failed to submit withdrawal request.');
+        setConfirmLoading(false);
+        setConfirmVisible(false);
+        formik.resetForm();
+      }
     },
   });
 
@@ -214,13 +263,13 @@ const EmployerTransactions = () => {
     <div className='employer-transactions-container'>
       <div className="employer-transactions-top">
         <div className="employer-identity-wallet">
-          {noAvatar ? (
-            <p className='no-avatar'><UserOutlined /></p>
+          {user?.avatar ? (
+            <img src={user.avatar} />
           ) : (
-            <img src={avatar} />
+            <p className='no-avatar'><UserOutlined /></p>
           )}
           <div className="employer-name-money">
-            <p className='employer-name'>CÔNG TY TNHH THƯƠNG MẠI & DỊCH VỤ NHÂN LỰC TRÍ VIỆT</p>
+            <p className='employer-name'>{user?.companyName || 'N/A'}</p>
             <p className='employer-money'>Wallet Balance: {parseFloat(walletBalance).toLocaleString('vi-VN')} VND</p>
           </div>
         </div>
@@ -410,6 +459,8 @@ const EmployerTransactions = () => {
                 options={[
                   { value: 'PENDING', label: 'PENDING' },
                   { value: 'RELEASED', label: 'RELEASED' },
+                  { value: 'HELD', label: 'HELD' },
+                  { value: 'COMPLETED', label: 'COMPLETED' },
                   { value: 'CANCELLED', label: 'CANCELLED' },
                 ]}
               />
@@ -425,7 +476,7 @@ const EmployerTransactions = () => {
                   <table className='employer-transactions-table'>
                     <thead>
                       <tr>
-                        <th className='job-posting-name'>Job Group Name</th>
+                        <th className='job-posting-name'>Description</th>
                         <th className='date'>Date</th>
                         <th className='amount'>Amount (VND)</th>
                         <th className='status'>Status</th>
@@ -435,7 +486,7 @@ const EmployerTransactions = () => {
                     <tbody>
                       {/*transactionData*/paginatedData.map(item => (
                         <tr key={item.id}>
-                          <td className='job-posting-name'>{item.jobGroupName}</td>
+                          <td className='job-posting-name'>{item.jobGroupName? item.jobGroupName : item.description}</td>
                           <td className='date'>{item.date}</td>
                           <td className='amount'>{item.amount.toLocaleString('vi-VN')}</td>
                           <td className='status'>

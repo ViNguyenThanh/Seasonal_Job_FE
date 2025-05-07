@@ -87,7 +87,7 @@ export default function SupportStaff() {
     const handleLogout = () => {
         dispatch(logout());
         message.success("Log out successfully!");
-        navigate("/")
+        // navigate("/")
     }
 
     const listDropdown = [

@@ -65,13 +65,15 @@ import ResetPassword from './pages/ResetPassword/ResetPassword'
 
 function App() {
   const { payload } = useSelector((state) => state.authReducer);
-  const [newUser, setNewUser] = useState(null);
+  const [newUser, setNewUser] = useState(() => {
+    const { user } = getUserFromToken();
+    return user;
+  });
 
   useEffect(() => {
     const { user } = getUserFromToken();
     setNewUser(user);
   }, [payload]);
-
 
   return (
     <>
@@ -130,7 +132,11 @@ function App() {
         </Route>
 
         {/* Worker */}
-        <Route path='/worker/*' element={<Worker />}>
+        <Route path='/worker/*' element={
+          newUser && newUser.role === 'worker'
+            ? <Worker />
+            : <Navigate to="/login-for-worker" />
+        }>
           <Route path='worker-profile' element={<WorkerProfile />} />
           <Route path='worker-ratings' element={<WorkerRatings />} />
           <Route path='worker-cv' element={<WorkerCV />} />
@@ -142,7 +148,11 @@ function App() {
         </Route>
 
         {/* Employer */}
-        <Route path='/employer/*' element={<Employer />}>
+        <Route path='/employer/*' element={
+          newUser && newUser.role === 'employer'
+            ? <Employer />
+            : <Navigate to="/login-for-employer" />
+        }>
           {/* Profile */}
           <Route path='employer-profile' element={<EmployerProfile />} />
           <Route path='employer-ratings' element={<EmployerRatings />} />
@@ -154,9 +164,9 @@ function App() {
           <Route path='employer-job-groups' element={<EmployerJobGroups />} />
           <Route path='employer-job-groups/employer-job-group-detail/:id' element={<EmployerJobGroupDetail />} />
           <Route path='employer-job-groups/employer-job-group-detail/:id/employer-job-posting-detail/:id' element={<EmployerJobPostingDetail />} />
-          <Route path='employer-job-groups/employer-job-group-detail/:groupId/employer-job-posting-detail/:postingId/worker-detail/:workerId' element={<WorkerDetailForEmployer />} />
+          <Route path='employer-job-groups/employer-job-group-detail/:groupId/employer-job-posting-detail/:postingId/worker-detail/:workerId' element={<WorkerDetailForEmployer newUser={newUser} />} />
           {/* Transactions */}
-          <Route path='employer-transactions' element={<EmployerTransactions />} />
+          <Route path='employer-transactions' element={<EmployerTransactions newUser={newUser} />} />
           <Route path="employer-transactions/employer-transaction-detail/:id" element={<EmployerTransactionDetail />} />
         </Route>
 
@@ -164,13 +174,21 @@ function App() {
         <Route path='/employer-premium' element={<EmployerPremiumPage />} />
 
         {/* Admin */}
-        <Route path='/admin/*' element={<Admin />}>
+        <Route path='/admin/*' element={
+          newUser && newUser.role === 'admin'
+            ? <Admin />
+            : <Navigate to="/sjcp-admin-login" />
+        }>
           <Route path='manage-accounts' element={<AccountManagement />} />
           <Route path='dashboard' element={<Dashboard />} />
         </Route>
 
         {/* support staff */}
-        <Route path='/support-staff/*' element={<SupportStaff />}>
+        <Route path='/support-staff/*' element={
+          newUser && newUser.role === 'support staff'
+            ? <SupportStaff />
+            : <Navigate to="/sjcp-support-staff-login" />
+        }>
           <Route path='manage-complaints' element={<ManageComplaints />} />
           <Route path='manage-jobExecute' element={<SupportStaffJobGroup />} />
           <Route path='manage-jobExecute/:jobGroupId' element={<SupportStaffJobPosting />} />

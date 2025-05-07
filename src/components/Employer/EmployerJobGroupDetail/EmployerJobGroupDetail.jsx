@@ -78,8 +78,7 @@ const EmployerJobGroupDetail = () => {
     useEffect(() => {
         dispatch(getJobGroupById(id))
         dispatch(getJobPostingByJGId(id))
-        console.log(jobPostings);
-
+        // console.log(jobPostings);
     }, [confirmLoading])
 
     const handleOpenModal = (action) => {
@@ -188,7 +187,7 @@ const EmployerJobGroupDetail = () => {
                 jobGroupId: id,
                 orderId: Date.now()
             }
-            console.log(data);
+            // console.log(data);
 
             const resPayment = await paymentApi.createPayment(data)
             // console.log(resPayment);

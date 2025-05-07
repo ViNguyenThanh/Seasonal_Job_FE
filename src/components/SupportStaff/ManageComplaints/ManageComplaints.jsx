@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './ManageComplaints.css';
 import { EyeOutlined, StopOutlined, CheckOutlined } from '@ant-design/icons';
 import { Table, Input, Button, Space, message, Modal, Popconfirm, Tag, Image } from 'antd';
+import { complaintApi } from '../../../apis/complaint.request';
+import { userApi } from '../../../apis/user.request';
 
 // Dữ liệu giả Complaints
 const complaintData = [
@@ -16,13 +18,50 @@ export default function ComplaintManagement() {
     const [searchType, setSearchType] = useState('');
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalData, setModalData] = useState(null);
+    const [complaints, setComplaints] = useState([]);
+
+    useEffect(() => {
+        const fetchComplaints = async () => {
+            try {
+                const res = await complaintApi.getComplaints();
+                // console.log(res);
+                if (res.data.data.length > 0) {
+                    const sortedComplaints = res.data.data.sort((a, b) => {
+                        const dateA = new Date(a.createdAt);
+                        const dateB = new Date(b.createdAt);
+                        return dateB - dateA; // Sắp xếp theo ngày tăng dần
+                    })
+                    const newComplaints = sortedComplaints.map((item, index) => {
+                        return {
+                            key: item.id,
+                            no: index + 1,
+                            email: item.User.email,
+                            type: item.type,
+                            description: item.description,
+                            images: item.image
+                                ? (typeof item.image === 'string' ? JSON.parse(item.image) : item.image)
+                                : [],
+                            status: item.status
+                        }
+                    });
+                    console.log(newComplaints);
+                    
+                    setComplaints(newComplaints);
+                }
+            } catch (error) {
+                setComplaints([]);
+                console.error('Error fetching complaints:', error);
+            }
+        }
+        fetchComplaints();
+    }, []);
 
     const getFilteredData = () => {
-        return complaintData.filter(item => {
+        return /*complaintData*/complaints.length > 0 ? complaints.filter(item => {
             const emailMatch = item.email.toLowerCase().includes(searchEmail.toLowerCase());
             const typeMatch = item.type.toLowerCase().includes(searchType.toLowerCase());
             return emailMatch && typeMatch;
-        });
+        }) : [];
     };
 
     const handleViewDetails = (record) => {
@@ -138,19 +177,30 @@ export default function ComplaintManagement() {
                 <div>
                     <p><strong>Email:</strong> {modalData?.email}</p>
                     <p><strong>Type:</strong> {modalData?.type}</p>
-                    <p><strong>Description:</strong> {modalData?.description}</p>
-                    <div>
-                        <strong>Images:</strong>
+                    <p><strong>Description:</strong></p>
+                    <p>
+                        {modalData?.description?.split('\n').map((line, index) => (
+                            <span key={index}>
+                                {line}
+                                <br />
+                            </span>
+                        ))}
+                    </p>
+
+                    {modalData?.type !== 'WITHDRAWAL' && modalData?.images?.length > 0 && (
                         <div>
-                            {modalData?.images?.map((image, index) => (
-                                <Image
-                                    key={index}
-                                    src={image}
-                                    style={{ width: '50px', height: '50px', marginRight: '8px' }}
-                                />
-                            ))}
+                            <strong>Images:</strong>
+                            <div>
+                                {modalData?.images?.map((image, index) => (
+                                    <Image
+                                        key={index}
+                                        src={image}
+                                        style={{ width: '50px', height: '50px', marginRight: '8px' }}
+                                    />
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </Modal>
         </div>

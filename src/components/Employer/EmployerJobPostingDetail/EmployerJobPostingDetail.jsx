@@ -35,7 +35,7 @@ const EmployerJobPostingDetail = () => {
     const fetchJobExecute = async () => {
       try {
         const res = await jobExecuteApi.getJobExecuteByJobPostingId(item.jobPostingInfo.id)
-        console.log(res.data);
+        // console.log(res.data);
         const sortedJobExecutes = res.data.data.sort((a, b) => {
           const dateA = dayjs(a.assigned_at, 'DD/MM/YYYY');
           const dateB = dayjs(b.assigned_at, 'DD/MM/YYYY');
@@ -346,7 +346,7 @@ const EmployerJobPostingDetail = () => {
       try {
         // const newList = await Promise.all(payload.map(async (jobPosting) => {
         const res = await getApplicationsForJob(item.jobPostingInfo.id);
-        console.log(res);
+        // console.log(res);
 
         const filteredApplications = res.filter(item =>
           item.status === 'approved'

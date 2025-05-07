@@ -32,7 +32,7 @@ const ApplicationWorkerDetail = () => {
     try {
       const fetchWorkerInfo = async () => {
         const res = await userApi.getUserById(workerId);
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
       }
@@ -40,7 +40,7 @@ const ApplicationWorkerDetail = () => {
 
       const fetchCV = async () => {
         const res = await cvApi.getUserCVs(workerId);
-        console.log(res.data);
+        // console.log(res.data);
         
         // const res = await cvApi.previewCV(item.workerInfo.cvId)
         if(res.data.length > 0) {
