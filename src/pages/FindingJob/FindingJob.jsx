@@ -218,7 +218,7 @@ const FindingJob = () => {
                                         setSelectedTitle(value); // Update state with user input
                                         applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
                                     }}
-                                    value={selectedTitle} // Bind state
+                                    value={selectedTitle || undefined} // Ensure placeholder appears when state is empty
                                     onChange={(value) => {
                                         setSelectedTitle(value); // Update state
                                         applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
@@ -246,7 +246,7 @@ const FindingJob = () => {
                                         setSelectedLocation(value); // Update state
                                         applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
                                     }}
-                                    value={selectedLocation} // Bind state
+                                    value={selectedLocation || undefined} // Ensure placeholder appears when state is empty
                                     onChange={(value) => {
                                         setSelectedLocation(value); // Update state
                                         applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
