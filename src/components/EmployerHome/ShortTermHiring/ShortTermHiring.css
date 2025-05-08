@@ -1,0 +1,145 @@
+.short-term-hiring-container{
+  width: 90%;
+  padding: 50px 5% 90px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.short-term-hiring-container .short-term-hiring-left{
+  width: 40%;
+  padding-left: 10%;
+}
+.short-term-hiring-container .short-term-hiring-left h1{
+  width: 100%;
+  font-size: 45px;
+  color: #0e4061;
+}
+.short-term-hiring-container .short-term-hiring-left img{
+  display: none;
+  width: 400px;
+  height: 400px;
+  margin-bottom: 20px;
+}
+.short-term-hiring-container .short-term-hiring-left p{
+  width: 90%;
+  padding-right: 10%;
+  font-size: 28px;
+  color: #0d3956;
+  margin: 10px 0 20px;
+}
+.short-term-hiring-container .short-term-hiring-left .post-job-btn {
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+}
+.short-term-hiring-container .short-term-hiring-left .post-job-btn button{
+  width: 200px;
+  padding: 8px 0 12px;
+  background-color: #1677FF;
+  color: #fff;
+  font-size: 25px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.short-term-hiring-container .short-term-hiring-left .post-job-btn button:hover{
+  background-color: #4096ff;
+  transition: 0.3s ease;
+}
+
+.short-term-hiring-container .short-term-hiring-right{
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.short-term-hiring-container .short-term-hiring-right img{
+  width: 500px;
+  height: 500px;
+}
+
+
+@media (max-width: 1300px) {
+  .short-term-hiring-container .short-term-hiring-left{
+    width: 45%;
+    padding-left: 5%;
+  }
+}
+
+@media (max-width: 1150px) {
+  .short-term-hiring-container .short-term-hiring-left h1{
+    font-size: 40px;
+  }
+  .short-term-hiring-container .short-term-hiring-left p{
+    font-size: 25px;
+  }
+  .short-term-hiring-container .short-term-hiring-left .post-job-btn button{
+    width: 170px;
+    font-size: 21px;
+  }
+
+  .short-term-hiring-container .short-term-hiring-right img{
+    width: 450px;
+    height: 450px;
+  }
+}
+
+@media (max-width: 1010px) { 
+  .short-term-hiring-container{
+    width: 90%;
+    padding: 30px 5% 70px;
+  }
+  .short-term-hiring-container .short-term-hiring-left{
+    width: 100%;
+    padding-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .short-term-hiring-container .short-term-hiring-left h1{
+    width: 90%;
+    padding: 0 5%;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .short-term-hiring-container .short-term-hiring-left img{
+    display: block;
+  }
+  .short-term-hiring-container .short-term-hiring-left p{
+    width: 90%;
+    padding: 0 5%;
+    margin: 7px 0;
+  }
+  .short-term-hiring-container .short-term-hiring-left .post-job-btn {
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .short-term-hiring-container .short-term-hiring-right{
+    display: none;
+  }
+}
+
+@media (max-width: 800px) { 
+  .short-term-hiring-container .short-term-hiring-left h1{
+    font-size: 37px;
+  }
+  .short-term-hiring-container .short-term-hiring-left img{
+    width: 350px;
+    height: 350px;
+  }
+  .short-term-hiring-container .short-term-hiring-left p{
+    font-size: 22px;
+  }
+  .short-term-hiring-container .short-term-hiring-left .post-job-btn button{
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 600px) { 
+  .short-term-hiring-container .short-term-hiring-left img{
+    width: 300px;
+    height: 300px;
+  }
+}

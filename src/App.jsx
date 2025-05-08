@@ -56,6 +56,7 @@ import SupportStaffJobPosting from './components/SupportStaff/ManageJobExecute/S
 import ManageJobExecute from './components/SupportStaff/ManageJobExecute/ManageJobExecute'
 
 import EmployerPremiumPage from './pages/EmployerPremiumPage/EmployerPremiumPage'
+import PaymentServiceSuccessful from './pages/PaymentServiceSuccessful/PaymentServiceSuccessful'
 
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail'
 import ResetPassword from './pages/ResetPassword/ResetPassword'
@@ -172,6 +173,7 @@ function App() {
 
         {/* Employer Premium */}
         <Route path='/employer-premium' element={<EmployerPremiumPage />} />
+        <Route path='/payment-service-successful' element={<PaymentServiceSuccessful />} />
 
         {/* Admin */}
         <Route path='/admin/*' element={
