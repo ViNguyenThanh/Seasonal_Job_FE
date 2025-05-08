@@ -8,7 +8,12 @@ export const reviewApi = {
         return API.post("/reviews/create", data);
     },
 
-    getReviews: (data) => {
-        return API.get("/reviews/", data );
+    getReviews: () => {
+        const token = getToken();
+        return API.get("/reviews/", {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        });
     }
 }
