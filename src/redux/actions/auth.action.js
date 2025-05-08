@@ -6,8 +6,10 @@ export const login = (user) => async (dispatch) => {
     try {
         const response = await authApi.login(user);
         dispatch({ type: actionsType.AUTH_LOGIN_SUCCESS, payload: response.data });
+        return { type: actionsType.AUTH_LOGIN_SUCCESS, payload: response.data };
     } catch (error) {
         dispatch({ type: actionsType.AUTH_FAIL, payload: error.response.data });
+        return { type: actionsType.AUTH_FAIL, payload: error.response.data };
     }
 }
 
