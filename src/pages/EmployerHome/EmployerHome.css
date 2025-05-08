@@ -67,7 +67,8 @@
   max-width: var(--max-screen-width);
   width: 100%;
   margin-top: 95px;
-  height: 100vh;
+  min-height: 100vh;
+  height: fit-content;
 }
 
 @media (max-width: 950px) {
@@ -81,7 +82,7 @@
   }
 }
 
-.employer-home-first-section {
+/* .employer-home-first-section {
   display: flex;
   justify-content: space-around;
   margin-top: 50px;
@@ -99,8 +100,8 @@
 }
 
 .employer-home-image6 {
-  width: 500px; /* Adjust the width */
-  height: auto; /* Maintain aspect ratio */
+  width: 500px; 
+  height: auto; 
 }
 
 .employer-home-reason-container {
@@ -109,37 +110,37 @@
 }
 
 .employer-home-image6 {
-  max-width: 100%; /* Ensures the image is responsive */
-  height: auto; /* Maintains aspect ratio */
+  max-width: 100%; 
+  height: auto; 
 }
 
 .employer-home-reason-content {
   display: flex;
   align-items: center;
-  gap: 10px; /* Space between the image and text */
+  gap: 10px;
 }
 
 .employer-home-image2 {
-  width: 120px; /* Adjust the width */
-  height: auto; /* Maintain aspect ratio */
+  width: 120px; 
+  height: auto; 
 }
 
 .employer-home-image3 {
-  width: 120px; /* Adjust the width */
-  height: auto; /* Maintain aspect ratio */
+  width: 120px; 
+  height: auto; 
 }
 
 .employer-home-image4 {
-  width: 120px; /* Adjust the width */
-  height: auto; /* Maintain aspect ratio */
+  width: 120px; 
+  height: auto; 
 }
 
 .employer-home-image5 {
-  width: 120px; /* Adjust the width */
-  height: auto; /* Maintain aspect ratio */
+  width: 120px; 
+  height: auto; 
 }
 
 .employer-home-image6 {
-  width: 500px; /* Adjust the width */
-  height: auto; /* Maintain aspect ratio */
-}
+  width: 500px; 
+  height: auto; 
+} */

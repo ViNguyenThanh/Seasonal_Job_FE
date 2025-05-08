@@ -1,0 +1,168 @@
+.payment-service-successful-whole-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  flex-direction: column;
+  background-image: url('/assets/background_verify_email.jpg');
+  /* background-size: 100% 100%; */
+  background-size: cover;
+  background-position: top;
+}
+
+.payment-service-successful-container {
+  max-width: var(--max-screen-width);
+  width: 100%;
+  min-height: 100vh;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.payment-service-successful-container .payment-service-successful-content{
+  width: 50%;
+  color: #333333;
+  background-color: white;
+  margin-top: 120px;
+  border-radius: 10px;
+  padding: 20px 2.5% 40px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.payment-service-successful-container .payment-service-successful-content h1{
+  width: 100%;
+  text-align: center;
+  margin: 0 0 20px;
+  color: #003366;
+  /* position: relative; */
+}
+.payment-service-successful-container .payment-service-successful-content h1 br{
+  display: none;
+}
+.payment-service-successful-container .payment-service-successful-content h1 span:nth-of-type(2){
+  display: inline-block;
+  transform: scaleX(-1)
+}
+
+.payment-service-successful-container .payment-service-successful-content p{
+  width: 90%;
+  padding: 0 5%;
+  color: #003366;
+  font-size: 20px;
+}
+.payment-service-successful-container .payment-service-successful-content p.thank-u{
+  text-align: center;
+  font-size: 22px;
+  font-weight: 450;
+}
+.payment-service-successful-container .payment-service-successful-content p.thank-u br{
+  display: none;
+}
+.payment-service-successful-container .payment-service-successful-content p.thank-u span{
+  color: orange;
+}
+
+
+.payment-service-successful-container .payment-service-successful-content .payment-service-successful-btn{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.payment-service-successful-container .payment-service-successful-content .payment-service-successful-btn button {
+  width: 270px;
+  margin: 10px 0 0;
+  padding: 12px 0 15px;
+  background-color: #187bcd;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+  font-size: 17px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.payment-service-successful-container .payment-service-successful-content .payment-service-successful-btn button:hover {
+  background-color: #2d8cda;
+  transition: 0.3s ease;
+}
+.payment-service-successful-container .payment-service-successful-content .payment-service-successful-btn button:disabled {
+  background-color: rgb(178, 178, 178);
+  cursor: not-allowed;
+}
+
+.payment-service-successful-container .payment-service-successful-content .payment-service-successful-btn button .anticon{
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+
+@media (max-width: 1200px) {
+  .payment-service-successful-whole-container {
+    background-size: cover;
+    background-position: left;
+  }
+}
+
+@media (max-width: 900px) {
+  .payment-service-successful-container .payment-service-successful-content{
+    width: 60%;
+  }
+}
+
+@media (max-width: 700px) {
+  .payment-service-successful-container .payment-service-successful-content{
+    width: 70%;
+  }
+
+  .payment-service-successful-container .payment-service-successful-content p{
+    width: 85%;
+    padding: 0 7.52%;
+  }
+
+  .payment-service-successful-container .payment-service-successful-content .payment-service-successful-btn button {
+    width: 220px;
+  }
+}
+
+@media (max-width: 550px) {
+  .payment-service-successful-container{
+    align-content: center;
+  }
+
+  .payment-service-successful-container .payment-service-successful-content{
+    margin-top: 0;
+  }
+
+  .payment-service-successful-container .payment-service-successful-content h1 br{
+    display: block;
+  }
+  .payment-service-successful-container .payment-service-successful-content h1 span:nth-of-type(1){
+    position: absolute;
+    top: 0;
+    left: 5%;
+  }
+  .payment-service-successful-container .payment-service-successful-content h1 span:nth-of-type(2){
+    position: absolute;
+    top: 0;
+    right: 5%;
+  }
+
+  .payment-service-successful-container .payment-service-successful-content p.thank-u br{
+    display: block;
+  }
+}
+
+@media (max-width: 450px) {
+  .payment-service-successful-container .payment-service-successful-content h1{
+    font-size: 30px;
+  }
+  .payment-service-successful-container .payment-service-successful-content p{
+    font-size: 19px;
+  }
+  .payment-service-successful-container .payment-service-successful-content p.thank-u{
+    font-size: 21px;
+  }
+}

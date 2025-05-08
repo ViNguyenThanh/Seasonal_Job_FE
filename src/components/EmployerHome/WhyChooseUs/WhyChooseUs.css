@@ -1,0 +1,192 @@
+.why-choose-us-container{
+  background-color: #d2f1f3;
+  display: flex;
+}
+
+.why-choose-us-container .why-choose-us-content {
+  width: 80%;
+  margin: 60px 5%;
+  padding: 50px 5% 0;
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.why-choose-us-content .title{
+  display: none;
+  width: 100%;
+  margin-bottom: 20px;
+  color: #234f6b;
+  font-size: 40px;
+  text-align: center;
+}
+.why-choose-us-content .title br{
+  display: none;
+}
+
+.why-choose-us-content .why-choose-us-left{
+  width: 55%;
+  padding-left: 5%;
+  margin-bottom: 100px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
+.why-choose-us-content .why-choose-us-left h1{
+  width: 100%;
+  margin-bottom: 20px;
+  color: #234f6b;
+  font-size: 40px;
+}
+
+.why-choose-us-content .why-choose-us-left .benefit{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.why-choose-us-content .why-choose-us-left .benefit .benefit-content{
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+.why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(1){
+  width: 25%;
+  font-size: 75px;
+  color: #1a9fb3;
+  margin: 0;
+}
+.why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(2){
+  width: 70%;
+  padding-left: 5%;
+  font-size: 25px;
+  color: #0b3b57;
+  margin: 0;
+}
+
+
+.why-choose-us-content .why-choose-us-right{
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+.why-choose-us-content .why-choose-us-right img{
+  width: 500px;
+  height: 450px;
+}
+
+
+@media (max-width: 1300px) {
+  .why-choose-us-content .why-choose-us-left{
+    width: 60%;
+    padding-left: 0%;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(1){
+    width: 30%;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(2){
+    width: 65%;
+    padding-left: 5%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .why-choose-us-content .title{
+    display: block;
+  }
+  .why-choose-us-container .why-choose-us-content {
+    padding: 20px 5% 0;
+  }
+  .why-choose-us-content .why-choose-us-left{
+    width: 50%;
+    margin-bottom: 50px;
+  }
+  .why-choose-us-content .why-choose-us-left h1{
+    display: none;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content{
+    width: 100%;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(1){
+    width: 25%;
+    text-align: end;
+    font-size: 62px;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(2){
+    width: 68%;
+    padding-left: 7%;
+  }
+
+  .why-choose-us-content .why-choose-us-right{
+    width: 50%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .why-choose-us-container .why-choose-us-content {
+    width: 75%;
+    margin: 60px 7.5%;
+    padding: 20px 5% 0;
+  }
+  .why-choose-us-content .why-choose-us-left{
+    width: 100%;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content{
+    width: 90%;
+    padding: 0 5%;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(1){
+    width: 35%;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(2){
+    width: 58%;
+    padding-left: 7%;
+  }
+
+  .why-choose-us-content .why-choose-us-right{
+    display: none;
+  }
+}
+
+@media (max-width: 750px) {
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(1){
+    width: 32%;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(2){
+    width: 61%;
+    padding-left: 7%;
+  }
+}
+
+@media (max-width: 650px) {
+  .why-choose-us-content .title{
+    margin: 10px 0 20px;
+    font-size: 37px;
+  }
+  .why-choose-us-content .title br{
+    display: block;
+  }
+
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(1){
+    width: 30%;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(2){
+    width: 63%;
+    padding-left: 7%;
+  }
+}
+
+@media (max-width: 550px) {
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(1){
+    width: 25%;
+    font-size: 55px;
+  }
+  .why-choose-us-content .why-choose-us-left .benefit .benefit-content p:nth-of-type(2){
+    width: 68%;
+    padding-left: 7%;
+    font-size: 23px;
+  }
+}
