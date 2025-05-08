@@ -25,6 +25,7 @@ const WorkerDetailForEmployer = ({ newUser }) => {
   const [showMore2, setShowMore2] = useState(false);
 
   const [jobExecutes, setJobExecutes] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
 
   useEffect(() => {
     try {
@@ -33,6 +34,11 @@ const WorkerDetailForEmployer = ({ newUser }) => {
         // console.log(res.data.data);
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
+
+        if(res.data.data.Reviews.length > 0){
+          const averageRating = res.data.data.Reviews.reduce((total, review) => total + review.rating, 0) / res.data.data.Reviews.length;
+          setAverageRating(averageRating);
+        }
       }
       fetchWorkerInfo();
     } catch (error) {
@@ -92,7 +98,10 @@ const WorkerDetailForEmployer = ({ newUser }) => {
     return new Date(year, month - 1, day); // monthIndex: 0 = January
   };
 
-  const endDate = parseDate('05/05/2025');
+  // const endDate = parseDate('05/05/2025');
+  const endDate = parseDate(formatDate(item.jobGroupInfo.end_date));
+  // console.log(endDate);
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -152,7 +161,7 @@ const WorkerDetailForEmployer = ({ newUser }) => {
       try {
         if (newUser && newUser?.id) {
           const res = await reviewApi.createReview({
-            userId: item.workerInfo?.workerId,
+            userId: workerId,
             reviewerId: newUser?.id,
             rating: starValue,
             reason: values.reasonReview
@@ -174,9 +183,9 @@ const WorkerDetailForEmployer = ({ newUser }) => {
       } catch (error) {
         console.log(error);
         if (error.response.status === 404) {
-          message.error(error.response.data.message);
+          message.error(error.response.data.error);
         } else if (error.response.status === 400) {
-          message.error(error.response.data.message);
+          message.error(error.response.data.error);
         }
         setConfirmLoading(false);
         setConfirmVisible(false);
@@ -552,7 +561,7 @@ const WorkerDetailForEmployer = ({ newUser }) => {
                 <img src={workerInfo?.avatar ? workerInfo?.avatar : avatar} />
                 <div className="worker-name-star">
                   <p>{workerInfo?.fullName}</p>
-                  <div><Rate defaultValue={4} disabled /></div>
+                  <div><Rate value={averageRating} allowHalf disabled /></div>
                 </div>
               </div>
             )}

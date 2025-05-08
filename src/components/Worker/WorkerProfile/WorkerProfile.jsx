@@ -75,6 +75,13 @@ const WorkerProfile = () => {
           description: response.data.data.description || "-- None --",
         }));
 
+        if (response.data.data.Reviews.length > 0) {
+          const average = response.data.data.Reviews.reduce((total, review) => total + review.rating, 0) / response.data.data.Reviews.length;
+          const newAverating = parseFloat(average.toFixed(2));
+          // console.log(newAverating);
+          setAverageRating(newAverating);
+        }
+
         // Initialize fileList with the current avatar
         if (response.data.data.avatar) {
           setFileList([
@@ -339,7 +346,8 @@ const WorkerProfile = () => {
   }, [formik.values.city]);
 
   const location = useLocation();
-  const averageRating = location.state?.averageRating || 0;
+  // const averageRating = location.state?.averageRating || 0;
+const [averageRating, setAverageRating] = useState(0);  
 
 
   /* Modal Change Password */
@@ -797,12 +805,12 @@ const WorkerProfile = () => {
           )}
           <div className="worker-name-star">
             <p>{profileData.fullname || "Loading..."}</p>
-            <div><Rate defaultValue={averageRating} allowHalf disabled /></div>
+            <div><Rate value={averageRating} allowHalf disabled /></div>
           </div>
         </div>
 
         <div className="worker-view-rating-btn">
-          <button onClick={() => navigate('/worker/worker-ratings', window.scrollTo(0, 0))}>
+          <button onClick={() => navigate('/worker/worker-ratings', { state: userId }, window.scrollTo(0, 0))}>
             <EyeOutlined /> &#160;View Review
           </button>
         </div>

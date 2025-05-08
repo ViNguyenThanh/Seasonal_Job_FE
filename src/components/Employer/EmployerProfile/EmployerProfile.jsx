@@ -24,6 +24,8 @@ import actionsType from '../../../redux/actions/action.type';
 const EmployerProfile = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState(null);
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -34,6 +36,7 @@ const EmployerProfile = () => {
 
         const response = await userApi.getUserById(id); // Fetch the profile data
         const data = response.data.data;
+        setUserId(id);
 
         console.log("Fetched Employer Profile Data:", data); // Log the fetched data
 
@@ -48,6 +51,14 @@ const EmployerProfile = () => {
           district: data.address ? data.address.split(',')[1]?.trim() || '-- None --' : '-- None --',
           description: data.description || '-- None --',
         });
+
+        if (data.Reviews.length > 0) {
+          const average = data.Reviews.reduce((total, review) => total + review.rating, 0) / data.Reviews.length;
+          const newAverating = parseFloat(average.toFixed(2));
+          // console.log(newAverating);
+          setAverageRating(newAverating);
+          setReviews(data.Reviews);
+        }
       } catch (error) {
         console.error("Error fetching profile data:", error);
         message.error("Failed to fetch profile data.");
@@ -371,8 +382,6 @@ const EmployerProfile = () => {
   }, [formik.values.city]);
 
   const location = useLocation();
-  const averageRating = location.state?.averageRating || 0;
-
 
   /* Modal Change Password */
   const [changePasswordVisible, setChangePasswordVisible] = useState(false);
@@ -793,12 +802,12 @@ const EmployerProfile = () => {
           )}
           <div className="employer-name-star">
             <p>{profileData.companyName}</p>
-            <div><Rate defaultValue={averageRating} allowHalf disabled /></div>
+            <div><Rate allowHalf value={averageRating} disabled /></div>
           </div>
         </div>
 
         <div className="employer-view-rating-btn">
-          <button onClick={() => navigate('/employer/employer-ratings', window.scrollTo(0, 0))}>
+          <button onClick={() => navigate('/employer/employer-ratings', { state: userId }, window.scrollTo(0, 0))}>
             <EyeOutlined /> &#160;View Review
           </button>
         </div>
