@@ -4,6 +4,7 @@ import { EyeOutlined, StopOutlined, CheckOutlined } from '@ant-design/icons';
 import { Table, Input, Button, Space, message, Modal, Popconfirm, Tag, Image } from 'antd';
 import { complaintApi } from '../../../apis/complaint.request';
 import { userApi } from '../../../apis/user.request';
+import { paymentApi } from '../../../apis/payment.request';
 
 // Dữ liệu giả Complaints
 const complaintData = [
@@ -35,6 +36,7 @@ export default function ComplaintManagement() {
                         return {
                             key: item.id,
                             no: index + 1,
+                            userId: item.userId,
                             email: item.User.email,
                             type: item.type,
                             description: item.description,
@@ -44,8 +46,6 @@ export default function ComplaintManagement() {
                             status: item.status
                         }
                     });
-                    console.log(newComplaints);
-                    
                     setComplaints(newComplaints);
                 }
             } catch (error) {
@@ -105,17 +105,53 @@ export default function ComplaintManagement() {
         },
         actionColumn,
     ];
+    const extractAmount = (description) => {
+        const match = description.match(/Amount:\s*([\d.]+)\s*VND/i);
+        if (match && match[1]) {
+            return parseInt(match[1].replace(/\./g, ''), 10);
+        }
+        return 0; // fallback nếu không tìm thấy
+    };
 
-    const handleSave = (status) => {
-        const updatedComplaintData = complaintData.map((item) => {
-            if (item.key === modalData.key) {
-                return { ...item, status }; // Update status to 'Accepted' or 'Rejected'
+    const handleSave = async (status) => {
+        message.loading('Please wait for a minute...');
+        try {
+            if (status === 'accepted') {
+                if (modalData.type === 'WITHDRAWAL') {
+                    const transactionPayload = {
+                        amount: extractAmount(modalData.description),
+                        receiverId: modalData.userId,
+                        description: modalData.type
+                    }
+
+                    const res = await paymentApi.createTransaction(transactionPayload)
+                }
+
+                await complaintApi.updateComplaint(modalData.key, { status });
+            } else {
+                await complaintApi.updateComplaint(modalData.key, { status });
             }
-            return item;
-        });
-        // Here, you would update the complaintData with the new status
-        message.success(`Complaint ${status.toLowerCase()} for ${modalData.email}`);
-        setIsModalVisible(false); // Close the modal
+            const updatedComplaintData = complaints.map((item) => {
+                if (item.key === modalData.key) {
+                    return { ...item, status }; // Update status to 'Accepted' or 'Rejected'
+                }
+                return item;
+            });
+            setComplaints(updatedComplaintData);
+            // Here, you would update the complaintData with the new status
+            message.destroy();
+            message.success(`Complaint ${status.toLowerCase()} for ${modalData.email}`);
+            setIsModalVisible(false); // Close the modal
+            setIsModalVisible(false);
+        } catch (error) {
+            console.log(error);
+            message.destroy();
+            if (error.response.status === 400 || error.response.status === 404) {
+                message.error(error.response.data.message);
+            } else {
+                message.error('Update failed!');
+            }
+        }
     };
 
     return (

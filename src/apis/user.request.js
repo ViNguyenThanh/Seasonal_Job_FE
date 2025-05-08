@@ -21,4 +21,28 @@ export const userApi = {
     getUserCompanies: () => {
         return API.get(`/users/companies`);
     },
+    getAllUsers: () => {
+        const token = getToken()
+        return API.get('/users/all', {
+            headers: { authorization: `Bearer ${token}` },
+        })
+    },
+    resetPassword: (data) => {
+        return API.post(`/users/reset-password`, data)
+    },
+    forgetPassword: (data) => {
+        return API.post(`/users/forget-password`, data)
+    },
+    getTotalAccounts: () => {
+        const token = getToken()
+        return API.get('/users/totalAccounts', {
+            headers: { authorization: `Bearer ${token}` },
+        })
+    },
+    banUser: (id) => {
+        const token = getToken()
+        return API.delete(`/users/delete/${id}`, {
+            headers: { authorization: `Bearer ${token}` },
+        })
+    },
 }

@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import './ConfirmPosting.css'
 import { Rate } from 'antd'
 import { ScheduleOutlined } from '@ant-design/icons';
+import { serviceApi } from '../../../../apis/service.request';
+import { getUserFromToken } from '../../../../utils/Token';
 
 
 const ConfirmPosting = ({ jobGroupName, startDate, endDate, jobPostings }) => {
+  const [isService, setIsService] = useState(false);
 
   const jobPostingsTemporaryData = [
     {
@@ -28,6 +31,26 @@ const ConfirmPosting = ({ jobGroupName, startDate, endDate, jobPostings }) => {
   ];
   // console.log("jobPostings in ConfirmPosting:", jobPostings);
 
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const { user } = getUserFromToken();
+        const res = await serviceApi.getServices();
+        console.log(res.data);
+        if (res.data.length > 0) {
+          const existService = res.data.some(service => service.userId === user.id && service.status === 'active');
+          if (existService) {
+            setIsService(true);
+          }else{
+            setIsService(false);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchService();
+  }, [])
   return (
     <div className='confirm-posting-container'>
 
@@ -70,13 +93,19 @@ const ConfirmPosting = ({ jobGroupName, startDate, endDate, jobPostings }) => {
 
       <div className="payable-amount">
         <p className='job-total-salary'>Total salary: {jobPostings.reduce((total, job) => total + job.salary * job.numberOfPeople, 0).toLocaleString('vi-VN')} VND</p>
-        <p className='service-fee'>Service fee: 50.000 VND</p>
+        {!isService && <p className='service-fee'>Service fee: 50.000 VND</p>}
         <div className='total-amount-border'></div>
-        <p className='total-amount'>
-          Total amount payable: <br className="break-line" />  {jobPostings.reduce((total, job) => 50000 + total + job.salary * job.numberOfPeople, 0).toLocaleString('vi-VN')} VND
-        </p>
+        {isService ? (
+          <p className='total-amount'>
+            Total amount payable: <br className="break-line" />  {jobPostings.reduce((total, job) => total + job.salary * job.numberOfPeople, 0).toLocaleString('vi-VN')} VND
+          </p>
+        ) : (
+          <p className='total-amount'>
+            Total amount payable: <br className="break-line" />  {jobPostings.reduce((total, job) => 50000 + total + job.salary * job.numberOfPeople, 0).toLocaleString('vi-VN')} VND
+          </p>
+        )}
       </div>
-    </div>
+    </div >
   )
 }
 

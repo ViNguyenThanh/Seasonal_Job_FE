@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SupportStaffJobGroup.css';
-import { Table, Input, Button, Tag, message } from 'antd';
+import { Table, Input, Button, Tag, message, Select } from 'antd';
 import { useNavigate } from 'react-router-dom'; // Dùng để điều hướng sang trang chi tiết
+import { jobGroupApi } from '../../../apis/job-group.request';
 
 // Dữ liệu giả Job Execute
 const jobData = [
@@ -15,26 +16,79 @@ const jobData = [
 const jobColumns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
     { title: 'Title', dataIndex: 'title', key: 'title' },
-    { title: 'Employer', dataIndex: 'employer', key: 'employer' },
+    { title: 'No. Jobs', dataIndex: 'numberOfJobPosting', key: 'numberOfJobPosting' },
+    {
+        title: 'Paid',
+        dataIndex: 'isPaid',
+        key: 'isPaid',
+        render: (value) => (
+            <Tag color={value ? 'blue' : 'red'}>
+                {value ? 'Is paid' : 'Not paid'}
+            </Tag>
+        ),
+    },
+    {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        render: (value) => (
+            <Tag color={value === 'active' ? 'blue' : value === 'inactive' ? 'red' : 'green'}>
+                {value}
+            </Tag>
+        ),
+    },
 ];
 
 export default function SupportStaffJobGroup() {
     const [searchTitle, setSearchTitle] = useState('');
-    const [searchEmployer, setSearchEmployer] = useState('');
+    const [filterStatus, setFilterStatus] = useState('all');
+    const [jobGroups, setJobGroups] = useState([]);
     const navigate = useNavigate(); // Dùng để điều hướng
+
+    useEffect(() => {
+        const fetchJobGroups = async () => {
+            try {
+                const res = await jobGroupApi.getAllJobGroups('', '');
+                // console.log(res.data);
+
+                if (res.data.data.length > 0) {
+                    const newJobGroups = res.data.data.map(jobGroup => {
+                        return {
+                            key: jobGroup.id,
+                            id: jobGroup.id,
+                            title: jobGroup.title,
+                            isPaid: jobGroup.isPaid,
+                            status: jobGroup.status,
+                            numberOfJobPosting: jobGroup.JobPostings.length,
+                            jobPostings: jobGroup.JobPostings,
+                            createdAt: jobGroup.createdAt
+                        }
+                    });
+                    console.log(newJobGroups);
+                    
+
+                    const sorted = newJobGroups.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    setJobGroups(sorted);
+                }
+            } catch (error) {
+                console.error('Failed to fetch job groups', error);
+            }
+        }
+        fetchJobGroups();
+    }, [])
 
     // Hàm lọc dữ liệu
     const getFilteredData = () => {
-        return jobData.filter(item => {
+        return /*jobData*/jobGroups.length > 0 ? jobGroups.filter(item => {
             const titleMatch = item.title.toLowerCase().includes(searchTitle.toLowerCase());
-            const employerMatch = item.employer.toLowerCase().includes(searchEmployer.toLowerCase());
-            return titleMatch && employerMatch;
-        });
+            const statusMatch = filterStatus === 'all' || item.status === filterStatus;
+            return titleMatch && statusMatch;
+        }) : [];
     };
 
     // Hàm chuyển đến trang chi tiết của job khi click vào một dòng
     const handleRowClick = (record) => {
-        navigate(`/support-staff/manage-jobExecute/${record.id}`); // Điều hướng sang trang chi tiết với ID job
+        navigate(`/support-staff/manage-jobExecute/${record.id}`, { state: record }); // Điều hướng sang trang chi tiết với ID job
     };
 
     return (
@@ -49,11 +103,17 @@ export default function SupportStaffJobGroup() {
                         value={searchTitle}
                         onChange={(e) => setSearchTitle(e.target.value)}
                     />
-                    <Input
-                        placeholder="Search by employer"
-                        value={searchEmployer}
-                        onChange={(e) => setSearchEmployer(e.target.value)}
-                    />
+                    <Select
+                        value={filterStatus}
+                        onChange={(value) => setFilterStatus(value)}
+                        style={{ width: 200 }}
+                    >
+                        <Select.Option value="all">All Status</Select.Option>
+                        <Select.Option value="active">Active</Select.Option>
+                        <Select.Option value="inactive">Inactive</Select.Option>
+                        <Select.Option value="completed">Completed</Select.Option>
+                    </Select>
+
                 </div>
 
                 <Table

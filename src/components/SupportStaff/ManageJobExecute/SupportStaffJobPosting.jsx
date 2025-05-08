@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './SupportStaffJobPosting.css';
-import { Table, Input, Breadcrumb } from 'antd';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Table, Input, Breadcrumb, Tag } from 'antd';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { jobPostingApi } from '../../../apis/job-posting.request';
 
 // Dữ liệu giả Job Posting
 const jobPostingData = [
@@ -13,22 +14,46 @@ const jobPostingData = [
 const jobPostingColumns = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
     { title: 'Job Title', dataIndex: 'title', key: 'title' },
-    { title: 'Participants', dataIndex: 'participantCount', key: 'participantCount' },
+    { title: 'Participants', dataIndex: 'number_of_person', key: 'number_of_person' },
+    {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        render: (value) => (
+            <Tag color={value === 'completed' ? 'green' : 'red'}>
+                {value}
+            </Tag>
+        ),
+    },
 ];
 
 export default function SupportStaffJobPosting() {
     const [searchTitle, setSearchTitle] = useState('');
+    const [jobPostings, setJobPostings] = useState([]);
     const { jobGroupId } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const fetchJobPosting = async () => {
+            try {
+                const res = await jobPostingApi.getAllJobByJobGroupId(jobGroupId);
+                setJobPostings(res.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchJobPosting()
+    }, []);
 
     const getFilteredData = () => {
-        return jobPostingData.filter(item =>
+        return /*jobPostingData*/jobPostings.length > 0 ? jobPostings.filter(item =>
             item.title.toLowerCase().includes(searchTitle.toLowerCase())
-        );
+        ) : [];
     };
 
     const handleRowClick = (record) => {
-        navigate(`/support-staff/manage-jobExecute/${jobGroupId}/${record.id}`);
+        navigate(`/support-staff/manage-jobExecute/${jobGroupId}/${record.id}`, { state: { title: location.state.title, jobPosting: record} });
     };
 
     return (
@@ -38,7 +63,7 @@ export default function SupportStaffJobPosting() {
                 <Breadcrumb style={{ marginBottom: '16px' }}>
                     <Breadcrumb.Item
                         onClick={() => navigate(`/support-staff/manage-jobExecute`)}>List Job Groups</Breadcrumb.Item>
-                    <Breadcrumb.Item>Fashion show 2025</Breadcrumb.Item>
+                    <Breadcrumb.Item>{location.state.title}</Breadcrumb.Item>
                 </Breadcrumb>
 
                 {/* Tìm kiếm theo tên job */}

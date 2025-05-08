@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom'
 import store from "../../store/ReduxStore";
 import { login } from '../../redux/actions/auth.action';
 import { useDispatch } from 'react-redux';
+import { userApi } from '../../apis/user.request'
 
 const AuthForManagementTeam = ({ comp }) => {
 
@@ -97,14 +98,24 @@ const AuthForManagementTeam = ({ comp }) => {
     }),
     onSubmit: (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
+      try {
+        const res = userApi.forgetPassword(values);
         message.success("Your request to reset the password has been submitted successfully! Please check your email to proceed.");
 
         // Xử lý khi bấm Change Password
         setConfirmLoading(false);
         setConfirmVisible(false);
         formikForgotPassword.resetForm();
-      }, 2000);
+      } catch (error) {
+        if (error.response.status === 404 || error.response.status === 400) {
+          message.error(error.response.data.message);
+        } else {
+          message.error("Can't send email");
+        }
+        setConfirmLoading(false);
+        setConfirmVisible(false);
+        formikForgotPassword.resetForm();
+      }
     }
   });
 

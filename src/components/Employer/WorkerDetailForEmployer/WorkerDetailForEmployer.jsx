@@ -53,7 +53,7 @@ const WorkerDetailForEmployer = ({ newUser }) => {
         // const res = await jobExecuteApi.getDailyJobExecutes(workerId);
         const res = await jobExecuteApi.getJobPostingByWorkerId(postingId, workerId);
         // console.log(res.data);
-        if (res.data.message === 'No job execute for this job posting') {
+        if (res.data.message === 'No job execute for this worker in this job posting') {
           // if (res.data.jobs.length === 0) {
           setJobExecutes([]);
         } else {
