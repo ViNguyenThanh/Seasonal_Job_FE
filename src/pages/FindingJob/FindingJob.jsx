@@ -11,6 +11,7 @@ import { jobApi } from '../../apis/job.request'; // Import the jobApi
 import { jobGroupApi } from '../../apis/job-group.request'; // Import jobGroupApi
 import { useEffect } from 'react';
 import { userApi } from '../../apis/user.request';
+import { useSearchParams } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -32,8 +33,9 @@ const FindingJob = () => {
     // const [isModalOpen, setIsModalOpen] = useState(false);
     // const [isFiltered, setIsFiltered] = useState(false);
 
-    const [selectedTitle, setSelectedTitle] = useState(null);
-    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [searchParams] = useSearchParams();
+    const [selectedTitle, setSelectedTitle] = useState(searchParams.get('title') || '');
+    const [selectedLocation, setSelectedLocation] = useState(searchParams.get('location') || '');
 
     // Fetch job postings by paid job groups when the component loads
     const fetchPaidJobPostings = async () => {
@@ -55,8 +57,22 @@ const FindingJob = () => {
                 inactiveJobGroupIds.includes(job.jobGroupId)
             );
 
-            // Sort the filtered jobs by the latest updated date
-            const sortedJobs = filteredJobs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+            // Get today's date (normalized to midnight)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Exclude jobs where started_date is today or earlier
+            const validJobs = filteredJobs.filter((job) => {
+                const jobStartDate = new Date(job.started_date);
+                jobStartDate.setHours(0, 0, 0, 0); // Normalize jobStartDate to midnight
+                return jobStartDate.getTime() > today.getTime(); // Compare only the date portion
+            });
+
+            // Sort the valid jobs by the latest updated date
+            const sortedJobs = validJobs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+            // // Sort the filtered jobs by the latest updated date
+            // const sortedJobs = filteredJobs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
             // Fetch user details for each job and add avatar to the job data
             const jobsWithAvatars = await Promise.all(
@@ -202,7 +218,7 @@ const FindingJob = () => {
                                         setSelectedTitle(value); // Update state with user input
                                         applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
                                     }}
-                                    value={selectedTitle} // Bind state
+                                    value={selectedTitle || undefined} // Ensure placeholder appears when state is empty
                                     onChange={(value) => {
                                         setSelectedTitle(value); // Update state
                                         applyFilters(value, selectedLocation, selectedMinStarRequirement); // Apply cumulative filters
@@ -230,7 +246,7 @@ const FindingJob = () => {
                                         setSelectedLocation(value); // Update state
                                         applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
                                     }}
-                                    value={selectedLocation} // Bind state
+                                    value={selectedLocation || undefined} // Ensure placeholder appears when state is empty
                                     onChange={(value) => {
                                         setSelectedLocation(value); // Update state
                                         applyFilters(selectedTitle, value, selectedMinStarRequirement); // Apply cumulative filters
@@ -452,7 +468,10 @@ const FindingJob = () => {
                                                         const startDate = new Date(job.started_date);
                                                         const endDate = new Date(job.end_date);
                                                         const durationInDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)); // Calculate duration in days
-                                                        return `${durationInDays} days`; // Display duration
+                                                        if (durationInDays === 0) {
+                                                            return "Same-day"; // Display "Same-day" if 0 days
+                                                        }
+                                                        return durationInDays === 1 ? "1 day" : `${durationInDays} days`; // Display "1 day" for singular, otherwise plural
                                                     })()}
                                                 </Tag>
                                                 <Tag color="yellow" style={{ marginLeft: '-10px' }}>

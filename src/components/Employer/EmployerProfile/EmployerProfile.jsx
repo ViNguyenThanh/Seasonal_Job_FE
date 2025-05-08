@@ -15,6 +15,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { userApi } from '../../../apis/user.request';
 import { getToken } from '../../../utils/Token';
 import { Api } from '../../../utils/BaseUrlServer';
+import { login } from '../../../redux/actions/auth.action';
+import store from "../../../store/ReduxStore";
+import actionsType from '../../../redux/actions/action.type';
 
 
 
@@ -43,7 +46,7 @@ const EmployerProfile = () => {
           email: data.email || '',
           phoneNumber: data.phoneNumber || '',
           // dob: data.dateOfBirth ? dayjs(data.dateOfBirth).format('DD/MM/YYYY') : '-- None --', // Properly format dateOfBirth
-          dob: data.dateOfBirth || '-- None --', // Properly format dateOfBirth
+          dob: data.dateOfBirth, // Properly format dateOfBirth
           city: data.address ? data.address.split(',')[0].trim() : '-- None --',
           district: data.address ? data.address.split(',')[1]?.trim() || '-- None --' : '-- None --',
           description: data.description || '-- None --',
@@ -411,16 +414,56 @@ const EmployerProfile = () => {
         .oneOf([Yup.ref('newPassword'), null], '* Confirm New Password must match New Password')
         .required('* Please enter your confirm New Password')
     }),
-    onSubmit: (values) => {
-      setConfirmChangePasswordLoading(true);
-      setTimeout(() => {
-        message.success("Password changed successfully!");
 
-        // Xử lý khi bấm Change Password
+    // onSubmit: (values) => {
+    //   setConfirmChangePasswordLoading(true);
+    //   setTimeout(() => {
+    //     message.success("Password changed successfully!");
+
+    //     // Xử lý khi bấm Change Password
+    //     setConfirmChangePasswordLoading(false);
+    //     setChangePasswordVisible(false);
+    //     formikChangePassword.resetForm();
+    //   }, 2000);
+    // }
+
+    onSubmit: async (values) => {
+      setConfirmChangePasswordLoading(true);
+      try {
+        // Step 1: Verify the old password using the login action
+        const loginPayload = { email: profileData.email, password: values.oldPassword };
+        const loginResponse = await store.dispatch(login(loginPayload));
+
+        console.log("Login Response:", loginResponse); // Debugging log
+
+        if (loginResponse?.type === actionsType.AUTH_LOGIN_SUCCESS) {
+          // Step 2: If old password is correct, update the password
+          const api = Api(); // Create an Axios instance
+          const response = await api.put(`/users/update/${userId}`, {
+            password: values.newPassword
+          }, {
+            headers: {
+              Authorization: `Bearer ${getToken()}`, // Include the token
+            },
+          });
+
+          if (response.status === 200) {
+            message.success("Password changed successfully!");
+            setChangePasswordVisible(false);
+            formikChangePassword.resetForm();
+          } else {
+            throw new Error(response.data?.message || "Failed to change password");
+          }
+        } else {
+          // Step 3: If old password is incorrect, show an error message
+          message.error("Incorrect Old Password");
+        }
+      } catch (error) {
+        console.error("Error changing password:", error);
+        message.error(error.response?.data?.message || "Failed to change password. Please try again.");
+      } finally {
         setConfirmChangePasswordLoading(false);
-        setChangePasswordVisible(false);
-        formikChangePassword.resetForm();
-      }, 2000);
+      }
     }
   });
 

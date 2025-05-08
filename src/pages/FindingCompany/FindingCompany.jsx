@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./FindingCompany.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Breadcrumb, Button, Flex, Space, Select, Row, Col, Typography, Tag, Pagination } from 'antd';
+import { Breadcrumb, Button, Flex, Space, Select, Row, Col, Typography, Tag, Pagination, Rate } from 'antd';
 import { userApi } from "../../apis/user.request"; // Import the userApi
 const { Title, Paragraph } = Typography;
 import { SearchOutlined, EnvironmentOutlined, ReloadOutlined, HomeOutlined } from '@ant-design/icons';
@@ -95,6 +95,28 @@ const FindingCompany = () => {
             })
             .finally(() => {
                 setLoading(false); // Stop loading
+            });
+    }, []);
+
+    useEffect(() => {
+        userApi.getUserCompanies()
+            .then(response => {
+                if (Array.isArray(response.data.data)) {
+                    const companiesWithRatings = response.data.data.map(company => ({
+                        ...company,
+                        avgRating: company.avgRating || 0, // Ensure avgRating is always defined
+                    }));
+                    setCompanies(companiesWithRatings);
+                    setFilteredCompanies(companiesWithRatings);
+                } else {
+                    setCompanies([]);
+                    setFilteredCompanies([]);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching companies:", error);
+                setCompanies([]);
+                setFilteredCompanies([]);
             });
     }, []);
 
@@ -338,6 +360,9 @@ const FindingCompany = () => {
                                                             <Paragraph style={{ color: 'grey', margin: 0 }}>
                                                                 <EnvironmentOutlined /> {company.address}
                                                             </Paragraph>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '5px' }}>
+                                                                <Rate disabled defaultValue={company.avgRating} style={{ fontSize: '14px' }} />
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
