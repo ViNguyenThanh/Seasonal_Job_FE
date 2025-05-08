@@ -119,9 +119,9 @@ const WorkerJobs = () => {
         });
         // console.log(transformedApplications);
 
-        // const sortedApplications = transformedApplications.sort((a, b) => new Date(b.today) - new Date(a.today));
+        const sortedApplications = transformedApplications.sort((a, b) => new Date(b.today) - new Date(a.today));
         // Cập nhật lại state với dữ liệu mới
-        setApplications(transformedApplications);
+        setApplications(sortedApplications);
         setLoading(false);
       }
     }

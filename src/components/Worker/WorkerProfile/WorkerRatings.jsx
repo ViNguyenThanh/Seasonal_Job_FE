@@ -1,12 +1,55 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './WorkerRatings.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { Empty, Pagination, Rate, Select } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeftOutlined, UserOutlined } from '@ant-design/icons';
+import { userApi } from '../../../apis/user.request'
+import { reviewApi } from '../../../apis/review.request'
+import { formatDate } from '../../../utils/formatDate'
 
 const WorkerRatings = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const [reviews, setReviews] = useState([])
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await reviewApi.getReviews({
+          userId: location.state
+        })
+        // console.log(res.data);
+        if (res.data.data.length > 0) {
+          const newReviews = await Promise.all(
+            res.data.data.map(async (review) => {
+              try {
+                const userRes = await userApi.getUserById(review.reviewerId);
+                const user = userRes.data.data;
+                return {
+                  id: review.id,
+                  avatar: user.avatar,
+                  employerName: user.companyName,
+                  rating: review.rating,
+                  date: formatDate(review.createdAt),
+                  reason: review.reason
+                };
+              } catch (err) {
+                console.error('Failed to fetch reviewer info for review:', review.id, err);
+                return null;
+              }
+            })
+          );
+
+          setReviews(newReviews.filter(r => r !== null));
+        }
+        // setReviews(res.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchReviews()
+  }, [])
 
   const workerRatingsData = [
     {
@@ -153,7 +196,7 @@ const WorkerRatings = () => {
   // Lọc theo rating
   const [ratingValue, setRatingValue] = useState(null);
 
-  const filteredRatings = workerRatingsData.filter(item => {
+  const filteredRatings = /*workerRatingsData*/reviews.length === 0 ? [] : reviews.filter(item => {
     return !ratingValue || item.rating === ratingValue;
   });
 

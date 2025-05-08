@@ -10,9 +10,10 @@ import { userApi } from '../../../apis/user.request';
 import { jobExecuteApi } from '../../../apis/job-execute.request';
 import dayjs from 'dayjs';
 import { formatDate } from '../../../utils/formatDate';
+import { reviewApi } from '../../../apis/review.request';
 const { TextArea } = Input;
 
-const WorkerDetailForEmployer = () => {
+const WorkerDetailForEmployer = ({ newUser }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const item = location.state; //item này bao gồm cả jobGroupInfo ( thông tin của 1 group) và jobPostingInfo (thông tin của 1 posting) và workerInfo (thông tin của 1 worker)
@@ -24,14 +25,20 @@ const WorkerDetailForEmployer = () => {
   const [showMore2, setShowMore2] = useState(false);
 
   const [jobExecutes, setJobExecutes] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
 
   useEffect(() => {
     try {
       const fetchWorkerInfo = async () => {
         const res = await userApi.getUserById(workerId);
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
+
+        if(res.data.data.Reviews.length > 0){
+          const averageRating = res.data.data.Reviews.reduce((total, review) => total + review.rating, 0) / res.data.data.Reviews.length;
+          setAverageRating(averageRating);
+        }
       }
       fetchWorkerInfo();
     } catch (error) {
@@ -73,7 +80,7 @@ const WorkerDetailForEmployer = () => {
             reason: item.reason || ''
           }));
           setJobExecutes(transformedExecutes);
-          console.log(transformedExecutes);
+          // console.log(transformedExecutes);
 
         }
       } catch (error) {
@@ -91,7 +98,10 @@ const WorkerDetailForEmployer = () => {
     return new Date(year, month - 1, day); // monthIndex: 0 = January
   };
 
-  const endDate = parseDate('13/04/2025');
+  // const endDate = parseDate('05/05/2025');
+  const endDate = parseDate(formatDate(item.jobGroupInfo.end_date));
+  // console.log(endDate);
+  
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -102,7 +112,7 @@ const WorkerDetailForEmployer = () => {
   const reviewEndDate = new Date(endDate);
   reviewEndDate.setDate(reviewEndDate.getDate() + 3); // ngày 17
 
-  const isWithinReviewPeriod = today >= reviewStartDate && today <= reviewEndDate;
+  const isWithinReviewPeriod = today >= reviewStartDate && today <= reviewEndDate && item.jobGroupInfo.status === "completed";
 
 
   /* Modal Review */
@@ -146,9 +156,17 @@ const WorkerDetailForEmployer = () => {
           return true;
         })
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
+      try {
+        if (newUser && newUser?.id) {
+          const res = await reviewApi.createReview({
+            userId: workerId,
+            reviewerId: newUser?.id,
+            rating: starValue,
+            reason: values.reasonReview
+          })
+        }
         message.success(`Review for ${item.workerInfo?.workerName} successfully!`);
 
         setSavedReview({
@@ -162,7 +180,18 @@ const WorkerDetailForEmployer = () => {
         setConfirmVisible(false);
         formikReview.resetForm();
         setStarValue(5);
-      }, 2000);
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 404) {
+          message.error(error.response.data.error);
+        } else if (error.response.status === 400) {
+          message.error(error.response.data.error);
+        }
+        setConfirmLoading(false);
+        setConfirmVisible(false);
+        formikReview.resetForm();
+        setStarValue(5);
+      }
     },
   });
 
@@ -350,7 +379,7 @@ const WorkerDetailForEmployer = () => {
           }
         });
         // setDummyData(updated); // cập nhật lại dữ liệu
-        console.log(updateList);
+        // console.log(updateList);
 
         if (updateList.length > 0) {
           for (const item of updateList) {
@@ -532,7 +561,7 @@ const WorkerDetailForEmployer = () => {
                 <img src={workerInfo?.avatar ? workerInfo?.avatar : avatar} />
                 <div className="worker-name-star">
                   <p>{workerInfo?.fullName}</p>
-                  <div><Rate defaultValue={4} disabled /></div>
+                  <div><Rate value={averageRating} allowHalf disabled /></div>
                 </div>
               </div>
             )}
@@ -555,7 +584,7 @@ const WorkerDetailForEmployer = () => {
               )}
               {/* Modal để review */}
               <Modal
-                title={<p className='employer-evaluate-worker-title'>  <StarOutlined /> &#160;Rating for {item.workerInfo?.workerName}</p>}
+                title={<p className='employer-evaluate-worker-title'>  <StarOutlined /> &#160;Rating for {workerInfo?.fullName}</p>}
                 open={confirmVisible}
                 onCancel={closeConfirm}
                 footer={[

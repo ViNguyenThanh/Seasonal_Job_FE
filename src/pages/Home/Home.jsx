@@ -10,6 +10,8 @@ import { CommentOutlined, PlusOutlined } from '@ant-design/icons';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Button, Form, Image, Input, message, Modal, Upload } from 'antd'
+import { complaintApi } from '../../apis/complaint.request'
+import { getToken } from '../../utils/Token'
 const { TextArea } = Input;
 
 const Home = () => {
@@ -41,16 +43,42 @@ const Home = () => {
         .test("no-leading-space", "* No spaces at the beginning", value => !/^\s/.test(value || ""))
         .required("* Required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
+      try {
+        const token = getToken();
+        if (!token) {
+          message.error('Please log in to submit feedback.');
+          setFileList([]);
+          setConfirmLoading(false);
+          setConfirmVisible(false);
+          formik.resetForm();
+          return
+        } 
+        const formData = new FormData();
+        formData.append("type", values.title);
+        formData.append("description", values.description);
+        fileList.forEach((file) => {
+          formData.append("images", file.originFileObj);
+        });
+
+        const res = await complaintApi.createComplaint(formData);
+        // console.log(res);
+        
         message.success('Feedback submitted successfully!');
         // Xử lý khi bấm Submit
         setFileList([]);
         setConfirmLoading(false);
         setConfirmVisible(false);
         formik.resetForm();
-      }, 2000);
+      } catch (error) {
+        console.log(error);
+        setFileList([]);
+        message.error('Failed to submit feedback.');
+        setConfirmLoading(false);
+        setConfirmVisible(false);
+        formik.resetForm();
+      }
     },
   });
 

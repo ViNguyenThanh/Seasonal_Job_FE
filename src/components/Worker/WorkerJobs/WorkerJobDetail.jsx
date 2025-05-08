@@ -11,6 +11,8 @@ import { formatDate } from '../../../utils/formatDate';
 import { getUserFromToken } from '../../../utils/Token';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { userApi } from '../../../apis/user.request';
+import { reviewApi } from '../../../apis/review.request';
 const { TextArea } = Input;
 
 const WorkerJobDetail = () => {
@@ -31,10 +33,13 @@ const WorkerJobDetail = () => {
         startDate: '',
         endDate: '',
         jobGroupId: 0,
-        jobPostingId: 0
+        jobPostingId: 0,
+        employerId: 0,
+        companyName: ''
     });
     const [jobExecutes, setJobExecutes] = useState([]);
     const [jobPostingLoading, setJobPostingLoading] = useState(true);
+    const [workerInfo, setWorkerInfo] = useState({});
     // if (!jobInfo) {
     //     return <p>Job not found.</p>;
     // }
@@ -62,11 +67,25 @@ const WorkerJobDetail = () => {
                     // Calculate the duration in days
                     const timeDifference = endDate - startDate; // Time difference in milliseconds
                     const daysDuration = (timeDifference / (1000 * 3600 * 24)) + 1; // Convert milliseconds to days
-
+                    try {
+                        if (jobGroupDetail.data.data.userId) {
+                            const fetchWorkerInfo = async () => {
+                                const res = await userApi.getUserById(jobGroupDetail.data.data.userId);
+                                // console.log(res.data.data);
+                                // setWorkerLoading(false);
+                                setWorkerInfo(res.data.data);
+                            }
+                            fetchWorkerInfo();
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        setWorkerLoading(false);
+                    } 
                     setJobInfo({
                         jobGroupName: jobGroupDetail.data.data.title,
                         title: jobPostingDetail.data.data.title,
                         address: jobPostingDetail.data.data.address,
+                        companyName: workerInfo.companyName,
                         description: jobPostingDetail.data.data.description,
                         jobType: jobPostingDetail.data.data.JobType?.name ? jobPostingDetail.data.data.JobType.name : '-- None --',
                         salary: jobPostingDetail.data.data.salary,
@@ -74,7 +93,9 @@ const WorkerJobDetail = () => {
                         startDate: jobGroupDetail.data.data.start_date,
                         endDate: jobGroupDetail.data.data.end_date,
                         jobGroupId: jobGroupDetail.data.data.id,
-                        jobPostingId: jobPostingDetail.data.data.id
+                        jobPostingId: jobPostingDetail.data.data.id,
+                        employerId: jobGroupDetail.data.data.userId,
+                        status: jobGroupDetail.data.data.status
                     })
                 }
             };
@@ -83,7 +104,7 @@ const WorkerJobDetail = () => {
             console.log(error);
         }
     }, []);
-    // console.log(jobInfo);
+
 
     useEffect(() => {
         const fetchJobExecute = async () => {
@@ -394,7 +415,8 @@ const WorkerJobDetail = () => {
         return new Date(year, month - 1, day); // monthIndex: 0 = January
     };
 
-    const endDate = parseDate('05/05/2025');
+    // const endDate = parseDate('05/05/2025');
+    const endDate = parseDate(formatDate(jobInfo.endDate));
     const todayForReview = new Date();
     todayForReview.setHours(0, 0, 0, 0);
 
@@ -405,7 +427,7 @@ const WorkerJobDetail = () => {
     const reviewEndDate = new Date(endDate);
     reviewEndDate.setDate(reviewEndDate.getDate() + 3); // ngày 17
 
-    const isWithinReviewPeriod = todayForReview >= reviewStartDate && todayForReview <= reviewEndDate;
+    const isWithinReviewPeriod = todayForReview >= reviewStartDate && todayForReview <= reviewEndDate && jobInfo.status === 'completed';
 
 
     /* Modal Review */
@@ -449,10 +471,16 @@ const WorkerJobDetail = () => {
                     return true;
                 })
         }),
-        onSubmit: (values) => {
+        onSubmit: async (values) => {
             setConfirmLoading(true);
-            setTimeout(() => {
-                message.success(`Review for employerName successfully!`);
+            try {
+                const res = await reviewApi.createReview({
+                    userId: jobInfo.employerId,
+                    reviewerId: user.id,
+                    rating: starValue,
+                    reason: values.reasonReview
+                })
+                message.success(`Review for ${jobInfo.companyName} successfully!`);
 
                 setSavedReview({
                     rating: starValue,
@@ -465,7 +493,18 @@ const WorkerJobDetail = () => {
                 setConfirmVisible(false);
                 formikReview.resetForm();
                 setStarValue(5);
-            }, 2000);
+            } catch (error) {
+                console.log(error);
+                if (error.response.status === 404) {
+                    message.error(error.response.data.error);
+                } else if (error.response.status === 400) {
+                    message.error(error.response.data.error);
+                }
+                setConfirmLoading(false);
+                setConfirmVisible(false);
+                formikReview.resetForm();
+                setStarValue(5);
+            }
         },
     });
 
@@ -499,7 +538,7 @@ const WorkerJobDetail = () => {
                         </div>
                         <p><SnippetsOutlined /> Job Name:  {jobInfo.title}</p>
                         <p><EnvironmentOutlined /> Address: {jobInfo.address}</p>
-                        {/* <p><ProductOutlined /> Company: Công ty tổ chức sự kiện và quản lý chương trình ABC chuyên nghiệp tại TP.HCM.</p> */}
+                        <p><ProductOutlined /> Company: {jobInfo.companyName}</p>
                         <div className="worker-job-detail-short-info">
                             <p><CreditCardOutlined /> Salary: {parseFloat(jobInfo.salary).toLocaleString('vi-VN')} VND</p>
                             <p><DashboardOutlined /> During: {jobInfo.during} Day{jobInfo.during === 1 ? '' : 's'}</p>
@@ -546,7 +585,7 @@ const WorkerJobDetail = () => {
                         </div>
                         {/* Modal để review */}
                         <Modal
-                            title={<p className='employer-evaluate-worker-title'>  <StarOutlined /> &#160;Rating for employerName</p>}
+                            title={<p className='employer-evaluate-worker-title'>  <StarOutlined /> &#160;Rating for {jobInfo.companyName}</p>}
                             open={confirmVisible}
                             onCancel={closeConfirm}
                             footer={[
@@ -780,7 +819,7 @@ const WorkerJobDetail = () => {
                         </table>
                     </div>
                     <p className='total-progress-completed'>
-                        Total Progress Completed: <br /> 
+                        Total Progress Completed: <br />
                         <span className={`${totalProgressCompleted < 100 ? 'orange' : ''}`}>{totalProgressCompleted}%</span> / 100%
                     </p>
                     <Pagination

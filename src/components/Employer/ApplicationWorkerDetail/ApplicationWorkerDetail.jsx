@@ -20,6 +20,7 @@ const ApplicationWorkerDetail = () => {
   const [workerLoading, setWorkerLoading] = useState(true);
   const [workerInfo, setWorkerInfo] = useState({});
   const [cv, setCv] = useState('');
+  const [averageRating, setAverageRating] = useState(0);
 
   /* Hiển thị file pdf */
   const [previewVisible, setPreviewVisible] = useState(false); // hiển thị modal preview
@@ -32,15 +33,20 @@ const ApplicationWorkerDetail = () => {
     try {
       const fetchWorkerInfo = async () => {
         const res = await userApi.getUserById(workerId);
-        console.log(res.data.data);
+        // console.log(res.data.data);
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
+
+        if(res.data.data.Reviews.length > 0){
+          const averageRating = res.data.data.Reviews.reduce((total, review) => total + review.rating, 0) / res.data.data.Reviews.length;
+          setAverageRating(averageRating);
+        }
       }
       fetchWorkerInfo();
 
       const fetchCV = async () => {
         const res = await cvApi.getUserCVs(workerId);
-        console.log(res.data);
+        // console.log(res.data);
         
         // const res = await cvApi.previewCV(item.workerInfo.cvId)
         if(res.data.length > 0) {
@@ -168,7 +174,7 @@ const ApplicationWorkerDetail = () => {
             <img src={workerInfo?.avatar ? workerInfo.avatar : avatar} />
             <div className="worker-name-star">
               <p>{item.workerInfo?.workerName}</p>
-              <div><Rate defaultValue={4} disabled /></div>
+              <div><Rate value={averageRating} allowHalf disabled /></div>
             </div>
           </div>)}
 

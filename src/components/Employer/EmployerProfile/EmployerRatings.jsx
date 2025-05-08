@@ -1,12 +1,55 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './EmployerRatings.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { Empty, Pagination, Rate, Select } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeftOutlined, UserOutlined } from '@ant-design/icons';
+import { reviewApi } from '../../../apis/review.request'
+import { formatDate } from '../../../utils/formatDate'
+import { userApi } from '../../../apis/user.request'
 
 const EmployerRatings = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const [reviews, setReviews] = useState([])
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await reviewApi.getReviews({
+          userId: location.state
+        })
+        console.log(res.data);
+        if (res.data.data.length > 0) {
+          const newReviews = await Promise.all(
+            res.data.data.map(async (review) => {
+              try {
+                const userRes = await userApi.getUserById(review.reviewerId);
+                const user = userRes.data.data;
+                return {
+                  id: review.id,
+                  avatar: user.avatar,
+                  workerName: user.fullName,
+                  rating: review.rating,
+                  date: formatDate(review.createdAt),
+                  reason: review.reason
+                };
+              } catch (err) {
+                console.error('Failed to fetch reviewer info for review:', review.id, err);
+                return null;
+              }
+            })
+          );
+
+          setReviews(newReviews.filter(r => r !== null));
+        }
+        // setReviews(res.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchReviews()
+  }, [])
 
   const employerRatingsData = [
     {
@@ -137,7 +180,7 @@ const EmployerRatings = () => {
       date: "22/05/2025",
       reason: "Công ty có môi trường làm việc rất tích cực và luôn đúng hạn trong việc cung cấp phản hồi. Tuy nhiên, tôi hy vọng sẽ có thêm cơ hội để tham gia vào các dự án lớn hơn."
     }
-];
+  ];
 
 
   // Quản lý phân trang
@@ -153,9 +196,9 @@ const EmployerRatings = () => {
   // Lọc theo rating
   const [ratingValue, setRatingValue] = useState(null);
 
-  const filteredRatings = employerRatingsData.filter(item => {
+  const filteredRatings = /*employerRatingsData*/reviews.length > 0 ? reviews.filter(item => {
     return !ratingValue || item.rating === ratingValue;
-  });
+  }) : [];
 
   const [dateFilter, setDateFilter] = useState(null);
   const convertToDate = (dateString) => {
