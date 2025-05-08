@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AccountManagement.css';
 import { EditOutlined, StopOutlined } from '@ant-design/icons';
 import { Table, Tabs, Input, Tag, Button, Space, message, Select, Modal, Popconfirm } from 'antd';
+import { userApi } from '../../../apis/user.request';
+import { authApi } from '../../../apis/auth.request';
 
 const { TabPane } = Tabs;
 
@@ -28,13 +30,13 @@ const supportStaffData = [
   { key: '2', no: 2, fullName: 'Nguyễn Thị Mai', email: 'mai.nt@gmail.com', status: 'banned', address: 'Da Nang', phoneNumber: '0934567890', isVerified: false },
 ];
 
-
 const statusColumn = {
   title: 'Status',
   dataIndex: 'status',
   key: 'status',
   render: (status) =>
-    status === 'active' ? <Tag color="blue">Active</Tag> : <Tag color="red">Banned</Tag>,
+    status === 'active' ? <Tag color="blue">Active</Tag> :
+      status === 'banned' ? <Tag color="red">Banned</Tag> : <Tag color="default">Pending</Tag>,
 };
 
 const verifiedColumn = {
@@ -45,41 +47,6 @@ const verifiedColumn = {
     isVerified ? <Tag color="green">Verified</Tag> : <Tag color="red">Unverified</Tag>,
 };
 
-const actionColumn = {
-  title: 'Action',
-  key: 'action',
-  render: (_, record) => (
-    <Popconfirm
-      title="Are you sure to ban this Account?"
-      onConfirm={() => message.info(`Banned ${record.email}`)}
-    >
-      <Button icon={<StopOutlined />} danger size="small"></Button>
-    </Popconfirm>
-  ),
-};
-
-const workerColumns = [
-  { title: 'No.', dataIndex: 'no', key: 'no' },
-  { title: 'Full Name', dataIndex: 'fullName', key: 'fullName' },
-  { title: 'Email', dataIndex: 'email', key: 'email' },
-  statusColumn,
-  { title: 'Address', dataIndex: 'address', key: 'address' },
-  { title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber' },
-  verifiedColumn,
-  actionColumn,
-];
-
-const employerColumns = [
-  { title: 'No.', dataIndex: 'no', key: 'no' },
-  { title: 'Company Name', dataIndex: 'companyName', key: 'companyName' },
-  { title: 'Email', dataIndex: 'email', key: 'email' },
-  statusColumn,
-  { title: 'Address', dataIndex: 'address', key: 'address' },
-  { title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber' },
-  verifiedColumn,
-  actionColumn,
-];
-
 export default function AccountManagement() {
   const [activeTab, setActiveTab] = useState('worker');
   const [searchName, setSearchName] = useState('');
@@ -88,12 +55,45 @@ export default function AccountManagement() {
   const [isCreateAccount, setIsCreateAccount] = useState(false);
   const [modalData, setModalData] = useState(null);
 
+  const [workers, setWorkers] = useState([]);
+  const [employers, setEmployers] = useState([]);
+  const [supportStaffs, setSupportStaffs] = useState([]);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        const res = await userApi.getAllUsers();
+        // console.log(res.data);
+        if (res.data.data.length > 0) {
+          const newWorkers = res.data.data
+            .filter(user => user.role === 'worker')
+            .map(user => ({ ...user, key: user.id }));
+
+          const newEmployers = res.data.data
+            .filter(user => user.role === 'employer')
+            .map(user => ({ ...user, key: user.id }));
+
+          const newSupportStaffs = res.data.data
+            .filter(user => user.role === 'support staff')
+            .map(user => ({ ...user, key: user.id }));
+
+          setWorkers(newWorkers);
+          setEmployers(newEmployers);
+          setSupportStaffs(newSupportStaffs);
+        }
+      } catch (error) {
+        console.error('Error fetching accounts:', error);
+      }
+    }
+    fetchAccounts()
+  }, []);
+
   const getFilteredData = (data, isWorker = true) => {
     return data.filter(item => {
       const nameMatch = isWorker
         ? item.fullName.toLowerCase().includes(searchName.toLowerCase())
         : item.companyName.toLowerCase().includes(searchName.toLowerCase());
-      const phoneMatch = item.phoneNumber.includes(searchPhone);
+      const phoneMatch = (item.phoneNumber || '').includes(searchPhone);
       return nameMatch && phoneMatch;
     });
   };
@@ -101,6 +101,7 @@ export default function AccountManagement() {
   const handleEdit = (record) => {
     setModalData(record);
     setIsModalVisible(true);
+    setIsCreateAccount(false);
   };
 
   const handleCreateAccount = () => {
@@ -109,24 +110,58 @@ export default function AccountManagement() {
     setIsCreateAccount(true);
   };
 
-  const handleSave = () => {
-    if (isCreateAccount) {
-      message.success('Account created successfully');
-    } else {
-      message.success(`Account updated for ${modalData.email}`);
+  const handleSave = async () => {
+    message.loading('Saving...');
+    try {
+      if (isCreateAccount) {
+        const payload = {
+          ...modalData,
+          role: 'support staff',
+        };
+        await authApi.register(payload);
+        message.destroy();
+        message.success('Support staff account created successfully');
+        setSupportStaffs(prev => [...prev, { ...payload, id: Date.now(), status: 'pending', isVerified: false }]);
+      }
+      setIsModalVisible(false);
+    } catch (error) {
+      console.error('Error saving account:', error);
+      message.destroy();
+      message.error('Failed to save support staff account');
     }
-    setIsModalVisible(false); // Close the modal
   };
+
+  const handleBan = async (record) => {
+    try {
+      const res = await userApi.banUser(record.id);
+      const updateUserStatus = (list) =>
+        list.map(user =>
+          user.id === record.id ? { ...user, status: 'banned' } : user
+        );
+
+      if (record.role === 'worker') {
+        setWorkers(prev => updateUserStatus(prev));
+      } else if (record.role === 'employer') {
+        setEmployers(prev => updateUserStatus(prev));
+      } else if (record.role === 'support staff') {
+        setSupportStaffs(prev => updateUserStatus(prev));
+      }
+
+      message.success('Ban successfully!');
+    } catch (error) {
+      message.error('Ban failed!');
+    }
+  }
 
   const sstaffActionColumn = {
     title: 'Action',
     key: 'action',
     render: (_, record) => (
       <Space>
-        <Button icon={<EditOutlined />} type="primary" size="small" onClick={() => handleEdit(record)}></Button>
+        {/* <Button icon={<EditOutlined />} type="primary" size="small" onClick={() => handleEdit(record)}></Button> */}
         <Popconfirm
           title="Are you sure to ban this Account?"
-          onConfirm={() => message.info(`Banned ${record.email}`)}
+          onConfirm={() => handleBan(record)}
         >
           <Button icon={<StopOutlined />} danger size="small"></Button>
         </Popconfirm>
@@ -135,14 +170,102 @@ export default function AccountManagement() {
   };
 
   const supportStaffColumns = [
-    { title: 'No.', dataIndex: 'no', key: 'no' },
+    {
+      title: 'No.', dataIndex: 'no', key: 'no',
+      render: (_, record, index) => (
+        <div>{index + 1}</div>
+      )
+    },
     { title: 'full name', dataIndex: 'fullName', key: 'fullName' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
     statusColumn,
-    { title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber' },
-    { title: 'Address', dataIndex: 'address', key: 'address' },
+    {
+      title: 'Phone Number', dataIndex: 'phoneNumber', key: 'phoneNumber',
+      render: (_, record) => (
+        <div>{record.phoneNumber ? record.phoneNumber : 'N/A'}</div>
+      )
+    },
+    {
+      title: 'Address', dataIndex: 'address', key: 'address',
+      render: (_, record) => (
+        <div>{record.address ? record.address : 'N/A'}</div>
+      )
+    },
     verifiedColumn,
     sstaffActionColumn,
+  ];
+
+  const actionColumn = {
+    title: 'Action',
+    key: 'action',
+    render: (_, record) => (
+      <Popconfirm
+        title="Are you sure to ban this Account?"
+        onConfirm={() => handleBan(record)}
+      >
+        <Button icon={<StopOutlined />} danger size="small"></Button>
+      </Popconfirm>
+    ),
+  };
+
+  const workerColumns = [
+    {
+      title: 'No.', dataIndex: 'no', key: 'no',
+      render: (_, record, index) => (
+        <div>{index + 1}</div>
+      )
+    },
+    { title: 'Full Name', dataIndex: 'fullName', key: 'fullName' },
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    statusColumn,
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+      render: (_, record) => (
+        <div>{record.address ? record.address : 'N/A'}</div>
+      )
+    },
+    {
+      title: 'Phone Number',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      render: (_, record) => (
+        <div>{record.phoneNumber ? record.phoneNumber : 'N/A'}</div>
+      )
+    },
+    verifiedColumn,
+    actionColumn,
+  ];
+
+  const employerColumns = [
+    {
+      title: 'No.', dataIndex: 'no', key: 'no',
+      render: (_, record, index) => (
+        <div>{index + 1}</div>
+      )
+    },
+    { title: 'Company Name', dataIndex: 'companyName', key: 'companyName' },
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    statusColumn,
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+      render: (_, record) => (
+        <div>{record.address ? record.address : 'N/A'}</div>
+      )
+    },
+    {
+      title: 'Phone Number',
+      dataIndex: 'phoneNumber',
+      key: 'phoneNumber',
+      render: (_, record) => (
+        <div>{record.phoneNumber ? record.phoneNumber : 'N/A'}</div>
+      )
+    },
+    verifiedColumn,
+    actionColumn,
   ];
 
   return (
@@ -166,7 +289,7 @@ export default function AccountManagement() {
             </div>
             <Table
               columns={workerColumns}
-              dataSource={getFilteredData(workerData, true)}
+              dataSource={getFilteredData(/*workerData*/workers, true)}
               pagination={{ pageSize: 4 }}
             />
           </TabPane>
@@ -186,7 +309,7 @@ export default function AccountManagement() {
             </div>
             <Table
               columns={employerColumns}
-              dataSource={getFilteredData(employerData, false)}
+              dataSource={getFilteredData(/*employerData*/employers, false)}
               pagination={{ pageSize: 4 }}
             />
           </TabPane>
@@ -201,7 +324,7 @@ export default function AccountManagement() {
               />
             </div>
             <Button type="primary" onClick={handleCreateAccount}>Create Account</Button>
-            <Table columns={supportStaffColumns} dataSource={getFilteredData(supportStaffData)} pagination={{ pageSize: 4 }} />
+            <Table columns={supportStaffColumns} dataSource={getFilteredData(/*supportStaffData*/supportStaffs)} pagination={{ pageSize: 4 }} />
           </TabPane>
         </Tabs>
 
@@ -222,6 +345,7 @@ export default function AccountManagement() {
             <Input
               className='input-account'
               placeholder="Email"
+              disabled={!isCreateAccount}
               value={modalData ? modalData.email : ''}
               onChange={(e) => setModalData({ ...modalData, email: e.target.value })}
             />
@@ -230,7 +354,7 @@ export default function AccountManagement() {
                 <Input.Password
                   className='input-account'
                   placeholder="Password"
-                  value={modalData ? modalData.phoneNumber : ''}
+                  value={modalData ? modalData.password : ''}
                   onChange={(e) => setModalData({ ...modalData, password: e.target.value })}
                 />
               </>

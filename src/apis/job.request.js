@@ -34,4 +34,10 @@ export const jobApi = {
     getJobTypeById: (id) => {
         return API.get(`/jobs/jobType/${id}`);
     },
+    getTotalJob: () => {
+        const token = getToken();
+        return API.get('/jobs/totalJob', {
+            headers: { authorization: `Bearer ${token}` },
+        });
+    },
 };

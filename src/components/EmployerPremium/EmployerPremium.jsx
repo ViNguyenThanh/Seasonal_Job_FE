@@ -3,6 +3,8 @@ import './EmployerPremium.css'
 import premium from '/assets/Premium.png'
 import { getUserFromToken } from '../../utils/Token';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
+import { paymentApi } from '../../apis/payment.request';
 
 const EmployerPremium = () => {
   const navigate = useNavigate();
@@ -43,10 +45,26 @@ const EmployerPremium = () => {
     },
   ];
 
-  const handlePayment = () => {
+  const handlePayment = async (plan) => {
+    message.loading("Processing...");
     const { user } = getUserFromToken();
-    if(!user || user.role !== 'employer') {
+    if (!user || user.role !== 'employer') {
       navigate('/login-for-employer', window.scrollTo(0, 0))
+    } else {
+      try {
+        const paymentData = {
+          name: plan.title,
+          price: plan.price,
+          description: plan.numberOfMonths
+        }
+        const res = await paymentApi.servicePayment(paymentData);
+        window.location.href = res.data.checkoutUrl
+        message.destroy();
+      } catch (error) {
+        console.log(error);
+        message.destroy();
+        message.error("Failed to make payment.");
+      }
     }
   };
 
@@ -55,7 +73,7 @@ const EmployerPremium = () => {
       <div className="employer-premium-top">
         <div className="employer-premium-top-left">
           <p className='title'><span>🌟</span> Become a Premium Member – Post Jobs Easily and Save More Every Day!</p>
-          <p className='content'>Are you an employer who hires frequently?  
+          <p className='content'>Are you an employer who hires frequently?
             Looking to optimize your job posting costs? <span>The Premium Package</span> is the perfect solution for you!</p>
         </div>
         <div className="employer-premium-top-right">
@@ -75,7 +93,7 @@ const EmployerPremium = () => {
               <p className='plan-benefit' key={i}>{benefit}</p>
             ))}
             <div className="choose-plan-btn">
-              <button onClick={()=> handlePayment()}>
+              <button onClick={() => handlePayment(plan)}>
                 Choose Plan
               </button>
             </div>

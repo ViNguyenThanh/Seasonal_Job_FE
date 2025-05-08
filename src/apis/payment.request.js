@@ -47,5 +47,23 @@ export const paymentApi = {
                 authorization: `Bearer ${token}`,
             },
         });
-    }
+    },
+
+    servicePayment: (data) => {
+        const token = getToken();
+        return API.post("/payment/services", data, {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        });
+    },
+
+    createTransaction: (data) => {
+        const token = getToken();
+        return API.post("/transactions/createTransaction", data, {
+            headers: {
+                authorization: `Bearer ${token}`,
+            },
+        });
+    },
 }

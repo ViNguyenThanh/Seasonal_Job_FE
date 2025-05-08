@@ -4,11 +4,13 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Input, message, Form } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { userApi } from '../../apis/user.request';
 const ResetPassword = () => {
 
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const formik = useFormik({
     initialValues: {
@@ -25,10 +27,23 @@ const ResetPassword = () => {
     }),
     onSubmit: async (values) => {
       setLoading(true);
-      message.success('Reset password successfully!');
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
+      const token = searchParams.get('token');
+      try {
+        if (token) {
+          const res = await userApi.resetPassword({ token, newPassword: values.newPassword });
+          setLoading(false);
+          message.success('Reset password successfully!');
+          navigate('/');
+        }
+      } catch (error) {
+        setLoading(false);
+        if (error.response.status === 404 || error.response.status === 400) {
+          message.error(error.response.data.message);
+        } else {
+          message.error("Can't reset password");
+        }
+        console.log(error);
+      }
     },
   });
 
@@ -54,7 +69,7 @@ const ResetPassword = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.newPassword}
-                disabled={loading} 
+                disabled={loading}
               />
             </Form.Item>
           </div>
@@ -75,7 +90,7 @@ const ResetPassword = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.confirmNewPassword}
-                disabled={loading} 
+                disabled={loading}
               />
             </Form.Item>
           </div>

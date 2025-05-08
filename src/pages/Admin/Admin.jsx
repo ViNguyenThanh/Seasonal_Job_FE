@@ -36,7 +36,13 @@ const items = [
         icon: <ProfileOutlined />,
         label: "Manage Accounts",
         route: "manage-accounts",
-    }
+    },
+    {
+        key: "services",
+        icon: <ProductOutlined />,
+        label: "Manage Services",
+        route: "manage-services",
+    },
 ]
 
 const siderStyle = {

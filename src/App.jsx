@@ -59,6 +59,7 @@ import EmployerPremiumPage from './pages/EmployerPremiumPage/EmployerPremiumPage
 
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail'
 import ResetPassword from './pages/ResetPassword/ResetPassword'
+import ManageServices from './components/Admin/ManageServices/ManageServices'
 
 
 
@@ -179,6 +180,7 @@ function App() {
             ? <Admin />
             : <Navigate to="/sjcp-admin-login" />
         }>
+          <Route path='manage-services' element={<ManageServices />} />
           <Route path='manage-accounts' element={<AccountManagement />} />
           <Route path='dashboard' element={<Dashboard />} />
         </Route>

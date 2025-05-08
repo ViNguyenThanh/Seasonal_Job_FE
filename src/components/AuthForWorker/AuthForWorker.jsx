@@ -12,6 +12,7 @@ import store from "../../store/ReduxStore";
 import { authApi } from '../../apis/auth.request';
 import { login } from '../../redux/actions/auth.action';
 import { useDispatch } from 'react-redux';
+import { userApi } from '../../apis/user.request';
 
 const AuthForWorker = ({ comp }) => {
   const [passwordVisible, setPasswordVisible] = useState(false)
@@ -95,7 +96,7 @@ const AuthForWorker = ({ comp }) => {
               message.destroy()
               message.success("Login successfully!");
               navigate("/");
-            }else{
+            } else {
               message.destroy()
               message.error("You are not a worker! Can't log in here");
               localStorage.removeItem("token");
@@ -133,7 +134,7 @@ const AuthForWorker = ({ comp }) => {
     formikForgotPassword.setTouched({
       email: false,
     });
-    
+
     setConfirmVisible(true);
   };
 
@@ -152,14 +153,24 @@ const AuthForWorker = ({ comp }) => {
     }),
     onSubmit: (values) => {
       setConfirmLoading(true);
-      setTimeout(() => {
+      try {
+        const res = userApi.forgetPassword(values);
         message.success("Your request to reset the password has been submitted successfully! Please check your email to proceed.");
 
         // Xử lý khi bấm Change Password
         setConfirmLoading(false);
         setConfirmVisible(false);
         formikForgotPassword.resetForm();
-      }, 2000);
+      } catch (error) {
+        if (error.response.status === 404 || error.response.status === 400) {
+          message.error(error.response.data.message);
+        } else {
+          message.error("Can't send email");
+        }
+        setConfirmLoading(false);
+        setConfirmVisible(false);
+        formikForgotPassword.resetForm();
+      }
     }
   });
 
@@ -335,10 +346,10 @@ const AuthForWorker = ({ comp }) => {
 
           </form>
 
-          <button className='log-in-gg-btn' onClick={() => navigate("/")}>
+          {/* <button className='log-in-gg-btn' onClick={() => navigate("/")}>
             <img src={google} />
             Log in with Google
-          </button>
+          </button> */}
 
 
           {comp === "Register" ? (

@@ -1,19 +1,30 @@
 import React, { useState } from 'react'
 import './VerifyEmail.css'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { message } from 'antd';
+import { authApi } from '../../apis/auth.request';
 
 const VerifyEmail = () => {
-  
+
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
 
-  const handleVerifyEmail = () => {
+  const handleVerifyEmail = async () => {
     setLoading(true);
-    message.success('Verify email successfully!');
-    setTimeout(() => {
-      navigate('/');
-    }, 2000);
+    const token = searchParams.get('token');
+    try {
+      if (token) {
+        const res = await authApi.verifyEmail(token);
+        setLoading(false);
+        message.success('Verify email successfully!');
+        navigate('/');
+      }
+    } catch (error) {
+      setLoading(false);
+      message.error("Cannot verify email");
+      console.log(error);
+    }
   }
 
   return (

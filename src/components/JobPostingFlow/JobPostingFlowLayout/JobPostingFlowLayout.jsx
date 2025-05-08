@@ -232,7 +232,7 @@ const JobPostingFlowLayout = () => {
         items={[
           {
             title: <Link
-              to="/"
+              to="/employer-home"
               className='b-title-1'
             >
               <HomeOutlined /> Home

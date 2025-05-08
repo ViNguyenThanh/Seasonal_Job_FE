@@ -1,17 +1,50 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Dashboard.css'
 import { ShoppingOutlined, TeamOutlined } from '@ant-design/icons';
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts';
+import { userApi } from '../../../apis/user.request';
+import { jobGroupApi } from '../../../apis/job-group.request';
+import { jobApi } from '../../../apis/job.request';
 
 export default function Dashboard() {
-    const [selectedYear, setSelectedYear] = useState('2023');
+    const [selectedYear, setSelectedYear] = useState('2025');
+    const [totalWorker, setTotalWorker] = useState(0);
+    const [totalEmployer, setTotalEmployer] = useState(0);
+
+    useEffect(() => {
+        const fetchTotalAccounts = async () => {
+            try {
+                const res = await userApi.getAllUsers();
+                const workers = res.data.data.filter(user => user.role === 'worker');
+                const employers = res.data.data.filter(user => user.role === 'employer');
+                setTotalWorker(workers.length);
+                setTotalEmployer(employers.length);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchTotalAccounts();
+    }, [])
+
+    // useEffect(() => {
+    //     const fetchJob = async () => {
+    //         try {
+    //             const res = await jobApi.getTotalJob();
+    //             console.log(res);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     }
+
+    //     fetchJob()
+    // })
 
     const revenueData = {
-        2023: [
-            { name: 'Jan', revenue: 1200 }, { name: 'Feb', revenue: 2100 }, { name: 'Mar', revenue: 800 },
-            { name: 'Apr', revenue: 2780 }, { name: 'May', revenue: 1890 }, { name: 'Jun', revenue: 2390 },
-            { name: 'Jul', revenue: 3490 }, { name: 'Aug', revenue: 3000 }, { name: 'Sep', revenue: 2000 },
-            { name: 'Oct', revenue: 2500 }, { name: 'Nov', revenue: 3200 }, { name: 'Dec', revenue: 4100 }
+        2025: [
+            { name: 'Jan', revenue: 0 }, { name: 'Feb', revenue: 0 }, { name: 'Mar', revenue: 0 },
+            { name: 'Apr', revenue: 250000 }, { name: 'May', revenue: 500000 }, { name: 'Jun', revenue: 0 },
+            { name: 'Jul', revenue: 0 }, { name: 'Aug', revenue: 0 }, { name: 'Sep', revenue: 0 },
+            { name: 'Oct', revenue: 0 }, { name: 'Nov', revenue: 0 }, { name: 'Dec', revenue: 0 }
         ],
         2024: [
             { name: 'Jan', revenue: 1800 }, { name: 'Feb', revenue: 2200 }, { name: 'Mar', revenue: 1700 },
@@ -27,19 +60,19 @@ export default function Dashboard() {
             <div className="dashboard-top-cards">
                 <div className="card-general card-total-workers">
                     <h3 className="card-title">Total Workers</h3>
-                    <p className="card-value"><TeamOutlined /> 10</p>
+                    <p className="card-value"><TeamOutlined /> {totalWorker}</p>
                 </div>
                 <div className="card-general card-total-employers">
                     <h3 className="card-title">Total Employers</h3>
-                    <p className="card-value"><TeamOutlined /> 25</p>
+                    <p className="card-value"><TeamOutlined /> {totalEmployer}</p>
                 </div>
                 <div className="card-general card-job-groups">
                     <h3 className="card-title">Total Job Groups</h3>
-                    <p className="card-value"><ShoppingOutlined /> 27</p>
+                    <p className="card-value"><ShoppingOutlined /> 41</p>
                 </div>
                 <div className="card-general card-job-postings">
                     <h3 className="card-title">Total Job Postings</h3>
-                    <p className="card-value"><ShoppingOutlined /> 48</p>
+                    <p className="card-value"><ShoppingOutlined /> 53</p>
                 </div>
             </div>
 
@@ -49,8 +82,8 @@ export default function Dashboard() {
                     <h4 className="card-title">Revenue of {selectedYear}</h4>
                     <div className="chart-selector-wrapper">
                         <select className="year-selector" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            {/* <option value="2024">2024</option> */}
                         </select>
                     </div>
                 </div>
