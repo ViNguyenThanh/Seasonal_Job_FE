@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import './Slide.css'
 import { Button, Col, ConfigProvider, Input, Rate, Row, Select } from 'antd'
 import { Link } from 'react-router-dom'
-import { DownOutlined, SearchOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { DownOutlined, SearchOutlined, EnvironmentOutlined, UserOutlined } from '@ant-design/icons';
 import { jobGroupApi } from '../../../apis/job-group.request';
 import { jobApi } from '../../../apis/job.request';
 import { useNavigate } from 'react-router-dom';
@@ -145,7 +145,7 @@ export default function Slide() {
     return (
         <div className='slide-container'>
             <div className="slide_left">
-                <div className="location-search">
+                {/* <div className="location-search">
                     <Select
                         prefix={<EnvironmentOutlined />}
                         size="large"
@@ -174,14 +174,19 @@ export default function Slide() {
                     <Button size="large" className="search-btn" onClick={handleSearch}>
                         Search
                     </Button>
-                </div>
+                </div> */}
                 <Link
                     to={highestRatedCompany?.id ? `/company-detail/${highestRatedCompany.id}` : '#'}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                     className="company-spotlight"
                 >
                     <div className="company-spotlight-img">
-                        <img src={publicUserDetails?.avatar || '/assets/background_colour.jpg'} alt="Company Avatar" />
+                        {/* <img src={publicUserDetails?.avatar || '/assets/background_colour.jpg'} alt="Company Avatar" /> */}
+                        {publicUserDetails?.avatar ? (
+                            <img src={publicUserDetails?.avatar} />
+                        ) : (
+                            <p className='no-avatar'><UserOutlined /></p>
+                        )}
                     </div>
                     <div className="company-spotlight-info">
                         {screenWidth < 1100 ? (
@@ -232,7 +237,7 @@ export default function Slide() {
                 <div className="today_dashboard">
                     <p>Today: <b>{`${new Date().getDate().toString().padStart(2, '0')}/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`}</b></p>
                     <p>
-                        Total Job: <b>{matchedPostings.length}</b> | Today new jobs: <b>
+                        Total Job: <b>{matchedPostings.length}</b> <span>|</span> <br/> Today new jobs: <b>
                             {
                                 matchedPostings.filter(posting => {
                                     const updatedAt = new Date(posting.updatedAt);

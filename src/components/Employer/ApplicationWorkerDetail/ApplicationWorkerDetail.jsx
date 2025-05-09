@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './ApplicationWorkerDetail.css'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Breadcrumb, Button, message, Modal, Rate, Skeleton } from 'antd';
-import { ContainerOutlined, EnvironmentOutlined, ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SolutionOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { ContainerOutlined, EnvironmentOutlined, ExclamationCircleOutlined, EyeOutlined, FileDoneOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SolutionOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
 import { updateApplicationStatus } from '../../../apis/application.request';
 import { userApi } from '../../../apis/user.request';
@@ -37,7 +37,7 @@ const ApplicationWorkerDetail = () => {
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
 
-        if(res.data.data.Reviews.length > 0){
+        if (res.data.data.Reviews.length > 0) {
           const averageRating = res.data.data.Reviews.reduce((total, review) => total + review.rating, 0) / res.data.data.Reviews.length;
           setAverageRating(averageRating);
         }
@@ -47,9 +47,9 @@ const ApplicationWorkerDetail = () => {
       const fetchCV = async () => {
         const res = await cvApi.getUserCVs(workerId);
         // console.log(res.data);
-        
+
         // const res = await cvApi.previewCV(item.workerInfo.cvId)
-        if(res.data.length > 0) {
+        if (res.data.length > 0) {
           const cv = res.data.filter(cv => cv.id === item.workerInfo.cvId);
           // console.log(cv[0].file_Url);
           setCv(cv[0].file_Url);
@@ -171,7 +171,12 @@ const ApplicationWorkerDetail = () => {
               <Skeleton.Avatar active size={120} />
             </div>
           ) : (<div className="worker-identity">
-            <img src={workerInfo?.avatar ? workerInfo.avatar : avatar} />
+            {/* <img src={workerInfo?.avatar ? workerInfo.avatar : avatar} /> */}
+            {workerInfo.avatar ? (
+              <img src={workerInfo?.avatar} />
+            ) : (
+              <p className='no-avatar'><UserOutlined /></p>
+            )}
             <div className="worker-name-star">
               <p>{item.workerInfo?.workerName}</p>
               <div><Rate value={averageRating} allowHalf disabled /></div>
@@ -239,7 +244,7 @@ const ApplicationWorkerDetail = () => {
             <h2>Worker Information</h2>
             <div className="worker-info">
               <p className='worker-email'><MailOutlined /> {workerInfo?.email}</p>
-              <p><UserSwitchOutlined /> {workerInfo?.sex? workerInfo.sex : "-- None --"}  </p> {/* -- None -- */}
+              <p><UserSwitchOutlined /> {workerInfo?.sex ? workerInfo.sex : "-- None --"}  </p> {/* -- None -- */}
             </div>
             <div className="worker-info">
               <p><EnvironmentOutlined /> {workerInfo?.address ? workerInfo.address : "-- None --"}</p>
@@ -255,13 +260,13 @@ const ApplicationWorkerDetail = () => {
                 in production environments with high workloads and participated in event organization,
                 assisting with exhibitions and fairs. I am adaptable, work efficiently under pressure,
                 and quickly adjust to job demands.</p> */}
-                {/* <p>{workerInfo?.description ? workerInfo.description : "-- None --"}</p> */}
+              {/* <p>{workerInfo?.description ? workerInfo.description : "-- None --"}</p> */}
               {/* <p>-- None --</p> */}
               <div
-              className='worker-description-content'
-              dangerouslySetInnerHTML={{ __html: workerInfo?.description || "-- None --" }}
-              style={{ whiteSpace: 'pre-wrap' }}
-            />
+                className='worker-description-content'
+                dangerouslySetInnerHTML={{ __html: workerInfo?.description || "-- None --" }}
+                style={{ whiteSpace: 'pre-wrap' }}
+              />
             </div>
           </div>)}
 

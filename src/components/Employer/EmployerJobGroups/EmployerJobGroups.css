@@ -122,6 +122,8 @@
     z-index: 0;
     transition: 0.3s ease;
     position: relative;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .employer-job-groups-list .employer-job-groups-item:hover {
@@ -132,6 +134,7 @@
 }
 
 .employer-job-groups-list .employer-job-groups-item .job-group-name {
+    width: 100%;
     font-size: 18px;
     font-weight: 500;
     /* BỎ vì có 3 chấm làm content đỡ dài rồi */
@@ -149,6 +152,7 @@
 }
 
 .employer-job-groups-list .employer-job-groups-item .number-of-job-postings {
+    width: 100%;
     /* color: #2F4F4F */
     /* color: rgb(231, 231, 81); */
     color: #ffa824;
@@ -158,6 +162,7 @@
 .employer-job-groups-list .employer-job-groups-item .status {
     width: fit-content;
     padding: 1.5% 5% 2.5%;
+    margin-right: 10px;
     color: white;
     text-align: end;
     border-radius: 20px;
@@ -174,6 +179,19 @@
 
 .employer-job-groups-list .employer-job-groups-item .status.inactive {
     background-color: rgb(252, 46, 46);
+}
+
+.employer-job-groups-list .employer-job-groups-item .unpaid{
+    width: fit-content;
+    padding: 1.5% 5% 2.5%;
+    text-align: end;
+    border-radius: 20px;
+    text-transform: capitalize;
+    /* color: orange; */
+    /* background-color: rgb(243, 235, 9); */
+    /* background-color: rgb(255, 230, 185); */
+    color: gray;
+    background-color: rgb(223, 223, 223);
 }
 
 .employer-job-groups-list .employer-job-groups-item button {

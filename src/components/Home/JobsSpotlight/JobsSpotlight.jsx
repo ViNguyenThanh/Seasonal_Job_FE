@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import './JobsSpotlight.css'
 import { Button, ConfigProvider } from 'antd'
-import { DownOutlined, EnvironmentOutlined, DollarOutlined, CalendarOutlined } from '@ant-design/icons';
+import { DownOutlined, EnvironmentOutlined, DollarOutlined, CalendarOutlined, UserOutlined } from '@ant-design/icons';
 import { jobGroupApi } from '../../../apis/job-group.request';
 import { jobApi } from '../../../apis/job.request';
 import { useNavigate } from 'react-router-dom';
@@ -103,7 +103,12 @@ export default function JobsSpotlight() {
                                     style={{ cursor: 'pointer' }} // Add pointer cursor for better UX
                                 >
                                     <div className="job-list-spotlight-img">
-                                        <img src={userDetails?.avatar || "/assets/background_colour.jpg"} alt="User Avatar" />
+                                        {/* <img src={userDetails?.avatar || "/assets/background_colour.jpg"} alt="User Avatar" /> */}
+                                        {userDetails?.avatar ? (
+                                            <img src={userDetails?.avatar} />
+                                        ) : (
+                                            <p className='no-avatar'><UserOutlined /></p>
+                                        )}
                                     </div>
                                     <div className="job-list-spotlight-info">
                                         <h3>{item.title || 'Default Title'}</h3>

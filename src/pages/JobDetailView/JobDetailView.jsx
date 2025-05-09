@@ -4,7 +4,7 @@ import "./JobDetailView.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
 import { Breadcrumb, Avatar, Tag, Button, Space, Row, Col, Modal, Upload, Input, message, ConfigProvider, notification, Spin, Radio } from 'antd';
-import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined, HomeOutlined, SearchOutlined, FileTextOutlined, FilePdfOutlined } from '@ant-design/icons';
+import { AntDesignOutlined, PhoneOutlined, MailOutlined, ArrowRightOutlined, HomeOutlined, SearchOutlined, FileTextOutlined, FilePdfOutlined, UserOutlined } from '@ant-design/icons';
 import { Typography } from 'antd';
 const { Title, Paragraph } = Typography;
 import { CalendarOutlined, ClockCircleOutlined, WalletOutlined, EnvironmentOutlined, UploadOutlined, ManOutlined, WomanOutlined, TeamOutlined, HourglassOutlined, PushpinOutlined, SolutionOutlined, StarOutlined } from '@ant-design/icons';
@@ -341,11 +341,17 @@ const JobDetailView = () => {
 
                 <div className="job-detail-header">
                     <div className="job-detail-avatar-section">
-                        <Avatar
-                            style={{ width: '100px', height: '100px' }}
-                            src={avatarUrl} // Use the avatar URL from state
-                            icon={!avatarUrl && <AntDesignOutlined />} // Fallback to icon if no avatar
-                        />
+                        {avatarUrl ? (
+                            <Avatar
+                                shape="square" 
+                                style={{ width: '100px', height: '100px' }}
+                                // icon={<AntDesignOutlined />}
+                                icon={!avatarUrl && <UserOutlined />}         
+                                src={avatarUrl}
+                            />
+                        ) : (
+                            <p className='no-avatar'><UserOutlined /></p>
+                        )}
                         <div style={{ marginLeft: '10px' }}>
                             <div className="job-detail-title-section">
                                 <Title level={2} style={{ fontWeight: 'bold', margin: 0 }}>{jobDetail.title}</Title>
@@ -408,7 +414,8 @@ const JobDetailView = () => {
                                     {jobGroupDetail.title}
                                 </Title>
                                 <Paragraph style={{ fontSize: "18px", color: "#333333" }}>
-                                    <span
+                                    <div className='description'
+                                        style={{ whiteSpace: 'pre-wrap' }}
                                         dangerouslySetInnerHTML={{
                                             __html: jobGroupDetail.description.replace(/\n/g, "<br />"),
                                         }}
@@ -416,7 +423,8 @@ const JobDetailView = () => {
                                 </Paragraph>
                                 <Title level={3} className="job-description-leftSide-title">Job Description</Title>
                                 <Paragraph style={{ fontSize: "18px", color: "#333333" }}>
-                                    <span
+                                    <div className='description'
+                                        style={{ whiteSpace: 'pre-wrap' }}
                                         dangerouslySetInnerHTML={{
                                             __html: jobDetail.description.replace(/\n/g, "<br />"),
                                         }}

@@ -513,8 +513,21 @@
     height: 80px;
     /* background-color: black; */
     background-color: #d9d9d9;
-    border-radius: 10px;
+    border-radius: 50%;
     margin-right: 25px;
+}
+.employer-job-posting-not-executed .workers-list .worker-item .no-avatar{
+    margin: 0;
+    margin-right: 25px;
+    min-width: 80px;
+    width: 80px;
+    height: 80px;
+    background-color: #d9d9d9;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    color: white;
 }
 .employer-job-posting-not-executed .workers-list .worker-item .worker-info{
     /* margin-left: 25px; */
@@ -613,8 +626,21 @@
     height: 80px;
     /* background-color: black; */
     background-color: #d9d9d9;
-    border-radius: 10px;
+    border-radius: 50%;
     margin-right: 25px;
+}
+.employer-job-posting-executed .workers-list .worker-item .no-avatar{
+    margin: 0;
+    margin-right: 25px;
+    min-width: 80px;
+    width: 80px;
+    height: 80px;
+    background-color: #d9d9d9;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    font-size: 40px;
+    color: white;
 }
 .employer-job-posting-executed .workers-list .worker-item .worker-info{
     /* margin-left: 25px; */
@@ -661,6 +687,18 @@
 
 /* Job Posting Detail */
 @media (max-width: 1280px) {
+    .employer-job-posting-detail-whole-container .ant-breadcrumb ol {
+        width: 90%;
+        padding: 0 5%;
+        margin-left: 0;
+        justify-content: center;
+        margin-bottom: 20px;
+        height: fit-content;
+    }
+    .employer-job-posting-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+        display: flex;
+    }
+
     .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating {
         width: 100%;
     }
@@ -703,18 +741,6 @@
     .employer-job-posting-detail-container .employer-job-posting-detail-info .employer-job-posting-detail-short-info .rating .star .anticon{
         font-size: 22px;
         margin-right: 2px;
-    }
-}
-@media (max-width: 570px) {
-    .employer-job-posting-detail-whole-container .ant-breadcrumb ol {
-        width: 100%;
-        margin-left: 0;
-        justify-content: center;
-        margin-bottom: 2%;
-        height: 99px;
-    }
-    .employer-job-posting-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
-        display: flex;
     }
 }
 @media (max-width: 500px) {

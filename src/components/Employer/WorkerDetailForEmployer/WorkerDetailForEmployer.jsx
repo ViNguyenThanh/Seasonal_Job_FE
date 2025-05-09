@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import './WorkerDetailForEmployer.css'
 import { Breadcrumb, Button, Form, Image, Input, InputNumber, message, Modal, Pagination, Rate, Skeleton } from 'antd'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { ContainerOutlined, DownOutlined, EnvironmentOutlined, EyeOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SnippetsOutlined, SolutionOutlined, StarOutlined, UpOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { ContainerOutlined, DownOutlined, EnvironmentOutlined, EyeOutlined, FolderOpenOutlined, GiftOutlined, IdcardOutlined, MailOutlined, PhoneOutlined, SnippetsOutlined, SolutionOutlined, StarOutlined, UpOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import avatar from '/assets/Work-On-Computer.png'
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
@@ -35,7 +35,7 @@ const WorkerDetailForEmployer = ({ newUser }) => {
         setWorkerLoading(false);
         setWorkerInfo(res.data.data);
 
-        if(res.data.data.Reviews.length > 0){
+        if (res.data.data.Reviews.length > 0) {
           const averageRating = res.data.data.Reviews.reduce((total, review) => total + review.rating, 0) / res.data.data.Reviews.length;
           setAverageRating(averageRating);
         }
@@ -101,7 +101,7 @@ const WorkerDetailForEmployer = ({ newUser }) => {
   // const endDate = parseDate('05/05/2025');
   const endDate = parseDate(formatDate(item.jobGroupInfo.end_date));
   // console.log(endDate);
-  
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -558,7 +558,12 @@ const WorkerDetailForEmployer = ({ newUser }) => {
               </div>
             ) : (
               <div className="worker-identity">
-                <img src={workerInfo?.avatar ? workerInfo?.avatar : avatar} />
+                {/* <img src={workerInfo?.avatar ? workerInfo?.avatar : avatar} /> */}
+                {workerInfo?.avatar ? (
+                  <img src={workerInfo?.avatar} />
+                ) : (
+                  <p className='no-avatar'><UserOutlined /></p>
+                )}
                 <div className="worker-name-star">
                   <p>{workerInfo?.fullName}</p>
                   <div><Rate value={averageRating} allowHalf disabled /></div>

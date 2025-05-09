@@ -4,7 +4,7 @@ import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Select, Space, Button, Flex, Card, Tag, Empty, Spin, Input } from "antd";
-import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined, HomeOutlined } from '@ant-design/icons';
+import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb, ConfigProvider } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { jobApi } from '../../apis/job.request'; // Import the jobApi
@@ -560,11 +560,18 @@ const FindingJob = () => {
                                             </>
                                         }
                                         avatar={
-                                            <img
-                                                alt="example"
-                                                src={job.avatar || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"}
-                                                style={{ width: '100px', height: '100px', borderRadius: '5px' }}
-                                            />
+                                            job.avatar ? (
+                                                <img
+                                                    alt="avatar"
+                                                    // src={job.avatar || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"}
+                                                    src={job.avatar}
+                                                    style={{ width: '100px', height: '100px', borderRadius: '5px', marginRight: '25px' }}
+                                                />
+                                            ) : (
+                                                <p className="no-avatar">
+                                                    <UserOutlined />
+                                                </p>
+                                            )
                                         }
                                     />
                                 </Card>

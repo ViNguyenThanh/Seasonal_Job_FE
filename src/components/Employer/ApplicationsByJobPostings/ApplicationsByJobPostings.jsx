@@ -3,7 +3,7 @@ import './ApplicationsByJobPostings.css'
 import avatar from '/assets/Work-On-Computer.png'
 import { Breadcrumb, Empty, Input, message, Pagination, Select, Tabs } from 'antd';
 const { Search } = Input;
-import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, ContainerOutlined, FolderOpenOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJobPostingByJGId } from '../../../redux/actions/jobposting.action';
@@ -30,7 +30,7 @@ const ApplicationsByJobPostings = () => {
       try {
         const newList = await Promise.all(payload.map(async (jobPosting, index) => {
           // console.log('payload', jobPosting.id);
-          
+
           const res = await getApplicationsForJob(jobPosting.id);
           // console.log(res);
 
@@ -44,7 +44,7 @@ const ApplicationsByJobPostings = () => {
             applicationId: item.id,
             workerName: item.CV.User.fullName,
             email: item.CV.User.email,
-            avatar: avatar,
+            avatar: item.CV.User.avatar,
             jobPostingName: item.jobPostingId === jobPosting.id ? jobPosting.title : '',
             status: item.status,
             coverLetter: item.coverLetter,
@@ -114,7 +114,7 @@ const ApplicationsByJobPostings = () => {
     }));
     setCurrentPage(1);
   };
-  
+
 
   const filteredWorkers = /*listWorkers*/!isLoading && listApplications.length > 0 ? listApplications.filter(item => {
     // const searchTermLower = searchTerm.toLowerCase();
@@ -271,7 +271,12 @@ const ApplicationsByJobPostings = () => {
                               navigate(`/employer/application/job-groups/${jobGroupInfo.id}/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))
                             }}>
                               <div className="worker-avatar">
-                                <img src={worker.avatar} />
+                                {/* <img src={worker.avatar} /> */}
+                                {worker.avatar ? (
+                                  <img src={worker.avatar} />
+                                ) : (
+                                  <p className='no-avatar'><UserOutlined /></p>
+                                )}
                               </div>
                               <div className="worker-info">
                                 <p className='job-posting-name'>{worker.jobPostingName}</p>
@@ -361,7 +366,12 @@ const ApplicationsByJobPostings = () => {
                               navigate(`/employer/application/job-groups/${jobGroupInfo.id}/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))
                             }}>
                               <div className="worker-avatar">
-                                <img src={worker.avatar} />
+                                {/* <img src={worker.avatar} /> */}
+                                {worker.avatar ? (
+                                  <img src={worker.avatar} />
+                                ) : (
+                                  <p className='no-avatar'><UserOutlined /></p>
+                                )}
                               </div>
                               <div className="worker-info">
                                 <p className='job-posting-name'>{worker.jobPostingName}</p>
@@ -451,7 +461,12 @@ const ApplicationsByJobPostings = () => {
                               navigate(`/employer/application/job-groups/${jobGroupInfo.id}/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: jobGroupInfo } }, window.scrollTo(0, 0))
                             }}>
                               <div className="worker-avatar">
-                                <img src={worker.avatar} />
+                                {/* <img src={worker.avatar} /> */}
+                                {worker.avatar ? (
+                                  <img src={worker.avatar} />
+                                ) : (
+                                  <p className='no-avatar'><UserOutlined /></p>
+                                )}
                               </div>
                               <div className="worker-info">
                                 <p className='job-posting-name'>{worker.jobPostingName}</p>

@@ -58,19 +58,20 @@
     border-radius: 5px;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
     display: flex;
-    transition: 0.5s ease;
+    align-items: center;
+    transition: 0.3s ease;
     cursor: pointer;
 }
 
 .companies-spotlight-items .company-list-spotlight:hover {
-    background-color: rgb(42, 157, 244, 0.75);
-    color: white;
-    transition: 0.5s ease;
+    background-color: rgb(146, 208, 255, 0.75);
+    /* color: white; */
+    transition: 0.3s ease;
 }
 
 .company-list-spotlight:hover .company-list-spotlight-info p {
-    color: white;
-    transition: 0.5s ease;
+    /* color: white; */
+    transition: 0.3s ease;
 }
 
 
@@ -82,10 +83,25 @@
 }
 
 .company-list-spotlight .company-list-spotlight-img img {
-    width: 100%;
-    height: 100%;
+    width: 100px;
+    height: 100px;
     object-fit: fill;
     border-radius: 10px;
+    margin-right: 25px;
+}
+
+.company-list-spotlight .company-list-spotlight-img .no-avatar{
+    margin: 0;
+    margin-right: 25px;
+    min-width: 100px;
+    width: 100px;
+    height: 100px;
+    background-color: #d9d9d9;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    font-size: 50px;
+    color: white;
 }
 
 .company-list-spotlight .company-list-spotlight-info {
@@ -95,6 +111,7 @@
 .company-list-spotlight-info .company-list-spotlight-info-location {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .company-list-spotlight .company-list-spotlight-info h3 {
@@ -109,6 +126,13 @@
     font-size: medium;
     /* color: #136cb9; */
     margin: 0;
+    /* height: 46px; */
+    /* display: flex;
+    align-items: center; */
+}
+.company-list-spotlight-info .company-list-spotlight-info-location p{
+    width: 100%;
+    margin: 10px 0 !important;;
 }
 
 .company-list-spotlight .company-list-spotlight-info p {
@@ -140,6 +164,17 @@
         width: 20%;
         height: 50px;
     } */
+     .company-list-spotlight .company-list-spotlight-img img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .company-list-spotlight .company-list-spotlight-img .no-avatar{
+        min-width: 80px;
+        width: 80px;
+        height: 80px;
+        font-size: 40px;
+    }
 }
 
 @media (max-width: 1170px) {

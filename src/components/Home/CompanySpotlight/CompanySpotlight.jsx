@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { Button, ConfigProvider, Rate } from 'antd'
-import { DownOutlined, EnvironmentOutlined, DollarOutlined, FileSearchOutlined } from '@ant-design/icons';
+import { DownOutlined, EnvironmentOutlined, DollarOutlined, FileSearchOutlined, UserOutlined } from '@ant-design/icons';
 import './CompanySpotlight.css'
 import { useNavigate } from 'react-router-dom';
 import { userApi } from '../../../apis/user.request';
@@ -93,14 +93,16 @@ export default function CompanySpotlight() {
                   style={{ cursor: 'pointer' }}
                 >
                   <div className="company-list-spotlight-img">
-                    <img src={company.avatar || "/assets/background_colour.jpg"} alt={company.companyName || "Company"} />
+                    {/* <img src={company.avatar || "/assets/background_colour.jpg"} alt={company.companyName || "Company"} /> */}
+                    {company.avatar  ? (
+                      <img src={company.avatar } />
+                    ) : (
+                      <p className='no-avatar'><UserOutlined /></p>
+                    )}
                   </div>
                   <div className="company-list-spotlight-info">
                     <h3>{company.companyName}</h3>
                     <div className='company-list-spotlight-info-location'>
-                      <p>
-                        <EnvironmentOutlined /> {company.address ? company.address.split(',')[0] : "Location not available"}
-                      </p>
                       <ConfigProvider
                         theme={{
                           components: {
@@ -114,9 +116,12 @@ export default function CompanySpotlight() {
                           }
                         }}
                       >
-                        <Rate style={{ height: 'fit-content' }} disabled defaultValue={company.avgRating || 0} />
+                        <Rate style={{ height: 'fit-content', marginTop: '10px' }} disabled defaultValue={company.avgRating || 0} />
                       </ConfigProvider>
-                      {/* <p><FileSearchOutlined /> {company.jobs || "0 jobs"}</p> */}
+                      {/* <p><FileSearchOutlined /> {company.jobs || "0 jobs"}</p> */}            
+                      <p>
+                        <EnvironmentOutlined /> {company.address ? company.address.split(',')[0] : "Location not available"}
+                      </p>
                     </div>
                     {/* <p>
                       {company.description

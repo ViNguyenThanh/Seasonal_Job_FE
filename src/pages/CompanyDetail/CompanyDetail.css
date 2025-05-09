@@ -45,6 +45,20 @@
   width: 100%;
 }
 
+.company-detail-header .company-detail-avatar-section .no-avatar{
+  margin: 0;
+  /* margin-right: 25px; */
+  min-width: 80px;
+  width: 80px;
+  height: 80px;
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  font-size: 40px;
+  color: white;
+}
+
 .open-position {
   margin-top: 50px;
 }
@@ -78,6 +92,21 @@
 .company-description-leftSide-typography {
   margin-left: 5px;
 }
+.company-description-leftSide-typography.description p{
+  margin: 0;
+  color: #3d3d3d !important;
+}
+.company-description-leftSide-typography.description p span,
+.company-description-leftSide-typography.description ul li,
+.company-description-leftSide-typography.description ol li{
+  color: #3d3d3d !important;
+}
+.company-description-leftSide-typography.description p a,
+.company-description-leftSide-typography.description ul li a,
+.company-description-leftSide-typography.description ol li a{
+  color: #187bcd !important;
+}
+
 
 @media screen and (max-width: 768px) {
   .company-description-leftSide-title {
