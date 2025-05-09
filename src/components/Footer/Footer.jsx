@@ -37,9 +37,9 @@ const Footer = () => {
           <div className="footer-content">
             <p className='title'>TERMS & POLICIES</p>
             <div className="policy">
-              <Link className='policy-link'>Privacy Policy</Link>
-              <Link className='policy-link'>Terms of Service</Link>
-              <Link className='policy-link'>Payroll Policy</Link>
+              <Link className='policy-link' to='/privacy-policy' target="_blank"  rel="noopener noreferrer">Privacy Policy</Link>
+              <Link className='policy-link' to='/terms-and-conditions' target="_blank"  rel="noopener noreferrer">Terms & Conditions</Link>
+              <Link className='policy-link' to='/payroll-policy' target="_blank"  rel="noopener noreferrer">Payroll Policy</Link>
             </div>
           </div>
           <div className="footer-content">
@@ -55,7 +55,7 @@ const Footer = () => {
             </div>
             <div className="contact-us">
               <img src={email} />
-              <p><b>Email:</b> scjp@gmail.com</p>
+              <p><b>Email:</b> scjp123sstaff@gmail.com</p>
             </div>
           </div>
         </div>

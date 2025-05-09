@@ -31,7 +31,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         district: jobPostings[index]?.district || '',
         ward: jobPostings[index]?.ward || '',
         numberOfPeople: jobPostings[index]?.numberOfPeople || 1,
-        salary: jobPostings[index]?.salary || 1000,
+        salary: jobPostings[index]?.salary || 100000,
         jobType: jobPostings[index]?.jobType || '',
         // specialSkills: jobPostings[index]?.specialSkills || '',
         rating: jobPostings[index]?.rating || 3,
@@ -91,7 +91,7 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
         numberOfPeople: Yup.number()
           .required("* Required"),
         salary: Yup.number()
-          .min(1000, "* Must be greater than 1000 VND.")
+          .min(100000, "* Must be greater than 100000 VND.")
           .required("* Required"),
         jobType: Yup.string()
           .matches(
@@ -404,10 +404,10 @@ const CreatingNewJobPostings = ({ numberOfJobPostings, jobPostings, setJobPostin
                 addonAfter="VND"
                 id="salary"
                 name="salary"
-                // defaultValue={100000}
-                // min={100000} // Không cho nhập số âm hoặc 0
-                defaultValue={1000}
-                min={1000}
+                defaultValue={100000}
+                min={100000} // Không cho nhập số âm hoặc 0
+                // defaultValue={1000}
+                // min={1000}
                 formatter={(value) => value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}
                 parser={(value) => value?.replace(/\./g, "")}
                 // InputNumber nhận giá trị kiểu number, trong khi formik.handleChange mặc định xử lý event.target.value. 

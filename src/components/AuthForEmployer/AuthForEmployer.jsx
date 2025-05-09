@@ -514,9 +514,19 @@ const AuthForEmployer = ({ comp }) => {
                                 </div>
 
                                 <Checkbox checked={checked} onChange={onChange} className="employer-checkbox">
-                                    I have read and agree to the
-                                    <span className='condition' onClick={() => navigate("/terms-and-conditions")}> Terms & Conditions</span> and
-                                    <span className='condition' onClick={() => navigate("/privacy-policy")}> Privacy Policy</span> provided
+                                    I have read and agree to the <span
+                                        className='condition'
+                                        // onClick={() => navigate("/terms-and-conditions")}
+                                        onClick={() => window.open("/terms-and-conditions", "_blank", "noopener,noreferrer")}
+                                    >
+                                        Terms & Conditions
+                                    </span> and <span
+                                        className='condition'
+                                        // onClick={() => navigate("/privacy-policy")}
+                                        onClick={() => window.open("/privacy-policy", "_blank", "noopener,noreferrer")}
+                                    >
+                                        Privacy Policy
+                                    </span> provided
                                 </Checkbox>
                                 {showCheckboxError && <p className="checkbox-error-text">* Please agree to the terms</p>}
                             </>
