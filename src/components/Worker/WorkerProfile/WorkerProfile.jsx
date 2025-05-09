@@ -53,7 +53,7 @@ const WorkerProfile = () => {
             authorization: `Bearer ${token}`,
           },
         });
-        console.log("API Response:", response.data);
+        // console.log("API Response:", response.data);
 
         // Update the profileData and fileList
         setProfileData((prevData) => ({

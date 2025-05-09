@@ -8,7 +8,7 @@ import "./CompanyDetail.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Avatar, Button, Divider, Tag, Space, Tooltip, Rate } from 'antd';
-import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, SolutionOutlined, FileProtectOutlined, UserOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, SolutionOutlined, FileProtectOutlined, UserOutlined } from '@ant-design/icons';
 import { Typography, Row, Col } from 'antd';
 const { Title, Paragraph } = Typography;
 
@@ -29,12 +29,12 @@ const CompanyDetail = () => {
     }).length;
 
     useEffect(() => {
-        console.log("Company ID:", id); // Log the company ID in the console
+        // console.log("Company ID:", id); // Log the company ID in the console
 
         // Fetch user data by ID
         userApi.getPublicUserById(id)
             .then(response => {
-                console.log("User Data:", response.data); // Log the fetched user data
+                // console.log("User Data:", response.data); // Log the fetched user data
                 setUserData(response.data.data); // Store the user data in state
             })
             .catch(error => {
@@ -47,11 +47,11 @@ const CompanyDetail = () => {
             // Fetch job groups related to the user
             jobGroupApi.getAllJobGroupsInactive()
                 .then(response => {
-                    console.log("All Job Groups Data:", response.data); // Log all fetched job groups data
+                    // console.log("All Job Groups Data:", response.data); // Log all fetched job groups data
                     const filteredJobs = response.data.data.filter(
                         job => job.userId === userData.id && job.isPaid === true // Filter jobs by userId and isPaid
                     );
-                    console.log("Filtered Job Groups Data (isPaid: true):", filteredJobs); // Log the filtered job groups data
+                    // console.log("Filtered Job Groups Data (isPaid: true):", filteredJobs); // Log the filtered job groups data
                     setJobGroups(filteredJobs); // Store the filtered job groups in state
                 })
                 .catch(error => {
@@ -65,11 +65,11 @@ const CompanyDetail = () => {
             // Fetch job postings for the filtered job groups
             jobApi.getJobPostingsByJobGroupsIsPaid()
                 .then(response => {
-                    console.log("All Job Postings Data:", response.data); // Log all fetched job postings data
+                    // console.log("All Job Postings Data:", response.data); // Log all fetched job postings data
                     const filteredPostings = response.data.data.filter(posting =>
                         jobGroups.some(jobGroup => jobGroup.id === posting.jobGroupId) // Filter postings by matching jobGroupId
                     );
-                    console.log("Filtered Job Postings Data:", filteredPostings); // Log the filtered job postings data
+                    // console.log("Filtered Job Postings Data:", filteredPostings); // Log the filtered job postings data
                     setJobPostings(filteredPostings); // Store the filtered job postings in state
                 })
                 .catch(error => {
@@ -86,10 +86,10 @@ const CompanyDetail = () => {
         // Fetch user companies and log details
         userApi.getUserCompanies()
             .then(response => {
-                console.log("User Companies Data:", response.data.data); // Log all fetched user companies data
+                // console.log("User Companies Data:", response.data.data); // Log all fetched user companies data
                 const details = response.data.data.find(company => company.id === parseInt(id)); // Ensure `id` is compared as a number
                 if (details) {
-                    console.log("Company Details for ID:", details); // Log the specific company details
+                    // console.log("Company Details for ID:", details); // Log the specific company details
                     setCompanyDetails(details); // Store the entire company details in state
                 } else {
                     console.log(`No company found for ID: ${id}`); // Log if no matching company is found
@@ -160,7 +160,7 @@ const CompanyDetail = () => {
                             <Typography className="company-description-leftSide-typography">
                                 <Title level={3} className="company-description-leftSide-title">Description</Title>
                                 <Paragraph style={{ fontSize: '19px', lineHeight: '1.5' }}>
-                                    {userData && userData.description ?  (
+                                    {userData && userData.description ? (
                                         <div className='description'
                                             style={{ whiteSpace: 'pre-wrap' }}
                                             dangerouslySetInnerHTML={{
@@ -378,9 +378,11 @@ const CompanyDetail = () => {
                 </Row>
             </div>
             <div className="open-position" ref={openPositionRef}>
-                <Title level={2} style={{ display: "flex", justifyContent: 'center' }}>
-                    Open Position ({filteredJobCount})
-                </Title>
+                {filteredJobCount > 0 && (
+                    <Title level={2} style={{ display: "flex", justifyContent: 'center' }}>
+                        Open Position ({filteredJobCount})
+                    </Title>
+                )}
                 <div className="list-company">
                     <div className="list-company-container">
                         <Row gutter={[16, 16]} justify="start">
