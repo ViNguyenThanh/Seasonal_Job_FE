@@ -66,7 +66,7 @@ export default function JobsSpotlight() {
                 );
 
                 setMatchedPostings(matched); // Update state with matched postings
-                console.log('Matched postings Job Spotlight:', matched);
+                // console.log('Matched postings Job Spotlight:', matched);
 
                 // Fetch user details for the first matched posting
                 if (matched.length > 0) {
@@ -74,7 +74,7 @@ export default function JobsSpotlight() {
                     userApi.getPublicUserById(userId)
                         .then(response => {
                             setUserDetails(response.data.data); // Update state with user details
-                            console.log('User Details Job Spotlight:', response.data);
+                            // console.log('User Details Job Spotlight:', response.data);
                         })
                         .catch(error => {
                             console.error('Error fetching user details:', error);
