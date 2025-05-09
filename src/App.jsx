@@ -62,6 +62,10 @@ import VerifyEmail from './pages/VerifyEmail/VerifyEmail'
 import ResetPassword from './pages/ResetPassword/ResetPassword'
 import ManageServices from './components/Admin/ManageServices/ManageServices'
 
+import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
+import TermsAndConditions from './pages/TermsAndConditions/TermsAndConditions'
+import PayrollPolicy from './pages/PayrollPolicy/PayrollPolicy'
+
 
 
 
@@ -114,7 +118,7 @@ function App() {
             < RegisterForEmployer />
           )} />
 
-        <Route path="/verify-email" element={<VerifyEmail />}/>
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
         <Route path="/sjcp-admin-login" element={<LoginForAdmin />} />
@@ -198,6 +202,10 @@ function App() {
           <Route path='manage-jobExecute/:jobGroupId' element={<SupportStaffJobPosting />} />
           <Route path='manage-jobExecute/:jobGroupId/:jobPostingId' element={<ManageJobExecute />} />
         </Route>
+
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+        <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
+        <Route path='/payroll-policy' element={<PayrollPolicy />} />
       </Routes>
     </>
   )
