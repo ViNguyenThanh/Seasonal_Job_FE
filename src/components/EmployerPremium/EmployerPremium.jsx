@@ -49,6 +49,7 @@ const EmployerPremium = () => {
     message.loading("Processing...");
     const { user } = getUserFromToken();
     if (!user || user.role !== 'employer') {
+      message.destroy();
       navigate('/login-for-employer', window.scrollTo(0, 0))
     } else {
       try {

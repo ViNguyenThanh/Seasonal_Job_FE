@@ -69,6 +69,19 @@
   border-radius: 50%;
   margin-right: 25px;
 }
+.application-worker-detail-left .worker-identity .no-avatar{
+  margin: 0;
+  margin-right: 25px;
+  min-width: 120px;
+  width: 120px;
+  height: 120px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  font-size: 60px;
+  color: white;
+}
 .application-worker-detail-left .worker-identity .worker-name-star{
   width: 100%;
 }
@@ -265,6 +278,18 @@
 
 
 @media (max-width: 1200px) {
+  .application-worker-detail-whole-container .ant-breadcrumb ol {
+    width: 90%;
+    padding: 0 5%;
+    margin-left: 0;
+    justify-content: center;
+    margin-bottom: 20px;
+    height: fit-content;
+  }
+  .application-worker-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+    display: flex;
+  }
+
   .application-worker-detail-right .worker-info p{
     width: 100%;
   }
@@ -313,18 +338,6 @@
   }
 }
 @media (max-width: 900px) {
-  .application-worker-detail-whole-container .ant-breadcrumb ol {
-    width: 90%;
-    padding: 0 5%;
-    margin-left: 0;
-    justify-content: center;
-    margin-bottom: 20px;
-    height: 99px;
-  }
-  .application-worker-detail-whole-container .ant-breadcrumb .ant-breadcrumb-link{
-    display: flex;
-  }
-
   .application-worker-detail-left .worker-identity{
     width: 100%;
     margin-bottom: 0px;
@@ -337,10 +350,6 @@
   }
 }
 @media (max-width: 700px) {
-  .application-worker-detail-whole-container .ant-breadcrumb ol {
-    margin-bottom: 50px;
-  }
-
   .application-worker-detail-right .worker-info p{
     width: 100%;
   }
@@ -352,6 +361,9 @@
   }
   .application-worker-detail-left .worker-identity img{
     margin: 15px 0;
+  }
+  .application-worker-detail-left .worker-identity .no-avatar{
+    margin-right: 0;
   }
   .application-worker-detail-left .worker-identity .worker-name-star p{
     width: 100%;

@@ -198,6 +198,19 @@
   border-radius: 10px;
   /* margin-right: 25px; */
 }
+.applications-by-job-postings-container .workers-list .worker-item .worker-avatar .no-avatar{
+  margin: 0;
+  /* margin-right: 25px; */
+  min-width: 80px;
+  width: 80px;
+  height: 80px;
+  background-color: #d9d9d9;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  font-size: 40px;
+  color: white;
+}
 .applications-by-job-postings-container .workers-list .worker-item .worker-info{
   /* margin-left: 25px; */
   width: 82%;
@@ -274,6 +287,18 @@
   }
 }
 @media (max-width: 1100px){
+  .applications-by-job-postings-whole-container .ant-breadcrumb ol {
+    width: 90%;
+    padding: 0 5%;
+    margin-left: 0;
+    justify-content: center;
+    margin-bottom: 20px;
+    height: fit-content;
+  }
+  .applications-by-job-postings-whole-container .ant-breadcrumb .ant-breadcrumb-link{
+    display: flex;
+  }
+
   /* .applications-by-job-postings-container .go-back-btn{
     top: 4%;
     left: 4%;
@@ -310,17 +335,6 @@
   }
 }
 @media (max-width: 700px) {
-  .applications-by-job-postings-whole-container .ant-breadcrumb ol {
-    width: 90%;
-    padding: 0 5%;
-    margin-left: 0;
-    justify-content: center;
-    margin-bottom: 20px;
-    height: 99px;
-  }
-  .applications-by-job-postings-whole-container .ant-breadcrumb .ant-breadcrumb-link{
-    display: flex;
-  }
   .applications-by-job-postings-container .workers-list .worker-item{
     width: 85%;
     padding: 20px 5% 15px 10%;

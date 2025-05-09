@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import './EmployerJobPostingDetail.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Breadcrumb, DatePicker, Empty, Form, Input, InputNumber, message, Pagination, Rate, Tabs } from 'antd';
-import { ArrowRightOutlined, ContainerOutlined, CreditCardOutlined, DeleteOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ScheduleOutlined, SnippetsOutlined, StarOutlined, TagOutlined, TeamOutlined, UpOutlined, UserSwitchOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, ContainerOutlined, CreditCardOutlined, DeleteOutlined, DownOutlined, EnvironmentOutlined, FileTextOutlined, FolderOpenOutlined, ScheduleOutlined, SnippetsOutlined, StarOutlined, TagOutlined, TeamOutlined, UpOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import dayjs from 'dayjs';
@@ -749,7 +749,12 @@ const EmployerJobPostingDetail = () => {
                               <>
                                 {/*listWorkers*/ paginatedData.map((worker) => (
                                   <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}/worker-detail/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } }, window.scrollTo(0, 0))}>
-                                    <img src={worker.avatar ? worker.avatar : avatar} />
+                                    {/* <img src={worker.avatar ? worker.avatar : avatar} /> */}
+                                    {worker.avatar ? (
+                                      <img src={worker.avatar} />
+                                    ) : (
+                                      <p className='no-avatar'><UserOutlined /></p>
+                                    )}
                                     <div className="worker-info">
                                       <p className='worker-name'>{worker.workerName}</p>
                                       <p className='worker-email'>{worker.email}</p>
@@ -811,7 +816,12 @@ const EmployerJobPostingDetail = () => {
                       <>
                         {/*listWorkers*/ paginatedData.map((worker) => (
                           <div className="worker-item" key={worker.id} onClick={() => navigate(`/employer/employer-job-groups/employer-job-group-detail/${item.jobGroupInfo.id}/employer-job-posting-detail/${item.jobPostingInfo.id}/worker-detail/${worker.id}`, { state: { workerInfo: worker, jobGroupInfo: item.jobGroupInfo, jobPostingInfo: item.jobPostingInfo } }, window.scrollTo(0, 0))}>
-                            <img src={worker.avatar ? worker.avatar : avatar} />
+                            {/* <img src={worker.avatar ? worker.avatar : avatar} /> */}
+                            {worker.avatar ? (
+                              <img src={worker.avatar} />
+                            ) : (
+                              <p className='no-avatar'><UserOutlined /></p>
+                            )}
                             <div className="worker-info">
                               <p className='worker-name'>{worker.workerName}</p>
                               <p className='worker-email'>{worker.email}</p>

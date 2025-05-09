@@ -6,7 +6,7 @@ import Footer from '../../components/Footer/Footer';
 import { Breadcrumb, Button, Flex, Space, Select, Row, Col, Typography, Tag, Pagination, Rate } from 'antd';
 import { userApi } from "../../apis/user.request"; // Import the userApi
 const { Title, Paragraph } = Typography;
-import { SearchOutlined, EnvironmentOutlined, ReloadOutlined, HomeOutlined } from '@ant-design/icons';
+import { SearchOutlined, EnvironmentOutlined, ReloadOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { Spin, Empty, ConfigProvider } from 'antd';
 
 const { Option } = Select;
@@ -346,11 +346,18 @@ const FindingCompany = () => {
                                             <a href={`/company-detail/${company.id}`} className="list-company-card-link">
                                                 <div className="list-company-card">
                                                     <div className="list-company-detail1">
-                                                        <img
-                                                            alt={company.companyName}
-                                                            src={company.avatar || "https://i.pinimg.com/736x/27/e0/74/27e074008b1d54fb474224de9102651b.jpg"} // Use avatar if available
-                                                            className="company-image"
-                                                        />
+                                                        {company.avatar ? (
+                                                            <img
+                                                                alt={company.companyName}
+                                                                // src={company.avatar || "https://i.pinimg.com/736x/27/e0/74/27e074008b1d54fb474224de9102651b.jpg"} // Use avatar if available
+                                                                src={company.avatar}
+                                                                className="company-image"
+                                                            />
+                                                        ) : (
+                                                            <p className="no-avatar">
+                                                                <UserOutlined />
+                                                            </p>
+                                                        )}
                                                         <div>
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                                                 <Title level={5} style={{ margin: 0 }} className="findingcomapany-title">

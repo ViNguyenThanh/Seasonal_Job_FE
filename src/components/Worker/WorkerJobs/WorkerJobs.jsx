@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './WorkerJobs.css'
 import avatar from '/assets/Work-On-Computer.png'
-import { DollarOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { DollarOutlined, EnvironmentOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Empty, Input, Pagination, Select, Skeleton } from 'antd';
 import { getApplicationsByUserId } from '../../../apis/application.request';
@@ -235,7 +235,12 @@ const WorkerJobs = () => {
               {/*listData*/ paginatedData.map((item) => (
                 <div className="worker-jobs-item" key={item.id} onClick={() => navigate(`/worker/worker-jobs/worker-job-detail/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
                   <div className="worker-jobs-item-left">
-                    <img src={item.image ? item.image : avatar} />
+                    {/* <img src={item.image ? item.image : avatar} /> */}
+                    {item.image ? (
+                      <img src={item.image} />
+                    ) : (
+                      <p className='no-avatar'><UserOutlined /></p>
+                    )}
                     <div className="worker-jobs-content">
                       <p className='worker-jobs-item-title'>{item.title}</p>
                       <p className='worker-jobs-item-info'>

@@ -8,7 +8,7 @@ import "./CompanyDetail.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import { Avatar, Button, Divider, Tag, Space, Tooltip, Rate } from 'antd';
-import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, SolutionOutlined, FileProtectOutlined } from '@ant-design/icons';
+import { AntDesignOutlined, ArrowRightOutlined, EnvironmentOutlined, PhoneOutlined, MailOutlined, StarOutlined, CalendarOutlined, SolutionOutlined, FileProtectOutlined, UserOutlined } from '@ant-design/icons';
 import { Typography, Row, Col } from 'antd';
 const { Title, Paragraph } = Typography;
 
@@ -117,11 +117,17 @@ const CompanyDetail = () => {
                     <div className="company-detail-header">
                         <div style={{ display: 'flex', justifyContent: 'space-start', gap: '20px', padding: '10px' }}>
                             <div className="company-detail-avatar-section">
-                                <Avatar
-                                    shape="square" size={80}
-                                    icon={<AntDesignOutlined />}
-                                    src={userData ? userData.avatar : "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} // Default avatar if none provided
-                                />
+                                {userData?.avatar ? (
+                                    <Avatar
+                                        shape="square" size={80}
+                                        // icon={<AntDesignOutlined />}
+                                        icon={<UserOutlined />}
+                                        // src={userData ? userData.avatar : "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} // Default avatar if none provided              
+                                        src={userData?.avatar}
+                                    />
+                                ) : (
+                                    <p className='no-avatar'><UserOutlined /></p>
+                                )}
                             </div>
                             <div className="company-detail-title-section">
                                 <Title level={3} style={{ fontWeight: 'bold', margin: 0 }}>
@@ -154,10 +160,15 @@ const CompanyDetail = () => {
                             <Typography className="company-description-leftSide-typography">
                                 <Title level={3} className="company-description-leftSide-title">Description</Title>
                                 <Paragraph style={{ fontSize: '19px', lineHeight: '1.5' }}>
-                                    {userData ? (
-                                        <span dangerouslySetInnerHTML={{ __html: userData.description }} />
+                                    {userData && userData.description ?  (
+                                        <div className='description'
+                                            style={{ whiteSpace: 'pre-wrap' }}
+                                            dangerouslySetInnerHTML={{
+                                                __html: userData.description.replace(/\n/g, "<br />"),
+                                            }}
+                                        />
                                     ) : (
-                                        "Loading..."
+                                        "--None--"
                                     )}
                                 </Paragraph>
                             </Typography>

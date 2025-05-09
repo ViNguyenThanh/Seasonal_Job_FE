@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './WorkerApplications.css'
 import avatar from '/assets/Work-On-Computer.png'
-import { DollarOutlined, EnvironmentOutlined } from '@ant-design/icons';
+import { DollarOutlined, EnvironmentOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Empty, Input, Pagination, Select, Skeleton } from 'antd';
 import { getApplicationsByUserId } from '../../../apis/application.request';
@@ -230,7 +230,11 @@ const WorkerApplications = () => {
               {/*listData*/ paginatedData.map((item) => (
                 <div className="worker-applications-item" key={item.id} onClick={() => navigate(`/job-detail-view/${item.id}`, { state: item }, window.scrollTo(0, 0))}>
                   <div className="worker-applications-item-left">
-                    <img src={avatar} />
+                    {item.image ? (
+                      <img src={item.image} />
+                    ) : (
+                      <p className='no-avatar'><UserOutlined /></p>
+                    )}
                     <div className="worker-applications-content">
                       <p className='worker-applications-item-title'>{item.title}</p>
                       <p className='worker-applications-item-info'>
