@@ -259,6 +259,30 @@
   font-size: 27px;
 }
 
+.employer-profile-left .employer-premium-card {
+  width: 80%;
+  padding: 12px 5%;
+  margin: 16px 10% 0 0;
+  background-color: #fdf8ef;
+  border-left: 4px solid #f5a623;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.employer-profile-left .employer-premium-card .premium-title {
+  width: 100%;
+  font-weight: 600;
+  color: #d48806;
+  font-size: 16px;
+  margin: 10px 0;
+}
+.employer-profile-left .employer-premium-card .premium-date {
+  width: 100%;
+  color: #1d1d1d;
+  font-weight: 500;
+  margin: 6px 0;
+}
+
+
 .employer-profile-left .employer-view-rating-btn{
   width: 100%;
   margin-top: 30px;
@@ -355,6 +379,13 @@
     width: 100%;
     justify-content: center;
   }
+
+  .employer-profile-left .employer-premium-card {
+    width: 80%;
+    padding: 12px 5%;
+    margin: 25px 5% 0;
+  }
+
   .employer-profile-left .employer-view-rating-btn{
     display: flex;
     justify-content: center;
@@ -442,6 +473,14 @@
   .employer-profile-container .employer-profile-left{
     margin-top: 30px;
   }
+  .employer-profile-left .employer-premium-card .premium-title {
+    width: 95%;
+    padding: 0 2.5%;
+  }
+  .employer-profile-left .employer-premium-card .premium-date {
+    width: 90%;
+    padding: 0 5%;
+  }
   .employer-profile-right .employer-info p{
     width: 100%;
   }
@@ -473,5 +512,12 @@
   .employer-profile-right .employer-description .employer-description-content{
     width: 90%;
     padding: 0 5%;
+  }
+}
+
+@media (max-width: 410px) {
+  .employer-profile-left .employer-premium-card .premium-date {
+    width: 70%;
+    padding: 0 18% 0 12%;
   }
 }
