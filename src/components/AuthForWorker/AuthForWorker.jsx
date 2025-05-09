@@ -115,6 +115,17 @@ const AuthForWorker = ({ comp }) => {
     }
   });
 
+  const handleLoginGoogle = async () => {
+    // message.loading('Please wait a moment...')
+    try {
+      window.location.href = 'https://sjcp-fha4a5e8f6arc7cg.eastasia-01.azurewebsites.net/api/auth/google';
+    } catch (error) {
+      console.log(error);
+      // message.destroy()
+      message.error("Can't login with Google");
+    }
+  }
+
   const onChange = (e) => {
     // console.log('checked = ', e.target.checked);
 
@@ -346,10 +357,10 @@ const AuthForWorker = ({ comp }) => {
 
           </form>
 
-          {/* <button className='log-in-gg-btn' onClick={() => navigate("/")}>
+          <button className='log-in-gg-btn' onClick={() => handleLoginGoogle()}>
             <img src={google} />
             Log in with Google
-          </button> */}
+          </button>
 
 
           {comp === "Register" ? (

@@ -3,6 +3,7 @@ import './SupportStaffJobGroup.css';
 import { Table, Input, Button, Tag, message, Select } from 'antd';
 import { useNavigate } from 'react-router-dom'; // Dùng để điều hướng sang trang chi tiết
 import { jobGroupApi } from '../../../apis/job-group.request';
+import { noop } from 'antd/es/_util/warning';
 
 // Dữ liệu giả Job Execute
 const jobData = [
@@ -14,7 +15,7 @@ const jobData = [
 
 // Cột cho Job Execute
 const jobColumns = [
-    { title: 'ID', dataIndex: 'id', key: 'id' },
+    { title: 'No.', dataIndex: 'no', key: 'no' },
     { title: 'Title', dataIndex: 'title', key: 'title' },
     { title: 'No. Jobs', dataIndex: 'numberOfJobPosting', key: 'numberOfJobPosting' },
     {
@@ -52,9 +53,11 @@ export default function SupportStaffJobGroup() {
                 // console.log(res.data);
 
                 if (res.data.data.length > 0) {
-                    const newJobGroups = res.data.data.map(jobGroup => {
+                    const sorted = res.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    const newJobGroups = sorted.map((jobGroup, index) => {
                         return {
                             key: jobGroup.id,
+                            no: index + 1,
                             id: jobGroup.id,
                             title: jobGroup.title,
                             isPaid: jobGroup.isPaid,
@@ -64,11 +67,8 @@ export default function SupportStaffJobGroup() {
                             createdAt: jobGroup.createdAt
                         }
                     });
-                    console.log(newJobGroups);
-                    
-
-                    const sorted = newJobGroups.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                    setJobGroups(sorted);
+                    // console.log(newJobGroups);
+                    setJobGroups(newJobGroups);
                 }
             } catch (error) {
                 console.error('Failed to fetch job groups', error);
@@ -88,7 +88,7 @@ export default function SupportStaffJobGroup() {
 
     // Hàm chuyển đến trang chi tiết của job khi click vào một dòng
     const handleRowClick = (record) => {
-        navigate(`/support-staff/manage-jobExecute/${record.id}`, { state: record }); // Điều hướng sang trang chi tiết với ID job
+        navigate(`/support-staff/manage-jobExecute/${record.id}`, { state: { jobGroup: record } }); // Điều hướng sang trang chi tiết với ID job
     };
 
     return (

@@ -12,7 +12,11 @@ const jobPostingData = [
 
 // Cột cho Job Posting
 const jobPostingColumns = [
-    { title: 'ID', dataIndex: 'id', key: 'id' },
+    { title: 'ID', dataIndex: 'id', key: 'id', 
+        render: (_, record, index) => (
+            <div>{index + 1}</div>
+        )
+    },
     { title: 'Job Title', dataIndex: 'title', key: 'title' },
     { title: 'Participants', dataIndex: 'number_of_person', key: 'number_of_person' },
     {
@@ -53,7 +57,7 @@ export default function SupportStaffJobPosting() {
     };
 
     const handleRowClick = (record) => {
-        navigate(`/support-staff/manage-jobExecute/${jobGroupId}/${record.id}`, { state: { title: location.state.title, jobPosting: record} });
+        navigate(`/support-staff/manage-jobExecute/${jobGroupId}/${record.id}`, { state: { jobGroup: location.state.jobGroup, jobPosting: record} });
     };
 
     return (
@@ -63,7 +67,7 @@ export default function SupportStaffJobPosting() {
                 <Breadcrumb style={{ marginBottom: '16px' }}>
                     <Breadcrumb.Item
                         onClick={() => navigate(`/support-staff/manage-jobExecute`)}>List Job Groups</Breadcrumb.Item>
-                    <Breadcrumb.Item>{location.state.title}</Breadcrumb.Item>
+                    <Breadcrumb.Item>{location.state.jobGroup.title}</Breadcrumb.Item>
                 </Breadcrumb>
 
                 {/* Tìm kiếm theo tên job */}

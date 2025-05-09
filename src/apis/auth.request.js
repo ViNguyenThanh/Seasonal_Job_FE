@@ -12,4 +12,7 @@ export const authApi = {
   verifyEmail: (token) => {
     return API.get(`/auth/verify-email?token=${token}`)
   },
+  loginGoogle: () => {
+    return API.get('/auth/google')
+  },
 }
