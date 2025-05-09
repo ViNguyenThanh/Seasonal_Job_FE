@@ -694,9 +694,7 @@ const JobDetailView = () => {
                                 </div>
                             </div>
                             <p className="jobType-but-job-expiry-date" style={{ color: "grey", display: 'flex', justifyContent: 'center' }}>
-                                Job type:<span className="job-expiry-date">
-                                    {jobTypeDetail?.name || "None"}
-                                </span>
+                                Created on <span className="job-expiry-date">{new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date(jobDetail.createdAt))}</span>
                             </p>
 
                             {/* <div className="share-this-job-mobile-only">

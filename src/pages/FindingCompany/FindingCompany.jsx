@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./FindingCompany.css";
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Breadcrumb, Button, Flex, Space, Select, Row, Col, Typography, Tag, Pagination, Rate } from 'antd';
+import { Breadcrumb, Button, Flex, Space, Select, Row, Col, Typography, Tag, Pagination, Rate, Input } from 'antd';
 import { userApi } from "../../apis/user.request"; // Import the userApi
 const { Title, Paragraph } = Typography;
 import { SearchOutlined, EnvironmentOutlined, ReloadOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
@@ -168,36 +168,29 @@ const FindingCompany = () => {
                         </div>
                         <div className="search-filter-layer2">
                             <Space.Compact size="large" className="custom-space-compact">
-                                <Select
-                                    showSearch
+                                <Input
                                     placeholder="Search Company / Employers..."
                                     prefix={<SearchOutlined className="custom-icon" />}
+                                    allowClear
                                     style={{
                                         width: '90%',
                                         height: '50px',
+                                        borderColor: 'white',
                                     }}
-                                    onSearch={(value) => {
-                                        setSelectedCompany(value); // Update state with user input
+                                    value={selectedCompany || ''} // Bind the input value to the state
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setSelectedCompany(value); // Update the state with user input
                                         applyFilters(value, selectedCity, selectedDistrict); // Apply cumulative filters
                                     }}
-                                    value={selectedCompany} // Bind state
-                                    onChange={(value) => {
-                                        setSelectedCompany(value); // Update state
-                                        applyFilters(value, selectedCity, selectedDistrict); // Apply cumulative filters
+                                    onPressEnter={() => {
+                                        applyFilters(selectedCompany, selectedCity, selectedDistrict); // Trigger search on Enter key press
                                     }}
-                                    filterOption={false} // Disable default filtering to rely on custom logic
-                                >
-                                    {[...new Set(companies.map((company) => company.companyName))]
-                                        .filter((name) => name.toLowerCase().includes(selectedCompany?.toLowerCase() || ''))
-                                        .map((name, index) => (
-                                            <Option key={index} value={name}>
-                                                {name}
-                                            </Option>
-                                        ))}
-                                </Select>
+                                />
 
                                 <Select
                                     showSearch
+                                    allowClear
                                     placeholder="Select City"
                                     prefix={<HomeOutlined className="custom-icon" />}
                                     style={{
@@ -227,6 +220,7 @@ const FindingCompany = () => {
                                 <Select
                                     showSearch
                                     placeholder="Select District"
+                                    allowClear
                                     prefix={<EnvironmentOutlined className="custom-icon" />}
                                     style={{
                                         width: '60%',

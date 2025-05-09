@@ -39,7 +39,7 @@ export default function CompanySpotlight() {
     // Fetch companies and then fetch user details for each company ID
     userApi.getUserCompanies()
       .then(companiesResponse => {
-        console.log('Companies Spotlight:', companiesResponse.data);
+        // console.log('Companies Spotlight:', companiesResponse.data);
         const companiesData = companiesResponse.data.data;
 
         // Fetch user details for each company and update the avatar and description
@@ -47,7 +47,7 @@ export default function CompanySpotlight() {
           const updatedCompanies = companiesData.map(company => {
             return userApi.getPublicUserById(company.id)
               .then(userResponse => {
-                console.log(`User Details Company Spotlight for Company ID ${company.id}:`, userResponse.data);
+                // console.log(`User Details Company Spotlight for Company ID ${company.id}:`, userResponse.data);
                 return {
                   ...company,
                   description: userResponse.data.data.description, // Add description
