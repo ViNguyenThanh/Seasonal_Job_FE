@@ -7,6 +7,7 @@ import { DownOutlined, SearchOutlined, EnvironmentOutlined } from '@ant-design/i
 import { jobGroupApi } from '../../../apis/job-group.request';
 import { jobApi } from '../../../apis/job.request';
 import { useNavigate } from 'react-router-dom';
+import { userApi } from '../../../apis/user.request';
 
 export default function Slide() {
     const { Option } = Select;
@@ -18,6 +19,8 @@ export default function Slide() {
     const [searchTitle, setSearchTitle] = useState(''); // State to track selected job title
     const [filteredTitles, setFilteredTitles] = useState([]); // State to store filtered job titles
     const navigate = useNavigate();
+    const [highestRatedCompany, setHighestRatedCompany] = useState(null);
+    const [publicUserDetails, setPublicUserDetails] = useState(null);
 
     const handleSearch = () => {
         navigate(
@@ -49,6 +52,9 @@ export default function Slide() {
                 const jobGroupsInactive = Array.isArray(jobGroupsResponse.data.data) ? jobGroupsResponse.data.data : [];
                 const jobPostingsIsPaid = Array.isArray(jobPostingsResponse.data.data) ? jobPostingsResponse.data.data : [];
 
+                // console.log('Job Groups Inactive:', jobGroupsInactive);
+                // console.log('Job Postings Is Paid:', jobPostingsIsPaid);
+
                 // Get today's date in ISO format (ignoring time)
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -59,10 +65,14 @@ export default function Slide() {
                     return startedDate > today;
                 });
 
+                // console.log('Future Job Postings:', futureJobPostings);
+
                 // Filter futureJobPostings where jobGroupId matches id in jobGroupsInactive
                 const matched = futureJobPostings.filter(posting =>
                     jobGroupsInactive.some(group => group.id === posting.jobGroupId)
                 );
+
+                console.log('Matched Postings:', matched);
 
                 // Extract unique locations from matchedPostings
                 const uniqueLocations = [...new Set(matched.map(posting => posting.location))].map(location => ({
@@ -70,8 +80,12 @@ export default function Slide() {
                     label: location
                 }));
 
+                // console.log('Unique Locations:', uniqueLocations);
+
                 // Extract unique job titles
                 const uniqueTitles = [...new Set(matched.map(posting => posting.title))];
+
+                // console.log('Unique Titles:', uniqueTitles);
 
                 // Update states
                 setLocations(uniqueLocations);
@@ -82,6 +96,40 @@ export default function Slide() {
                 console.error('Error fetching data:', error);
             });
     }, []);
+
+    useEffect(() => {
+        // Fetch user companies
+        userApi.getUserCompanies()
+            .then(response => {
+                const companies = response.data.data;
+
+                // Find the company with the highest avgRating
+                const highestRated = companies.reduce((max, company) =>
+                    company.avgRating > max.avgRating ? company : max, { avgRating: 0 });
+
+                setHighestRatedCompany(highestRated);
+                console.log('Highest Rated Company:', highestRated);
+
+                // Fetch additional details using getPublicUserById
+                if (highestRated?.id) {
+                    userApi.getPublicUserById(highestRated.id)
+                        .then(publicUserResponse => {
+                            console.log('Public User Details:', publicUserResponse.data);
+                            setPublicUserDetails(publicUserResponse.data.data); // Store public user details
+                        })
+                        .catch(error => {
+                            console.error('Error fetching public user details:', error);
+                        });
+                }
+
+                // Filter matched postings for the highest-rated company
+                const filteredPostings = matchedPostings.filter(posting => posting.userId === highestRated.id);
+                console.log('Matched Postings for Highest Rated Company:', filteredPostings);
+            })
+            .catch(error => {
+                console.error('Error fetching user companies:', error);
+            });
+    }, [matchedPostings]); // Add matchedPostings as a dependency
 
     const handleSearchChange = (value) => {
         setSearchInput(value);
@@ -129,18 +177,24 @@ export default function Slide() {
                         Search
                     </Button>
                 </div>
-                <div className="company-spotlight">
+                <Link
+                    to={highestRatedCompany?.id ? `/company-detail/${highestRatedCompany.id}` : '#'}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    className="company-spotlight"
+                >
                     <div className="company-spotlight-img">
-                        <img src="/assets/background_colour.jpg" alt="" />
+                        <img src={publicUserDetails?.avatar || '/assets/background_colour.jpg'} alt="Company Avatar" />
                     </div>
                     <div className="company-spotlight-info">
                         {screenWidth < 1100 ? (
-                            <h3>TAM VIET INTERNATIONAL INVESTMENT & TRADING JOINT STOCK COMPANY</h3> // Thay h2 bằng h4 khi màn hình nhỏ
+                            <h3>{highestRatedCompany?.companyName || 'Company Name Not Available'}</h3>
                         ) : (
-                            <h2>TAM VIET INTERNATIONAL INVESTMENT & TRADING JOINT STOCK COMPANY</h2>
+                            <h2>{highestRatedCompany?.companyName || 'Company Name Not Available'}</h2>
                         )}
                         <div className='company-spotlight-info-location'>
-                            <Link><EnvironmentOutlined /> Ho Chi Minh</Link>
+                            <Link style={{ textDecoration: 'none', color: 'inherit' }}>
+                                <EnvironmentOutlined /> {highestRatedCompany?.address?.split(',')[0] || 'City Not Available'}
+                            </Link>
                             <ConfigProvider
                                 theme={{
                                     components: {
@@ -154,17 +208,31 @@ export default function Slide() {
                                     }
                                 }}
                             >
-                                <Rate style={{ height: 'fit-content' }} disabled defaultValue={2} />
+                                {highestRatedCompany ? (
+                                    <Rate
+                                        style={{ height: 'fit-content' }}
+                                        disabled
+                                        defaultValue={highestRatedCompany.avgRating || 0}
+                                    />
+                                ) : (
+                                    <p>Loading rating...</p>
+                                )}
                             </ConfigProvider>
-                            <Link>12 công việc <DownOutlined /></Link>
+                            <Link style={{ textDecoration: 'none', color: 'inherit' }}>
+                                {matchedPostings.filter(posting => posting.userId === highestRatedCompany?.id).length || 0} công việc <DownOutlined />
+                            </Link>
                         </div>
-                        <p>Tam Viet operates in the medical field with the foundation of: pharmaceuticals, medical services</p>
+                        <p>
+                            {publicUserDetails?.description
+                                ? new DOMParser().parseFromString(publicUserDetails.description, 'text/html').body.textContent
+                                : 'Description not available'}
+                        </p>
                     </div>
-                </div>
+                </Link>
             </div>
             <div className="slide_right">
                 <div className="today_dashboard">
-                    <p>Today: <b>19/2/2025</b></p>
+                    <p>Today: <b>{new Date().toLocaleDateString()}</b></p>
                     <p>Total Job: <b>100+</b> | Today new jobs: <b>10</b></p>
                 </div>
                 <div className="image_background">
