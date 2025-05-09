@@ -6,6 +6,7 @@ import { FilePdfOutlined, InboxOutlined, SaveOutlined } from '@ant-design/icons'
 import { cvApi } from '../../../apis/cv.request'; // Import the cvApi for API calls
 import { getToken } from '../../../utils/Token'; // Import token utility
 const { Dragger } = Upload;
+import { userApi } from '../../../apis/user.request'; // Import the userApi
 
 const WorkerCV = () => {
   const [selectedFile, setSelectedFile] = useState(null); // State to store the selected file
@@ -15,6 +16,7 @@ const WorkerCV = () => {
   const [defaultPreviewUrl, setDefaultPreviewUrl] = useState(null); // For the default CV preview
   const [defaultCV, setDefaultCV] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [currentWorker, setCurrentWorker] = useState(null); // State to store current worker data
 
   // Handle file selection
   const handleUpload = (info) => {
@@ -79,6 +81,25 @@ const WorkerCV = () => {
 
     fetchDefaultCV();
   }, [userId]);
+
+  useEffect(() => {
+    const fetchCurrentWorker = async () => {
+      const token = getToken();
+      if (token) {
+        const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token to get the user ID
+        const userId = decodedToken.id;
+
+        try {
+          const response = await userApi.getUserById(userId); // Fetch the worker's data
+          setCurrentWorker(response.data.data); // Store the worker's data in state
+        } catch (error) {
+          console.error("Error fetching current worker:", error);
+        }
+      }
+    };
+
+    fetchCurrentWorker();
+  }, []);
 
   const handleSave = async () => {
     if (!selectedFile || !userId) {
@@ -193,7 +214,7 @@ const WorkerCV = () => {
             size="large"
             onClick={handleDefaultPreview} // Use a separate handler for the default CV preview
           >
-            <FilePdfOutlined /> {defaultCV.name}
+            <FilePdfOutlined /> {`${currentWorker?.fullName}'s CV`}
           </Button>
           <Modal
             open={defaultPreviewVisible}

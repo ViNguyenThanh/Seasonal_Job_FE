@@ -48,7 +48,7 @@ const FindingCompany = () => {
         // Fetch the companies from the API
         userApi.getUserCompanies()
             .then(response => {
-                console.log("API Response:", response.data); // Log the API response
+                // console.log("API Response:", response.data); // Log the API response
                 if (Array.isArray(response.data.data)) {
                     setCompanies(response.data.data); // Update the companies state with the API data
                     setFilteredCompanies(response.data.data); // Automatically populate the filtered list
@@ -73,7 +73,7 @@ const FindingCompany = () => {
                     const companiesWithCreatedAt = await Promise.all(
                         response.data.data.map(async (company) => {
                             const userResponse = await userApi.getPublicUserById(company.id); // Fetch user data by company ID
-                            console.log(`Fetched user data for company ID ${company.id}:`, userResponse.data); // Log the user data
+                            // console.log(`Fetched user data for company ID ${company.id}:`, userResponse.data); // Log the user data
                             return {
                                 ...company,
                                 avatar: userResponse.data.data.avatar, // Include avatar

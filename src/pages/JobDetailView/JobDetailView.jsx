@@ -37,6 +37,7 @@ const JobDetailView = () => {
     const [defaultPreviewUrl, setDefaultPreviewUrl] = useState(null); // State for the default CV preview URL
     const [defaultPreviewVisible, setDefaultPreviewVisible] = useState(false); // State for the default CV preview modal
     const [avatarUrl, setAvatarUrl] = useState(null); // State for the avatar URL
+    const [currentWorker, setCurrentWorker] = useState(null); // State to store current worker data
 
 
     // Fetch job details when the component loads
@@ -45,13 +46,13 @@ const JobDetailView = () => {
             try {
                 const jobResponse = await jobApi.getJobById(id);
                 const jobData = jobResponse.data.data;
-                console.log("Job Detail:", jobData); // Log the job details
+                // console.log("Job Detail:", jobData); // Log the job details
                 setJobDetail(jobData);
 
                 // Fetch user details using userId from jobData
                 if (jobData.userId) {
                     const userResponse = await userApi.getPublicUserById(jobData.userId);
-                    console.log("User Detail:", userResponse.data); // Log user details here
+                    // console.log("User Detail:", userResponse.data); // Log user details here
                     setAvatarUrl(userResponse.data.data.avatar); // Set the avatar URL
                 }
 
@@ -111,7 +112,7 @@ const JobDetailView = () => {
                             name: defaultCV.filename,
                             url: defaultCV.file_Url,
                         });
-                        console.log("Default CV:", defaultCV); // Log the default CV
+                        // console.log("Default CV:", defaultCV); // Log the default CV
                     } else {
                         setDefaultCV(null);
                         console.log("No default CV found.");
@@ -124,6 +125,25 @@ const JobDetailView = () => {
 
         fetchDefaultCV();
     }, [userId]);
+
+    useEffect(() => {
+        const fetchCurrentWorker = async () => {
+            const token = getToken();
+            if (token) {
+                const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode the token to get the user ID
+                const userId = decodedToken.id;
+
+                try {
+                    const response = await userApi.getUserById(userId); // Fetch the worker's data
+                    setCurrentWorker(response.data.data); // Store the worker's data in state
+                } catch (error) {
+                    console.error("Error fetching current worker:", error);
+                }
+            }
+        };
+
+        fetchCurrentWorker();
+    }, []);
 
     if (isLoading) {
         return (
@@ -343,10 +363,10 @@ const JobDetailView = () => {
                     <div className="job-detail-avatar-section">
                         {avatarUrl ? (
                             <Avatar
-                                shape="square" 
+                                shape="square"
                                 style={{ width: '100px', height: '100px' }}
                                 // icon={<AntDesignOutlined />}
-                                icon={!avatarUrl && <UserOutlined />}         
+                                icon={!avatarUrl && <UserOutlined />}
                                 src={avatarUrl}
                             />
                         ) : (
@@ -770,7 +790,7 @@ const JobDetailView = () => {
                                             size="large"
                                             onClick={handleDefaultPreview} // Open preview for default CV
                                         >
-                                            <FilePdfOutlined /> {defaultCV.name}
+                                            <FilePdfOutlined /> {`${currentWorker?.fullName}'s CV`}
                                         </Button>
                                         <Modal
                                             open={defaultPreviewVisible}

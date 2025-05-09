@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
@@ -7,8 +7,8 @@ import { Select, Space, Button, Flex, Card, Tag, Empty, Spin, Input } from "antd
 import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined, HomeOutlined, UserOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb, ConfigProvider } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { jobApi } from '../../apis/job.request'; // Import the jobApi
-import { jobGroupApi } from '../../apis/job-group.request'; // Import jobGroupApi
+import { jobApi } from '../../apis/job.request';
+import { jobGroupApi } from '../../apis/job-group.request';
 import { userApi } from '../../apis/user.request';
 import { useSearchParams } from 'react-router-dom';
 
@@ -159,27 +159,8 @@ const FindingJob = () => {
 
     const navigate = useNavigate();
 
-    const inputRef = useRef(null);
-    useEffect(() => {
-        const title = searchParams.get('title') || ''; // Get 'title' from query params
-        const location = searchParams.get('location') || ''; // Get 'location' from query params
-        const trigger = searchParams.get('trigger') === 'true'; // Check if 'trigger' is true
-
-        setSelectedTitle(title); // Set the title state
-        setSelectedLocation(location); // Set the location state
-
-        if (trigger) {
-            applyFilters(title, location, selectedMinStarRequirement); // Trigger the search logic
-        }
-    }, [searchParams]); // Re-run when searchParams change
-
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
-            // Update the URL with the search parameters
-            navigate(
-                `/finding-job?title=${encodeURIComponent(selectedTitle)}&location=${encodeURIComponent(selectedLocation)}`
-            );
-
             // Trigger the search logic
             applyFilters(selectedTitle, selectedLocation, selectedMinStarRequirement);
         }
@@ -261,7 +242,6 @@ const FindingJob = () => {
                                 </Select> */}
 
                                 <Input
-                                    ref={inputRef}
                                     placeholder="Job title, Keyword..."
                                     allowClear
                                     prefix={<SearchOutlined className="custom-icon" />}
@@ -274,6 +254,15 @@ const FindingJob = () => {
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         setSelectedTitle(value); // Update the state with user input
+
+                                        // Dynamically filter jobs based on the input value
+                                        const filteredJobs = allJobs.filter((job) =>
+                                            job.title.toLowerCase().includes(value.toLowerCase())
+                                        );
+
+                                        setJobData(filteredJobs); // Update the displayed jobs
+                                        // setSelectedLocation(''); // Clear location filter
+                                        // setSelectedMinStarRequirement(''); // Clear star requirement filter
                                     }}
                                     onKeyUp={handleKeyPress} // Trigger handleKeyPress on key up
                                 />

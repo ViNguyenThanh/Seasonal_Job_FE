@@ -72,7 +72,7 @@ export default function Slide() {
                     jobGroupsInactive.some(group => group.id === posting.jobGroupId)
                 );
 
-                console.log('Matched Postings:', matched);
+                // console.log('Matched Postings:', matched);
 
                 // Extract unique locations from matchedPostings
                 const uniqueLocations = [...new Set(matched.map(posting => posting.location))].map(location => ({
