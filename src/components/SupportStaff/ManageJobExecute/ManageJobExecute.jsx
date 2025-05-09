@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './ManageJobExecute.css';
 import { Table, Input, Breadcrumb, Button, Tag, Modal, message } from 'antd';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { jobExecuteApi } from '../../../apis/job-execute.request';
 import { userApi } from '../../../apis/user.request';
 
@@ -18,6 +18,7 @@ export default function ManageJobExecute() {
     const [jobExecutes, setJobExecutes] = useState([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingRecord, setEditingRecord] = useState({});
+    const [isModalViewVisible, setIsModalViewVisible] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -25,23 +26,29 @@ export default function ManageJobExecute() {
         const fetchJobExecute = async () => {
             try {
                 const res = await jobExecuteApi.getJobExecuteByJobPostingId(jobPostingId);
-                console.log(res.data);
+                // console.log(res.data);
                 if (res.data.message === "No job execute for this job posting") {
                     setJobExecutes([]);
                 } else {
-                    const newJobExecutes = await Promise.all(res.data.data.map(async (item) => {
+                    let number = 0;
+                    const newJobExecutes = await Promise.all(res.data.data.map(async (item, index) => {
                         const userRes = await userApi.getPublicUserById(item.userId);
-                        return {
-                            key: item.id, // key cho Table
-                            id: item.id,
-                            assignedDate: item.assigned_at,
-                            jobRequirement: item.note,
-                            workProcess: item.work_process,
-                            processCompleted: item.processComplete,
-                            userName: userRes?.data?.data?.fullName || userRes?.data?.data?.companyName
-                        };
+                        if (userRes.data.data.role === "worker") {
+                            number += 1
+                            return {
+                                key: item.id,
+                                no: number,
+                                id: item.id,
+                                assignedDate: item.assigned_at,
+                                jobRequirement: item.note,
+                                workProcess: item.work_process,
+                                processCompleted: item.processComplete,
+                                userName: userRes?.data?.data?.fullName || '',
+                                reason: item.reason
+                            };
+                        }
                     }))
-                    setJobExecutes(newJobExecutes);
+                    setJobExecutes(newJobExecutes.filter(Boolean));
                 }
             } catch (error) {
                 console.log(error);
@@ -51,7 +58,7 @@ export default function ManageJobExecute() {
     }, [])
     const getFilteredData = () => {
         return /*jobExecuteData*/jobExecutes.length > 0 ? jobExecutes.filter(item =>
-            item.userName.toLowerCase().includes(searchRequirement.toLowerCase())
+            item?.userName?.toLowerCase().includes(searchRequirement.toLowerCase())
         ) : [];
     };
 
@@ -60,8 +67,14 @@ export default function ManageJobExecute() {
         setIsModalVisible(true);
     };
 
+    const handleView = (record) => {
+        setEditingRecord(record);
+        setIsModalVisible(true);
+        setIsModalViewVisible(true);
+    };
+
     const jobExecuteColumns = [
-        { title: 'ID', dataIndex: 'id', key: 'id' },
+        { title: 'No.', dataIndex: 'no', key: 'no' },
         { title: 'Assigned Date', dataIndex: 'assignedDate', key: 'assignedDate' },
         { title: 'User Name', dataIndex: 'userName', key: 'userName' },
         { title: 'Job Requirement', dataIndex: 'jobRequirement', key: 'jobRequirement' },
@@ -87,9 +100,13 @@ export default function ManageJobExecute() {
             title: 'Action',
             key: 'edit',
             render: (_, record) => (
-                <Button icon={<EditOutlined />} type="link" onClick={() => handleEdit(record)}>
-                    Edit
-                </Button>
+                location.state.jobGroup.status === "active" ? (
+                    <Button icon={<EditOutlined />} type="link" onClick={() => handleEdit(record)}>
+                        Edit
+                    </Button>
+                ) : (
+                    <Button icon={<EyeOutlined />} type="link" onClick={() => handleView(record)}></Button>
+                )
             ),
         },
     ];
@@ -97,15 +114,29 @@ export default function ManageJobExecute() {
     const handleSave = async () => {
         message.loading('Updating...');
         try {
+            console.log(editingRecord);
+            
+            if(editingRecord.workProcess < editingRecord.processCompleted) {
+                message.destroy();
+                message.error('Process completed must be less than work process');
+                return
+            }
+            if(editingRecord.processCompleted < editingRecord.workProcess && !editingRecord.reason) {
+                message.destroy();
+                message.error('Reason is required when process completed is less than work process');
+                return
+            }
+            
             const payload = {
-                processComplete: editingRecord.processCompleted
+                processComplete: editingRecord.processCompleted,
+                reason: editingRecord.processCompleted === editingRecord.workProcess ? '' : editingRecord.reason
             };
             await jobExecuteApi.updateJobExecute(editingRecord.id, payload);
             message.destroy();
             message.success('Update successful!');
             setJobExecutes(prev =>
                 prev.map(j =>
-                    j.id === editingRecord.id ? { ...j, processCompleted: payload.processComplete } : j
+                    j.id === editingRecord.id ? { ...j, processCompleted: payload.processComplete, reason: payload.reason } : j
                 )
             );
             setIsModalVisible(false);
@@ -123,7 +154,7 @@ export default function ManageJobExecute() {
                     <Breadcrumb.Item
                         onClick={() => navigate(`/support-staff/manage-jobExecute`)}>List Job Groups</Breadcrumb.Item>
                     <Breadcrumb.Item
-                        onClick={() => navigate(`/support-staff/manage-jobExecute/${jobGroupId}`, { state: location.state })}>{location.state.title}</Breadcrumb.Item>
+                        onClick={() => navigate(`/support-staff/manage-jobExecute/${jobGroupId}`, { state: { jobGroup: location.state } })}>{location.state.jobGroup.title}</Breadcrumb.Item>
                     <Breadcrumb.Item>{location.state.jobPosting.title}</Breadcrumb.Item>
                 </Breadcrumb>
 
@@ -147,8 +178,11 @@ export default function ManageJobExecute() {
                     title="Edit Job Execute progress completed"
                     open={isModalVisible}
                     onOk={handleSave}
-                    onCancel={() => setIsModalVisible(false)}
-                    okText="Save"
+                    onCancel={() => {
+                        setIsModalVisible(false)
+                        setIsModalViewVisible(false);
+                    }}
+                    okText={isModalViewVisible ? 'OK' : 'Save'}
                 >
                     <div className='modal-create-update-sstaff'>
                         <Input
@@ -177,16 +211,29 @@ export default function ManageJobExecute() {
                             className='input-account'
                             placeholder="Work Process"
                             type="number"
-                            value={editingRecord ? editingRecord.workProcess : ''}
+                            value={editingRecord ? editingRecord.workProcess : 0}
                             onChange={(e) => setEditingRecord({ ...editingRecord, workProcess: e.target.value })}
                         />
                         <Input
                             className='input-account'
                             placeholder="Process Completed"
                             type="number"
-                            value={editingRecord ? editingRecord.processCompleted : ''}
-                            onChange={(e) => setEditingRecord({ ...editingRecord, processCompleted: e.target.value })}
+                            max={editingRecord.workProcess}
+                            min={0}
+                            disabled={isModalViewVisible}
+                            value={editingRecord ? editingRecord.processCompleted : 0}
+                            onChange={(e) => setEditingRecord({ ...editingRecord, processCompleted: Number(e.target.value) })}
                         />
+                        {editingRecord.workProcess > editingRecord.processCompleted &&
+                            <Input
+                                className='input-account'
+                                placeholder="Reason"
+                                type="text"
+                                disabled={isModalViewVisible}
+                                value={editingRecord ? editingRecord.reason : ''}
+                                onChange={(e) => setEditingRecord({ ...editingRecord, reason: e.target.value})}
+                            />
+                        }
                     </div>
                 </Modal>
             </div>
