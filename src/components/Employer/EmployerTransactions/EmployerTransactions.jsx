@@ -11,6 +11,7 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { userApi } from '../../../apis/user.request';
 import { complaintApi } from '../../../apis/complaint.request';
+import { jobPostingApi } from '../../../apis/job-posting.request';
 
 const EmployerTransactions = ({ newUser }) => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const EmployerTransactions = ({ newUser }) => {
     const fetchAllTransactions = async () => {
       let payments = [];
       let transfers = [];
-  
+
       try {
         const res = await paymentApi.getPaymentHistory();
         payments = await Promise.all(res.data.data.map(async (item) => {
@@ -68,40 +69,40 @@ const EmployerTransactions = ({ newUser }) => {
           console.error("Error fetching payments:", err);
         }
       }
-  
+
       try {
         const res = await paymentApi.getTransactions();
         // console.log(res.data);
-        
+
         transfers = res.data.data.map(item => ({
           id: item.id,
           jobGroupName: '',
           date: formatDate(item.createdAt),
           amount: parseFloat(item.amount),
           status: item.status,
-          description: item.description? item.description : 'SALARY PAYMENT',
+          description: item.description ? item.description : 'SALARY PAYMENT',
           employerId: item.senderId,
           userId: item.receiverId,
           orderCode: item.id,
           startDate: null,
           endDate: null,
-          type: item.description? 'WITHDRAW' : 'TRANSFER',
+          type: item.description ? 'WITHDRAW' : 'TRANSFER',
         }));
       } catch (err) {
         if (err?.response?.status !== 404) {
           console.error("Error fetching transfers:", err);
         }
       }
-  
+
       const merged = [...payments, ...transfers];
       const sorted = merged.sort((a, b) => convertToDate(b.date) - convertToDate(a.date));
       setTransactions(sorted);
       setIsLoading(false);
     };
-  
+
     fetchAllTransactions();
   }, []);
-  
+
 
   useEffect(() => {
     fetchWallet();
@@ -134,7 +135,7 @@ const EmployerTransactions = ({ newUser }) => {
     if (status === 'PENDING') return 'pending';
     if (status === 'HELD') return 'held';
     if (status === 'RELEASED') return 'released';
-    if(status === 'COMPLETED') return 'released';
+    if (status === 'COMPLETED') return 'released';
     if (status === 'CANCELLED') return 'cancelled';
     return '';
   };
@@ -195,8 +196,58 @@ const EmployerTransactions = ({ newUser }) => {
   // Đóng modal
   const closeConfirm = () => {
     setConfirmVisible(false);
-    setPreviewImage('');
+    // setPreviewImage('');
   };
+
+  const [deposit, setDeposit] = useState(0);
+
+  useEffect(() => {
+    const fetchJobGroupDeposit = async () => {
+      try {
+        const res = await jobGroupApi.getAllJobGroupsByUserId();
+        // console.log(res.data.data);
+        if (res.data.data.length > 0) {
+          const newJobGroup = res.data.data.filter(item =>
+            item.status === "active" ||
+            (new Date(item.start_date) > new Date() && item.isPaid && item.status === "inactive")
+          );
+          // console.log(newJobGroup);
+          
+          const jobPostingsByGroup = await Promise.all(
+            newJobGroup.map(async (group) => {
+              const jobPostingRes = await jobPostingApi.getAllJobByJobGroupId(group.id); // giả định bạn có API này
+              const jobPostings = jobPostingRes.data.data || [];
+              // console.log(jobPostings);
+              
+              // Tính tổng lương cho group này
+              const totalSalary = jobPostings.reduce((sum, post) => {
+                return sum + (parseFloat(post.salary) * post.number_of_person);
+              }, 0);
+
+              return {
+                jobGroupId: group.id,
+                jobGroupTitle: group.title,
+                totalSalary,
+                jobPostings, // nếu cần dùng để hiển thị
+              };
+            })
+          );
+          // console.log(jobPostingsByGroup);
+          
+          let totalSalary = 0
+          jobPostingsByGroup.forEach(item => {
+            totalSalary += item.totalSalary
+          })
+          setDeposit(totalSalary);
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    fetchJobGroupDeposit();
+  }, [])
 
   const formik = useFormik({
     initialValues: {
@@ -223,6 +274,15 @@ const EmployerTransactions = ({ newUser }) => {
     onSubmit: async (values) => {
       setConfirmLoading(true);
       try {
+        console.log(parseFloat(walletBalance) - deposit);
+        
+        if(values.amount > (parseFloat(walletBalance) - deposit)) {
+          message.error(`You cannot withdraw more than ${(parseFloat(walletBalance) - deposit).toLocaleString('vi-VN')} VND, ${deposit.toLocaleString('vi-VN')} VND have been reserved to pay the worker upon completion of the Job Group.`);
+          setConfirmLoading(false);
+          setConfirmVisible(false);
+          formik.resetForm();
+          return
+        }
         await complaintApi.createComplaint({
           description: `Account Number: ${values.accountNumber}
             Account Name: ${values.accountName}
@@ -486,7 +546,7 @@ const EmployerTransactions = ({ newUser }) => {
                     <tbody>
                       {/*transactionData*/paginatedData.map(item => (
                         <tr key={item.id}>
-                          <td className='job-posting-name'>{item.jobGroupName? item.jobGroupName : item.description}</td>
+                          <td className='job-posting-name'>{item.jobGroupName ? item.jobGroupName : item.description}</td>
                           <td className='date'>{item.date}</td>
                           <td className='amount'>{item.amount.toLocaleString('vi-VN')}</td>
                           <td className='status'>

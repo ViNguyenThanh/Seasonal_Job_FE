@@ -13,11 +13,13 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // Giao diện mặc định
 import { useLocation, useNavigate } from 'react-router-dom';
 import { userApi } from '../../../apis/user.request';
-import { getToken } from '../../../utils/Token';
+import { getToken, getUserFromToken } from '../../../utils/Token';
 import { Api } from '../../../utils/BaseUrlServer';
 import { login } from '../../../redux/actions/auth.action';
 import store from "../../../store/ReduxStore";
 import actionsType from '../../../redux/actions/action.type';
+import { serviceApi } from '../../../apis/service.request';
+import { formatDate } from '../../../utils/formatDate';
 
 
 
@@ -38,7 +40,7 @@ const EmployerProfile = () => {
         const data = response.data.data;
         setUserId(id);
 
-        console.log("Fetched Employer Profile Data:", data); // Log the fetched data
+        // console.log("Fetched Employer Profile Data:", data); // Log the fetched data
 
         setProfileData({
           avatar: data.avatar || '',
@@ -315,7 +317,7 @@ const EmployerProfile = () => {
           avatar: avatarUrl, // Use the uploaded avatar URL
         };
 
-        console.log("Update Data Sent to Backend:", updateData);
+        // console.log("Update Data Sent to Backend:", updateData);
 
         // Send the profile update request
         const api = Api(); // Create an Axios instance
@@ -326,7 +328,7 @@ const EmployerProfile = () => {
         });
 
         if (response.status === 200) {
-          console.log("Update Response:", response.data);
+          // console.log("Update Response:", response.data);
 
           // Show success message
           message.success("Profile updated successfully!");
@@ -434,7 +436,7 @@ const EmployerProfile = () => {
         const loginPayload = { email: profileData.email, password: values.oldPassword };
         const loginResponse = await store.dispatch(login(loginPayload));
 
-        console.log("Login Response:", loginResponse); // Debugging log
+        // console.log("Login Response:", loginResponse); // Debugging log
 
         if (loginResponse?.type === actionsType.AUTH_LOGIN_SUCCESS) {
           // Step 2: If old password is correct, update the password
@@ -466,6 +468,55 @@ const EmployerProfile = () => {
       }
     }
   });
+
+  const [serviceDate, setServiceDate] = useState(null);
+
+  useEffect(() => {
+    const fetchService = async () => {
+      try {
+        const { user } = getUserFromToken();
+        const res = await serviceApi.getServices();
+        if (res.data.length > 0) {
+          const existService = res.data.filter(service => service.userId === user.id && service.status === 'active');
+          // console.log(existService);
+
+          if (existService.length > 0) {
+            // B1: Tìm ngày tạo sớm nhất
+            const earliestDate = new Date(
+              existService.reduce((minDate, service) => {
+                return new Date(service.createdAt) < new Date(minDate)
+                  ? service.createdAt
+                  : minDate;
+              }, existService[0].createdAt)
+            );
+
+            // B2: Tính tổng số tháng từ description
+            const totalMonths = existService.reduce((sum, service) => {
+              const months = parseInt(service.description, 10);
+              return sum + (isNaN(months) ? 0 : months);
+            }, 0);
+
+            // B3: Tính ngày hết hạn
+            const expiredDate = new Date(earliestDate);
+            expiredDate.setMonth(expiredDate.getMonth() + totalMonths);
+
+            setServiceDate({
+              earliestDate: earliestDate.toISOString(),
+              totalMonths,
+              expiredDate: expiredDate.toISOString()
+            });
+            console.log("Ngày bắt đầu:", earliestDate.toISOString());
+            console.log("Tổng số tháng:", totalMonths);
+            console.log("Ngày hết hạn:", expiredDate.toISOString());
+          }
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchService()
+  }, [])
 
   return (
     <div className='employer-profile-container'>
@@ -805,6 +856,20 @@ const EmployerProfile = () => {
             <div><Rate allowHalf value={averageRating} disabled /></div>
           </div>
         </div>
+
+        {serviceDate && (
+          <div className="employer-premium-card">
+            <p className="premium-title">
+              ✨ Premium Account
+            </p>
+            <p className="premium-date">
+              Effective Date: {formatDate(serviceDate?.earliestDate)}
+            </p>
+            <p className="premium-date">
+              Expiry Date: {formatDate(serviceDate?.expiredDate)}
+            </p>
+          </div>
+        )}
 
         <div className="employer-view-rating-btn">
           <button onClick={() => navigate('/employer/employer-ratings', { state: userId }, window.scrollTo(0, 0))}>

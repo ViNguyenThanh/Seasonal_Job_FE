@@ -20,6 +20,7 @@ const ApplicationWorkerDetail = () => {
   const [workerLoading, setWorkerLoading] = useState(true);
   const [workerInfo, setWorkerInfo] = useState({});
   const [cv, setCv] = useState('');
+  const [previewCv, setPreviewCv] = useState('');
   const [averageRating, setAverageRating] = useState(0);
 
   /* Hiển thị file pdf */
@@ -75,7 +76,7 @@ const ApplicationWorkerDetail = () => {
       const pdfBlob = new Blob([blob], { type: "application/pdf" });
       const objectUrl = URL.createObjectURL(pdfBlob);
 
-      setCv(objectUrl);
+      setPreviewCv(objectUrl);
     } catch (error) {
       console.error("Error fetching the PDF:", error);
       message.error("Failed to load the CV for preview.");
@@ -214,7 +215,7 @@ const ApplicationWorkerDetail = () => {
                 <p>No CV available for preview.</p>
               )} */}
               <iframe
-                src={/*defaultCvFileUrl*/cv} // Đưa URL trực tiếp vào đây
+                src={previewCv/*cv*/} // Đưa URL trực tiếp vào đây
                 type="application/pdf"
                 width="100%"
                 height="500px"
