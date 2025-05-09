@@ -201,9 +201,16 @@ const Header = () => {
                                         >
                                             <a onClick={(e) => e.preventDefault()}>
                                                 <Space>
-                                                    <Avatar
+                                                    {/* <Avatar
                                                         src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
-                                                    />
+                                                    /> */}
+                                                    {userInfor.avatar ? (
+                                                        <Avatar
+                                                            src={userInfor.avatar}
+                                                        />
+                                                    ) : (
+                                                        <p className='no-avatar'><UserOutlined /></p>
+                                                    )}
                                                 </Space>
                                             </a>
                                         </Dropdown>
@@ -271,9 +278,16 @@ const Header = () => {
                                 >
                                     <a onClick={(e) => e.preventDefault()}>
                                         <Space>
-                                            <Avatar
+                                            {/* <Avatar
                                                 src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
-                                            />
+                                            /> */}
+                                            {userInfor.avatar ? (
+                                                <Avatar
+                                                    src={userInfor.avatar}
+                                                />
+                                            ) : (
+                                                <p className='no-avatar'><UserOutlined /></p>
+                                            )}
                                         </Space>
                                     </a>
                                 </Dropdown>

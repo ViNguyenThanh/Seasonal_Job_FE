@@ -123,26 +123,26 @@ const EmployerHeader = () => {
         {
             label: "Applications",
             key: '2',
-            icon: <SolutionOutlined/>,
+            icon: <SolutionOutlined />,
             onClick: () => navigate('/employer/application/job-groups', window.scrollTo(0, 0))
         },
         {
             label: "Jobs Management",
             key: '3',
-            icon: <ProfileOutlined/>,
+            icon: <ProfileOutlined />,
             onClick: () => navigate('/employer/employer-job-groups', window.scrollTo(0, 0)),
         },
         {
             label: "Wallet & Transaction",
             key: '4',
-            icon: <CreditCardOutlined/>,
+            icon: <CreditCardOutlined />,
             style: { width: '160px' },
             onClick: () => navigate('/employer/employer-transactions', window.scrollTo(0, 0)),
         },
         {
             label: "Log Out",
             key: '5',
-            icon: <LogoutOutlined/>,
+            icon: <LogoutOutlined />,
             onClick: handleLogout,
         },
     ];
@@ -192,9 +192,16 @@ const EmployerHeader = () => {
                                         >
                                             <a onClick={(e) => e.preventDefault()}>
                                                 <Space>
-                                                    <Avatar
+                                                    {/* <Avatar
                                                         src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
-                                                    />
+                                                    /> */}
+                                                    {userInfor.avatar ? (
+                                                        <Avatar
+                                                            src={userInfor.avatar}
+                                                        />
+                                                    ) : (
+                                                        <p className='no-avatar'><UserOutlined /></p>
+                                                    )}
                                                 </Space>
                                             </a>
                                         </Dropdown>
@@ -271,9 +278,16 @@ const EmployerHeader = () => {
                                 >
                                     <a onClick={(e) => e.preventDefault()}>
                                         <Space>
-                                            <Avatar
+                                            {/* <Avatar
                                                 src={userInfor.avatar ? userInfor.avatar : 'https://cdn-media.sforum.vn/storage/app/media/THANHAN/avatar-trang-98.jpg'}
-                                            />
+                                            /> */}
+                                            {userInfor.avatar ? (
+                                                <Avatar
+                                                    src={userInfor.avatar}
+                                                />
+                                            ) : (
+                                                <p className='no-avatar'><UserOutlined /></p>
+                                            )}
                                         </Space>
                                     </a>
                                 </Dropdown>

@@ -136,6 +136,12 @@ const EmployerJobGroups = () => {
                     <p className='job-group-name'>{group.title}</p>
                     <p className='number-of-job-postings'>Number of Job Postings: {group.totalJobPostings}</p>
                     <p className={`status ${getStatusClass(group.status)}`}>{group.status}</p>
+                    {group.isPaid ? (
+                      <></>
+                    ): (
+                      <p className='unpaid'>{group.isPaid ? '' : 'Unpaid'}</p>
+                    )}
+                    {/* <p className='unpaid'>{group.isPaid ? '' : 'Unpaid'}</p> */}
                     <div style={{ display: 'none' }}>
                       {group.startDate}
                       {group.endDate}
