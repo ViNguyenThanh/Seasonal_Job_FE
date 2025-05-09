@@ -24,7 +24,7 @@ export default function Slide() {
 
     const handleSearch = () => {
         navigate(
-            `/finding-job?location=${encodeURIComponent(searchLocation)}&title=${encodeURIComponent(searchTitle)}`
+            `/finding-job?location=${encodeURIComponent(searchLocation)}&title=${encodeURIComponent(searchTitle)}&trigger=true`
         );
     };
 
@@ -108,13 +108,13 @@ export default function Slide() {
                     company.avgRating > max.avgRating ? company : max, { avgRating: 0 });
 
                 setHighestRatedCompany(highestRated);
-                console.log('Highest Rated Company:', highestRated);
+                // console.log('Highest Rated Company:', highestRated);
 
                 // Fetch additional details using getPublicUserById
                 if (highestRated?.id) {
                     userApi.getPublicUserById(highestRated.id)
                         .then(publicUserResponse => {
-                            console.log('Public User Details:', publicUserResponse.data);
+                            // console.log('Public User Details:', publicUserResponse.data);
                             setPublicUserDetails(publicUserResponse.data.data); // Store public user details
                         })
                         .catch(error => {
@@ -124,7 +124,7 @@ export default function Slide() {
 
                 // Filter matched postings for the highest-rated company
                 const filteredPostings = matchedPostings.filter(posting => posting.userId === highestRated.id);
-                console.log('Matched Postings for Highest Rated Company:', filteredPostings);
+                // console.log('Matched Postings for Highest Rated Company:', filteredPostings);
             })
             .catch(error => {
                 console.error('Error fetching user companies:', error);
@@ -148,32 +148,30 @@ export default function Slide() {
                 <div className="location-search">
                     <Select
                         prefix={<EnvironmentOutlined />}
-                        size='large'
-                        className='select-location'
+                        size="large"
+                        allowClear
+                        className="select-location"
                         showSearch
                         placeholder="Select a location"
                         optionFilterProp="label"
-                        options={locations} // Use the dynamically populated locations
+                        options={locations}
                         onChange={(value) => setSearchLocation(value)} // Update location state
                     />
-                    <Select
-                        className='select-location'
+                    <Input
+                        className="select-location"
                         placeholder="Job title"
-                        showSearch
+                        allowClear
                         prefix={<SearchOutlined className="custom-search-icon" />}
-                        size='large'
-                        value={searchTitle || undefined} // Set to undefined if searchTitle is empty
-                        onSearch={handleSearchChange} // Track user input
-                        onChange={(value) => setSearchTitle(value)} // Update title state
-                        filterOption={false} // Disable default filtering
-                    >
-                        {filteredTitles.map((title, index) => (
-                            <Option key={index} value={title}>
-                                {title}
-                            </Option>
-                        ))}
-                    </Select>
-                    <Button size='large' className="search-btn" onClick={handleSearch}>
+                        size="large"
+                        value={searchTitle || ''} // Bind the input value to the state
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setSearchTitle(value); // Update the state with user input
+                            handleSearchChange(value); // Filter job titles based on user input
+                        }}
+                        onPressEnter={handleSearch} // Trigger search when the user presses Enter
+                    />
+                    <Button size="large" className="search-btn" onClick={handleSearch}>
                         Search
                     </Button>
                 </div>
@@ -232,8 +230,21 @@ export default function Slide() {
             </div>
             <div className="slide_right">
                 <div className="today_dashboard">
-                    <p>Today: <b>{new Date().toLocaleDateString()}</b></p>
-                    <p>Total Job: <b>100+</b> | Today new jobs: <b>10</b></p>
+                    <p>Today: <b>{`${new Date().getDate().toString().padStart(2, '0')}/${(new Date().getMonth() + 1).toString().padStart(2, '0')}/${new Date().getFullYear()}`}</b></p>
+                    <p>
+                        Total Job: <b>{matchedPostings.length}</b> | Today new jobs: <b>
+                            {
+                                matchedPostings.filter(posting => {
+                                    const updatedAt = new Date(posting.updatedAt);
+                                    const today = new Date();
+                                    // Normalize both dates to UTC
+                                    const utcUpdatedAt = new Date(Date.UTC(updatedAt.getUTCFullYear(), updatedAt.getUTCMonth(), updatedAt.getUTCDate()));
+                                    const utcToday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+                                    return utcUpdatedAt.getTime() === utcToday.getTime();
+                                }).length
+                            }
+                        </b>
+                    </p>
                 </div>
                 <div className="image_background">
                     <img src="/assets/background_home.png" alt="" />

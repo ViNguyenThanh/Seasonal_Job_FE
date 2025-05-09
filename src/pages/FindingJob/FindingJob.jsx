@@ -1,15 +1,14 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './FindingJob.css';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
-import { Select, Space, Button, Flex, Card, Tag, Empty, Spin } from "antd";
+import { Select, Space, Button, Flex, Card, Tag, Empty, Spin, Input } from "antd";
 import { SearchOutlined, EnvironmentOutlined, ContainerOutlined, DollarOutlined, ArrowRightOutlined, ReloadOutlined, StarOutlined, HomeOutlined } from '@ant-design/icons';
 import { Row, Col, Pagination, Breadcrumb, ConfigProvider } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { jobApi } from '../../apis/job.request'; // Import the jobApi
 import { jobGroupApi } from '../../apis/job-group.request'; // Import jobGroupApi
-import { useEffect } from 'react';
 import { userApi } from '../../apis/user.request';
 import { useSearchParams } from 'react-router-dom';
 
@@ -160,6 +159,32 @@ const FindingJob = () => {
 
     const navigate = useNavigate();
 
+    const inputRef = useRef(null);
+    useEffect(() => {
+        const title = searchParams.get('title') || ''; // Get 'title' from query params
+        const location = searchParams.get('location') || ''; // Get 'location' from query params
+        const trigger = searchParams.get('trigger') === 'true'; // Check if 'trigger' is true
+
+        setSelectedTitle(title); // Set the title state
+        setSelectedLocation(location); // Set the location state
+
+        if (trigger) {
+            applyFilters(title, location, selectedMinStarRequirement); // Trigger the search logic
+        }
+    }, [searchParams]); // Re-run when searchParams change
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            // Update the URL with the search parameters
+            navigate(
+                `/finding-job?title=${encodeURIComponent(selectedTitle)}&location=${encodeURIComponent(selectedLocation)}`
+            );
+
+            // Trigger the search logic
+            applyFilters(selectedTitle, selectedLocation, selectedMinStarRequirement);
+        }
+    };
+
     return (
         <Spin spinning={loading} tip="Loading..." style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
             <div className='finding-job-whole-container'>
@@ -206,8 +231,9 @@ const FindingJob = () => {
                         </div>
                         <div className="search-filter-layer2">
                             <Space.Compact size="large" className="custom-space-compact">
-                                <Select
+                                {/* <Select
                                     showSearch
+                                    allowClear
                                     placeholder="Job title, Keyword..."
                                     prefix={<SearchOutlined className="custom-icon" />}
                                     style={{
@@ -232,10 +258,28 @@ const FindingJob = () => {
                                                 {title}
                                             </Option>
                                         ))}
-                                </Select>
+                                </Select> */}
 
+                                <Input
+                                    ref={inputRef}
+                                    placeholder="Job title, Keyword..."
+                                    allowClear
+                                    prefix={<SearchOutlined className="custom-icon" />}
+                                    style={{
+                                        width: '90%',
+                                        height: '50px',
+                                        borderColor: 'white',
+                                    }}
+                                    value={selectedTitle || ''} // Bind the input value to the state
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setSelectedTitle(value); // Update the state with user input
+                                    }}
+                                    onKeyUp={handleKeyPress} // Trigger handleKeyPress on key up
+                                />
                                 <Select
                                     showSearch
+                                    allowClear
                                     placeholder="Location"
                                     prefix={<EnvironmentOutlined className="custom-icon" />}
                                     style={{
@@ -262,6 +306,7 @@ const FindingJob = () => {
 
                                 <Select
                                     showSearch
+                                    allowClear
                                     placeholder="Minimum Star Requirement"
                                     prefix={<StarOutlined className="custom-icon" />}
                                     style={{
