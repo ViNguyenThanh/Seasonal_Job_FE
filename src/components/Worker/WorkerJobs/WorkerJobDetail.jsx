@@ -112,7 +112,7 @@ const WorkerJobDetail = () => {
                 // const res = await jobExecuteApi.getJobExecuteByJobPostingId(id)
                 if (user) {
                     const res = await jobExecuteApi.getJobPostingByWorkerId(id, user.id)
-                    console.log(res.data);
+                    // console.log(res.data);
                     if (res.data.message === 'No job execute for this worker in this job posting') {
                         setJobExecutes([]);
                     } else {
@@ -480,7 +480,7 @@ const WorkerJobDetail = () => {
                     rating: starValue,
                     reason: values.reasonReview
                 })
-                message.success(`Review for ${jobInfo.companyName} successfully!`);
+                message.success(`Review for ${jobInfo.company} successfully!`);
 
                 setSavedReview({
                     rating: starValue,
