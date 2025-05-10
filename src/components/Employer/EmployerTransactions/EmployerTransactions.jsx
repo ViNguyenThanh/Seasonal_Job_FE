@@ -286,7 +286,7 @@ const EmployerTransactions = ({ newUser }) => {
         await complaintApi.createComplaint({
           description: `Account Number: ${values.accountNumber}
             Account Name: ${values.accountName}
-            Amount: ${values.amount}
+            Amount: ${values.amount.toLocaleString('vi-VN')} VND
             Bank Code: ${values.bankCode}`,
           type: 'WITHDRAWAL',
         });
